@@ -1,51 +1,24 @@
-.background {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background-color: #000;
-    overflow: hidden;
-    z-index: -1;
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f8ff;
+    text-align: center;
+    padding: 50px;
 }
 
-.star {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    background: white;
-    border-radius: 50%;
-    top: calc(100% * var(--randomY));
-    left: calc(100% * var(--randomX));
-    opacity: 0.8;
-    animation: blink 2s infinite ease-in-out alternate;
+h1 {
+    color: #333333;
 }
 
-.star:nth-child(1) {
-    --randomX: 0.2;
-    --randomY: 0.3;
+button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 30px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-.star:nth-child(2) {
-    --randomX: 0.5;
-    --randomY: 0.6;
-}
-
-.star:nth-child(3) {
-    --randomX: 0.8;
-    --randomY: 0.1;
-}
-
-.star:nth-child(4) {
-    --randomX: 0.35;
-    --randomY: 0.75;
-}
-
-@keyframes blink {
-    0% {
-        opacity: 0.3;
-        transform: scale(1);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1.5);
-    }
+button:hover {
+    background-color: #45a049;
 }
