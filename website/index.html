@@ -110,11 +110,58 @@
   }
 }
 
-    .auto-image {
-      width: 600px !important;
-      height: 400px !important;
-      object-fit: contain;
-    }
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  aspect-ratio: 3 / 2;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.auto-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: 30% center; /* 왼쪽으로 약간 치우침 */
+  opacity: 0;
+  z-index: 0;
+  user-select: none;
+}
+
+.auto-image.visible {
+  opacity: 1;
+  z-index: 10;
+}
+
+/* ✅ 데스크탑 전용 설정 (화면 너비 768px 이상) */
+@media screen and (min-width: 768px) {
+  .container {
+    max-width: 600px;
+    aspect-ratio: 3 / 2;
+  }
+
+  .auto-image {
+    object-position: center center; /* PC에서는 중앙 */
+  }
+}
+
+/* ✅ 모바일 전용 설정 (화면 너비 767px 이하) */
+@media screen and (max-width: 767px) {
+  .container {
+    max-width: 100%;
+    aspect-ratio: 3 / 2;
+  }
+
+  .auto-image {
+    object-position: 30% center; /* 모바일에서 살짝 왼쪽으로 */
+  }
+}
+
   </style>
 </head>
 
@@ -143,16 +190,17 @@
   </div>
 
   <main class="flex-grow flex flex-col md:flex-row items-center justify-center md:justify-around p-10">
-    <div class="w-full md:w-1/2 flex justify-center items-center mb-8 md:mb-0">
-      <img src="https://lh3.googleusercontent.com/fife/ALs6j_FS2z5bRMRNEVvhqj52oBGD-WulY31lNjmd5bCJhITkr2mmFj_7vpn0RNRClw5V5RXY3HicMVJ4-qDsF4W09N5PFcCi2503zcRgBw8ZWzgRORZiVRjrL-sbfYSwgiwkws31_uSSpjgxDBl1EVyJPTt1sFGZ7ICCFU1DD266P6IVZ6cnbhpkQGs9gNw_hGypsET_lkWHMJW1RU8O5z2u_gpHPGLNwMbozxAYkLcAnjtcPkE5VLPkuNn74HLY0p-Lxj261y2tlay0EWwWTJcmZIrOAj5UhWpZz6bDnwm-78IAG8pwJ_bc-E5Gh-tlwzIKw9omD-Tf20s8vqBZ3p_SSAJ26RZoSLQe71_MTWzTZbuGzJXYuzO2G_9pKmJKgFBkfC7gBWTc9OVT5XVF-2vHJFUigYPDgFGpHv3xqGUnM_g3HnWq4YeHw8m-b2qcfrmITBCSXPXIaq4xpHMBGduGi3PWhdRBUhz3qQgNlhWrQKGKfKtqCLpFsS8npmnUYdOr61gZA7etGm1lBi9uHAk72aA5ciHhQMHT7i9IUrvXMMr3tF82FLFOuCcMgclSA3c0f7QAwOcrNt5fuTaregb3L2o7IBWm-bug-Hx8OLf-xF-x-ub5Jbf8HH6p74qVhs8xYb8XJ6i86NI3LkaJLCPgpQ8v4XsmTiHSuvH4fK5A0-fofR7K-DkEYp0e7DCin94wDnLuQaCHB3lfORVQCvLzsSU_M0XiBKCnfzgqz8vty_B2RLLQ0tS1hckSDdkCZNERNP369DdW4oVlQ0mbq5tfBXS_AWG7-RTQGezqVZ4a00c4U5rj8EWZiWa1MFIQPKp6wA_z5YozG7A7nvqMX877zOzVYgjnQ91_0u5tNP0kxTKTXS2ASX4u8rijginDy6Js9k7evxj4U3vCN1vN2VZxqRtfemJAaIYJMtMmyCGlA6PQEr5gC0BseBQzGKwbWTpLg-ZZ0xRf2PgepIY-jqL0Ldi1a7Eo7dHk-MY-O-dEgcfBQZKibzRv9tdaKpQnjo_k6PFni3Aj_yWN6kctgR0pBKGnkZzOkTyx3B6ZZWYRb9q7gQ6FFjc7bS5ULUTOX2pFi6FOTny0b3SoLuiHdY7fGLpTds8HwTRUPmrHa9-xjjGSJsbPJP6D4orxzw4ZEdxQW4NbB-457Oq_bNdKp7jHpNUYRn38r2JmWO37D_2FsdpttoSCkqWQEi7m5FXDMzpiUqbSGxcq37b5DXQxRWxGkTKb5YE4bOdZ0RLPhhx0u2U9noL_V5xD8gtqHt_bBDc4DKZGQh3IyNBIFgDWK_M2W0qx-SoY--0JdmblirzINMu6--MhwWLbIC4XjNMc7pWSwBjmDc_c8pQUBHgkcKbIv_cL7Iz3Wg2LSEagx4XABuq0Nr7HwTy3EgCqLZG5_9RKjkEe1r90SzfLyDl0EOvFNFHG3HmMRKOAAoTbZGIkk2iQxgJAcq9bQkUdw5h1hYSP5mH6oEItXe_HR2PmIW-eY6LfcMfTktvDVwfvsm4OzocZVTIbb1gDXxuABaLSevOVr7SDHj6TbIjyBi9X_i_zVRWoWyBfO1CK38Vm7lQ-b0x_M05cxf52wcVqrAICCnTTO2tmHBzBovqb_pQ4JzieKOsaWZLQZKSLyKmRQ1MCkZ2bEXNydEkPSpL_l5DJzoZAJBohxWw-ujJDqw=w1919-h918?auditContext=prefetch" alt="Automobile Image" class="rounded-lg shadow-2xl auto-image"
-        onerror="this.onerror=null; this.src='https://placehold.co/600x400/CCCCCC/000000?text=Image+Not+Found';"
-        width="600" height="400">
-    </div>
+  
+<div class="container" style="width:600px; height:400px;">
+  <img id="img1" class="auto-image visible" src="..." />
+  <img id="img2" class="auto-image" src="..." />
+</div>
+
     <div class="text-center w-full md:w-1/2 max-w-lg md:pr-20 md:text-left">
       <h1 class="text-6xl font-extrabold mb-3 leading-tight neon-text">Zumi AI </h1>
       <p class="text-xl mb-3 neon-text">Pythone Library</p>
       <p class="text-sm mb-8 opacity-80 neon-text">
-        ‘주미 AI’의 파이썬 학습을 위한 지원 사이트 입니다.
+        ‘주미 AI’의 파이썬 학습을 위한 <br> 지원 사이트 입니다.
       </p>
       <a href="https://truedo.github.io/zumi_mini_python_backup/">
         <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
@@ -181,8 +229,8 @@
     for (let i = 0; i < numStars; i++) {
       const star = document.createElement("div");
       star.className = "star";
-      star.style.top = Math.random() * 100 + "vh";
-      star.style.left = Math.random() * 100 + "vw";
+     star.style.top = Math.random() * 95 + "vh";  // 최대 95vh
+     star.style.left = Math.random() * 95 + "vw"; // 최대 95vw
       const blinkDuration = (Math.random() * 3 + 3).toFixed(2);
       const moveDuration = (Math.random() * 20 + 30).toFixed(2);
       star.style.animationDuration = `${blinkDuration}s, ${moveDuration}s`;
@@ -196,6 +244,84 @@
     toggleButton.addEventListener("click", () => {
       mobileMenu.classList.toggle("hidden");
     });
+
+
+
+  const img1 = document.getElementById('img1');
+  const img2 = document.getElementById('img2');
+
+ const images = [
+    'https://lh3.googleusercontent.com/fife/ALs6j_EXEimJynJEKYiyqxTZvV19FJxEMjaH57X5eZMF2Me3hNM-H21lsux9Yk2iHr-0fV56OUpo1hyhU0FvCP_TOig3zjV7xAwgbyDG-XFU3z8ODhuMnoMr4BiCS3dn1pPJHrj7YoW2VwrqETDbUV0Q9pY4BnINsztsRefYDbA5jhN_OJDiBR1tDw47pUxPiuOgI3GXTu9YQMyi5NbAmvEwgLc1nXN_6rU85eA8dj4IpElaGbXQiEO_RA-zJUD1PGF9bQYzTRYfP0dkVIy2rDeJsFilvnoc2CayPM2LMxS7E0rsSltF9bCbtSJH1jfOrOO2xvnln0siMxSTpAY2pj82X7EhCcptGGVMd5O7cglLVeEwVrmzlTB2g_7klgv22e6S8o2Rnb3c7hmc7g3SMxaPYiGPPsKAI6e0ECwgPO20LlJKfCLtUB9tsfLn4HZ3euY8oB1oG5oBlApz1SCnBwUynqeVnDPfE9bJuMBEV3x6dE0KcnZzfh7q2vzvH8MouOPKxSnDQDzTe4E4NPORhfy4xxzF8s5J1M6Cf02ITw-237d3Z2c_TtjA9WoRdIyQUiwzfo6OQbMK-cR3ZcyeD0lszl5dRw3YWSj_mlu44UHW3OUwxS_vL_qOqFt8W4QSE7BhWCb7w8gXbN5inkWIqvo7GMLcgYeCj0g_De1Jfw_41Ua1oM0sZOKhauPCRpiSa_BvcayHyiINPVHC8CHzjST9YTcSwJ7trLsM-HlC-NnFnrs7o_KdEvXLDmNNo53kQoVghywT7TVCA3Hi4d7bn3sUsHxrWM8a4dVDVYXZFE6LvVgkzGPwPXzjc5Hut2cu2jtHeACE91FRSDqgKa-O1YRrdURAhs--IUbf1bVNDg-Q3sPbpkbQLj7dshk0WjNMaobYp3ERqqS7JpruDikDT0TpEXSUyp-6Pd8eUNkHzuWVKgncH5qZVONCujiyual168IQgsFdiz-IXBSgREM22Bes3rMjja8ySo8qZ24Ebic-5BkNmaaCWKz2mryRnV0XSxjFCy64lahQITcOrIhoVoxKGY2Sz6nTIIaXMFUZ5R8r0r087QxUCwU5bGvX3djdGA3xz-Luf3c0lPK9SJtgLzSxVS0gys2eDLV1vTZ5pj1ZdxvCrsruZUsVfJ_rXjV0F6YHEl_Gpps9tqEKwUl8A5e7EYwBySFyj-wD72BcwdjvvJKfSHtvBzDwVQTKkzq_LNo7MRorWEKwD21uGHvKcaFLZ7SlaASy66lt8-fXdElxjPagKpc9Fvf6mr62Ug48WAxWeutQbY38ATjAj39XZzn_4lHyVmuHS8Ct4E-urkRM9N6sLvAuYXPhXdbAarA3YPplefU5Q5gyHAkenPdgr-I5VjRPtJghAYKE7Od0gBBqDM52QnnVThFUAffLj6qhUeTF7tgDPZMV2j_ZHEHUHeBMx57XY-Km3ytpOC2MZTN_iIU-MTbcwzfgicM3vrWSj6mlQsisQ4f-dFUAVrsJXwnV1XVYvs8XsZ4jAjl0ZjFm0VHaYGKqdQFVEpx62eVrfHUDxEi5Vhcp-m-n7xefkRHl5d78v-yGx18QxcxMngUyvTXDXnTDa3wvTyOBQ-YvoCJ-3QaQaoAtfWd7uOiSmuJHjoiAC0vWvxzwBZoRLYyp7jGvOos0nL-ffxj9ffTRyS8i4dlbobkMESOfig=w1919-h918?auditContext=prefetch', // 0
+    'https://lh3.googleusercontent.com/fife/ALs6j_Gqf3R_dNuGLmNDdcHK00BIp1jBZediQ6jSjQqmhmrMOwBcREv2FNGucwCKCORsi9qKpbKlV_i_nFqHLP60sUhpv3H3TPDc7730JSgXPikBV8p9Rm2ugaTM2v1P2UP0ExsCH3o0p2ziry0_-B-WjF-Mc6Br6ISLlTTp7VxT0D57Gf3IPnUeQTL-h6Aa58V54i662nQPvLKMY2W0WN9DIagalRdVW2i9kpr9Umlre4cg5PvE5cbkjTAPsPG_xdC4ZMyjynT7iQB8hViR3TrCNGJYqK7HgVgi4NspW7G_edf5psobPY91Rq3PkRM5bWHSSiaDyHRWakpv2geGFrnRGXJ-9bHUnarMzD2sxUJP0_8iaAz84gDQSY8DcxneDmDGvpG_6pa2SSRpqrI2Eiv2cuEXVmH-N9AVLkuJQx7QtQecJdgBPSl2v_2z0PjBAhWaBdmr6Au4Xd8up8UyjCRlJ8PKdsYsQugJV8OWGXp5O3has7lK0nqfJKkGSp4ZkMFUQQy2eJxb4s3AcDyQkTBRxWdvDJLxh8o0d2gWo9WmucY7r2GIejhRD6-i9afOvONADn1lNCHuFDPYyT7JpdgclQc3wCUH0PKFzzvx_Zc_pdJSjyb-lX_mix-BNWR1N00GF139uafKjrTMhG2711nq69Xp1aEZSLxfw5NmF6aYt-Wq8s3OgcL2_wABCkqDRHJCblMtuhggpFkaozjJDCmM1kybcYC_OLAn0YJ1FW8-1o7QX7zAxLtVNuHH5wpsqeXbkziI1yOkHgXC3U3hMDOM7ELaShL0TQe2DNZm86GQeuP8T2H3TMOYBUtQuRL5mlwOxS-5unZ0W6nmqmOvBzB_8130bSky0FD0n55l6-d-qOxZK-TU87f5NLdhzb2S3ulrRIqPZFkMgInEBfqohs9cZr2e7-m0r1FhWxvj0SdNHrl4psH97kJXHaJDLj55AXcEpqjFXq_9fxebSFxS-zLBsbiyyOvWlT9YhGSVMeq3f61qAx1nngOj8StiVhKYAJuqDeXN0cntgGWVbH9Ji84eYXZtgOiUUV9VHpfD0fzJvIlI-PO9zpX0DlnQ-i61H471_nEIdK8uXa3hOIHDpzqYOT5PFoY7U4KDlXcYDeRGB_m8dak09cKvZToNaByT7XIfMsB9zachrrWVNUKN8WqD1TL5TqlyXkXhIoafPLI092s5sBhjIsGVPGxUvYEPohSVCck3tfjnjIxif19vSTKsf4sHABXTlNPk22dvpQv1MGfXQwhVezCFKyUZNkGvg1jtaa4xE-uOAMTAGozqr1zAt_N3NuQFumtA0nFcqUbC-tyh9lxMrfD-CmHAcKw7-fGa711aSYatz8USbViX-AKB4DPbx0aPxPWHUxWqBuBLuaxrid9EQGfdIrOXfqnVmiqSP7z9FRHDYjv6zQT9LeyCMpINflW9RyTLd_8dnY9SW_aQ-dYWpYcKkuLSMW6EflR8N7emUuKAeUnLO_i1R13i5seOZP5D5KnCqWOLGXiKC6uAoZTB2AwV8YRvKTFRst6zVUA-Ne1R48uCKT8hQ9KbYjRYP_ECzhjyB_QACibFPLvcWWtFHX7ZHFhx9H5UobDfCfOKXwQx5tBLSNtssAu9p1wcKWuwlaWvCTddkWhSMlQU6DqYeM-F7GKlCVPXE52FvDHteRyemFZQ8w=w1919-h918?auditContext=prefetch', // 1
+    'https://lh3.googleusercontent.com/fife/ALs6j_EPEF1NgxtQyYSpzIoS9xfpsE0c80OpmG0VWkS3zh_wWFvdX5mEGb84ZFMzIyacRpSjbf4HG5VFcpIeTDZHbrxEBqb78FED3NXA5QnNFMEVquVLypGEY5emqMv3Co9HwVciCv02lOnC3kwbOiMCBDtgjeotyqyI9C_d9gtS4jTVpWtlW96akpGGrXwAzKZ5p--GB4SBrwxf5LKF3cokb-Q9pCg0vDiMirAX9qW98-E6n9-5X0Hhho-bpnPDPmrDeBuCgERoiMei1AuLbIt2HXdSa6JQl5DbDs5l45kLro09tgs94yNK76_UTxKwmDuvrtstOUODOBnDUX0zt9oTBb6GYu-Tw05RsebtSDEiYr8mzbnB5T46RkWUj8AgBYwZeLsjijynHEAq--tkq_MAqZFaYdNmATRGz0zpjBC1rI28r7AvbvqGqlvDrJdKpI79Y14uCkzaVHVLyoVYSN4JK7xDUlyM-Gk5xhYnGsebmJmxWU_kDosXShYZsBSo1HLzMsVLrld416QUA9A6mqG_olUw_ntjOUrAxq8v9qJO5YGHjpRsxeUVyDUHC8mduvJ9-s4AhspBqHitxz4Nk90GuotANi4NtLODTxlrvGE4UdYLtXsHaIDdalNiuqpoeYmIq4SvHti2QsUIdq2O8CGai0zrJPnS1hKLca93q6LJvGIPDAw7vMHoDIPP2NnDIsHk27OTZZh2dO3XSGlAf63cTNSdezJcE7YaVs9Rbdoceqznvx5DwgXE5YeZDGTa3hy90jL76KMWlnHYx4s8u8lT9myi22fbNzW1D1UZ7tNAIuxZtOgHJeaSJ7DeyB1xn7-I1DvPs6pMmuMeb7kKGpy-f74H9-V8z0Wh2Ia9fQg2qsFVAVMuim6JbhIFOMucCl9LLE6CzuW_FBJproVY9UJNX7NUu5nCYboK-tAojWkLRvMDpx0Ep-3kvag8VYCah9Oyxnm6KJNjGGUQnx3MPIh0GrPgHpJFuXhxxNZ7bgMyYoAv1jyBpR-f6J5_jhXa-udu73FjDwdnQcr9ZNzRNvNM0gk1fdFXwAOI-P7ywU0vXPVqXbi3WdAKMilvhShKecJWhwCf5ykAZtmxDz0DuE2QOH7td7Wi7bcLKeTfyFCf6-3zONU9XDSChS5pz6h0M0OUXs-5yHyYTayYxC0J4sKiEQjekyaq68AP2DMZdNUelyfLzqCfy7w9WAUmSIyBLWcb2pcOPLiZK6JWnkmjsknXEVLtU4HcKS-x5srUbRQvnizJxytLamcDt_FhAT-sEK-5RP0hAaKobhSqV-gi3-kHTdaFnkr--WTfQYNJZir6M-wJ2E6vZKxQ643tCB1oLr0qMnV_kxSn9mfoFEXCVqX2hQyURvV5V2RjtDFI9lAtyBTgd3xM_bxjk9ieEQ9zvKbBRjhVYZ2httc32pcDaDNPnCuyX-QilmpB1HiP3bUnVtgaUAE1KKrinz0TWUZdK-LUwaqrGrYtA2OD4OHe57brIZhf8a4ImljHRM3aIzJlwnMt_ZBkPJVna2Tzayaeghx1pXAfW2vOGQJdNE-OxQfk3iu8BP2Eb3szFZMit-0HazbjhJJ_C9VJUNfRb2YXh_3lbTOqjcHkopD28jWY7uC5V2b5atLcfAcJI9ikWWg6lSQGgfOX51BHAH7HhidCh7BDUbkML2CP8uP_6w=w1919-h918?auditContext=prefetch'  // 2
+  ];
+
+
+  let showingFirst = true;       // img1이 보이면 true, img2가 보이면 false
+  let sequence = [0,1,2,1,0];    // 1 → 2 → 3 → 2 → 1 순서
+  let seqIndex = -1;
+  let isPlayingSequence = false;
+
+  // 처음부터 img1에 첫 이미지 세팅 (이미 되어있긴 하지만 확실히)
+  img1.src = images[0];
+  img1.classList.add('visible');
+  img2.classList.remove('visible');
+
+  function playSequence() {
+    if (isPlayingSequence) return;
+    isPlayingSequence = true;
+    seqIndex = -1;
+
+    const intervalId = setInterval(() => {
+      seqIndex++;
+      if (seqIndex >= sequence.length) {
+        // 시퀀스 끝나면 1번 이미지로 복귀
+        if (showingFirst) {
+          img1.src = images[0];
+          img1.classList.add('visible');
+          img2.classList.remove('visible');
+        } else {
+          img2.src = images[0];
+          img2.classList.add('visible');
+          img1.classList.remove('visible');
+        }
+        showingFirst = true;
+        isPlayingSequence = false;
+        clearInterval(intervalId);
+        return;
+      }
+
+      const nextImageIndex = sequence[seqIndex];
+
+      if (showingFirst) {
+        img2.onload = () => {
+          img2.onload = null; // 이벤트 한 번만 실행
+          img2.classList.add('visible');
+          img1.classList.remove('visible');
+          showingFirst = false;
+        };
+        img2.src = images[nextImageIndex];
+      } else {
+        img1.onload = () => {
+          img1.onload = null; // 이벤트 한 번만 실행
+          img1.classList.add('visible');
+          img2.classList.remove('visible');
+          showingFirst = true;
+        };
+        img1.src = images[nextImageIndex];
+      }
+    }, 100); // 0.1초마다 이미지 전환
+  }
+
+  // 1번 이미지가 평소에 보이게 하면서
+  // 3초마다 한번씩 시퀀스 재생 시작
+  setInterval(() => {
+    if (!isPlayingSequence) {
+      playSequence();
+    }
+  }, 2000);
+
+
 
 </script>
 
