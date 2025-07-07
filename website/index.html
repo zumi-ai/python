@@ -100,12 +100,12 @@
 
 @keyframes flickerOpacity {
  0% {
-    opacity: 0.4;
-  }
-  30% {
     opacity: 0.2;
   }
-  50% {
+  10% {
+    opacity: 0.15;
+  }
+  20% {
     opacity: 0.1;
   }
 }
@@ -121,14 +121,13 @@
 <body>
 
   <header class="w-full flex justify-between items-center px-6 py-4 z-10">
-    <div class="flex items-center">
+    <div class="flex items-center"><a href="https://zumi-ai.github.io/python/website/" class="flex items-center" id="logo-link">
       <img src="https://lh3.googleusercontent.com/fife/ALs6j_FpAj7oMETlep3fCBHYuZGq6DWoc60B49wnyNHOTMWS4llCaS_Dp1WLetK1BMHmti4aHnoIXtcVTmgJozC5-VcrBMfRf_pmuzJwULdG9kDt6CALW-P5LRQI_XsXKEB9aJKmDaYTl6V1QaFdPJVpK5YNQBhlW2jdI_AuDvDA78CfUZ-unq3YrNsIHtalQg-UUQQ_3xPZT6uK4tsd1fLzGhG0-axfqtU9jKSbt_DqT5C0fbHcHdA3TFXzaC0PIVtdZWE7pevMcpAkE5GGH6e1RZ1Xa3bQVi4p-EefrONX0wqt1oGD9YFE6g6o6wYkUcyMgwmiAqyMLo4jUDkjfr2tQ_RAiu88W1AgAPtCm8VPp8iQqHsxxdJkEg-OM4kWXs6BhcT1HaUk-uyhd6V3u6qeaAugGSjTgzOhJE8_WB-Kg0_EMceh1aUtKxsKF6sL2s9SYoiBPeodHQZ_JOfPgfrJ9saqwzS1c12GHZQPA9214h2jB3B342DTmtnI3Kjke9ZACcerZTGmgs8r-M-KXZfaW3GGrMeGyuNiunkLZPpoaonQfsVmr1bTddKvcd2CIDuynW_IrFk8mGF7QWfEPunNbCRW5giSKO7G24DSsZxBI9z6ZKUTYc2yIVUMe6lvPUn0fiBncb1DvPN5KwQ-wo-085B42dWoe4A608RY0V0Zw7HX5z3nAqlMGoaugV4hlbRr4AM-utqOfrMeX_L1WyndUfUbzdAvb567Wm1lFLvBp68eP4SyQlwKolfA46zTPuSnYdIQZqeyQBz-k7LGf_KYqjdYJgQxs98ug55nA-K9l_S9JERHaBVe8f1WwxzDyLJyrS84EZFy8DeW113a6osXVO-appgYVBiLOwuxAiAMfLiOhHI6vnxaLm0_XnvRl-grtv4-B9wovOeAwWWJ53EYN-OvVwAKIrzORek9zZNaVE7ZdtHbO4fJ5GHKL6pGx8e45NdnMfBaPqLLUZvfY-lHnTfkxlNkauTHtsghHHd1IOtCREO-9sFepHhsZdyonnEyoOdfcDEIUUynaqkB9nJ6LRnTREJ57v2eKtxlRyczJVcMYAePf7iScHkDM8SXFKLbAzfXff9lBiZzqUXzpMW5wTiDb7YhHdCVFQzO48HMtmbHuegn7qYh1DDNbhzzFj1mjuadOJx1k5ifcrOCc-gaAQZTAOYSfddaqn2X1ISnpK326an-GOJ5NROtbwwXmpSApWXVR1S3te51R8E8YdGR4MIl_A3PoawJbN5OGh2BoPrrRuwxESmk5BbUtxjRagSnhCaAkOZ2pHzjL7kyYpCK6zfAgDfRKwFhU6UXddvgKIkcUkH-LgFj4-2IHb4AKILBiHIRcoImi8qHz-KvtxPTQMVUbUf44V1Lwqv6-JemKVzmGy8ZUJPaexdRtfJ1dwrNmm6K1otLVn7TKePyOS6UaD4FSxavVGJMijJNXZBXKA5OzU-ZP9h60Dil3L26hrte0m2ioVhqV_r5dBxmNhchgw8kyaaFomXDRYgj1nW9Ja5YMUOacyTc3Ms0icahuF3vUm25sjH4H8rjWGBUYKXIlM-K-QWrpRDD6HW5m5FzIlt_nNVirFunkfenUXCNEhJVg-khcWOEd7YEvbmk50xjUsAldDIUIsQ6t_qbEvAnM88NBSPLOOLHwCZvVuXbsp_dJAFRmXY0vhmb=w1919-h918?auditContext=prefetch" alt="Logo" class="h-10 rounded-lg shadow-lg">
     </div>
 
     <button id="menu-toggle" class="text-white text-3xl md:hidden focus:outline-none">☰</button>
 
     <nav class="hidden md:flex space-x-4">
-      <a href="#" class="nav-link whitespace-nowrap">HOME</a>
       <a href="#" class="nav-link whitespace-nowrap">AI GALLERY</a>
       <a href="https://truedo.github.io/zumi_mini_python_backup/" class="nav-link whitespace-nowrap">PYTHON</a>
       <a href="#" class="nav-link whitespace-nowrap">EXAMPLE</a>
@@ -137,7 +136,6 @@
   </header>
 
   <div id="mobile-menu" class="hidden flex-col items-center text-center bg-[#000C36] w-full py-4 space-y-3 md:hidden z-20">
-    <a href="#" class="nav-link whitespace-nowrap">HOME</a>
     <a href="#" class="nav-link whitespace-nowrap">AI GALLERY</a>
     <a href="https://truedo.github.io/zumi_mini_python_backup/" class="nav-link whitespace-nowrap">PYTHON</a>
     <a href="#" class="nav-link whitespace-nowrap">EXAMPLE</a>
@@ -198,6 +196,9 @@
     toggleButton.addEventListener("click", () => {
       mobileMenu.classList.toggle("hidden");
     });
+
+</script>
+
   </script>
 
 </body>
