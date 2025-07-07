@@ -18,11 +18,28 @@
       flex-direction: column;
     }
 
+  body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; 
+  background-image: url('https://lh3.googleusercontent.com/fife/ALs6j_E782PyIFMYtfVVTWKJmz-NPOAMoNGyICJBadA4s8rszXoBW1pdOjGqEGLaJ6a0MTRkxoIZda-w1eEBdzmu7NpqU9QlaUX2XQY5BKLHSPbORtCE87IE3XMTnbsdNUIM2QDvRB41vYEKbzD3Y6bCsxXuLgblYo45APBATItrnaPs5SkcXeu9aMFuO8Q6kvoPorMCwyAObsM39R5G5_E_Ny4k4oc1IHZfhdJELCCBFT-uuiQtWHXXxmLmcqqCFV36Yub3GZcoAkilshppk0ij1iotqUM9Nk4fNUjg_HSqeXi7yzrZ4gofhiS8xQebPOsnnYHgk3L0SCghkoc6qFYFWAscDbY3J-T3eetqtbXbB6-v3GNFW7xti1pcvNbgLjZtRsaIGJynrnsWED8AUXQRHCk3EmYfxA0gY4wsBe-hWeGJZY9cofd4gEbj7ievulF49GZV7LRbry0cXnDZVSVQYrNcc8oxBM5UvAhNouLXYIJXJ1_XrT67zlzLmaWFvgQQjBnnk2oQX60UerK8qSGRhQ8Mmezkv_cMpiU9M46f8t9rwWVhsknkIxzWOEJEmq9ZT1gDIu8pJuJ3u-S9ZLVvKY8HBMqd09aJxwQfKpdcmEqOn2DjZJ5Ia6EDnV0d-41bYyXz0oZOcs1sDV1vh9Ecz35P12FNqpPjzcYZKRLxGdGyygvDYaACaFqHkqaXrW9pE58AAlqvnBmeyNW8NlG2c52S6Q2lsdbBpAWcXQp0iswofLRMi6Wd-Q1B6UUdMXZhyEAdOtiCngRDzpx8RasWmW-9ZMSqnwvl3B9eB113R5jXh6ZB_0eNjO20SZXZn1XEZP-iD0C0qZgHA_-dVp38zoiT-RutNUwTPiG22-Ff6w_JWic7E1tYgOgMCGWjKDdEbHZW3GB3zXyBrnyH81_8oPGApy1vjOa8_pqZS5jyX9PFbODsrQdPRwq4xTMYsW6OTvG08eM96O2lOThJ5PzHxrOYSpOR-kVKLM7VBUbQHPYq36ECuFUY3kDA7yyMnVm4WWMlU3vS0aguTUUva3CAskP6V8difKwvTNgeKae8dGv44TUtEHGvLjk1eWiBrThOEBpik5XOrt5Y_2d8YnWvbymfdh1QdqeU9o0yxC0tVQBDuGDjkfNVsETEGIK9Sy6ZHBOlQjElWxhelqVv6CaiKM8hKEtfTQoJAgJsgboz_5VGUU3hye0xJY18dQ0bQ23jPDl__tjztKa64n8Hw4BzvKDG_cP0J-1h-m3C9COokR6tTEWSzUyRtK98vafvKmkM8Jw_o9UnoxEN9dbo50aKeD88MUKYso3ijwz-H5DNJHK9wNhgnp2Yn3WkVR_ZtlQpfOcJO3hNmCVOGJDdZ9g3gUBDjQXFg1I_Ww7Wc636ttmFKGDuYeNvyyiwLCmXtbmVhkT29p2M-k4_CQZKh-nDzkUlD-B3oXw4DQr7qr9qXEPX7zFqi0KW521Bynrl2z_NP5nf-AWAun8hnjrpdxoedpcLYra9Qqw-7Qz2gptYkn1FBtRCdTMKEWvYiHlOcruhXC1PSTfyHahNxdVaNkhfDtfnF7LZu0NSlx-JOcMtigLfj8iGGneEDJMB3HlA674Hv6s2MoVnxU5E6x71lqwuC0n2oX5H8BRUx0IiOn40i9TcbEPpzDSwPR8hk3fyLQ0_LiReswY0HUhPAA=w1919-h918');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.5;
+  z-index: -2;
+  animation: flickerOpacity 6s ease-in-out infinite alternate;
+}
+
+
+
     .star {
       position: absolute;
-      width: 4px;
-      height: 4px;
-      background: #39569C;
+      width: 10px;
+      height: 10px;
+      background: #00B0C8;
       border-radius: 50%;
       opacity: 0.7;
       animation: blink linear infinite, move linear infinite;
@@ -30,9 +47,11 @@
     }
 
     @keyframes blink {
-      0% { opacity: 0.3; transform: scale(1); }
-      80% { opacity: 1; transform: scale(1.5); }
-    }
+  0% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
+  100% { opacity: 0.3; transform: scale(1); }
+}
+
 
     @keyframes move {
       0% { transform: translate(0, 0); }
@@ -65,19 +84,31 @@
     }
 
     @keyframes neon-blink {
-      40% {
+      0% {
         text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
-        opacity: 1;
+        opacity: 0.3; 
       }
-      60% {
+      50% {
         text-shadow: 0 0 2px rgba(255,255,255,0.5), 0 0 5px rgba(74,144,226,0.5), 0 0 10px rgba(74,144,226,0.5), 0 0 15px rgba(74,144,226,0.5);
-        opacity: 0.7;
+        opacity: 0.6;
       }
-      80% {
+      100% {
         text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
         opacity: 1;
       }
     }
+
+@keyframes flickerOpacity {
+ 0% {
+    opacity: 0.4;
+  }
+  30% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.1;
+  }
+}
 
     .auto-image {
       width: 600px !important;
@@ -148,7 +179,7 @@
   </footer>
 
   <script>
-    const numStars = 100;
+    const numStars = 80;
     for (let i = 0; i < numStars; i++) {
       const star = document.createElement("div");
       star.className = "star";
