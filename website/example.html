@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>주미 AI 파이썬 : AI 갤러리</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #010415, #000C36);
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+    }
+
+  body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; 
+  background-image: url('https://lh3.googleusercontent.com/fife/ALs6j_E782PyIFMYtfVVTWKJmz-NPOAMoNGyICJBadA4s8rszXoBW1pdOjGqEGLaJ6a0MTRkxoIZda-w1eEBdzmu7NpqU9QlaUX2XQY5BKLHSPbORtCE87IE3XMTnbsdNUIM2QDvRB41vYEKbzD3Y6bCsxXuLgblYo45APBATItrnaPs5SkcXeu9aMFuO8Q6kvoPorMCwyAObsM39R5G5_E_Ny4k4oc1IHZfhdJELCCBFT-uuiQtWHXXxmLmcqqCFV36Yub3GZcoAkilshppk0ij1iotqUM9Nk4fNUjg_HSqeXi7yzrZ4gofhiS8xQebPOsnnYHgk3L0SCghkoc6qFYFWAscDbY3J-T3eetqtbXbB6-v3GNFW7xti1pcvNbgLjZtRsaIGJynrnsWED8AUXQRHCk3EmYfxA0gY4wsBe-hWeGJZY9cofd4gEbj7ievulF49GZV7LRbry0cXnDZVSVQYrNcc8oxBM5UvAhNouLXYIJXJ1_XrT67zlzLmaWFvgQQjBnnk2oQX60UerK8qSGRhQ8Mmezkv_cMpiU9M46f8t9rwWVhsknkIxzWOEJEmq9ZT1gDIu8pJuJ3u-S9ZLVvKY8HBMqd09aJxwQfKpdcmEqOn2DjZJ5Ia6EDnV0d-41bYyXz0oZOcs1sDV1vh9Ecz35P12FNqpPjzcYZKRLxGdGyygvDYaACaFqHkqaXrW9pE58AAlqvnBmeyNW8NlG2c52S6Q2lsdbBpAWcXQp0iswofLRMi6Wd-Q1B6UUdMXZhyEAdOtiCngRDzpx8RasWmW-9ZMSqnwvl3B9eB113R5jXh6ZB_0eNjO20SZXZn1XEZP-iD0C0qZgHA_-dVp38zoiT-RutNUwTPiG22-Ff6w_JWic7E1tYgOgMCGWjKDdEbHZW3GB3zXyBrnyH81_8oPGApy1vjOa8_pqZS5jyX9PFbODsrQdPRwq4xTMYsW6OTvG08eM96O2lOThJ5PzHxrOYSpOR-kVKLM7VBUbQHPYq36ECuFUY3kDA7yyMnVm4WWMlU3vS0aguTUUva3CAskP6V8difKwvTNgeKae8dGv44TUtEHGvLjk1eWiBrThOEBpik5XOrt5Y_2d8YnWvbymfdh1QdqeU9o0yxC0tVQBDuGDjkfNVsETEGIK9Sy6ZHBOlQjElWxhelqVv6CaiKM8hKEtfTQoJAgJsgboz_5VGUU3hye0xJY18dQ0bQ23jPDl__tjztKa64n8Hw4BzvKDG_cP0J-1h-m3C9COokR6tTEWSzUyRtK98vafvKmkM8Jw_o9UnoxEN9dbo50aKeD88MUKYso3ijwz-H5DNJHK9wNhgnp2Yn3WkVR_ZtlQpfOcJO3hNmCVOGJDdZ9g3gUBDjQXFg1I_Ww7Wc636ttmFKGDuYeNvyyiwLCmXtbmVhkT29p2M-k4_CQZKh-nDzkUlD-B3oXw4DQr7qr9qXEPX7zFqi0KW521Bynrl2z_NP5nf-AWAun8hnjrpdxoedpcLYra9Qqw-7Qz2gptYkn1FBtRCdTMKEWvYiHlOcruhXC1PSTfyHahNxdVaNkhfDtfnF7LZu0NSlx-JOcMtigLfj8iGGneEDJMB3HlA674Hv6s2MoVnxU5E6x71lqwuC0n2oX5H8BRUx0IiOn40i9TcbEPpzDSwPR8hk3fyLQ0_LiReswY0HUhPAA=w1919-h918');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.5;
+  z-index: -2;
+  animation: flickerOpacity 6s ease-in-out infinite alternate;
+}
+
+
+
+    .star {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #00B0C8;
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: blink linear infinite, move linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes blink {
+  0% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
+  100% { opacity: 0.3; transform: scale(1); }
+}
+
+
+    @keyframes move {
+      0% { transform: translate(0, 0); }
+      50% {
+        transform: translate(
+          calc(var(--dx) * 1vw),
+          calc(var(--dy) * 1vh)
+        );
+      }
+      100% { transform: translate(0, 0); }
+    }
+
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      background-color: transparent;
+      text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff;
+    }
+
+    .neon-text {
+      text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+      animation: neon-blink 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes neon-blink {
+      0% {
+        text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+        opacity: 0.3; 
+      }
+      50% {
+        text-shadow: 0 0 2px rgba(255,255,255,0.5), 0 0 5px rgba(74,144,226,0.5), 0 0 10px rgba(74,144,226,0.5), 0 0 15px rgba(74,144,226,0.5);
+        opacity: 0.6;
+      }
+      100% {
+        text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+        opacity: 1;
+      }
+    }
+
+@keyframes flickerOpacity {
+ 0% {
+    opacity: 0.4;
+  }
+  30% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.1;
+  }
+}
+
+    .auto-image {
+      width: 600px !important;
+      height: 400px !important;
+      object-fit: contain;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="w-full flex justify-between items-center px-6 py-4 z-10">
+    <div class="flex items-center"><a href="index.html" class="Logo">
+      <img src="https://lh3.googleusercontent.com/fife/ALs6j_FpAj7oMETlep3fCBHYuZGq6DWoc60B49wnyNHOTMWS4llCaS_Dp1WLetK1BMHmti4aHnoIXtcVTmgJozC5-VcrBMfRf_pmuzJwULdG9kDt6CALW-P5LRQI_XsXKEB9aJKmDaYTl6V1QaFdPJVpK5YNQBhlW2jdI_AuDvDA78CfUZ-unq3YrNsIHtalQg-UUQQ_3xPZT6uK4tsd1fLzGhG0-axfqtU9jKSbt_DqT5C0fbHcHdA3TFXzaC0PIVtdZWE7pevMcpAkE5GGH6e1RZ1Xa3bQVi4p-EefrONX0wqt1oGD9YFE6g6o6wYkUcyMgwmiAqyMLo4jUDkjfr2tQ_RAiu88W1AgAPtCm8VPp8iQqHsxxdJkEg-OM4kWXs6BhcT1HaUk-uyhd6V3u6qeaAugGSjTgzOhJE8_WB-Kg0_EMceh1aUtKxsKF6sL2s9SYoiBPeodHQZ_JOfPgfrJ9saqwzS1c12GHZQPA9214h2jB3B342DTmtnI3Kjke9ZACcerZTGmgs8r-M-KXZfaW3GGrMeGyuNiunkLZPpoaonQfsVmr1bTddKvcd2CIDuynW_IrFk8mGF7QWfEPunNbCRW5giSKO7G24DSsZxBI9z6ZKUTYc2yIVUMe6lvPUn0fiBncb1DvPN5KwQ-wo-085B42dWoe4A608RY0V0Zw7HX5z3nAqlMGoaugV4hlbRr4AM-utqOfrMeX_L1WyndUfUbzdAvb567Wm1lFLvBp68eP4SyQlwKolfA46zTPuSnYdIQZqeyQBz-k7LGf_KYqjdYJgQxs98ug55nA-K9l_S9JERHaBVe8f1WwxzDyLJyrS84EZFy8DeW113a6osXVO-appgYVBiLOwuxAiAMfLiOhHI6vnxaLm0_XnvRl-grtv4-B9wovOeAwWWJ53EYN-OvVwAKIrzORek9zZNaVE7ZdtHbO4fJ5GHKL6pGx8e45NdnMfBaPqLLUZvfY-lHnTfkxlNkauTHtsghHHd1IOtCREO-9sFepHhsZdyonnEyoOdfcDEIUUynaqkB9nJ6LRnTREJ57v2eKtxlRyczJVcMYAePf7iScHkDM8SXFKLbAzfXff9lBiZzqUXzpMW5wTiDb7YhHdCVFQzO48HMtmbHuegn7qYh1DDNbhzzFj1mjuadOJx1k5ifcrOCc-gaAQZTAOYSfddaqn2X1ISnpK326an-GOJ5NROtbwwXmpSApWXVR1S3te51R8E8YdGR4MIl_A3PoawJbN5OGh2BoPrrRuwxESmk5BbUtxjRagSnhCaAkOZ2pHzjL7kyYpCK6zfAgDfRKwFhU6UXddvgKIkcUkH-LgFj4-2IHb4AKILBiHIRcoImi8qHz-KvtxPTQMVUbUf44V1Lwqv6-JemKVzmGy8ZUJPaexdRtfJ1dwrNmm6K1otLVn7TKePyOS6UaD4FSxavVGJMijJNXZBXKA5OzU-ZP9h60Dil3L26hrte0m2ioVhqV_r5dBxmNhchgw8kyaaFomXDRYgj1nW9Ja5YMUOacyTc3Ms0icahuF3vUm25sjH4H8rjWGBUYKXIlM-K-QWrpRDD6HW5m5FzIlt_nNVirFunkfenUXCNEhJVg-khcWOEd7YEvbmk50xjUsAldDIUIsQ6t_qbEvAnM88NBSPLOOLHwCZvVuXbsp_dJAFRmXY0vhmb=w1919-h918?auditContext=prefetch" alt="Logo" class="h-10 rounded-lg shadow-lg">
+    </div></a>
+
+    <button id="menu-toggle" class="text-white text-3xl md:hidden focus:outline-none">☰</button>
+
+   <nav class="hidden md:flex space-x-4">
+      <a href="ai_gallery.html" class="nav-link whitespace-nowrap">AI GALLERY</a>
+      <a href="#" class="nav-link whitespace-nowrap">EXAMPLE</a>
+      <a href="https://truedo.github.io/zumi_mini_python_backup/" class="nav-link whitespace-nowrap">LIBRARY</a>
+      <a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=81&display_group=1" class="nav-link whitespace-nowrap">PURCHASE</a>
+    </nav>
+  </header>
+
+<div id="mobile-menu" class="hidden flex-col items-center text-center bg-[#000C36] w-full py-4 space-y-10 md:hidden z-20">
+    <a href="ai_gallery.html" class="nav-link whitespace-nowrap">AI GALLERY</a><br>
+    <a href="#" class="nav-link whitespace-nowrap">EXAMPLE</a><br>
+    <a href="https://truedo.github.io/zumi_mini_python_backup/" class="nav-link whitespace-nowrap">LIBRARY</a><br>
+    <a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=81&display_group=1" class="nav-link whitespace-nowrap">PURCHASE</a>
+  </div>
+
+
+
+
+
+<main class="flex flex-col items-center min-h-screen bg-gray-900 bg-opacity-20 p-6">
+  
+  <div class="w-full max-w-2xl bg-gray-800 text-white rounded-2xl p-6 space-y-4 mt-10">
+
+
+    <div class="flex items-center space-x-2">
+  <img src="https://lh3.googleusercontent.com/fife/ALs6j_Emgzj1eLXT3ybfg6oywNqvuMMZN-vV1eIGxC_QWFn1bYfMsVJ9Oum5NZUNkk54sh2ixzkP_m6vMhzF0hpTNMeSTkJ-VHXuvw2JfhtxCBYo7DkadwIK5h3hoBsNBewG9IiE4ftBhPScw-p6SyVCOBLt5CzO3yM00ONDQRizLIulY9HkcNM1Dz5el5WGvSRm8Jlga2lQlLT0uq_E6V-R1UTxskks8NHAv1ndVJnmluSzdiiopy7GE1pFWnOP4nduzrwBUfVj_Y2N48opxgnx3rhpqfOx9s2YZfGHLWjaYxtEy-cgB48HfX9oii_dxFoTRvD37jU3rq_me1TK1p1ZQoxERzPWeUkTOXI-eCSeLYpFKR3uFSByAIRPu8ONL3ZJVSPcDeMbj4gv3rnOe8trqcT8jnl_Q6eJf5ECo-8uQxhdZqQblNE6mIN-0k_rCaTdUOHe8Nuum-VCWM_tFP3xMUuiEnhPBxq5N_AdW0zG18NqaTOMP1rHwFhbozPhu9fPFpjHNmVpfnSr8Q9qQFbIATYGwoMhIcEpabxashqxjCXqiEIJWTZFrImw7QSvA4yBlkPc8g96itwGRZR-kGECSzmKVXvRtK2uCW2GTs1acrAjQzy4pIh6u69oaWxQigxwI6ejyBexLhCzIKnWOe3RujASr0BWGN24eFQInMrjgXUTi_N8r53UnYIV76O4Co22zfquSTl0chiq269Kcewk6r1-FYOX1opPfgfIhjzbPwoYfdKtqOLvvQGZTEX3oy8VRdeA_uf0jHSCNg0ck-po9HaS6nhLiXv8Jc7fnXVhDX-7mXjTjn2Us1llaF96Szew0ZlvYgrod9vi9HhNZoSKqQ9F935lV2ryB0X7S25bUHiehou8g4g81gG9xqtPBG2cPgacp37A4ZkFPusPEbACV-l3Ba-iNVoLhqyDK5rIn9xD3usxiFjZ0Dexyq6QQ5zRyz4bCkz3n2T4J1rxgyvVydyCxZDqXhjQwjnWVzWUjQb-HSLnAxEvILh5GfLzmCSWYz_N3qk_zGiUAjDZJEWE1s9Avd7JkTXv_SAwhr9m8adYpcvwNc76Kun_xg_Sm919kYpCxjk_v0-GvcwsKiOf3ZL-wj319lfDmxaMA46VxE8k8NwWmO5-v2chqNJ83cxkpB4GeA41AbF-HgSJpRh2WGjTleJuuSVHSLELxlFriO0RXWlARpcCrAkXZUBOcdiZ6FzavuN5-aPZzWw7GAL1zrbiG2q_DxLMaarW6wxUh2kio9rMOscnZYHqjfaJcv0pmuhBA8AdyhhBADtPsnywCMfTKdeZh1egcu0HYWN55DdHcQK1mBK7c1OHDAC8W9wmKT8iVfrXKoK1rcV2NkNHMwpK9UHeBOUZtZywEDH2TpzzpLKjetPdFjcPC7bWYQ6sAcQUf1_X5yN39aXHuGFLm-t7nhYA0qUPJlO5DEmULjqu6PTbWnW-pI6clCUA9IwSUXNKtnV1oxC0rX37kw2B-gXaqGXn6M1xetUwYNRx5bX7jtv7EXftLb3dXrsiHO86rjUgyiQRFeGC_KPU3XZb__V8y9EUPpD9CfkfRehizaouulqplvHI60-JDH5DLMVXrgMY9a3Ltp8xW0oUfFHp8iuSpMqn1yXCZwwMBhB7dLZl4S1I_i8-IzLBPst0p2LlpfNaCFa7GscznA=w1919-h918?auditContext=forDisplay" alt="Python" class="w-12 h-12">
+  <h2 class="text-lg font-bold">&nbsp&nbsp[Download] <br> &nbsp&nbspPython Example</h2>
+</div>
+      
+      <div class="flex items-center justify-between border-b border-gray-500 pb-1">
+      <span class="text-base break-words">[01] 자율주행 자동차 가상 시뮬레이터 (X/Y 좌표)</span>
+      <a href="https://drive.google.com/file/d/1RRd32AsgqSw4qHM9hcJNaGllvGmT_0ML/view?usp=sharing" class="flex-shrink-0 bg-green-500 hover:bg-green-600 text-white text-sm font-bold px-3 py-1 rounded text-center mt-2 sm:mt-0">다운로드</a>
+      </div>
+
+      <div class="flex items-center justify-between border-b border-gray-500 pb-1">
+      <span class="text-base break-words">[02] 자율주행 자동차 가상 시뮬레이터 (X/Y 좌표) (실제 동작 추가)</span>
+      <a href="https://drive.google.com/file/d/1iEIT5Jt7AL1QqG1jyCci5btPZwtLDw70/view?usp=sharing" class="flex-shrink-0 bg-green-500 hover:bg-green-600 text-white text-sm font-bold px-3 py-1 rounded text-center mt-2 sm:mt-0">다운로드</a>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+  </main>
+
+  <script>
+    const numStars = 80;
+    for (let i = 0; i < numStars; i++) {
+      const star = document.createElement("div");
+      star.className = "star";
+      star.style.top = Math.random() * 92 + "vh";
+      star.style.left = Math.random() * 92 + "vw";
+      const blinkDuration = (Math.random() * 3 + 3).toFixed(2);
+      const moveDuration = (Math.random() * 20 + 30).toFixed(2);
+      star.style.animationDuration = `${blinkDuration}s, ${moveDuration}s`;
+      star.style.setProperty("--dx", (Math.random() * 20 - 10).toFixed(2));
+      star.style.setProperty("--dy", (Math.random() * 20 - 10).toFixed(2));
+      document.body.appendChild(star);
+    }
+
+    const toggleButton = document.getElementById("menu-toggle");
+    const mobileMenu = document.getElementById("mobile-menu");
+    toggleButton.addEventListener("click", () => {
+      mobileMenu.classList.toggle("hidden");
+    });
+  </script>
+
+</body>
+</html>
