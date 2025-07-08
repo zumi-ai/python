@@ -5,7 +5,6 @@
   <title>01 ITS : 지능형 교통 체계</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
 </head>
 
 <body class="bg-gradient-to-b from-gray-900 to-gray-800 min-h-screen text-white">
@@ -154,12 +153,20 @@
 
  
   <aside id="sidebar"  class="hidden md:flex w-64 bg-[#3B82F6] text-white p-4 rounded-r-xl flex-col space-y-2 transition-all duration-300 fixed md:relative z-40 h-screen md:h-auto top-0 left-0 md:translate-x-0">
+
 <div class="flex justify-between items-center mb-4 md:hidden">
   <h2 class="text-lg font-bold">원리 선택</h2>
   <button onclick="toggleSidebar()" class="text-white text-2xl">✖</button>
 </div>
 
+
+<button id="pc-toggle-btn" onclick="togglePcSidebar()" class="hidden md:block text-white text-2xl mt-4">
+-
+</button>
+
     <div class="space-y-2 text-sm sidebar-item">
+
+
     <a href="#" class="block bg-[#0845A8] text-[#ffffff] font-bold px-4 py-2 rounded ">01 ITS : 지능형 교통 체계 </a>
         <a href="#" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">02 인공지능의 원리#2</a>
         <a href="#" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">03 인공지능의 원리#3</a>
@@ -176,12 +183,11 @@
 
       <!-- 페이지 이동 버튼 -->
       <div class="flex-1 flex items-end">
-        <a href="#" class="block w-full text-center text-3xl mt-4">←</a>
+        <a href="#" class="block w-full text-center text-3xl mt-4">↑</a>
       </div>
 
- <button id="pc-toggle-btn" onclick="togglePcSidebar()" class="hidden md:block text-white text-2xl mt-4">
--
-</button>
+
+
     </aside>
 
     <!-- 메인 콘텐츠 영역 -->
@@ -191,6 +197,7 @@
    <button onclick="toggleSidebar()" class="text-white text-2xl md:hidden mb-4 bg-[#2563EB]/90 px-4 py-2 rounded">
   원리 선택
 </button>
+
 
 
       <h1 class="text-xl sm:text-2xl md:text-3xl font-bold">1. ITS : 지능형 교통 체계 이해하기 </h1>
@@ -203,45 +210,220 @@
    <img src="https://lh3.googleusercontent.com/fife/ALs6j_Hpvd4yUw5IKXQMbgH3XKP_lhZgxvMqaymkmLQGwc_B4_ud12jP4VU6T-5OqrinpkxpJFz_0Z2Lahy7RBPFqNTUiVpVOtPGGUbFU-jjvZaQicpxfuRwFTjTIJHT-Rq6swumOjJ1FwDrKZqZIdWc73vT1gCuoRcxez1VOarjuJVSiXdlaKdatDekPKMPfa0-gcG1_WOUy9vTwZfF9ZLsnz1ILBN3xbNbwNFze8lbzZkWPhCJ1aUqg1PKbxwdaAd1zle847AIvyaOt0xRvYv63uA7XFVsGjpps2Y11X9AihUmEF3jzJb7iK3AAPnUHl2m6z2PWOgLEtEXuHGMINVrTgRkhZl_OMMrIlLuNK0kQCPjDEYQVh4FEL49cZa-LE56z2a-NuYMDWiYfgtLzw9J2GSWyWzcN8hXZxLPWAaaw5UpbTcOiixnyPyR4XXW97m4pFV4Fh5WCFfTrTFdvC_b8olntfeGb6LnTwo3uRmQuyv5_hNVFlAIGHz3wyKHGZ5ppnNLC_TpFpk8PJ-m14kTGr7H9A4vupWFp11OxgiX1z5O68pya-z21O9qV8Gi8ZWvi4_m13gyCUQEZJBx7YvEcx7eZOsQmvltdZf_YlyLn1qEkoynTIR4S0RU8kb5WdD7WTcpL6BE5jOf0xNQ2qV8_VT0S0DodS27L5Rhi_hskBaqglMj94Xutsnoxl817iQG-EqLERwwm3VCMpYep5ohGr9O0WuFEAftiShZT2fNRBV1jmu_UnXYEB8PIaMAnXG0b4kzrkwLFsMDEXijB434EW36TpQ_MEvGnYJw_KEMreY1v8PN02grjGStpwv9nU4HdpX6gMkd8Z-B9Yk02_ecSj1v9tEKr53DazzSeLW0QZ_TUAjSVvNLeA2oKW28hVL-JIGQVP5DentHoUfanigmU-WMGjg45om9d8XMzgMMIgWt2PRzBprO2KuI3f2bqgszMeGOo-DUm0QR2EqN1RUSdUp6SOH8iRUOU4IK4RMEoUdeTk79U4KeDWZpSSpH69_1DuEIVerUFEjVgHpL6czFq4BCbiExXaW8ev5iq8gmODrKH1sKH6i7grxitPUVxwPuqhCQfqRJ0Pnr4Cx2GyhulHnK3DZ0MMk0sAYrmn0GUnBVyozeDPAy7Wp3gygcoLT6p4LX1pqfO08msloP_SFdeeLHAnU_nkIsht2G4G-H5XZTeSdZx1qCeogaik3w1o8SPTPUUQGRgmnQrsj17VBRh8U_9JVuwSIIV8EdfmLkE-TnFgLpn-Qx_VvY9mhB8Ik0L58zxyBSnDs4YimgBvr4AigUkjelFXeBuLwjD9mXFHTqyQZ2AUWBNpi6mA8GXkZwMW3GBPicXOxw7E7V6QuwkXDlAoAH2oX_44uQja6-2ze7EjjONOQAn1YK5Iz-6vicB9O1jrhtI4U1y32ponbmivC5HrvvzKRJEG8fNlzzdBPrXVsWCgKCDFvMX7u07Lk0ClnmCCBnrnQQT84i0p5dseWvCUqq9UCUS3RXRzJwTWny7C2yHdnlHbJ4rmBI2Z3NF7NkbBa4DbN97t3usMW6M9RQQnq3f6kqqWchEN3-wSdWt8am7-cccmNx5xvU2cOgViqH37nb5eQQkL7YjmfJqtjiy4P8rfg1zUPmtO9WLaFoGdofCQMvIviNSV3VE5DMXUwsBGFvuRQG2A=w1919-h918?auditContext=prefetch" alt="그림1" class="w-full rounded-lg ">
 </div>
 
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : ITS 국가교통정보센터(National Transport Information Center)</p>
 
       <!-- 설명 -->
       <div class="bg-white text-black p-4 rounded">
-        <h2 class="text-lg font-bold mb-2">ITS(지능형 교통 체계)정의</h2>
-        <p class="text-sm">대한민국은 면적이 99,720㎢에 달하며 인구는 51,750천 명으로, 서울을 중심으로 한 수도권에 26,190천 명 이상의 인구가 밀집되어 있어 교통 문제가 매우 심각합니다 (출처: 통계청 2024). 전국적으로 교통혼잡으로 발생하는 비용은 2021년 기준 65조 2천억 원에 달하며, 이 중 절반 이상이 승용차 보급 확대에 따른 비용으로 분석됩니다 (출처: 한국교통연구원 2023). 한정된 재원과 토지로 인해 교통시설 공급은 여전히 수요를 따라가지 못하고 있으며, 2011년 약 1,844만 대이던 자동차 등록대수는 2015년에 2,000만 대를 넘어선 이후 지속적으로 증가하여 2024년 말에는 약 2,629만 대에 이르렀습니다 (출처: 국토교통부 2025). 이처럼 늘어나는 교통혼잡 상황에서도 교통은 우리 생활과 떼어낼 수 없는 중요한 요소입니다.
+        <h2 class="text-lg font-bold mb-2">✅ ITS(지능형 교통 체계)정의</h2>
+        <p class="text-sm">ITS(=Intelligent Transportation Systems, 지능형 교통 체계)는 기존의 교통 인프라와 시스템에 최신 정보통신기술(ICT)을 접목하여, 교통 운영을 보다 지능적이고 효율적으로 개선하고자 하는 통합적인 교통 관리 체계입니다. 단순한 도로망 확장이나 물리적 교통 시설 개선에만 의존하던 기존 방식에서 벗어나, 실시간 정보 수집, 분석, 공유, 제어 기능을 통해 교통의 흐름을 보다 유기적이고 효과적으로 관리할 수 있도록 지원합니다. <br><br>
+
+ITS는 도로, 차량, 신호체계, 통신 인프라, 교통 관련 기관, 이용자 등 교통 시스템 전반을 하나의 네트워크로 연결하여, 다양한 정보를 실시간으로 처리하고 전달함으로써 교통 혼잡 완화, 사고 예방, 에너지 절약, 환경 보호, 이용자 편의성 증대 등 다방면의 효과를 가져오는 것을 목표로 합니다. <br><br>
+
+특히 ITS는 도로 위의 센서, CCTV, 교통 신호기, 전자지도, 위성 위치 시스템(GPS), 차량 탑재 장치(OBU) 등 다양한 하드웨어와, 이를 제어하고 운영하는 소프트웨어 알고리즘 및 통신 네트워크의 유기적인 결합을 통해 작동합니다. 이로 인해 교통 상황을 실시간으로 모니터링하고, 예측 및 제어함으로써, 교통기관과 운전자 모두에게 유용한 정보를 제공할 수 있습니다. <br><br>
+
+또한 ITS는 국가 및 도시 차원에서의 스마트 시티 구현의 핵심 기반으로 여겨지며, 나아가 자율주행차, 커넥티드카(C-V2X), 친환경 교통 수단 등 미래 교통 기술과도 밀접하게 연결되어 있습니다. <br><br>
 
 우리는 보다 안전하고 편리하게 이동하기를 원합니다. 우리의 교통 시스템은 날로 발전하는 첨단 기술과 접목하여, 이용자의 안전과 편의를 도모하고 운영 및 이용 효율을 극대화할 수 있도록 변해가고 있습니다. 이러한 배경에서 ITS가 탄생되었습니다.
 </p>
 
 <br>
 
-  <h2 class="text-lg font-bold mb-2">ITS란 무엇입니까?</h2>
-  <h3 class="text-lg font-bold mb-2">Intelligent Transport Systems</h3>
-        <p class="text-sm">(이하 ITS : 지능형 교통 체계)라 함은 교통수단 및 교통시설에 전자ㆍ제어 및 통신 등 첨단 기술을 접목하여 교통 정보 및 서비스를 제공하고 이를 활용함으로써 교통 체계의 운영 및 관리를 과학화ㆍ자동화하고, 교통의 효율성과 안정성을 향상시키는 교통체계를 말합니다. 우리 생활에서 접할 수 있는 ITS에는 버스정류장의 버스 도착 안내 시스템, 교차로에서 교통량에 따라 자동으로 차량 신호가 바뀌는 시스템, 내비게이션의 실시간 교통정보, 하이패스가 있습니다.
+  <h2 class="text-lg font-bold mb-2">🔵 요약하기</h2>
+        <p class="text-sm">ITS 란 도로, 차량, 교통 관련 인프라에 최신 정보통신기술을 접목하여 <br>
+● 교통 흐름을 원활하게 하고<br>
+● 사고를 줄이며 <br>
+● 에너지 사용을 줄이고 <br>
+● 이용자에게 실시간 정보를 제공하여 보다 안전하고 효율적인 교통 환경을 구현하는 시스템입니다.
 </p>
 
 <br>
 
-  <h2 class="text-lg font-bold mb-2">ITS 도입효과</h2>
-  <h3 class="text-lg font-bold mb-2">교통혼잡, 이제는 피할 수 있습니다.</h3>
-        <p class="text-sm">실시간 교통상황과 우회경로 정보 제공으로 빠른 길로 운행하실 수 있습니다. 유료도로 톨게이트에서 요금을 지불하기 위해 멈추실 필요가 없습니다. 도로 상황에 따라 실시간으로 신호가 바뀝니다. 신호교차로에서 대기시간이 감소하여 쾌적하게 주행할 수 있습니다.
+ <h2 class="text-lg font-bold mb-2">🛠 주요 구성 요소</h2>
+        <p class="text-sm">1. 교통 관리 시스템 (예: 신호 제어, 교통 상황 분석) <br>
+2. 실시간 정보 제공 (예: VMS 전광판, 내비게이션, 교통 방송)<br>
+3. 자동 요금 징수 시스템 (ETC 등)<br>
+4. 긴급 대응 시스템 (예: 사고 자동 통보, 도로 감시)<br>
+
+</p> 
+<br>
+
+
+  <h2 class="text-lg font-bold mb-2">🎯 주요 목적</h2>
+        <p class="text-sm">●교통 혼잡 완화<br>
+●교통사고 감소 및 안전 향상<br>
+●에너지 절약 및 환경 보호<br>
+●대중교통의 효율 향상<br>
+
+●이용자 만족도 증대<br>
+</p> 
+<br>
+
+  <h2 class="text-lg font-bold mb-2">💡 예시를 통한 이해</h2>
+        <p class="text-sm">
+● 도로에 설치된 센서와 CCTV가 차량의 속도 및 밀집도를 감지하고, 이를 교통 제어 센터로 전송<br>
+● 교통 제어 센터는 이 데이터를 실시간 분석하여 신호 주기를 자동으로 조절하거나 전자 표지판(VMS)을 통해 <br> &nbsp;&nbsp;&nbsp;운전자에게 우회로 안내<br>
+● 스마트폰 내비게이션 앱은 이러한 실시간 데이터를 바탕으로 가장 빠른 경로를 제시<br>
+</p> 
+<br>
+
+  <h2 class="text-lg font-bold mb-2">🔶 자율주행 자동차와 ITS의 관계</h2>
+        <p class="text-sm">
+<strong>
+(1) ITS는 자율주행 자동차의 ‘눈과 귀’ 역할 <br> 
+</strong> 
+    ITS 인프라(교통 신호, 도로 상황 정보, 실시간 교통 정보)는 <br>
+    자율주행차에 필수적인 외부 정보 공급원입니다. <br>
+    자율주행차가 주변 환경만 인식하는 것에서 나아가, ITS가 제공하는 정보를 통해 <br>
+    보다 정확하고 안전한 주행이 가능합니다. <br><br>
+<strong>
+(2) 자율주행 자동차는 ITS 발전을 촉진 <br> 
+</strong> 
+    자율주행차가 늘어날수록, 보다 정밀한 교통 정보와 통신 인프라 필요성이 증가합니다.<br>
+    ITS는 자율주행차의 대규모 도입을 지원하기 위해 더욱 발전하고 확장됩니다. <br><br>
+<strong>
+(3) 차량과 도로 인프라 간 정보 공유<br>
+</strong> 
+    자율주행 자동차는 ITS가 제공하는 신호등 상태, 교통 상황 등의 정보를 받아서<br>
+    주변 상황을 더 정확히 파악하고, 안전하게 주행할 수 있어요..<br>
+    이렇게 차량과 도로 인프라가 정보를 주고받으면서, 교통 흐름이 원활해지고 사고 위험도 줄어듭니다.<br>
+</p> 
+<br>
+
+<h2 class="text-lg font-bold mb-2">🟦 텔레메틱스의 정의</h2>
+        <p class="text-sm">
+텔레메틱스(Telematics)는 통신(Telecommunication)과 정보학(Informatics)의 합성어로, 원격 통신 기술을 이용해 차량, 기기, 시스템 간에 데이터를 주고받고 관리하는 기술 또는 서비스를 뜻합니다.
+
+차량이나 장비에 장착된 센서와 통신 장치를 통해, 위치, 속도, 상태, 고장 정보 등 다양한 데이터를 실시간으로 수집하고 전송하여, 이를 분석하고 활용하는 기술 및 시스템 입니다.
+</p> 
+<br>
+
+
+  <h2 class="text-lg font-bold mb-2">💡 주요 기능 및 활용 분야</h2>
+        <p class="text-sm">
+●차량 위치 추적 및 관리 : GPS를 활용해 차량 위치와 이동 경로 모니터링 <br>
+●원격 진단 및 정비 지원 : 차량 상태 정보를 원격으로 파악해 고장 예방 및 신속 대응 <br>
+●긴급 호출 서비스(예: eCall) : 사고 발생 시 자동으로 구조 요청 신호 발신 <br>
+●운전 습관 분석 및 안전 운전 지원 : 운전자의 운전 패턴 분석을 통한 사고 예방 <br>
+●차량 내 엔터테인먼트 및 정보 제공 : 실시간 교통 정보, 내비게이션, 음악 스트리밍 등 <br>
+
+    * 텔레메틱스는 ITS의 핵심 구성 요소로, 차량과 교통 인프라 간 실시간 정보 교환과 서비스 제공에 필수적입니다.<br>
+</p> 
+<br>
+
+  <h2 class="text-lg font-bold mb-2">🟦 [Python] 자율주행 자동차 가상 시뮬레이터 만들기</h2>
+        <p class="text-sm">
+ITS를 구성하는 텔레메틱스는 차량과 정보를 교환 하는 것이 핵심 인데,  여기서 가장 기본이 되는 차량의 X,Y 좌표를 가상 맵 에서 받아오는 예제를 해보겠습니다. <br><br>
+</p> 
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_EWwofWv5XsZKZKrSLUpNcDEsa8F8b7HfT0XQ7km37w53iKoXcc5dU2G9gGDq4e1XuwBOzv86_TxR79WzKc4Q9s8Ox53p2rKrMTwL0kEiVgrty4dqtQQqNzyxhHOKYlJ5yKhRsHQ4SVqyS9zWp1J-c0cYh68WAoaHRAPqmkds1xpv4nvTKExvAv-KXEiqLwIXNj2fK9OjyscF7UiAxnVzsSISywgbrPbnsXxxJoDfKJggI0YF7uMslvcUlHc9N3hDQV7EMUuEBq_MK_0gK6Vg1cr4FnG8TCxIvCi6TRxEeTk6HCbrbTGjXSDqOC-YDc5Bd-JWDMPn2bgdoJJNxc1UJ0NGo7aEwPgu5Z-mfhXUb4jKEVYY8ZiwV99hlj9uRliZs_PuCGxPEoyfUVB3rXuSG5e02Wdfcmek4KzS6c-R7vqyv_jHcTxBxcBCzSU4np4BSV5-R8_kPetzkNbTAzQdz82OSsWmYiblZls75IU-ZLGc1NrlAab-w6g0CgHYqnlAg4raqjlp5KJ0N6-ofwrXaxKGY0QdLKZd1c1OUwyT5C-07GdkD12ELlPQW9WfILMSLL4vDInb7N6lJXhM87gGL12K3USzedXr_TWG7X-2bMrrpS86qtpi2qJtqgJ6JNh_d763iFsKIwBcASJRsIM_5B0VviuWjdlf0qVKYWPwnnSbkPu5VEt4YPrZoKx4CXv6lWV3QcpbX7WMwd3iSUYRaEmt67wq4fAiOfhZRauJ4-ElNjVWy_XyEUwvt7mXMfrugYEFCBgQvEDLuAN49iA8TXHE7t6AP9m-1-2viaeBdrVN-6F-QXu2ywTxzOBHXykivdLM5dKEU1d-L4115My7HfWrbEcX5UEMSg6_m9FfuJ6WLEfHTbkgzt7ykXyT8jko2ov_G63lxmJIf7XvHlEewqms7O6Lhz30az5eXrSdeoj6SVnjD1HAbjjAIjrh8hMWOGMp8fbtPz_W-dg_KFyBZHvdHQhYijMSszZF8TmYsj3Au7AuuwWyyHlO7I8h5aopqD-Be6Oly_vuOsLyuRDaZG-lHVJUa2cvjdwZHtA3u3pkzqPuYGInKJSCKFACPyo8s-P5RcCt05mkogMi4CfFmTMA1vmQ_ng5i_90ne0xHGkrmtXyuXpfQPcNYCHqMeNl-f4Y95qxq0FhPXItO3ly0EtT9DdpxIF9wV4-iPUAgRaSxGJdlDtoSoHQskbe2ivH9T4qprnRVTgsuwUdI_f1o1yYmWmuw6Jq562GVULZjCyUfji4h8caSi4i2ArxhvQ0O-Y-XsdMq5c1TIHtT1nVl2C7at9wOeappUKeLCUJIQFQmvYdWtA-Kcju1XiAMjFb6tnKML0ykUWp_X7yUn-0lxf9beM92udcjKvGNaAmdQWv51IffyGTEK4cbxLpRpoxACfxK_W8Qxq4L-qZTqrzlAgzYr6SVCie5vcS-vPbKlIfvC7uBnvSWYNtfw55vOzH2J31QiXn2n7agJZ9vwd91xnJPYmGy7jQo6vOXGSUCZbgdIGZDGiwYJ8Qpb4pZy0YnKlAzXaCG2w_OHNU24XACirY4VxnvCet5EuF0-vixIiFLq-zMOPiGCyVq5CZnTEk8O0LvS9rt8BQjY8Qogqsx-vQTz3ulbxopWUO9WVLHfe0-OL2LPsSxTxuMUBPlsldbfzydv1QT9Dg=w1919-h918?auditContext=prefetch" class="w-[70%] mx-auto border border-gray-300 shadow-lg rounded-lg" /><br>
+
+<!-- 파이썬 코드 설명&다운로드 버튼 -->
+<div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
+  <div id="output" class=" flex-1 bg-gray-800 text-white p-4 rounded h-30 text-sm"">
+  <p class="font-normal text-white text-sm">X : [0 10 20 30 40] Y : [0 10 20 30 40] <br>
+전체 크기가 5x5 인 가상 시뮬레이터를 만들어 <br>
+4개의 버튼 
+<button class="text-white font-normal px-2 py-0.5 rounded" style="background-color: #E20070; cursor: default;"> ▲전진 </button>
+<button class="text-white font-normal px-2 py-0.5 rounded" style="background-color: #404098; cursor: default;"> ◀회전(L) </button>
+<button class="text-white font-normal px-2 py-0.5 rounded" style="background-color: #00AE69; cursor: default;"> ▶회전(R) </button>
+<button class="text-white font-normal px-2 py-0.5 rounded" style="background-color: #00B6EF; cursor: default;"> ▼후진 </button> <br><br>
+<span class="text-green-500"> ★ 코드를 다운 받아 IDLE 에서 실행 해봅니다. </span>
 </p>
+  </div>
 
-      </div>
-
-      <!-- 코드 실행 결과 -->
-      <div class="bg-gray-800 p-4 rounded">
-        <div id="output" class="bg-gray-800 p-4 rounded">
-  <p class="font-bold text-white text-sm">여기에 실행 결과 표시</p>
-</div>
-      </div>
-
-      <!-- 코드 작성 및 실행 버튼 -->
-      <div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
-        <textarea id="code-input" class="flex-1 bg-gray-800 text-white p-4 rounded h-40 text-sm" placeholder="여기에 코드를 작성하세요"></textarea>
-        <button id="run-code-btn" class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto">
-  코드 실행
+<a href="https://drive.google.com/file/d/1RRd32AsgqSw4qHM9hcJNaGllvGmT_0ML/view?usp=sharing" download="example.py" id="run-code-btn"
+   class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto inline-flex flex-col justify-center items-center text-center min-h-[64px]">
+ <button id="run-code-btn" class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto">
+  파이썬 코드 <br> 다운로드
 </button>
-      </div>
+</a>
+  </div>
+
+<br>
+  <p class="text-sm text-gray-500">
+* 이 예제는 tkinter와 math 모듈을 사용합니다. 별도의 설치는 필요 없지만, 만약 tkinter 관련 오류가 발생한다면<br> &nbsp;&nbsp;  Python 설치 시 tkinter가 포함되어 있는지 확인해주세요. <br><br>
+</p> 
+
+
+<h2 class="text-lg font-bold mb-2">1️⃣  주미 AI 연결하기</h2>
+ <p class="text-sm">
+이렇게 시뮬레이터 프로그램을 우선적으로 만들었다면, 이제 주미 AI를 연결하는 코드를 추가 해줍니다.  <br>
+</p> 
+
+<div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
+  <div id="output" class=" flex-1 bg-gray-800 text-white p-4 rounded h-22 text-sm"">
+  <p class="font-normal text-white text-sm">
+<span class="text-orange-500">from</span> zumi_AI.zumi_AI <span class="text-orange-500">import</span> *  <span class="text-red-500"> &nbsp;&nbsp; #ZumiAI 클래스 임포트 </span><br>
+zumiAI = ZumiAI()  <span class="text-red-500"> &nbsp;&nbsp; #zumi 인스턴스 생성 </span><br>
+zumiAI.connect() <span class="text-red-500"> &nbsp;&nbsp; #zumi 연결하기 </span> <br>
+</p>
+ </div>
+</div>
+<br>
+
+<h2 class="text-lg font-bold mb-2">2️⃣  실제 이동 명령 추가하기</h2>
+ <p class="text-sm">
+그 다음, 버튼을 누르면 주미 AI가 이동 할 수 있도록 명령어를 추가해 줍니다.  <br>
+</p> 
+ 
+<div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
+  <div id="output" class=" flex-1 bg-gray-800 text-white p-4 rounded h-22 text-sm"">
+  <p class="font-normal text-white text-sm">  
+zumiAI.forward_dist_quick(20) <span style="color: #E20070; ">&nbsp;&nbsp;  #앞으로 가기</span> <br>
+zumiAI.reverse_dist_quick(20) <span style="color: #00B6EF; ">&nbsp;&nbsp;  # 뒤로 가기</span> <br>
+zumiAI.left_turn_quick(90) <span style="color: #404098; ">&nbsp;&nbsp;  #왼쪽 회전</span> <br>
+zumiAI.right_turn_quick(90) <span style="color: #00AE69; ">&nbsp;&nbsp;  #오른쪽 회전 </span> <br>
+</p>
+  </div>
+</div>
+<br>
+
+<h2 class="text-lg font-bold mb-2">3️⃣  좌표 한계 사항 계산하기</h2>
+
+ <p class="text-sm">
+그리고, X=60, Y=60 혹은 X=-10, Y=-10 처럼 좌표를 벗어난다면, <br>
+좌표와 실제 주미 AI 모두 이동하지도 않고 경고 메세지를 보내는 명령을 만들어줍니다.<br>
+</p> 
+ 
+<div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
+  <div id="output" class=" flex-1 bg-gray-800 text-white p-4 rounded h-22 text-sm"">
+  <p class="font-normal text-white text-sm">  
+<span class="text-orange-500">if not </span> moved:
+<span class="text-purple-500">
+print</span>(<span class="text-green-500">"더 이상 움직일 수 없습니다."</span>)<br>
+    update_arrow() <br>
+    update_labels() <br>
+    disable_buttons() <br>
+</p>
+  </div>
+</div>
+<br>
+<h2 class="text-lg font-bold mb-2">4️⃣  코드 다운로드 및 실행하기</h2>
+      <!-- 그림 영역 -->
+<div class="w-full flex justify-between items-center px-2 py-4 z-10">
+   <img src="https://lh3.googleusercontent.com/fife/ALs6j_Fy84fIZR_HFBdhTV-F1zpRh1zyKSz9IX6pTIhsgewXGruZoIczcc-aYZ0CjPm8XHQs5gHf2wmU9ossT0rBDhP7eTNEH2xab0goX7yZRvROYNYYzuG9nx2xMtBRvvuXVJhVijPMLp9kR4rZaihoOICVK3BPIPvcB9VnRfNCoyALKi4WOxCHQbkhOhh2R3nBFIpWrI3Yu8HZN2hc5ldD3edX5HLOG5X5wBOrQHnnCUi3-w4NMkY4XDj4BT26f-8muwQxfbIsPiHIIXNhwbbox9cZgfXDS8AKFZt84J3fMNMPNpCb5It09o8B7DLu0ZbPE8zTB-uE36mUHf_ihvxObPT4619Q_761OTDvTRYSMVS4yfZiRBsqijoiVPD2TvBmT4ClBqq_NiJtiR9kuxHyRhymTmbmgbDo3LKa4Ng6M5mnjciNL29LPV4gSIUGN9b7Vqk1AuVQHXxrLP0lDD106ZoGMTQU-vo2sTYQ-GlDXob47iRoBRw2nCVlm7jFOXlRM6CMvKanyHTeGROtNbB9ZQLUgmTsuPlweKTsn7yY6c4d3Q3q4FKHA_wngntu9HJAVQfeKzuG61QGX7tmIwYZnHMVboSAD15PEM02iqLMQKy2UThmOYtE-j_UM4y8-DZ4jr8PS3S9sJBjBqaFhSz-NTWqbIEJscp6Gx22L1lDP72yjddg_w9LSOz8_FGbUhllpAkn_TDk8kv1_1LsA8eYBoAUfNMIyI-MCd6-tqmrdpk99GQB8-wGbDBdN93Bk6oSdFbrhRn_Sl8ONd1Qbsg8tibVG5DjwXBsGC-Fhr0jaiVp7KymfO7E2fyUNmiyhRsWqrUllCESqkLasQ7mx8-w0vxRmBRyTxqTTc6L4fiy8ciWu8NNJHaKR881JKGypzPnWGGqaH5T7Ws_iiNaWx9o9Utnk1yPXk1Ri2c4lpeDfq4qbkyJTyJEoR2Y051QDR1QELVztOu9WJsUoJ44Fhd-LI9xTx9k8CKXHRYG6qrnZHNzvN1wmZAyw7xwLQr5xmgX08tS5FcStkm6ptZ62kButIMaer_fwWmjuYuAO13bfBFaXEq0BiH-Wx7f0QgESQocsTS97v5DfN5mjlwoH8eZuZXxG7R6pBdCKLpLlbd0TlQuQtgWQ-QCitsqOpqkqJPG0eZXIhveHDRkd1rfeAAzb7x02TzfW87wIL_Y_B3DXhKKlM9uTtqPwDNdH7VTBI6OQJ9DwG5lPRv0QTQK2gfNktpbLyZk2jt4cHRDIXtuMuJLQ7E01Szx6FWZvat809PurWjNvr7UxWarZv0gbyDKpHlDtinR5VaC6wpY1MRYSNjITKQFY8ZD-GmyIh6u7uIvgKLfl_plX3WxiBFsaqEN93P-srGFmeNk-CsWmWVSv5HKWauQmOp_-zjeebkirF2CbF5-IjmtOSHWavSTbO1ac2WC5IIQRwGh2Cv471HdJ73rRH_SSZv7vd4ELe9VlgAz19ulr4z4qWl47b5MRWbzozS98vVlrcBEdesMGsxxPTg0oaG-_RMdLclsjBt2sY1lJqNOjUbpYy57qa-eavWA8G7F8j1N_WGreejKirQ5dXMKgmFdq7kXMfFr9WftdQT1WUMVH6pAyj22UrKr-T-JCulBi3xPSBdIGNdmxQqHdYRR5GnZqAwYcCdZitxGu6rVEZLZlKWkWBoFIA=w1919-h918?auditContext=prefetch" alt="그림1" class="w-full rounded-lg ">
+</div>
+
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : 주미 AI 와 PC의 X,Y 좌표 텔레메틱스</p><br>
+
+<!-- 파이썬 코드 설명&다운로드 버튼 -->
+<div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
+  <div id="output" class=" flex-1 bg-gray-800 text-white p-4 rounded h-30 text-sm"">
+  <p class="font-normal text-white text-sm">PC의 가상 화면에서 현재 주미 AI의 X,Y 좌표를 받아 올 수 있습니다.<br>
+이러한 방법으로 X,Y 좌표 같은 정보 뿐만이 아니라 <br><br>
+사용자가 원하는 정보를 'PC → 주미 AI로' 또는 
+<br> '주미 AI → PC'로 양방향으로 정보를 주고 받는 것이 가능합니다. <br> <br> 
+<span class="text-green-500"> ★ 완성 된 코드를 다운 받아 IDLE 에서 실행 해봅니다. </span>
+</p>
+  </div>
+
+<a href="https://drive.google.com/file/d/1RRd32AsgqSw4qHM9hcJNaGllvGmT_0ML/view?usp=sharing" download="example.py" id="run-code-btn"
+   class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto inline-flex flex-col justify-center items-center text-center min-h-[64px]">
+ <button id="run-code-btn" class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto">
+  파이썬 코드 <br> 다운로드
+</button>
+</a>
+  </div>
+
 
 <!-- 흰색 상자-->
 </div>
@@ -256,8 +438,8 @@
   for (let i = 0; i < numStars; i++) {
     const star = document.createElement("div");
     star.className = "star";
-    star.style.top = Math.random() * 92 + "vh";
-    star.style.left = Math.random() * 92 + "vw";
+    star.style.top = Math.random() * 90 + "vh";
+    star.style.left = Math.random() * 90 + "vw";
     const blinkDuration = (Math.random() * 3 + 3).toFixed(2);
     const moveDuration = (Math.random() * 20 + 30).toFixed(2);
     star.style.animationDuration = `${blinkDuration}s, ${moveDuration}s`;
@@ -310,33 +492,7 @@
     }
   }
 
-// 코드 실행 버튼 이벤트let pyodideReady = false;
-let pyodide = null;
 
-// pyodide 불러오기
-async function loadPyodideAndPackages() {
-  pyodide = await loadPyodide();
-  pyodideReady = true;
-}
-loadPyodideAndPackages();
-
-// 코드 실행 버튼 이벤트
-document.getElementById("run-code-btn").addEventListener("click", async () => {
-  const code = document.getElementById("code-input").value;
-  const output = document.getElementById("output");
-
-  if (!pyodideReady) {
-    output.innerHTML = `<p class="text-yellow-400 text-sm">Pyodide 로딩 중입니다. 잠시만 기다려주세요...</p>`;
-    return;
-  }
-
-  try {
-    const result = await pyodide.runPythonAsync(code);
-    output.innerHTML = `<p class="text-green-400 text-sm"> ${result}</p>`;
-  } catch (e) {
-    output.innerHTML = `<p class="text-red-400 text-sm"> ${e.message}</p>`;
-  }
-});
 
 </script>
 
