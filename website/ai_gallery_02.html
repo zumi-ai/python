@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>02 V2X : 차량과 모든 것</title>
+
+  <!-- ✅ Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ✅ Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    #map {
+      height: 500px;
+      width: 100%;
+      border-radius: 0.5rem;
+    }
+
+  body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #010415, #000C36);
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+    }
+
+  body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; 
+  background-image: url('https://lh3.googleusercontent.com/fife/ALs6j_E782PyIFMYtfVVTWKJmz-NPOAMoNGyICJBadA4s8rszXoBW1pdOjGqEGLaJ6a0MTRkxoIZda-w1eEBdzmu7NpqU9QlaUX2XQY5BKLHSPbORtCE87IE3XMTnbsdNUIM2QDvRB41vYEKbzD3Y6bCsxXuLgblYo45APBATItrnaPs5SkcXeu9aMFuO8Q6kvoPorMCwyAObsM39R5G5_E_Ny4k4oc1IHZfhdJELCCBFT-uuiQtWHXXxmLmcqqCFV36Yub3GZcoAkilshppk0ij1iotqUM9Nk4fNUjg_HSqeXi7yzrZ4gofhiS8xQebPOsnnYHgk3L0SCghkoc6qFYFWAscDbY3J-T3eetqtbXbB6-v3GNFW7xti1pcvNbgLjZtRsaIGJynrnsWED8AUXQRHCk3EmYfxA0gY4wsBe-hWeGJZY9cofd4gEbj7ievulF49GZV7LRbry0cXnDZVSVQYrNcc8oxBM5UvAhNouLXYIJXJ1_XrT67zlzLmaWFvgQQjBnnk2oQX60UerK8qSGRhQ8Mmezkv_cMpiU9M46f8t9rwWVhsknkIxzWOEJEmq9ZT1gDIu8pJuJ3u-S9ZLVvKY8HBMqd09aJxwQfKpdcmEqOn2DjZJ5Ia6EDnV0d-41bYyXz0oZOcs1sDV1vh9Ecz35P12FNqpPjzcYZKRLxGdGyygvDYaACaFqHkqaXrW9pE58AAlqvnBmeyNW8NlG2c52S6Q2lsdbBpAWcXQp0iswofLRMi6Wd-Q1B6UUdMXZhyEAdOtiCngRDzpx8RasWmW-9ZMSqnwvl3B9eB113R5jXh6ZB_0eNjO20SZXZn1XEZP-iD0C0qZgHA_-dVp38zoiT-RutNUwTPiG22-Ff6w_JWic7E1tYgOgMCGWjKDdEbHZW3GB3zXyBrnyH81_8oPGApy1vjOa8_pqZS5jyX9PFbODsrQdPRwq4xTMYsW6OTvG08eM96O2lOThJ5PzHxrOYSpOR-kVKLM7VBUbQHPYq36ECuFUY3kDA7yyMnVm4WWMlU3vS0aguTUUva3CAskP6V8difKwvTNgeKae8dGv44TUtEHGvLjk1eWiBrThOEBpik5XOrt5Y_2d8YnWvbymfdh1QdqeU9o0yxC0tVQBDuGDjkfNVsETEGIK9Sy6ZHBOlQjElWxhelqVv6CaiKM8hKEtfTQoJAgJsgboz_5VGUU3hye0xJY18dQ0bQ23jPDl__tjztKa64n8Hw4BzvKDG_cP0J-1h-m3C9COokR6tTEWSzUyRtK98vafvKmkM8Jw_o9UnoxEN9dbo50aKeD88MUKYso3ijwz-H5DNJHK9wNhgnp2Yn3WkVR_ZtlQpfOcJO3hNmCVOGJDdZ9g3gUBDjQXFg1I_Ww7Wc636ttmFKGDuYeNvyyiwLCmXtbmVhkT29p2M-k4_CQZKh-nDzkUlD-B3oXw4DQr7qr9qXEPX7zFqi0KW521Bynrl2z_NP5nf-AWAun8hnjrpdxoedpcLYra9Qqw-7Qz2gptYkn1FBtRCdTMKEWvYiHlOcruhXC1PSTfyHahNxdVaNkhfDtfnF7LZu0NSlx-JOcMtigLfj8iGGneEDJMB3HlA674Hv6s2MoVnxU5E6x71lqwuC0n2oX5H8BRUx0IiOn40i9TcbEPpzDSwPR8hk3fyLQ0_LiReswY0HUhPAA=w1919-h918');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.5;
+  z-index: -2;
+  animation: flickerOpacity 6s ease-in-out infinite alternate;
+}
+
+
+
+    .star {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #00B0C8;
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: blink linear infinite, move linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes blink {
+  0% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
+  100% { opacity: 0.3; transform: scale(1); }
+}
+
+
+    @keyframes move {
+      0% { transform: translate(0, 0); }
+      50% {
+        transform: translate(
+          calc(var(--dx) * 1vw),
+          calc(var(--dy) * 1vh)
+        );
+      }
+      100% { transform: translate(0, 0); }
+    }
+
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      background-color: transparent;
+      text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff;
+    }
+
+    .neon-text {
+      text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+      animation: neon-blink 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes neon-blink {
+      0% {
+        text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+        opacity: 0.3; 
+      }
+      50% {
+        text-shadow: 0 0 2px rgba(255,255,255,0.5), 0 0 5px rgba(74,144,226,0.5), 0 0 10px rgba(74,144,226,0.5), 0 0 15px rgba(74,144,226,0.5);
+        opacity: 0.6;
+      }
+      100% {
+        text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+        opacity: 1;
+      }
+    }
+
+@keyframes flickerOpacity {
+ 0% {
+    opacity: 0.4;
+  }
+  30% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.1;
+  }
+}
+
+    .auto-image {
+      width: 600px !important;
+      height: 400px !important;
+      object-fit: contain;
+    }
+
+
+
+  </style>
+</head>
+
+<body>
+
+  <header class="w-full flex justify-between items-center px-6 py-4 z-10">
+    <div class="flex items-center"><a href="index.html" class="Logo">
+      <img src="https://lh3.googleusercontent.com/fife/ALs6j_FpAj7oMETlep3fCBHYuZGq6DWoc60B49wnyNHOTMWS4llCaS_Dp1WLetK1BMHmti4aHnoIXtcVTmgJozC5-VcrBMfRf_pmuzJwULdG9kDt6CALW-P5LRQI_XsXKEB9aJKmDaYTl6V1QaFdPJVpK5YNQBhlW2jdI_AuDvDA78CfUZ-unq3YrNsIHtalQg-UUQQ_3xPZT6uK4tsd1fLzGhG0-axfqtU9jKSbt_DqT5C0fbHcHdA3TFXzaC0PIVtdZWE7pevMcpAkE5GGH6e1RZ1Xa3bQVi4p-EefrONX0wqt1oGD9YFE6g6o6wYkUcyMgwmiAqyMLo4jUDkjfr2tQ_RAiu88W1AgAPtCm8VPp8iQqHsxxdJkEg-OM4kWXs6BhcT1HaUk-uyhd6V3u6qeaAugGSjTgzOhJE8_WB-Kg0_EMceh1aUtKxsKF6sL2s9SYoiBPeodHQZ_JOfPgfrJ9saqwzS1c12GHZQPA9214h2jB3B342DTmtnI3Kjke9ZACcerZTGmgs8r-M-KXZfaW3GGrMeGyuNiunkLZPpoaonQfsVmr1bTddKvcd2CIDuynW_IrFk8mGF7QWfEPunNbCRW5giSKO7G24DSsZxBI9z6ZKUTYc2yIVUMe6lvPUn0fiBncb1DvPN5KwQ-wo-085B42dWoe4A608RY0V0Zw7HX5z3nAqlMGoaugV4hlbRr4AM-utqOfrMeX_L1WyndUfUbzdAvb567Wm1lFLvBp68eP4SyQlwKolfA46zTPuSnYdIQZqeyQBz-k7LGf_KYqjdYJgQxs98ug55nA-K9l_S9JERHaBVe8f1WwxzDyLJyrS84EZFy8DeW113a6osXVO-appgYVBiLOwuxAiAMfLiOhHI6vnxaLm0_XnvRl-grtv4-B9wovOeAwWWJ53EYN-OvVwAKIrzORek9zZNaVE7ZdtHbO4fJ5GHKL6pGx8e45NdnMfBaPqLLUZvfY-lHnTfkxlNkauTHtsghHHd1IOtCREO-9sFepHhsZdyonnEyoOdfcDEIUUynaqkB9nJ6LRnTREJ57v2eKtxlRyczJVcMYAePf7iScHkDM8SXFKLbAzfXff9lBiZzqUXzpMW5wTiDb7YhHdCVFQzO48HMtmbHuegn7qYh1DDNbhzzFj1mjuadOJx1k5ifcrOCc-gaAQZTAOYSfddaqn2X1ISnpK326an-GOJ5NROtbwwXmpSApWXVR1S3te51R8E8YdGR4MIl_A3PoawJbN5OGh2BoPrrRuwxESmk5BbUtxjRagSnhCaAkOZ2pHzjL7kyYpCK6zfAgDfRKwFhU6UXddvgKIkcUkH-LgFj4-2IHb4AKILBiHIRcoImi8qHz-KvtxPTQMVUbUf44V1Lwqv6-JemKVzmGy8ZUJPaexdRtfJ1dwrNmm6K1otLVn7TKePyOS6UaD4FSxavVGJMijJNXZBXKA5OzU-ZP9h60Dil3L26hrte0m2ioVhqV_r5dBxmNhchgw8kyaaFomXDRYgj1nW9Ja5YMUOacyTc3Ms0icahuF3vUm25sjH4H8rjWGBUYKXIlM-K-QWrpRDD6HW5m5FzIlt_nNVirFunkfenUXCNEhJVg-khcWOEd7YEvbmk50xjUsAldDIUIsQ6t_qbEvAnM88NBSPLOOLHwCZvVuXbsp_dJAFRmXY0vhmb=w1919-h918?auditContext=prefetch" alt="Logo" class="h-10 rounded-lg shadow-lg">
+    </div></a>
+
+    <button id="menu-toggle" class="text-white text-3xl md:hidden focus:outline-none">☰</button>
+
+    <nav class="hidden md:flex space-x-4">
+      <a href="ai_gallery.html" class="nav-link whitespace-nowrap">AI GALLERY</a>
+      <a href="example.html" class="nav-link whitespace-nowrap">EXAMPLE</a>
+      <a href="https://truedo.github.io/zumi_mini_python_backup/" class="nav-link whitespace-nowrap">LIBRARY</a>
+      <a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=81&display_group=1" class="nav-link whitespace-nowrap">PURCHASE</a>
+    </nav>
+  </header>
+
+   <div id="mobile-menu" class="hidden flex-col items-center text-center bg-[#000C36] w-full py-4 space-y-10 md:hidden z-20">
+    <a href="ai_gallery.html" class="nav-link whitespace-nowrap">AI GALLERY</a><br>
+    <a href="example.html" class="nav-link whitespace-nowrap">EXAMPLE</a><br>
+    <a href="https://truedo.github.io/zumi_mini_python_backup/" class="nav-link whitespace-nowrap">LIBRARY</a><br>
+    <a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=81&display_group=1" class="nav-link whitespace-nowrap">PURCHASE</a>
+  </div>
+
+  <!-- 오버레이 (모바일 전용) -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden" onclick="toggleSidebar()"></div>
+
+
+<div class="flex">
+
+ 
+  <aside id="sidebar"  class="hidden md:flex w-64 bg-[#3B82F6] text-white p-4 rounded-r-xl flex-col space-y-2 transition-all duration-300 fixed md:relative z-40 h-screen md:h-auto top-0 left-0 md:translate-x-0">
+
+<div class="flex justify-between items-center mb-4 md:hidden">
+  <h2 class="text-lg font-bold">챕터 보기</h2>
+  <button onclick="toggleSidebar()" class="text-white text-2xl">✖</button>
+</div>
+
+
+<button id="pc-toggle-btn" onclick="togglePcSidebar()" class="hidden md:block text-white text-2xl mt-4">
+-
+</button>
+
+    <div class="space-y-2 text-sm sidebar-item">
+
+        <a href="ai_gallery_01" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">01 ITS : 지능형 교통 체계</a>
+        <a href="ai_gallery_02" class="block bg-[#0845A8] text-[#ffffff] font-bold px-4 py-2 rounded ">02 V2X : 차량과 모든 것 </a>
+        <a href="ai_gallery_03" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">03 인공지능의 원리#3</a>
+        <a href="ai_gallery_04" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">04 인공지능의 원리#4</a>
+        <a href="ai_gallery_05" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">05 인공지능의 원리#5</a>
+        <a href="ai_gallery_06" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">06 인공지능의 원리#6</a>
+        <a href="ai_gallery_07" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">07 인공지능의 원리#7</a>
+        <a href="ai_gallery_08" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">08 인공지능의 원리#8</a>
+        <a href="ai_gallery_09" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">09 인공지능의 원리#9</a>
+        <a href="ai_gallery_10" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">10 인공지능의 원리#10</a>
+        <a href="ai_gallery_11" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">11 인공지능의 원리#11</a>
+        <a href="ai_gallery_12" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">12 인공지능의 원리#12</a>
+      </div>
+
+      <!-- 페이지 이동 버튼 -->
+      <div class="flex-1 flex items-end">
+        <a href="#" class="block w-full text-center text-3xl mt-4">↑</a>
+      </div>
+
+
+
+    </aside>
+
+    <!-- 메인 콘텐츠 영역 -->
+   <main class="flex-1 max-w-screen-lg mx-auto p-4 sm:p-6 md:p-8 flex flex-col space-y-4 md:ml-0 md:pl-64">
+
+      <!-- 사이드바 열기 버튼 (모바일 전용) -->
+   <button onclick="toggleSidebar()" class="text-white text-2xl md:hidden mb-4 bg-[#2563EB]/90 px-4 py-2 rounded">
+  챕터 보기
+</button>
+
+
+
+      <h1 class="text-xl sm:text-2xl md:text-3xl font-bold">02 V2X (Vehicle-to-Everything) : 차량과 모든 것 </h1>
+
+<!-- 흰색 상자-->
+<div class="bg-white text-black p-6 rounded-lg space-y-4">
+
+      <!-- 그림 영역 -->
+   <img src="https://lh3.googleusercontent.com/fife/ALs6j_HUZDhCgbq6mn_bv467555QpKkDTRtxCv1479RMrjnrJvT79hiVtMxXlto7WD2NECEr8UMSfAOUJeBBlMlBe3o521FDJCChiirrAL9H9pJycP0RGkfdPP-crLc7qYrkghVWc01vIo-neAcVexDSj_QkzfOm80LLcOEUVSI0Ea6SA4lZOGUxtWVFnhSzBRFjzLKOa34VsQZtmg4IKBuDm5YmPkeLedHr4xx2kU-VoQekpruUFdM4ctq6leNFu-QsRAMAXVmvr_Snsi3KgXY1p1zqQfPZYx7UZm7ljSpAkUoexJqzqqraBrDv4jwRbAHOEO9UBeBwKX-MN8QvukUqZc1oIimO3ekw_5VQHcD0dVuyLMwC1qUhoOFXlliMLzxVXcmsm2MrXw_43E40V0jYb9HXEtafGKaJNHogF2reQz-_inyA8-0VPdY1dLdbGbNSFzqdq06R2M8lfmxs5mkAtjs1adiJw9pzabdMVReXo12UuDw_2u85D1KcwOcOGKzH1yVgDwh2CeiBdXwkCJ_NG3SEk2yCGPFlSgsMvuAN9CUSitXwAAB77CyFdudb0fJRoZFkr6GhTnibmS9xHVr7Va-0QuQIiduImvG06wnQSBr8OU13spzkVsKfIlHYqwmHxgPpD2DZJTW4JHn8fCgooxkaByYOISamphCfLKS9dgZItdt2kR38mUyMLsHH4OzHUeI1Y6o5OLit1eRCCRG7PfmvGzJYgr5tVURmrCroGleZSIn52vhPutfMxe9EynWEaE4xKR8Zx6ND6Z-LHs4CT-b7nn3J2piTfbxRcP-0XTmNe3nMwr92T5jb5TYG6to7wD8kXThGg8Oa_I_lCf9wwPysHQIU_hhgXVsgImQmqUz_ndIJceDoAHb07vCLvqedq7yfkDONyOGSXUPF7yQuHlzS4wF2hGCOTrtykI4TjLjgVX8GXhCc-tggM3WsAxj0HoHK03odXA_13dNtaRDTC6nOubR2WbPf2XyWOUsoL6S5Tbrj5WQdapE-FyMqwZBYVMBmc8gpGxyh_INV_kgGf9txROFC42JzaRkT9JwNhBNMdAKN5qusgPjvfInxQllAi-g_8uWzg5qihyFeIkEDU0Cu679ObhgQckuwOHztH7zyKWn_YCZLwN8liZUafI5RgjS3TjEnlYN_3C_Y7mo11f2Gko7Ocuz7Q6OZp0967tr6hnuTvK7xXQ5Yf2ZcrhL2fXWHYnDjLP3BkFrHjh7bFUid0KZuQQtji2ovYAAg1oWxCR4Tay9jRoFnoh4BTlrVIAQDRZRCQg2-7bRkEiIFWAWANDnS2rGBUMxNhUTEd0PkFwLnlBLLjJcYDtAYYQArPFi-jsUAmOShUH0vhGjQm6XFrh0yOh95-K_OYjJsXY6TZHiZfzPL3A-xBtPPFWdww2av3Z7ICpnhCRXU_PXnsi6-k5XqnDjfYIbHf0hKZGRHoOcCCU5TVGRYR0v7Pyxkr9fIcXo0nzLvPpMNGmMUPAGdIrl7s4a1xQ0XRa_pRr6nS0rRwVgRR7cHa2oEOI2J77zNvFlVaC0tcelgnId60Q31kLJgLioMAjerZZidjOa_Yw2b2JyUYKOn_L_lw-Lo_YmwnnEmw4aba1R1iKXbb7PpfCHFpKBKNY8PrLYDCWplJiRRIyDlkyl-v0CFno2aS95yaZJ448eo3A=w1919-h918?auditContext=prefetch" alt="그림1" class="w-full rounded-lg ">
+
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : V2X (Vehicle-to-Everything) 체계도</p>
+
+      <!-- 설명 -->
+      <div class="bg-white text-black p-4 rounded">
+        <h2 class="text-lg font-bold mb-2">✅ V2X (Vehicle-to-Everything) 정의</h2>
+        <p class="text-sm"> V2X (Vehicle-to-Everything)는 ITS와 서로 밀접하게 연결이 되어 있는 개념 이며, 차량이 무선 통신을 통해 다른 차량, 도로 인프라, 보행자, 네트워크 등과 실시간으로 데이터를 주고받는 기술을 말합니다. 즉, "차량과 모든 것(Vehicle-to-Everything)" 간의 통신을 의미하며, V2X는 자율주행차와 스마트 교통 시스템(ITS)의 핵심 기술입니다.
+<br><br>
+
+
+  <h2 class="text-lg font-bold mb-2">🔵  V2X와 ITS의 관계 </h2>
+        <p class="text-sm">
+<strong> ● V2X는 ITS의 핵심 기술 중 하나 </strong> <br>
+V2X는 차량이 다른 차량, 인프라, 네트워크 등과 통신하여 데이터를 주고받는 기술이며, ITS에서 이런 통신 기술을 활용해 실시간 교통 제어, 안전 경고, 사고 예방 등을 구현함 <br><br>
+
+<strong> ● ITS는 시스템 전체, V2X는 통신 기술 </strong> <br>
+ITS는 신호 제어, 교통 센서, 카메라, 교통정보센터 등 모든 시스템을 포괄하는 반면, V2X는 차량과 외부와의 연결 수단 <br><br>
+
+<strong> ● V2X는 ITS를 스마트하게 만드는 도구 </strong> <br>
+V2X를 통해 차량이 실시간 교통 데이터를 ITS와 주고받으면, ITS는 더 정확하게 전체 교통을 조정 가능 <br><br>
+
+</p>
+
+
+ <h2 class="text-lg font-bold mb-2">🛠 V2X의 구성 요소 (종류별 설명)</h2>
+        <p class="text-sm">
+
+<strong>1.  V2V (Vehicle-to-Vehicle) 차량 간 통신 </strong> :	차량끼리 위치, 속도, 방향 공유 (예: 급정거 경고) <br>
+<strong>2.  V2I (Vehicle-to-Infrastructure) 차량-인프라 통신 </strong> : 신호등, 도로 표지판, 교차로 센서 등과 통신 <br>
+<strong>3.  V2P (Vehicle-to-Pedestrian) 차량-보행자 통신 </strong> : 보행자 스마트폰이나 웨어러블과 위험 정보 교환 <br>
+<strong>4.  V2N (Vehicle-to-Network) 차량-네트워크 통신 </strong> : 클라우드, 인터넷, 5G망과 연동해 정보 수신 <br>
+<strong>5. V2D (Vehicle-to-Device)  차량-기기 통신 </strong> : 운전자나 탑승자의 개인기기와 연동 <br>
+<strong>6.  V2G (Vehicle-to-Grid) 차량-전력망 통신 </strong> : 전기차와 전력망 간 충전 및 에너지 관리 <br>
+
+</p> 
+<br>
+
+  <h2 class="text-lg font-bold mb-2">🎯  V2X의 목적</h2>
+        <p class="text-sm">ITS 란 도로, 차량, 교통 관련 인프라에 최신 정보통신기술을 접목하여 <br>
+● 교통사고 예방 및 안전성 강화<br>
+● 자율주행차의 판단 능력 향상 <br>
+● 교통 흐름 개선 및 혼잡 감소 <br>
+● 스마트시티와 연계된 교통 시스템 구축
+</p>
+
+<br>
+
+  <h2 class="text-lg font-bold mb-2">💡 예시를 통한 이해</h2>
+        <p class="text-sm">
+📍 ITS 활용 시나리오: <br>
+&nbsp;&nbsp;교통센터에서 교차로 상황 모니터링 <br>
+&nbsp;&nbsp;특정 구간에 교통량 과밀 발생 → 우회 경로 제공 <br> <br>
+
+📍 여기에 V2X가 적용되면:
+&nbsp;&nbsp;V2I로 차량이 신호등/교통 인프라와 실시간 정보 교환<br>
+&nbsp;&nbsp;V2N을 통해 클라우드 기반 교통정보를 받음<br>
+&nbsp;&nbsp;V2V로 앞차의 급정지 정보를 공유받아 자동 감속<br><br>
+➡️ 결과적으로, ITS는 전체 교통 시스템을 조정하고,<br>
+V2X는 차량이 그 시스템에 참여하는 방법이에요.<br>
+
+<br>
+</p> 
+<br>
+
+  <h2 class="text-lg font-bold mb-2">🔶 V2X 핵심 기술</h2>
+        <p class="text-sm">
+<strong>
+DSRC (Dedicated Short-Range Communications) <br> 
+</strong>
+
+    : Wi-Fi 기반의 단거리 전용 통신 방식. <br><br>
+
+<strong>
+C-V2X (Cellular V2X) <br> 
+</strong> 
+
+   : LTE/5G 기반 통신으로 더 넓은 범위와 낮은 지연시간 제공 <br> <br>
+
+<p class="text-[14px] text-gray-500 ">
+* V2X는 ITS의 핵심 구성 요소이며, ITS의 실시간성과 효율성을 실현하기 위한 필수 기술입니다. <br> 
+&nbsp;&nbsp; V2X 없이는 미래형 ITS, 특히 자율주행 기반의 스마트 교통체계 구현이 어렵습니다.
+</p>
+
+<br>
+
+  <h2 class="text-lg font-bold mb-2">🟦 [Python] V2N을 통한 교통 도로 정보 가져오기</h2>
+        <p class="text-sm">
+V2X의 대표적인 예제인 도로 교통 정보를 가져와서, 맵에 저장하고 특정 구간에 과밀된 교통량을 피해 주행 도로를 권장하는 예제를 해보겠습니다. <br><br>
+</p> 
+
+
+
+<h2 class="text-lg font-bold mb-2">1️⃣   🛰️ V2X: 지능형 교통 체계 지도</h2>
+ <p class="text-sm">
+우선, 아래의 지도를 클릭하여 교통 상황을 알고 싶은 도로의 끝 점의 위도와 경도를 알아 봅니다. <br>
+</p> 
+
+  <!-- ✅ 지도 컨테이너 -->
+  <div class="w-full max-w-4xl">
+      <div id="map" class="shadow-lg border border-gray-600">
+      </div>
+
+      <!-- ✅ 좌표 표시 박스 -->
+      <div id="coords" class="mt-4 p-4 bg-gray-200 rounded text-center text-lg">
+        지도 위를 클릭하면 좌표가 여기에 표시됩니다.
+      </div>
+  </div>
+
+<p class="text-[14px] text-gray-500 ">
+* 드래그로 지도를 이동하고, 클릭하면 위도·경도를 확인합니다. 페이지 새로고침 시 좌표는 리셋됩니다.
+</p>
+<br>
+
+<h2 class="text-lg font-bold mb-2">2️⃣  테헤란로 위도·경도 확인하기 </h2>
+  <p class="text-sm">
+위 지도에서 클릭하여 테헤란로 (강남역 ~ 삼성역)의 위도와 경도를 확인해보면,<br> 
+대략 <strong> [37.497976, 127.027445]에서 [37.508939, 127.063065] </strong>사이에 위치하고 있는 것을 알 수 있습니다. <br><br>
+<p class="text-[14px] text-gray-500 "> ※ 아래의 그림을 참조해주세요.</p> 
+</p> 
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_G861wr1pAgixnWA6wJj3Z2AnqinilSPpUkn5QqRjomxkHKs-4FHnYIvpRKrxkAcKP0q5-jHcI4r5qmHbas-foj5U0gX4k1T8ebHf6JgEMtz7VkDTXPpByUINsTYVXx7oZye9UUM3YdWlZlHeLWhl8ndm6c98sDw6Co2b9pATyacnQeiJxMalvZ36p_Qr1R0Fr3aJ4iW4I_x4i-Z6otop_e3c8SeZFJQi6FWBhh-QMTm5RNN031qYCnGT990685kfFLsGJeN77N5B7PJFgWTT6d7LM8V6t8tg32iKOH7kXp7mYuS34DFHp48QUelX6pM_E_whrigqjn01wI47HH0AuZ97fkJibs0yIkj9gBLW44P22olVAsPGB3KF5bMzrjsCYVRhWiiqUVZqFQ0Vtf1TwKMD_KZPxJ_qsqYoE10CBwxDHxjigykbuvytYpSFu8B04m6NCXM5EJJG8MtUhGf9VZm5fguI2cr0XuMk2gUJm-i_fZJPFvRv-nws76_jpQJnNG3fVmNOZCphH568BXMD8EeYRT_XqwBPFZcEwV3QUuQBLmnlfD952I0ddNILYUZAH0IlIpXdgqJIFLJvtnoUbtmNcXtKPVJXfTbmA9bLfJ0X5NuaW_OBzUnU9Fq6W2gkvR8niwalWkAK6jFMrpE2YOdzO4r6QP_OnlyGXYTF0a0yFlSRwlHZgqfdJFHHi_A4KW3GgiZennT1GWYZaayYrliMn5_VMn7SBr8TbJhGfeYtWbvnTIUSg1EqNxu_xMcvlTgqn2RhsgVo4jvQ5ezhOngVpHiMl_oMc4g8dpbe9qvey6d_nMfNPHPb9y56ARyyP6bxRg7LKNwGz-g3mqqt6xFAJaOH--i845UwsE-6Z1edjvjVIZJ8g2z7_VmUhhdBfeQNZNprlDe_O04EqZOf5R9953_YXBTpuR4uXEncZ0LGuvKNL-V29Pc2GnXZnI_oZznnwuTUuzmD8hGNNr6ZqZxwlxjKzR_7Sf6AAVn1rc--fw2LrjIsyUPCA6MGCiFEjnIMHS9vSDXSXM_j8MIc19V6VSfBNxdNkaVh6uU5JO5Qx0Nw-OjB5nA44vKrneghzK0JsSXZi7hJCGfavwTqb5OzciWTTcGFWc9LCRcqcMoeflbU-nySMJ94MAaZ4LM5vYaek5kL5oHpBnwww2F5DTvKeT_D2WaNE9jnhkKU4ErkclRuZ_1I0O99F1R3cmIuwcORh928hVAL2yCTZhaDw2BVUythf8da55sqFeFoJ41n5Z5xaZBxHaIhx4cFZ9dHPbpOEk02rObAiG4vp6AJJCIoY1q1BvIukzGi48fV6wa2C1NXVnQUdfnPqWfxXQPq_HFPhG0hPVanp6azjdl07dNfw618YMgE1kx2HH3TN1krf6owPyAujSQmCz-8wNNjO9W4I0xwDUOjQBuSVeWDUnuVpa8TtFSLCFW-DI2K2I8O0HgBLG59iawqMMRkQoRzmTocfDnL1xcDJkrpvoAsXLIv8vbBynOmpZU99Ppls_XYjNWVItoABOLPCKFsErqQApp5Cgc6IFTXbnBsKhrACJZNW7Xy_vyCz0Er-pLtH1ozCBsipS-aZaqO-gpasV1Gw6z84wx1hsGaVuBVmy7eKkSXcdVUdRD9dZxXRyU8lGBn2mzAWVj6W_8pi5nn-Mf5p9e9GZy33ohw=w1919-h918?auditContext=prefetch" class="w-[100%] mx-auto border border-gray-300 shadow-lg rounded-lg" /><br>
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : 테헤란로 위도와 경도</p> <br>
+
+
+<h2 class="text-lg font-bold mb-2">3️⃣  코드 다운로드 및 위도·경도 입력하기 </h2>
+
+ <p class="text-sm">
+아래 버튼을 클릭하여 코드를 다운받아<br>  traffic_data 부분에 내가 확인한 테헤란로의 위도와 경도를 입력 해줍니다.<br> <br>
+</p> 
+
+<!-- 파이썬 코드 설명&다운로드 버튼 -->
+<div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
+  <div id="output" class=" flex-1 bg-gray-800 text-white p-4 rounded h-30 text-sm"">
+  <p class="font-normal text-white text-sm">
+
+traffic_data = [ <br>
+ {<br>
+        <span class="text-green-400"> "roadName": "테헤란로" </span>, <br>
+        <span class="text-green-400"> "speed"</span>: 8, <br>
+        <span class="text-green-400"> "coords"</span>: [[37.497976, 127.027445], [37.508939, 127.063065]] <br>
+    },<br>
+코드의 해당 부분에 지표에서 찍었던 위도·경도를 입력 합니다. <br><br>
+
+<span class="text-green-500"> ★ 코드를 다운 받아 IDLE 에서 실행 해봅니다. </span>
+</p>
+  </div>
+
+<a href="https://drive.google.com/file/d/1RRd32AsgqSw4qHM9hcJNaGllvGmT_0ML/view?usp=sharing" download="example.py" id="run-code-btn"
+   class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto inline-flex flex-col justify-center items-center text-center min-h-[64px]">
+ <button id="run-code-btn" class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto">
+  파이썬 코드 <br> 다운로드
+</button>
+</a>
+  </div>
+
+<p class="text-[14px] text-gray-500 ">
+* 이 예제는 folium 모듈을 사용 합니다. 따라서 folium 모듈이 설치 되어 있지 않다면,<br> &nbsp;&nbsp; 명령프롬포트(cmd) 에서 pip install folium 를 설치 한 뒤에 실행 해주세요
+</p>
+
+<br>
+
+<h2 class="text-lg font-bold mb-2">4️⃣   생성 된 파일 확인하기 </h2>
+
+
+<br>
+</p> 
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_HlTOH6gxGnBbROaPLN8EJbaAVL_b_0J59Lxm94Y1LCbE4ZhE79RH7FgkRKAEigWolPhOkwU16EDwQ73yVrZB7ipWna1d8fvTCeeVnRn2WeZdQfGkxIt_nZXYiIioIPErl-bAtL6ehdJ3mMpN7ZltB4cvnZpCusPF4CWZObyyghYitu69vBRwFX0x2yK5mnjUi7QsUTuC1DOrCIIPfjc_YmEM2LqYS_Vl0aR9-ToK4a1vahjDrRnCq7f_8oBc8EmjBagRNQ9-BicMAaq1RXJ8ZYcIBewHyHqZb7eIkFc1nhphYiEyM9P-ljk7lEowkBCnk1vuKrTQ8qiyomWwOf2El9Mfwwic3xsYm7AqBQbjxj7OYP7n7Q90qqWNh0fDTkwABgCydNQSw0QOoHIITVsHd2saC8N_35zn2kgjXJkj9WjBCZtsEa1zC6AU36oboapUn2mVgGvfpcOsesMDH6cks1eVhaUm1cgMzTJ5wM0OTbny_mYFuxbc9Ep0THydCWeOXPuWs3thYkfRz6jqBLJxKop3tV_ZmvBrUKJZkHVBls-Nc-phhuhppjv31WsO-RzjDtBnxsDdZ6Kr5tlmXivbCH0NZPgZpztqfetAxAxeLreSmvPeLOkySRT1VIZGxpENfR7k1ED0d4v2DbJo4mCEfEBfCpx82xq4pTmQ0sUwTfMlD-usx-etJ5FVePj6l82P41X1UeatIZXyJ_qOt2barIixsPYSyrkldSD80AMj_NNF1vQbdw29_cfG1-v7cPDxsPXAdEg0s4cKoqyJs9iNPXhYJSTAynuVGUGRQMKxVki1ULx4rpaWWWGF3bhbwEiSWnY0-TMGbSttQr_N4zW2E1iuYColiC_C_3idlGUdJxRYKPLiT2iTETFliRyWnVJtahQHAM-yarSQPouaHQ7ywbyaqI-vBCadjusGI8N3BlkVVIKWmPLiEV0StANUj-i7OY1pQf5C3F1hKrFU18mWsSBjUDS0sb8TkPbvSNPbf7tlRG4Ekf0GkPHyDvfU6N1vbBFCNRsp0pMf9KTd2XVEdXn6HAIqfyJZohGetHJyBOkJuRARdStGz8KDS3v3lhcnsfHuQMLCrSdWxqwy_SYM-T9OE-eKymCYI1z96Q8FsIkpmZtu6N1ansqTO96iwEx4jWMFPo4RKHq9CeC3RqlmfBYFffMG3PNRRFfXUt61qXHXz94NVpzR2h-yyYa57_A_5ET4-EemFGfW1s_y-gUTdFBTkrZyK9YdBmqfKcNiHLfg-HsuzLhPbb7D3t87izL60sWkyOw4Tfbu1BZNd6uXFb2Hkpabl-Ky1qW0Y2BTFoboPySeMwDX21n1ytA2DJQ7JBZ_p-OKGF02dLNU8gulVZBfAIdRNK-d5O4xGH3yo4KmHGB6Kd5wPbOTraRVnIsVF62Gj8k5lN6XXo8b1JQkPNCRmPITBaKFgOqX1ZHJ0wnInlPv6jekksXQbaDDGCLxOoeanf8UM1vlyc-ICCy73NYpAL-LRJ7HTQBVKb_cNwbSWPtrh30Q_fXrjp0jA-vGXsm8Y3T28DDuvnoLcPX2P_EHD8Y9UlLVIdF8mUWUuxQOhqmakW7IdqXY9FEqn6GR3xBvhDAU8sKuofPlf7fvhU7dnaZzml8O--sdq9uW_5Z05geyroTmnabSufCY2na6De8TeKioylAg=w1919-h918?auditContext=prefetch" class="w-[100%] mx-auto border border-gray-300 shadow-lg rounded-lg" /><br>
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : 생성된 html 파일을 인터넷 사이트 위로 드래그 합니다.</p> <br>
+
+ <p class="text-sm">
+프로그램을 실행 시키면, 같은 장소에 <strong>sample_traffic_map.html </strong> 파일이 생성 되고<br> 
+이 파일을 인터넷 사이트(크롬,파이어폭스 등)를 실행 시켜 파일을 사이트 위로 드래그 하면, 파일이 오픈 됩니다. <br>
+정상적으로 오픈 되었다면, 아래 그림 처럼 도로 교통 상황이 보여집니다.
+</p> 
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_G4uXvJVnaWTtjculXFAIed_UrC4o0rAWUpgZfLqUUc87INS8slICPhO3bGiRY4LGlLBy4GWxGnb7YLG4BVbXTl5JeDkHFFAyGJvLjT_yPmMsosCzoPqkhkaDwEV8HQVTcki5kq7lPgj0E7otyZvSVmMrjcAYXxoJJYagtDI4fa7mXpxBPtp40tyItzMsmFgjetQ9i6NB9E9qYIXRwUWQGX28TLdjEbyBldSSHatRwzUSNeZL6e8KOWQZSFIComAQFk9DGPBJwclK4VAnIxhxVLbLHXhhaSTJ7dWfyPN8u9Arcy71ToH2tgz7-HWsmhG58tb0TFS_Sd7oKFIYJ5pnXumRDYKr9Kb7G9oK9WRV88fmvIpBhXu3t0xYtCWTi2XBX2ThSWWBqkggY_NHuzBh4Vw0nT7LS1rZ4moakUwm0BUu4I6QCqsB-MYRHTQyWkulwB8mZJp37J_gtigb61FbCElijReAwKc6S0LBYAUzw-2Uy58yPJB22VvSo6n-lWs3h4jxkLjYCj2_-rMAUQ_TkrqZRRNwQAxcVAOQ4CouPddjJErI-3MDp5OMr1WF1EghPLpqDFrATaYg2xgs0aJWrJfsTAGi__6QaaQ2Q0zzILvme2OpdrL8HnW5N2AVg95ut9uWM2yB0HoC3ThCpSGAvuw7c1TJbjwdwKG6xRZqbTug5z64eyQTxC6kkbrTll0xJLuJrTWN48rFE82ngXD-v7NvS0eX8ox86OiAJLDyMZLOrqXXoX4VjUhKnOoBFcGJV8wh2N_Ib3lgFDGo_HI9JoaZ6bb8PrEUEHeEHsO6aTj-ybU5_RJ7h7joFYKbpm8_fP1ofXrjVxThkz83pn9Wp2q3e8AHFA06fmjtDk_oE2EQlvDx3aH9bneLL-Gq2I73FB_dyVAygtNcjGb7oyOhUVnR2VXUvjhIVyWGYDjeZ9G2WIa0obifdOobJrDJUYg8UOCqK3oFBzs8ly_cSLMvhfQtcHkmJabPeWaQueHMCZP7yGC8M20A-I9zbpTQK9DiivPaMAIfSG7lhBNaYEM7E99Ybt88KSzXiwU8hTYSCAUjhQvOdFXyhcACDTNTnNwXiFwhm_c5YUSx-cxKdNysgzvzQGuALlHOtBioOwGpxj3zjWOai3HliL3sawKPx3XAFA5pdqejnOgUmjYamWu3OM5d16_rUJEKCcL78Ev6R_D8f8pigaQP9DAJXBk2NGfIjVznLxbYVz1870Mc85Cna1r1bnCrUT8jDc4uEv908GJpG4GO9x2ufLoG45ACD4JSVoUaYpDfUEhXgefSM0woXHva-7C-sPwQAOjZGrJyNdGl22d0fMxeFbq-U59F7Ly39HxQSx0Z6QLT5orPiUOdxudsg8NYuky2jbjC075QQdkjJfSW87RjCkVEesHEJhkz8YVhML4UeEm3tXAdaCvJe5XDv4eUSMlNX28ALgRTYINXFKWQ5CpoGnTVbsUhZOsyMpKJQxbMuqSGMbLA9TWuJswlmMgB17HZRpZQDuffIJXwORW6fxcjVmBUsqgRm_i9LGiwMZNXnZKAY41ugAWa7U1MLf93yKJQPofxU8b8yT4qJuFZL4zEZgcm98D30v7EUddd9e1hgp5Nns2Y182kAipqSN3eDhtLwJhDDqC8Yk1-bOk5bmfD0kWAIjIrGY7P5FV_O3YgbE=w1919-h918?auditContext=prefetch" class="w-[100%] mx-auto border border-gray-300 shadow-lg rounded-lg" /><br>
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : 강남 지역의 도로 교통 상황</p> <br>
+
+<h2 class="text-lg font-bold mb-2">5️⃣  시뮬레이터에 적용하기 </h2>
+
+ <p class="text-sm">
+이렇게 강남 지역의 map 과 도로 교통 상황을 확인 하였다면<br> 
+이 정보를 자율주행 시뮬레이터에 적용하여 받아 옵니다.<br>
+</p> 
+
+       <p class="text-sm">
+예를 들어, 강남 지역 도로 명을 보면 가로 로는 도산대로, 학동로, 봉은사로, 테헤란로 가 있으며,<br> 세로로는 왼쪽부터 강남대로,논현로,언주로,선릉로,삼성로,영동대로가 있 습니다. <br><br>
+</p> 
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_H57p5uW_VI8eoa-NgGlG-XiJxZhn5MbQObxYM0vd9aW4OP2xLvYOzdj0YFDZY29QwdiFHuZLE42lKYpJbi1ksTLMNmC3jsP-IdnTpyTg89xKMSyJhW5qs2rgpK42-1ucIHis0Jnx4kzO3GPJKvOu35YHcPRoB25ZftCoxz1qgIA7IF_hE4WN6Yz94YOlZ2Sc4FxjMVgnf_ucqjNxXhKQpnI5vObYJ4Eckb61QrNnvLIiVun7VybXnFn3P46FbkUD8xtMJn6rEiM4yh1_3nXnwWyOTCvpsGQra9Z3Z4AYTSCfwmhieZHNrDVe75EFB6v7FLAL7kf9SzJk1x-EIm5wCSeuLuzq31u6wwBHlxkvG9NuI2o6vx8ozezuZ0MccKgp_gXp4l-uMgNS4Vl9ae4t9KrFQj0YwaQ68MoNdQPbXbF6EvnCfWKLRK-2DA3zyWWhdyw71d2N8flzpgNCJw8lWgC1Qz2D6btOxt3rCAfZW9sQ8ejiNxinOtRdX8XRNt5fvTCmXehfyTsx_ekGxsIcSHBRoG7FoSkMHtQPUG11oC6bbfmnS0ex93lSF2xi1UKDahlQsB--rg7RrzhdCtbVf4ZT0B_KxE0_QK5ilYRQZhsdHwK_KhmdF5FrESUGQCsu57wKyUQL3rp7EFIZltn6dJ_yQFgMR3i31E-rkzJHMuNL3hDJHGhPU7pKMsci4ei34FhkBOLhB7KthAQZ76lNfdjRgxxw0h-fT7Kh7btfN4dsdQXTx5GeSnpyFlQLDm-UWjZFpvyaxOBJZWavopMfNvIwB7A86LGHu-8bkKSignha7vJy0zhBn0eo0Lfq2odr4zUNGXR28lQCLX4QXWFXlJKFiU3bo5HsKtqgd_6oTWCM2I--4l1ZxzLbBbyuIndsivhHaNnDBfw0pa4Yxazwa1DnVNrUC5OE1pHFjM_7U1bHVBP2Dgy-E4QkitIcnzbCpMuPFwo3hoFQFE_ZeFZAh1p_66M8JP5O0ZbzAhZILUNYvjdR4OBaCcfiNM5Hmnr5Q8uFU_iuOTpZVFJAz_lrQcbx4VgBU0WFBhKtNGN0GSca2GIDw62FbF9VkJsnUgqgY6mTcbaC1OqREU8iZ97aUlvhLHV64RlXwQzylrY3Z4gW6c1jE7buVCruRWuajhsmNsqtJawRoQX1GWpTHGAAsg6_4uWmn03SaCdCW9kBmPTeuS3CaHtFtARr_ElhfFco9UG_OkzdwMon17mZS7EPYEYRLsCWyWd0t-E2ZvblUMWrsqtj--U4BnDzigDeltJtiVzG5WKM5h5jh9l3l9IempUBpm0p8DSW7cJNcBRtTTLc5IclfdOYrEbCdkaHLPgGrthCrTPNCMeXxiaSNo2Sj9YT-uckVpJjMd3ujsl7P5EsiJhx03Ar-VHOlKZaBKMzAa9zUxWKZ_xNM75-cIr_8OLk2DUV7vJ5BWPFhUbrTxx4bd2pt0O5H50ocUjtoK8hBADzn8lS4c9tdr1F6TvphpJHhPIet6G6etugly34eaXk4MzFFrXxBv0VS44vkaoRWcFa2q-ZMvF3J2k9DSKKU51K27mIJlUGf7ynsOmElX7bnPlOqk1q8rcmjIijH9vP108OLQXhq7U3YYYsoeFkgoxjJrs3k5NibHi-paAugr4YmVvvckI5vaRyX_yTxPx50VwP8n8ynqSQ=w1919-h918?auditContext=prefetch" class="w-[100%] mx-auto border border-gray-300 shadow-lg rounded-lg" /><br>
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : 강남지역 도로명</p> <br>
+
+       <p class="text-sm">
+해당 맵에, 강남역,신사역 등을 추가하고, 도로를 선으로 표현하면, 아래 그림처럼 간략화 하여 표현 할 수 있습니다. <br><br>
+</p> 
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_HNWfF0vBR5jW9QU-5EokJopH7gbgjj0hF8qA0xkIRYvIdPQEt3uE81WpP7Lp0Iry2Qx403ecuolyH3Ufiodsa3HA5l1bAE_xQO48bc2afVpvm1HH86c0Jh_DZJqfQtutzBk85oG0r3X7skJ146og-7xc2PFpOWKT5cdGEtHu9_aXsFbSpySCk0quwvCAnNQG4Ku73gojt4BPDLvniiZkIOD0d98lfde2boZPrJbXTVdajbcJsLxd-T1HKC00DQHVpUs5kyZzRQJum516ZylSrrdz9OwDrDIn_M_WQpgZrnyqo90EZbyBDZd2UA9Ru1U3H6rJI_Uvcqs-Q7f4BHPHTr0X9i3EjvxbH2LMOQes2kC7w9AnZ72uZExIX5YIN_iTzP-T_WzPrfHoLqWvXxvFdfh77-jyeN5ApCzUDawuHYYyX1wmgVJZjYDVxmr468reys0fCjzvh62-Z6VtIfLIveRgQWrLi9-SrA3KvTk28Jdj9-6e4jos5eQ5sxMeRzBOkzRHhyQdf3lossWIKqgRN2IgeGSM8KWkgdknxF_gHb4ExuvXED1VcWPfcx89_ulwCpCP2TstFEQk_InGPg_svXip7OFm7OtCuNE_6YdRuKJNomqczUTlAgvqypaerAZy0SVRoNOyNeHHnQrbaCib12e2RQvRGq0YNseYMuI2uhlzTe1WkJvCwAU-_PLRtc--znnYIqWTnsxa3FNLA_dPkfuwmaDmktXexZnU-aksyO5E1YodRVMMuZZDg2aY_7AzeZz4bEJDDPYBQ3Ltm0N9L5suiCESS7Yo3x3IaJoEl3MzhWm4gOwVDTU7k1w7N5MoSB3q5HltP2vwrUyPJbbemjBMexpKthuWHEia_v3QqXOt4M86I3hvhn3I3MijL5riOrHN3aKc4JAEKumcjpkxLYDiDPj_yL1QWLmsbSBIqmL1y8JhTZ7w4MfO7HOntfXkL_NO5HZWnHo7cJBgrLdYJ8VYWIlh2hErwyf2DnYPZL0fNol885V9sVVpUSnxhNHNtUtVMLwOBnRmOJwsn9MF6R0bNRGZHlLbPwFcyEdrjZMh_StriwzeY4gHny03FIsBV0z3q4Yd3PbLjj8mnaCKbiF2aLHbuRb3Q8XWjL4NVzbfZyL2-p0BP90Oi-JlclXlYxk68O0SX5RAbnJs12Vnnht1XWV-QEu4iFfSa_gQgN_O7cLJaaVLKAyDiw6PBLj4lwNAL4UA9uHQI13NcAgnvXHFhoK1XjqQRkF8a2p3TVC4StTEno9KxYaaQNXvr2BhF4n5MxZfj26KlkiSmPWtk28ubiT4cdJTmqeiuM_OxdabOl_MbZqmx3F37TOrAPqYk4Gaz0Kayqn9Z1AeCQGl0p5Q4ifOfgFrTDIhsnSEuKEUa3cWoIl3QewOuy0Hlurgirnk8D4ozTPo8xyG1O2A0tmSNFsmVyEmdPmk91joQzea0vFxO4q0TCJ3LteSHf4CMSTsgpioNqEbeD2U2Vq81HssM6S49xwbBi3yh8J2On9DUCAukrBBgLqydIU7kr2b2C38lTiMCpml6We3MA4BXBp1OWdtIxkmDKYwb1b1ckRfl8Uttym2rBNSiQF31s0OXlD7tBfcTS5hVYpPiQL-ediXsfKO9BETMli-oy3H6NtGXFPGWcXygjvt-gpS6jfTChEWoKNCi_=w1919-h918?auditContext=prefetch" class="w-[100%] mx-auto border border-gray-300 shadow-lg rounded-lg" /><br>
+
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : 강남지역 도로 간략화</p> <br>
+
+
+<h2 class="text-lg font-bold mb-2">6️⃣   지역 표시하는 시뮬레이터 </h2>
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_HKmVfVFqGDlfA8H-Nv2EY4VbsK1swjvwLozNHjk3eBHcdFVnVDpNVX4hwyL2xZ847AR8Q3JJkB2m8GaWmVjpj57AuclqNzGOCtrafDlVbPdp0eHFrpQnV1tHNgaNp_npHqg19T_GLfpdW9gTWxMiK_pB9sDdvMNpeYVum_QcuAIpUoNq6SCVrEj2lidezNsZ4H45L7B47a-TB4a90kNwWihhg-cRlF7xewauoqmKpgBBNp4fTanH2eYpRMPmCumfCJN03D_Yldo-uMgmEiLCnqP-6crXEYWcV4gfMig9JWuR6qWsuHUHWj7TdNqBKY8hoz-RbEJRLGC0267VQWA27ffxI-f3kdhAosfcKdkpANZYl32FeOYtgMxzk2cQSYijSXVnZ7-7cb_ZHeWb_oRI5pH0aKME6zvPfbSxZaeT7KxYiiDeM_ecEvISDQP1iCZagZxyJjV_-pPSpVinF2Kk0xEdEaPb7-b87T7rNnTLVnVrVkpQdI4etb5IZcrW65T4AbrVfZRdu5ZPuvChtUu4uM2UapHAjovDmXzblmdo3qkdIKAL7BMScyGOiKJAXP20Wyuij2ivg9E8Skqi2sSGLmxWJIZZoN5kC_89Asp_O08zEll2GoeQ7xaBZCafBLUyg60XcvTKbLdwH7zeOzUirp4g_Ean7hSGiTLnWTNlBVylGGCghFaGsaEZulzDLEWoLiUCzqFA-BlLZ4bFfTNRwxTDacVZs6z93P-TOq5WHU34L3stTM46Xkao2ALLcCixHw4zq_hOxLv4-jRLiCIk1biuDpD6bo6U7RiM_6m_WAwq7-Qs7_iHdt2a6b7Ilrtuc6kpN4Hri8NBBtu2Ktzay_Mv7vGxSe1Bt9bD_UJt6pflevbzP5p-_KDbdCW20sICShjVp1jdsWyjrclPnwMWM8DuCmz6T8SvE7EodevbaycaAAn_Yb2VJpF5E71IjaWfkZ3n-bLzf4ETwEP22rB5b0g7s2CFXU_gCO0nRIlOOghJaxPfnKD8Wch2Wv_A_u02CsIOOHfmBTh0eQsmMnNmZBetdWbUtIdaF2ozeZhsmKxnWhOhQ8abQW5upspOsDOtyZUCIr9uKuiIog6QzhQkqjycGFAheChmFSljAtwBO5md-ItdKtDGP9Hfg6SSXsIo3sMoVsR5CZX1sUzksrU638mN7qxbpphCPULwemwDGwDfsxdtq3BpIZLEVcJE0zYOxeapq4c93Ky8QAr_PxeRAK_jjCjQRBCOX8l6gwT2bCcLZPuzl8LDhPQktM9Z9L1q8_yJqiQXCSvkXKlt2ULyaZBDGpRlXz_8YzAJveLI9M-5Kl-94wBmCbr0gHvYpxmeHIMUhHhdnGjJ-a_ZwaghbrJR2EPZzLmNIJZ-9i_uWJV2FqWAqgFOW9bvz_Z3Av7MIWJOGITL2v7aOzVT_AWj_rSEthjqb-QQEKprtN0ubyKhZNFZhpe-vIo8pDQL47va-zv1QHf8F9ug4AsDISD1S9ge6vYtO20FpLvkjlSUMthxg4EskPMzo3Jjz_eVNpWM0ME7yRT3L1OsWqI7UBVCPhCkSCw8QCNBTIQ_j4szw4OHlNrS78Q1XtHvIC356108IGNtidJRD5CTnX_Ipm_oUXwfjY6ON0of5z4CPg0OD9yoZXh-85txEAJ02_kW6yylXHf9ra5vzn0Q=w1919-h918?auditContext=prefetch" class="w-[100%] mx-auto border border-gray-300 shadow-lg rounded-lg" /><br>
+
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : 강남지역 도로를 시뮬레이터에 적용</p> <br>
+
+       <p class="text-sm">
+이전 시뮬레이터에 실제 도로 좌표를 반영하여, X/Y 위치에 따라 해당 도로명이 표시되고, <br> &nbsp;특정 위치에서는 역 이름도 함께 표시되는 시뮬레이터입니다.<br><br>
+</p> 
+
+<!-- 파이썬 코드 설명&다운로드 버튼 -->
+<div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
+  <div id="output" class=" flex-1 bg-gray-800 text-white p-4 rounded h-30 text-sm"">
+  <p class="font-normal text-white text-sm">
+x_names = { <br>
+    0: <span class="text-green-400">"강남대로"</span> , 1: <span class="text-green-400">"논현로"</span>, 2: <span class="text-green-400">"언주로"</span>,<br>
+    3: <span class="text-green-400">"선릉로"</span>, 4: <span class="text-green-400">"삼성로"</span>, 5: <span class="text-green-400">"영동대로"</span> }<br><br>
+
+y_names = {<br>
+    0:<span class="text-green-400"> "테헤란로"</span>, 1:<span class="text-green-400"> "봉은사로"</span>, 2: <span class="text-green-400">"학동로"</span>, 3: <span class="text-green-400">"도산대로"</span>}<br><br>
+
+special_locations = {<br>
+    (5, 0):<span class="text-green-400"> "삼성역"</span>, (5, 1): <span class="text-green-400">"봉은사역"</span>, (5, 3): <span class="text-green-400">"영동대교"</span>,<br>
+    (0, 3): <span class="text-green-400">"신사역"</span>, (0, 0): <span class="text-green-400">"강남역"</span>}<br><br>
+
+<span class="text-green-500"> ★ 완성 된 코드를 다운 받아 IDLE 에서 실행 해봅니다. </span>
+</p>
+  </div>
+
+<a href="https://drive.google.com/file/d/1giSVipOcv1tsUbEcSXoV-88KI0NYYVq9/view?usp=sharing" download="example.py" id="run-code-btn"
+   class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto inline-flex flex-col justify-center items-center text-center min-h-[64px]">
+ <button id="run-code-btn" class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto">
+  파이썬 코드 <br> 다운로드
+</button>
+</a>
+  </div>
+
+
+
+
+
+
+<br>
+  <p class="text-sm text-gray-500">
+* 이 예제는 tkinter와 math 모듈을 사용합니다. 별도의 설치는 필요 없지만, 만약 tkinter 관련 오류가 발생한다면<br> &nbsp;&nbsp;  Python 설치 시 tkinter가 포함되어 있는지 확인해주세요. <br><br>
+</p> 
+
+
+
+<br>
+<h2 class="text-lg font-bold mb-2">7️⃣ 코드 다운로드 및 실행하기</h2>
+      <!-- 그림 영역 -->
+<div class="w-full flex justify-between items-center px-2 py-4 z-10">
+   <img src="https://lh3.googleusercontent.com/fife/ALs6j_HTxXsA5HIHo4UicBRAhBsZXOkQjKL1fGIbOoC3ZpgcLKTmn8XZzr8HBtVu-YKiFtPggItfshRnNh5s_SmrXLeYFD8uRO9icGsw6iGAvYA1z4wD_X3YL61H3VOFpH-zjKlEzXbQa2MRRKuniGceM319fXf3UkvOLEuM7dG3fMg_ecS4agWMqGUuKC3RmNJaSwhpUYOKg_0TEzDkzvzNJKCqvXtP4mPZs95xqYaZ60fHUy8vh1wMstQkxuDhZwURdWLZi9R2LXRrMPxCq2Bo3Pxa2p2I8gxS2LhMGidu8joyYGM1T6-kDo-uoibdOeXXZfKTWChlC24HYdKwdRSrk35XCRVP04L9O9w8XBmzM2NErPtAkRetjNYCLIjwsYG2uvPFONd7cy4gCH-d1qO2C-kqBjzhzNPqNW3dKfVlkVdUK00TEzn9Boq-3w-AGooLcN-N1YU9_PQU2T8GYgFo2-lyEJJIxxU-2OvkuTTWoN3achIWiLnUdxxH6FipL3wH-p7Adi2nq7617PtLjuvg5AtUXTzK5D79THBxo62IgJELkWRGFCHRQaNktlyD01glJ_KtQK9tHzIe9qU3Uk7XWJuQ8efp3zWdTwow57gxu6ha8MRhiKpGaOamwNCJLTztt1aca_XHLhJRTnfLUAsqPL3FXdVWiylwu9PY8PUTJJujophaz2DAHuJXmQ5CQ7U1v1hOYCCopQ1Dr48wPoi1GJC-4ZPh03MDw7rwBKmRusvIQdXYXM8RXsEJdP-piT6YI5iEHFFN8Tg7rCzwTdh30ixyJ3vGsoWxAGetN9f9h4V6wzBPoalFUpApuCQAHWmJOq8A1FpCRKpga7IOn8s3cWGVrMI-o91O8pSQEOAaJ7_H5BpUU-92A-BEtznBotUdNfZ2YEQJyqXPXN8Jm7wG-m9WgEVRJHQqR3IEFv-oGLa5TvZJOSI43McGHj4MM0wZqnohrZRMGBxCu9MzIIyq-L5KjaB9Q7LmNJEgEEtqgPLoXS5rZoiYDHNsEhkwuKq6q7trfJxGLKMMF9SFBd_gZVVwqwcsQ68OPlnbL5J6VCiBEe0geGtgslBvfKlREXbYeg9dB3YtAEPBP7EHs6B7kRi3js_lQttxvb8Td2lMsJjV_cz1q8h57Gijs8an9S0ZPY4LnM1yHISlhnx7FPR0cwtRPysR-A9VWAFZbDTBGrukvdeNal5___iLoR0H1WfgSVNHU4Mbr8Fjl3ip1QCiAM3Zdoi-o_iGk1fNGuGOaaiyzJiB3xyWXTyXTy_jS4Winxh2-z40zYFGFFXaZTcZVrlXKCO_yTL6rdo23w9js3zEOB9qcoqV94yswUz-JFJj6CERs7obzo78bNc8TaDUCWl2rqYGTm_EXPHcTe0Ia7tqOu0lg1LV_ocTfPhMOSagVvxLjxazj9EbhrztYIqxeydQacmaA_2YO_PpSfEfNmzlixudGsh6ugnqhbaQzb5MFPfsxHnxTsHtG1Z4SCPE1724S6LFKQ5X1AkPD3ax4N-o1nXfXxn2yVYvDQMYU9zOXiKMjvJr--ApFWQnuh4CIMz1rBG5LuA01Op4VYDbaWms9euRImOtm4CWsjTMxKm-abAwwQiR-lmZQLdmZv7FS-x9zwWQ6er01sP0sxRmWoW_3q2McgSl9HRt1AClUFuul1LxbZox2oN-gg=w1919-h918?auditContext=forDisplay" alt="그림1" class="w-full rounded-lg ">
+</div>
+
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : 교통 상황이 적용된 시뮬레이터</p><br>
+
+<!-- 파이썬 코드 설명&다운로드 버튼 -->
+<div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
+  <div id="output" class=" flex-1 bg-gray-800 text-white p-4 rounded h-30 text-sm"">
+  <p class="font-normal text-white text-sm">
+위치를 참고하여 추가 된 네비게이션이 <br>
+교통 상황을 반영하여 강남역에서 영동대교까지 <br>
+가장 원활한 경로를 추천해드립니다.<br><br>
+
+<span class="text-green-500"> ★ 완성 된 코드를 다운 받아 IDLE 에서 실행 해봅니다. </span>
+</p>
+  </div>
+
+<a href="https://drive.google.com/file/d/1ovKeTVtiVfAPfsIixwL5xG_dwNsobirY/view?usp=sharing" download="example.py" id="run-code-btn"
+   class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto inline-flex flex-col justify-center items-center text-center min-h-[64px]">
+ <button id="run-code-btn" class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto">
+  파이썬 코드 <br> 다운로드
+</button>
+</a>
+  </div>
+
+ <br>
+
+
+
+<!-- 흰색 상자-->
+</div>
+
+    </main>
+  </div>
+
+
+  <!-- ✅ Leaflet 지도 스크립트 -->
+  <script>
+// 별 반짝반짝
+  const numStars = 80;
+  for (let i = 0; i < numStars; i++) {
+    const star = document.createElement("div");
+    star.className = "star";
+    star.style.top = Math.random() * 90 + "vh";
+    star.style.left = Math.random() * 90 + "vw";
+    const blinkDuration = (Math.random() * 3 + 3).toFixed(2);
+    const moveDuration = (Math.random() * 20 + 30).toFixed(2);
+    star.style.animationDuration = `${blinkDuration}s, ${moveDuration}s`;
+    star.style.setProperty("--dx", (Math.random() * 20 - 10).toFixed(2));
+    star.style.setProperty("--dy", (Math.random() * 20 - 10).toFixed(2));
+    document.body.appendChild(star);
+  }
+
+  // 모바일 메뉴 토글
+  const toggleButton = document.getElementById("menu-toggle");
+  const mobileMenu = document.getElementById("mobile-menu");
+
+  toggleButton.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+  });
+
+  // 모바일 '챕터 보기' 버튼 토글
+  function toggleSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    const isHidden = sidebar.classList.contains("hidden");
+
+    if (isHidden) {
+      sidebar.classList.remove("hidden");
+      overlay.classList.remove("hidden");
+    } else {
+      sidebar.classList.add("hidden");
+      overlay.classList.add("hidden");
+    }
+  }
+
+  // PC용 사이드바 토글
+  function togglePcSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const pcToggleBtn = document.getElementById("pc-toggle-btn");
+    const isCollapsed = sidebar.classList.contains("w-16");
+
+    if (isCollapsed) {
+      sidebar.classList.remove("w-16");
+      sidebar.classList.add("w-64");
+      pcToggleBtn.innerHTML = "-";
+      const items = sidebar.querySelectorAll(".sidebar-item");
+      items.forEach(el => el.classList.remove("hidden"));
+    } else {
+      sidebar.classList.remove("w-64");
+      sidebar.classList.add("w-16");
+      pcToggleBtn.innerHTML = "☰";
+      const items = sidebar.querySelectorAll(".sidebar-item");
+      items.forEach(el => el.classList.add("hidden"));
+    }
+  }
+
+    const map = L.map('map').setView([37.5139, 127.04118], 14); // 강남역 위치
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    const coordsBox = document.getElementById('coords');
+    let marker;
+
+    map.on('click', function (e) {
+      const { lat, lng } = e.latlng;
+
+      // 마커 표시
+      if (marker) map.removeLayer(marker);
+      marker = L.marker([lat, lng]).addTo(map);
+
+      // 좌표 표시
+      coordsBox.innerHTML = `📍 위도: ${lat.toFixed(5)} / 경도: ${lng.toFixed(5)}`;
+    });
+  </script>
+
+</body>
+</html>
