@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>03 V2G V2D V2N</title>
+
+  <!-- ✅ Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    #map {
+      height: 500px;
+      width: 100%;
+      border-radius: 0.5rem;
+    }
+
+  body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #010415, #000C36);
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+    }
+
+  body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; 
+  background-image: url('https://lh3.googleusercontent.com/fife/ALs6j_E782PyIFMYtfVVTWKJmz-NPOAMoNGyICJBadA4s8rszXoBW1pdOjGqEGLaJ6a0MTRkxoIZda-w1eEBdzmu7NpqU9QlaUX2XQY5BKLHSPbORtCE87IE3XMTnbsdNUIM2QDvRB41vYEKbzD3Y6bCsxXuLgblYo45APBATItrnaPs5SkcXeu9aMFuO8Q6kvoPorMCwyAObsM39R5G5_E_Ny4k4oc1IHZfhdJELCCBFT-uuiQtWHXXxmLmcqqCFV36Yub3GZcoAkilshppk0ij1iotqUM9Nk4fNUjg_HSqeXi7yzrZ4gofhiS8xQebPOsnnYHgk3L0SCghkoc6qFYFWAscDbY3J-T3eetqtbXbB6-v3GNFW7xti1pcvNbgLjZtRsaIGJynrnsWED8AUXQRHCk3EmYfxA0gY4wsBe-hWeGJZY9cofd4gEbj7ievulF49GZV7LRbry0cXnDZVSVQYrNcc8oxBM5UvAhNouLXYIJXJ1_XrT67zlzLmaWFvgQQjBnnk2oQX60UerK8qSGRhQ8Mmezkv_cMpiU9M46f8t9rwWVhsknkIxzWOEJEmq9ZT1gDIu8pJuJ3u-S9ZLVvKY8HBMqd09aJxwQfKpdcmEqOn2DjZJ5Ia6EDnV0d-41bYyXz0oZOcs1sDV1vh9Ecz35P12FNqpPjzcYZKRLxGdGyygvDYaACaFqHkqaXrW9pE58AAlqvnBmeyNW8NlG2c52S6Q2lsdbBpAWcXQp0iswofLRMi6Wd-Q1B6UUdMXZhyEAdOtiCngRDzpx8RasWmW-9ZMSqnwvl3B9eB113R5jXh6ZB_0eNjO20SZXZn1XEZP-iD0C0qZgHA_-dVp38zoiT-RutNUwTPiG22-Ff6w_JWic7E1tYgOgMCGWjKDdEbHZW3GB3zXyBrnyH81_8oPGApy1vjOa8_pqZS5jyX9PFbODsrQdPRwq4xTMYsW6OTvG08eM96O2lOThJ5PzHxrOYSpOR-kVKLM7VBUbQHPYq36ECuFUY3kDA7yyMnVm4WWMlU3vS0aguTUUva3CAskP6V8difKwvTNgeKae8dGv44TUtEHGvLjk1eWiBrThOEBpik5XOrt5Y_2d8YnWvbymfdh1QdqeU9o0yxC0tVQBDuGDjkfNVsETEGIK9Sy6ZHBOlQjElWxhelqVv6CaiKM8hKEtfTQoJAgJsgboz_5VGUU3hye0xJY18dQ0bQ23jPDl__tjztKa64n8Hw4BzvKDG_cP0J-1h-m3C9COokR6tTEWSzUyRtK98vafvKmkM8Jw_o9UnoxEN9dbo50aKeD88MUKYso3ijwz-H5DNJHK9wNhgnp2Yn3WkVR_ZtlQpfOcJO3hNmCVOGJDdZ9g3gUBDjQXFg1I_Ww7Wc636ttmFKGDuYeNvyyiwLCmXtbmVhkT29p2M-k4_CQZKh-nDzkUlD-B3oXw4DQr7qr9qXEPX7zFqi0KW521Bynrl2z_NP5nf-AWAun8hnjrpdxoedpcLYra9Qqw-7Qz2gptYkn1FBtRCdTMKEWvYiHlOcruhXC1PSTfyHahNxdVaNkhfDtfnF7LZu0NSlx-JOcMtigLfj8iGGneEDJMB3HlA674Hv6s2MoVnxU5E6x71lqwuC0n2oX5H8BRUx0IiOn40i9TcbEPpzDSwPR8hk3fyLQ0_LiReswY0HUhPAA=w1919-h918');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.5;
+  z-index: -2;
+  animation: flickerOpacity 6s ease-in-out infinite alternate;
+}
+
+
+
+    .star {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #00B0C8;
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: blink linear infinite, move linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes blink {
+  0% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
+  100% { opacity: 0.3; transform: scale(1); }
+}
+
+
+    @keyframes move {
+      0% { transform: translate(0, 0); }
+      50% {
+        transform: translate(
+          calc(var(--dx) * 1vw),
+          calc(var(--dy) * 1vh)
+        );
+      }
+      100% { transform: translate(0, 0); }
+    }
+
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      background-color: transparent;
+      text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff;
+    }
+
+    .neon-text {
+      text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+      animation: neon-blink 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes neon-blink {
+      0% {
+        text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+        opacity: 0.3; 
+      }
+      50% {
+        text-shadow: 0 0 2px rgba(255,255,255,0.5), 0 0 5px rgba(74,144,226,0.5), 0 0 10px rgba(74,144,226,0.5), 0 0 15px rgba(74,144,226,0.5);
+        opacity: 0.6;
+      }
+      100% {
+        text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+        opacity: 1;
+      }
+    }
+
+@keyframes flickerOpacity {
+ 0% {
+    opacity: 0.4;
+  }
+  30% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.1;
+  }
+}
+
+    .auto-image {
+      width: 600px !important;
+      height: 400px !important;
+      object-fit: contain;
+    }
+
+
+
+  </style>
+</head>
+
+<body>
+
+  <header class="w-full flex justify-between items-center px-6 py-4 z-10">
+    <div class="flex items-center"><a href="index.html" class="Logo">
+      <img src="https://lh3.googleusercontent.com/fife/ALs6j_FpAj7oMETlep3fCBHYuZGq6DWoc60B49wnyNHOTMWS4llCaS_Dp1WLetK1BMHmti4aHnoIXtcVTmgJozC5-VcrBMfRf_pmuzJwULdG9kDt6CALW-P5LRQI_XsXKEB9aJKmDaYTl6V1QaFdPJVpK5YNQBhlW2jdI_AuDvDA78CfUZ-unq3YrNsIHtalQg-UUQQ_3xPZT6uK4tsd1fLzGhG0-axfqtU9jKSbt_DqT5C0fbHcHdA3TFXzaC0PIVtdZWE7pevMcpAkE5GGH6e1RZ1Xa3bQVi4p-EefrONX0wqt1oGD9YFE6g6o6wYkUcyMgwmiAqyMLo4jUDkjfr2tQ_RAiu88W1AgAPtCm8VPp8iQqHsxxdJkEg-OM4kWXs6BhcT1HaUk-uyhd6V3u6qeaAugGSjTgzOhJE8_WB-Kg0_EMceh1aUtKxsKF6sL2s9SYoiBPeodHQZ_JOfPgfrJ9saqwzS1c12GHZQPA9214h2jB3B342DTmtnI3Kjke9ZACcerZTGmgs8r-M-KXZfaW3GGrMeGyuNiunkLZPpoaonQfsVmr1bTddKvcd2CIDuynW_IrFk8mGF7QWfEPunNbCRW5giSKO7G24DSsZxBI9z6ZKUTYc2yIVUMe6lvPUn0fiBncb1DvPN5KwQ-wo-085B42dWoe4A608RY0V0Zw7HX5z3nAqlMGoaugV4hlbRr4AM-utqOfrMeX_L1WyndUfUbzdAvb567Wm1lFLvBp68eP4SyQlwKolfA46zTPuSnYdIQZqeyQBz-k7LGf_KYqjdYJgQxs98ug55nA-K9l_S9JERHaBVe8f1WwxzDyLJyrS84EZFy8DeW113a6osXVO-appgYVBiLOwuxAiAMfLiOhHI6vnxaLm0_XnvRl-grtv4-B9wovOeAwWWJ53EYN-OvVwAKIrzORek9zZNaVE7ZdtHbO4fJ5GHKL6pGx8e45NdnMfBaPqLLUZvfY-lHnTfkxlNkauTHtsghHHd1IOtCREO-9sFepHhsZdyonnEyoOdfcDEIUUynaqkB9nJ6LRnTREJ57v2eKtxlRyczJVcMYAePf7iScHkDM8SXFKLbAzfXff9lBiZzqUXzpMW5wTiDb7YhHdCVFQzO48HMtmbHuegn7qYh1DDNbhzzFj1mjuadOJx1k5ifcrOCc-gaAQZTAOYSfddaqn2X1ISnpK326an-GOJ5NROtbwwXmpSApWXVR1S3te51R8E8YdGR4MIl_A3PoawJbN5OGh2BoPrrRuwxESmk5BbUtxjRagSnhCaAkOZ2pHzjL7kyYpCK6zfAgDfRKwFhU6UXddvgKIkcUkH-LgFj4-2IHb4AKILBiHIRcoImi8qHz-KvtxPTQMVUbUf44V1Lwqv6-JemKVzmGy8ZUJPaexdRtfJ1dwrNmm6K1otLVn7TKePyOS6UaD4FSxavVGJMijJNXZBXKA5OzU-ZP9h60Dil3L26hrte0m2ioVhqV_r5dBxmNhchgw8kyaaFomXDRYgj1nW9Ja5YMUOacyTc3Ms0icahuF3vUm25sjH4H8rjWGBUYKXIlM-K-QWrpRDD6HW5m5FzIlt_nNVirFunkfenUXCNEhJVg-khcWOEd7YEvbmk50xjUsAldDIUIsQ6t_qbEvAnM88NBSPLOOLHwCZvVuXbsp_dJAFRmXY0vhmb=w1919-h918?auditContext=prefetch" alt="Logo" class="h-10 rounded-lg shadow-lg">
+    </div></a>
+
+    <button id="menu-toggle" class="text-white text-3xl md:hidden focus:outline-none">☰</button>
+
+    <nav class="hidden md:flex space-x-4">
+      <a href="ai_gallery.html" class="nav-link whitespace-nowrap">AI GALLERY</a>
+      <a href="example.html" class="nav-link whitespace-nowrap">EXAMPLE</a>
+      <a href="https://truedo.github.io/zumi_mini_python_backup/" class="nav-link whitespace-nowrap">LIBRARY</a>
+      <a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=81&display_group=1" class="nav-link whitespace-nowrap">PURCHASE</a>
+    </nav>
+  </header>
+
+   <div id="mobile-menu" class="hidden flex-col items-center text-center bg-[#000C36] w-full py-4 space-y-10 md:hidden z-20">
+    <a href="ai_gallery.html" class="nav-link whitespace-nowrap">AI GALLERY</a><br>
+    <a href="example.html" class="nav-link whitespace-nowrap">EXAMPLE</a><br>
+    <a href="https://truedo.github.io/zumi_mini_python_backup/" class="nav-link whitespace-nowrap">LIBRARY</a><br>
+    <a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=81&display_group=1" class="nav-link whitespace-nowrap">PURCHASE</a>
+  </div>
+
+  <!-- 오버레이 (모바일 전용) -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden" onclick="toggleSidebar()"></div>
+
+
+<div class="flex">
+
+ 
+  <aside id="sidebar"  class="hidden md:flex w-64 bg-[#3B82F6] text-white p-4 rounded-r-xl flex-col space-y-2 transition-all duration-300 fixed md:relative z-40 h-screen md:h-auto top-0 left-0 md:translate-x-0">
+
+<div class="flex justify-between items-center mb-4 md:hidden">
+  <h2 class="text-lg font-bold">챕터 보기</h2>
+  <button onclick="toggleSidebar()" class="text-white text-2xl">✖</button>
+</div>
+
+
+<button id="pc-toggle-btn" onclick="togglePcSidebar()" class="hidden md:block text-white text-2xl mt-4">
+-
+</button>
+
+    <div class="space-y-2 text-sm sidebar-item">
+
+        <a href="ai_gallery_01" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">01 ITS : 지능형 교통 체계</a>
+        <a href="ai_gallery_02" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">02 V2X : 차량과 모든 것 </a>
+        <a href="ai_gallery_03" class="block bg-[#0845A8] text-[#ffffff] font-bold px-4 py-2 rounded ">03 V2G V2D V2N</a>
+        <a href="ai_gallery_04" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">04 인공지능의 원리#4</a>
+        <a href="ai_gallery_05" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">05 인공지능의 원리#5</a>
+        <a href="ai_gallery_06" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">06 인공지능의 원리#6</a>
+        <a href="ai_gallery_07" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">07 인공지능의 원리#7</a>
+        <a href="ai_gallery_08" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">08 인공지능의 원리#8</a>
+        <a href="ai_gallery_09" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">09 인공지능의 원리#9</a>
+        <a href="ai_gallery_10" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">10 인공지능의 원리#10</a>
+        <a href="ai_gallery_11" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">11 인공지능의 원리#11</a>
+        <a href="ai_gallery_12" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">12 인공지능의 원리#12</a>
+      </div>
+
+      <!-- 페이지 이동 버튼 -->
+      <div class="flex-1 flex items-end">
+        <a href="#" class="block w-full text-center text-3xl mt-4">↑</a>
+      </div>
+
+
+
+    </aside>
+
+    <!-- 메인 콘텐츠 영역 -->
+   <main class="flex-1 max-w-screen-lg mx-auto p-4 sm:p-6 md:p-8 flex flex-col space-y-4 md:ml-0 md:pl-64">
+
+      <!-- 사이드바 열기 버튼 (모바일 전용) -->
+   <button onclick="toggleSidebar()" class="text-white text-2xl md:hidden mb-4 bg-[#2563EB]/90 px-4 py-2 rounded">
+  챕터 보기
+</button>
+
+
+
+      <h1 class="text-xl sm:text-2xl md:text-3xl font-bold">03 V2G V2D V2N </h1>
+
+<!-- 흰색 상자-->
+<div class="bg-white text-black p-6 rounded-lg space-y-4">
+
+      <!-- 그림 영역 -->
+   <img src="https://lh3.googleusercontent.com/fife/ALs6j_Hdfm_MDPIiPcof0AVRvTbWrd1xTixhWjAolQPbzlKS-zrOSD12NphuNmGCtrzxYCDTyXN-dGlTChCEW-QW3BED_DqlJfAxDcVKXGt1P5Xrw_z7I16oLQutPSYRqkhpdWkfYl0M7oqev73TE41LgMwK8DgFFcSJKeDc2Xbze_W3RQN6X8V3BUhNeOE8sq3-v3C5GuWFj8V6eUY9dA-fra2NV7ku6vwVKjp6pea_qpC4xGgc_0E6o_KfLai3xOxg-6EeXAQwXRSTFthCnzmO5dFNr8207FdfE6wgnIMb4PPHZTGx2MXlxh3mpS6E0AfSGoDy8v8Ny6_9kfEiSSHtlxIPdhaFBy1cHM6bjulu1JAR_qsIiFAtNv3GcvjzaUhQs8ReRJcOUagMuBIisVkRgZqeoKUSpFiYNGiDMdQbpZ7uE4Mgz1n91PHiNWEhQIXYKgep9XP6yVW1RJprl8HPoNSlpmalp8OkXimlA922MOHop-m2KEafXiCWY1Cozzvki1fDTnZlag34U5uGxlzu7hulQrJWNnVaODOVWgNPVcCEf0Jpe91qwQdixB7B4tJVmJbzX-b5CBD0tGWuWlRvX5Ia8FPfhTxpFZ4QXfiTqWVBmi8Nt9a6DctKjSsENgd80F81tkJGDrd64ZsRaUYIaroQ6unNX4n6oRRwKMsgLNkiuVWANKYtKlvZwjCQo4gfpYaZvuWWlQ9AUtkgN44a91X-taDhmTTlvzwEBeiiiSvI33dRRQGY7jGPoe9xp-L5Od7UkOoCDxd400FIlYea2r0IATPIIk76Y_Ci2kh_LQJFVasEO1wOpzCedKq-pqSNiEufUmoXFAUBTghFp9idEb27gS5PzENh1f05euhYrdGzd1Q-ieqhcUjmCT5hua9x1u_VU-MVHf5VrqeJ-TUhyQfTmDeD6wGb5xvt_XqEUFPk1D-31LaUx1KxKW_LL_wkQIE9hAVOro531Xmzq3RRY-vaUMLl5-j00UXv6Eo7ql0bYUg4mBNgOz-eXawxndWyyuvg7Kn55aTKPWtYxG1Dkx-B6i8E7De3KiZ4FvG8-g-f92cvdWSL0oMbpsoGT8Uum6eCDW2NwaEVcQj8vPOCY4eTZd7k1mQGRu3TJgvMhw16jw-9NBOmeiKpLqJ4MBWMbbqoy-4ua9gDyavII5Q5S-D892AR6Z7OTDdwFo_jfqQrOE0QJBjJN71Sq3nhuCSekFid2uIzOJJ8zhPQs-WY2u3fLpI9Avlu6J9x3tjZYOI6l_w7j-sF9s9_tieywAbzFMfWjXlvkeu_DzXon_qA6JQuiXuy8u8IC5zbihkB-J1Tnlf30DHPFFWhYMQ8grAyPE590smqaDueO3rqmefY4aNK7rRNDet68kSwSYoNYAfrimEg0Ej1Ye1ZAd4Csb1UE1mAjF474yluKwZHqy_H_oxNJW0MULc6S5XthUq1SMQwLsrSEsqAMMRdUIw8u_h69ki199ifSFV41xIXbLEgFFFFTp2PozjuylMCMSItzk34pqeWVwxE26QbEe5PbQ70iEwrEYXTwb01xv9eJMD6eqikfPW0ONJcfDk4O4Q1aJiUqWXrNPM6xlTKUKup9mDIPtvFLSPss6sjYgunE4cGSBNnzesd5fireaZljAw70LHktGZkgWhzu5SvDDRg9ckL3LxCafkqhEyDXg=w1919-h918?auditContext=prefetch" alt="그림1" class="w-full rounded-lg ">
+
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : V2G V2D V2N</p>
+
+      <!-- 설명 -->
+      <div class="bg-white text-black p-4 rounded">
+        <h2 class="text-lg font-bold mb-2">✅ V2X (Vehicle-to-Everything)의 하위 기술 (1) </h2>
+        <p class="text-sm"> V2X (Vehicle-to-Everything)의 구성 요소 중 V2G (Vehicle-to-Grid), V2D (Vehicle-to-Device), V2G (Vehicle-to-Grid)에 대해 알아보겠습니다. 
+
+<br><br>
+
+
+  <h2 class="text-lg font-bold mb-2">🟡  V2G (Vehicle-to-Grid) </h2>
+        <p class="text-sm">
+
+전기차(특히 자율주행 전기차)와 <strong>전력망(Grid)</strong> 간의 양방향 에너지 통신 및 전력 교환을 의미합니다. 즉, 전기차가 단순히 <strong>전력을 소비하는 것뿐 아니라, 필요 시 전력을 다시 전력망에 공급하는 역할</strong>도 할 수 있습니다.
+</p><br>
+
+  <h2 class="text-lg font-bold mb-2">🟨  V2G (Vehicle-to-Grid)  예시</h2>
+        <p class="text-sm">
+
+<br>
+● 전기차가 낮에는 태양광으로 충전된 전력을 저장하고, 전력 수요가 높은 저녁 시간에 전력을 전력망에 되돌려 공급<br>
+● 차량이 집에 도착하면 스마트그리드와 통신하여 충전 시간과 전력 단가를 분석, 가장 경제적인 시간대에 충전 자동 실행 <br>
+● 자연재해나 정전 발생 시, 전기차 배터리를 통해 가정이나 건물에 전력을 공급 (V2H: Vehicle-to-Home의 응용 형태)<br>
+● 전기차가 주차장에 있을 때 스마트 시티 에너지 관리 시스템과 연동되어 지역 전력 수급 상황에 따라 자동 충전 및 방전 조절.<br><br>
+</p>
+
+
+ <h2 class="text-lg font-bold mb-2">💡 예시를 통한 이해</h2>
+        <p class="text-sm">
+📍 V2G 시나리오: <br>
+&nbsp;&nbsp;에너지 관리 시스템에서 전력량 모니터링 <br>
+&nbsp;&nbsp;예상 사용 시간 계산  → 100% 일 때, 4시간 기준  <br> <br>
+&nbsp;&nbsp;<strong>※ 모니터링 도중 주미 AI에 유선 케이블을 끼웠을 때 전력량 확인 </strong><br> <br>
+
+<h2 class="text-lg font-bold mb-2">1️⃣  V2G를 활용한 실시간 배터리 모니터링 시스템 </h2>
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_Gz9jeQRudg7IF-EJhtpe-zuLrS3SUbtRnVk8uNkIthcUY4q5C-AgJ5UnxYFKAm0gHe8f7gkohyjU0OzVaWD5QPkuz4auZBmMMSMvoD41_WfzmKDfMsD5cZ4nCsLXdNETgOGE_v1OE5lWDuG23ZqFGZHimeyUPONwHuuWAUlhQRI-I19QCDS7mJizsTIE5dRHzbR8SXhkRR0JfydmUCzTDpEiWVaN0KHC2fw_ORBG1ocmvyr9SvAb4A_JwQAcIX_vazwnna-DhbOvxkgj4dPw_RDtI432t5Lufac0eKvPnK5YsbaKN_Vzm6Gp8ZFZRKDU8Il7JRyiNVvICYJopdywh5AyKigWDm0F5STfSYWLFew5fVeewvowYJTYylNGEnJ7530v69LKS5YoADrff0vSxmNbK3bTS0oqY2cUSRc0rSw5ntyYgu32la__WhtVYql7HPNyJO9XjMMjuMdx9yw_TVV_dcdwHArlGTcJrhm6-aHp6sAAUBFTg7O5Um-RIPDqULClCQaBCf-ACxjTV8j5qbSx2T5XcBVcJT2VkNzFQyD4hUxeiK7wY-u0PllIe8MxMPBizxI2z0PY7Usqujmobl4KO_3CT_Duo_1ALtcA2SSeuhKUjTxLmFIPuyXZ-iyCcHdxFvtpzyldWclA33PGjtK7zY6eWPzVq9OYWMD9LRqbY8vc0LRtxERSMkvJI3tPeCNX75NwKKu-Zg2WxMv5Hdmqd9_sS4L_KE1WtJG48tpxwdqZC-i_fVXeuxjiYUeI2_2tB0RHXihE0BxW3QhRofRWLO40jZsDkTBK3Oo5lsFNLRiiz9vrIZ7mG5P0hIKqHzz3oO7csE0Inh6WIP4j9N9B9-SXa2Yh6zqlVZP12piEvjS-Aa2wSAYiL3hvURribz1YaP9Wc-a3aWAWlGCEAzqKq_XDNSjTNV0D6kgYdjkNKbe2o8jzsEMBLez3d6lNxA5P1bYgPxwLLIeeuOEOIE9TqcFdaNARxhTPd-ORNpdhk5HghSZkOZNUzxdw1FR5yFOxMu1tSjdnPCXAClnscIYcEgn8MY6xUKY3zZ2_X1pUDMDt3_xLscUCWJ2YBET5GbVfr6bThC0S1L3Dm69wJizqjuIew8IbzAD7qguqt6rwfci-XcwDXWfUqhpDC4C705tpypdd3giNAWtQa2bXefoUcmlKs9aFu0fbGbCVIqacS_noCIp0dCLolOWk_GegCEHAWwTz9YqqHHVI_5qQ_Ju1pBtio3HNeZbrN5cNt93xMdmuoZZkCjnJr2BraQRB-XcYO3fgXmXB3rJdC3QfUPGqoMKv3P-tmWVFXIxFzteaMKqFl551bZ34BIb807YeUTYMr9zXwaN9p_m7yJHS4chCnTJjLG-oe-0cXVuFt3-KKxPU6BSXHbX5K0W6vvMqQ4kXKYXLTxXQy-nGPfOshggi1KjkQ8X9q65eCcR_JMSH04f05VFBdz46OilWbzn-fO66-HvPsFeKAOU21t2ZANUVgFdZ-PvFKpSCwdYzYCFhrMvfnPSQjoF0kruwTACur6xHQUBHwN4BsEPlKrjMU07hWSYqQaTETF9u9N8yjw9ZokGQ_7DdGNxPxaqXAXq0zZPxNmUISl70iodGgTWI8ZQEuh9kJvGqD2lAK6I5WZKj7zBc95sbo_CxbgT5mc3uFWVjrR2UU-sA=w1919-h918?auditContext=prefetch" alt="그림1" class="w-full rounded-lg ">
+
+<p class="text-[14px] text-gray-500 ">
+* 이 예제는 matplotlib 모듈을 사용 합니다. 따라서 matplotlib 모듈이 설치 되어 있지 않다면,<br> &nbsp;&nbsp; 명령프롬포트(cmd) 에서 pip install matplotlib 를 설치 한 뒤에 실행 해주세요
+</p><br>
+
+<!-- 파이썬 코드 설명&다운로드 버튼 -->
+<div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
+  <div id="output" class=" flex-1 bg-gray-800 text-white p-4 rounded h-30 text-sm"">
+  <p class="font-normal text-white text-sm">
+
+<span class="text-red-500"> # x축 범위 갱신 (60초 넘으면 확대) </span><br>
+ <span class="text-orange-500"> if </span>current_time > ax.get_xlim()[1]:<br>
+ax.set_xlim(0, current_time + 10)<br><br>
+
+<span class="text-red-500">  # 애니메이션 함수</span><br>
+ani = FuncAnimation(fig, update, interval=500)  <br>
+<span class="text-red-500"> # 0.5초마다 값 읽어옵니다.</span>
+</p>
+  </div>
+
+<a href="https://drive.google.com/file/d/18PkHQFMekNsu4w4t6tph7x9WZ0m0qgrm/view?usp=sharing" download="example.py" id="run-code-btn"
+   class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto inline-flex flex-col justify-center items-center text-center min-h-[64px]">
+ <button id="run-code-btn" class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto">
+  파이썬 코드 <br> 다운로드
+</button>
+</a>
+  </div>
+<br>
+</p> 
+
+
+  <h2 class="text-lg font-bold mb-2">🟢 V2D (Vehicle-to-Device) </h2>
+        <p class="text-sm">
+
+차량과 운전자 또는 보행자 등의 <strong>개인 디바이스(스마트폰, 웨어러블, 태블릿 등)</strong> 간의 통신을 의미합니다.<br><br>
+
+
+  <h2 class="text-lg font-bold mb-2">🟩V2D (Vehicle-to-Device)  예시</h2>
+        <p class="text-sm">
+
+<br>
+● 자율주행 차량이 근처의 보행자의 스마트폰 신호를 감지하여 보행자가 <br> &nbsp;&nbsp; 도로에 진입할 가능성이 있다고 판단하고 속도를 줄임<br>
+● 운전자의 스마트워치와 차량이 연동되어 심박수나 피로도 정보를 수집하고<br> &nbsp;&nbsp; 피로가 높다고 판단되면 자동으로 휴식 권고 알림 표시 <br>
+● 차량 소유자의 스마트폰 앱을 통해 차량을 원격으로 호출하거나, 주차 위치를 확인하는 기능<br><br>
+</p>
+
+
+ <h2 class="text-lg font-bold mb-2">💡 예시를 통한 이해</h2>
+        <p class="text-sm">
+📍 V2D 시나리오: <br>
+● <strong>배터리량 실시간 모니터링 (간소화) </strong><br>
+스마트폰 앱을 통해 자율주행차 또는 로봇형 차량의 배터리 상태를 실시간으로 확인<br>
+→ 차량이 배터리 정보를 사용자의 디바이스로 실시간 무선 전송 → 사용자가 언제든 확인 가능<br><br>
+
+●<strong>앱을 통해 차량에 장착된 전방 센서, 하단 거리 센서 등의 값을 실시간 확인.  </strong><br>
+→ 센서 데이터가 차량에서 스마트폰으로 직접 전송 → 전원이 꺼진 상태에서 물체 접촉 확인 기능 (블랙박스) <br><br>
+
+●<strong>앱에서 버튼을 누르면 차량 LED를 원하는 색으로 변경.</strong><br> 
+→ 사용자의 디바이스가 제어 명령을 차량으로 전송 → 운전중이 아닐 때 누군가 접촉 하려 하면 경고등을 켜는 기능 <br><br>
+
+●<strong>원격 버튼을 사용한 디지털 표정 또는 전면/후면 카메라 전환을 앱으로 조작.  </strong><br> 
+→  사용자의 디바이스에서 보내는 명령에 따라 차량이 표정·카메라 전환을 즉시 실행 → 원격 모니터링 가능<br><br>
+
+●<strong>앱에서 절전 모드 상태를 켜거나 끌 수 있는 버튼을 사용.  </strong><br> 
+→  절전 모드 제어 신호가 디바이스에서 차량으로 전송되어 시스템 전원 관리를 원격으로 수행<br><br>
+
+
+<h2 class="text-lg font-bold mb-2">2️⃣  V2D를 활용한 디바이스 무선 컨트롤 APP</h2>
+
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_GrsYbfBBqwQaK1yeevWLl_McAH45gGldnRNL1Thda3obfGYqy-GegQDWBCYcxMqhD1IZfjUghsaLo4dXPjuT_FsZi1NPfrExHNH0z_6wT-2soTg8ehu_WfbP8giYWLMCGcx9KYvsw3q9UD9RoOzUlfyeT9bbIpr3XpXtlQRQ6ZIqRXMvexgeLZxO7Tt6OhZJxqNw3epCbYY1_k1LNclcJz1c5CqpJbkDCL37Ykjy9QiukoN6ZHgur8-hRiUwdS6Pt7hHtnkgU6SBLyFAUR1KTsCumYjJg8pjRG6U2OCaHlMzXl0XZQ-Yn15fAW5TOes9_LE9nk-09cPvG504WX2t_46f-pMB6QTg68F3--RQVnPhcRHen71B4QTaxx5nawnEVqss-eX_DyJUyI0F_CN-WrgMeM4YEwaCGaoCR_7c5bnlphhJky362asS_9gPBsYeYDyM3CxjXgPpeeKwOJ-rAC8T3Hzc7jSrlOVJp0czNTEhLeG-IPeGC10P9sEvYfoycFomnjsVzIO4Mv6iKUajsQ7lFwKGHjlNwmN6SbT1bzAJuNaeF9s97-XMNkfiF5FJZEKj1KMZ4qRKmnp-jxza6nNor_rAqldavsivqPZylbroJL6072sCYmu90yUZthIlHeuH-tbq0cZz_NOXqSmRRjkOzHqFm6U2dIjGVlmsMywvXZugx7MWV8zq3xDdBkPMC1SLbIx_AbRJQKy63JE-1wxvePCiE3Fu6LQWDHiwdycJnfvt2xs6CM86koLPb7JokzAzBQ__ClCxlQiEJ8dMJtqKHHj5Hy3M3JHmyJyvj7j7f5B6M3OL7S9HwRl4j9LdBRqGEjWltUhfm4iHQzrgnWvbfc_Ch0nSuQB5d4ra7taKn1UX3h6ZGjMj92muL3vrnMi02KumesqbwPCXyJzKVVddjE07gRidnaNQISNsvY9RPX5RZoQCdRredvlZhZHAk_Uxh6bJ0A4QnA1re-jf8AmagJq80kRXLjQ3xZ4I3KWiBsq9IljR8WiDEF_SQcZkM9K625IM7IeJY7ePQg9FIyuBZ-0eCgeNYXHPhrRR9xK-aN6TPiuD7B8ckzajrBl-D-fJGxQjOTqeQ1s0ERsocKU7HOY5pDGBpQWtfYunsL9AhA9Trtp0vDmC5Z4K8p7KJtzsAcOveIqWSDVoQfnVJSTAl4jrAeXLVoqHCGVuiDv0-VKbEeTKyzO1T3_nNBjnVhciCe45KeLE4Wb0xLDjmIJztQ5lBCI6qjLL2at-UYmraYDIztmRmS_LbEV63-7cME2yNL-HmHkrGuwwu1-W_lspRB8_3bryTnTmOg-Lc0GWYhbk6wdLdug0PpnG00Hd4d4-cln0mYVXWBpnqrx4UT1RsBFbWcTl6Up_IX42fjbJ96PiBs6bffdO2ibRNNXkbHEDSIkprka260VwE6js_ZlAx-1URQo5_oZLKWknJuVrEN3CeVbNOZ_xn8tF_oukZ2xCSfR1hHrSVVdmS9FxokRzVcAKYz1LTdC2_mGieMSh2f55Fg140M66xxZ85GFy82pj_Z9JdD1E3nNcphCwauErRDA1nI2cS-oDQXeKwdFAsBhwudqZz19C5CjY_J1v_55pt2LCchqrJ4b6HGJRrUhpwvcgiZBoLitIGGEfWyBpQzR3TnzhDnJ8DjddQanYrIp42ZqhAqRg=w1919-h918?auditContext=prefetch" alt="그림2" class="w-full rounded-lg ">
+<p class="text-[14px] text-gray-500 ">
+
+* 이 예제는 tkinter와 math 모듈을 사용합니다. 별도의 설치는 필요 없지만, 만약 tkinter 관련 오류가 발생한다면<br> &nbsp;&nbsp;Python 설치 시 tkinter가 포함되어 있는지 확인해주세요.
+</p>
+<br>
+
+<!-- 파이썬 코드 설명&다운로드 버튼 -->
+<div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
+  <div id="output" class=" flex-1 bg-gray-800 text-white p-4 rounded h-30 text-sm"">
+  <p class="font-normal text-white text-sm">
+
+<span class="text-green-500"> 배터리 값 모니터링 </span><br>
+<span class="text-gray-300"> 절전모드 ON/OFF </span><br>
+<span class="text-pink-400"> 표정 ↔ 카메라 전환 </span><br>
+<span class="text-blue-500"> 전방·하단 센서값 실시간 모니터링 </span><br>
+<span class="text-yellow-300"> LED 변경 </span><br>
+</p>
+  </div>
+
+<a href="https://drive.google.com/file/d/1fdOvQMoHe1yJ6b3bSaBOSoQ92T2hA9VX/view?usp=sharing" download="example.py" id="run-code-btn"
+   class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto inline-flex flex-col justify-center items-center text-center min-h-[64px]">
+ <button id="run-code-btn" class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto">
+  파이썬 코드 <br> 다운로드
+</button>
+</a>
+  </div>
+<br>
+</p> 
+
+
+
+
+
+  
+
+ <br>
+
+
+
+<!-- 흰색 상자-->
+</div>
+
+    </main>
+  </div>
+
+
+  <!-- JS 스크립트 -->
+  <script>
+// 별 반짝반짝
+  const numStars = 80;
+  for (let i = 0; i < numStars; i++) {
+    const star = document.createElement("div");
+    star.className = "star";
+    star.style.top = Math.random() * 90 + "vh";
+    star.style.left = Math.random() * 90 + "vw";
+    const blinkDuration = (Math.random() * 3 + 3).toFixed(2);
+    const moveDuration = (Math.random() * 20 + 30).toFixed(2);
+    star.style.animationDuration = `${blinkDuration}s, ${moveDuration}s`;
+    star.style.setProperty("--dx", (Math.random() * 20 - 10).toFixed(2));
+    star.style.setProperty("--dy", (Math.random() * 20 - 10).toFixed(2));
+    document.body.appendChild(star);
+  }
+
+  // 모바일 메뉴 토글
+  const toggleButton = document.getElementById("menu-toggle");
+  const mobileMenu = document.getElementById("mobile-menu");
+
+  toggleButton.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+  });
+
+  // 모바일 '챕터 보기' 버튼 토글
+  function toggleSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    const isHidden = sidebar.classList.contains("hidden");
+
+    if (isHidden) {
+      sidebar.classList.remove("hidden");
+      overlay.classList.remove("hidden");
+    } else {
+      sidebar.classList.add("hidden");
+      overlay.classList.add("hidden");
+    }
+  }
+
+  // PC용 사이드바 토글
+  function togglePcSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const pcToggleBtn = document.getElementById("pc-toggle-btn");
+    const isCollapsed = sidebar.classList.contains("w-16");
+
+    if (isCollapsed) {
+      sidebar.classList.remove("w-16");
+      sidebar.classList.add("w-64");
+      pcToggleBtn.innerHTML = "-";
+      const items = sidebar.querySelectorAll(".sidebar-item");
+      items.forEach(el => el.classList.remove("hidden"));
+    } else {
+      sidebar.classList.remove("w-64");
+      sidebar.classList.add("w-16");
+      pcToggleBtn.innerHTML = "☰";
+      const items = sidebar.querySelectorAll(".sidebar-item");
+      items.forEach(el => el.classList.add("hidden"));
+    }
+  }
+
+  </script>
+
+</body>
+</html>
