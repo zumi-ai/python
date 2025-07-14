@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>04 V2P 보행자 안전 시스템</title>
+
+  <!-- ✅ Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    #map {
+      height: 500px;
+      width: 100%;
+      border-radius: 0.5rem;
+    }
+
+  body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #010415, #000C36);
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+    }
+
+  body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; 
+  background-image: url('https://lh3.googleusercontent.com/fife/ALs6j_E782PyIFMYtfVVTWKJmz-NPOAMoNGyICJBadA4s8rszXoBW1pdOjGqEGLaJ6a0MTRkxoIZda-w1eEBdzmu7NpqU9QlaUX2XQY5BKLHSPbORtCE87IE3XMTnbsdNUIM2QDvRB41vYEKbzD3Y6bCsxXuLgblYo45APBATItrnaPs5SkcXeu9aMFuO8Q6kvoPorMCwyAObsM39R5G5_E_Ny4k4oc1IHZfhdJELCCBFT-uuiQtWHXXxmLmcqqCFV36Yub3GZcoAkilshppk0ij1iotqUM9Nk4fNUjg_HSqeXi7yzrZ4gofhiS8xQebPOsnnYHgk3L0SCghkoc6qFYFWAscDbY3J-T3eetqtbXbB6-v3GNFW7xti1pcvNbgLjZtRsaIGJynrnsWED8AUXQRHCk3EmYfxA0gY4wsBe-hWeGJZY9cofd4gEbj7ievulF49GZV7LRbry0cXnDZVSVQYrNcc8oxBM5UvAhNouLXYIJXJ1_XrT67zlzLmaWFvgQQjBnnk2oQX60UerK8qSGRhQ8Mmezkv_cMpiU9M46f8t9rwWVhsknkIxzWOEJEmq9ZT1gDIu8pJuJ3u-S9ZLVvKY8HBMqd09aJxwQfKpdcmEqOn2DjZJ5Ia6EDnV0d-41bYyXz0oZOcs1sDV1vh9Ecz35P12FNqpPjzcYZKRLxGdGyygvDYaACaFqHkqaXrW9pE58AAlqvnBmeyNW8NlG2c52S6Q2lsdbBpAWcXQp0iswofLRMi6Wd-Q1B6UUdMXZhyEAdOtiCngRDzpx8RasWmW-9ZMSqnwvl3B9eB113R5jXh6ZB_0eNjO20SZXZn1XEZP-iD0C0qZgHA_-dVp38zoiT-RutNUwTPiG22-Ff6w_JWic7E1tYgOgMCGWjKDdEbHZW3GB3zXyBrnyH81_8oPGApy1vjOa8_pqZS5jyX9PFbODsrQdPRwq4xTMYsW6OTvG08eM96O2lOThJ5PzHxrOYSpOR-kVKLM7VBUbQHPYq36ECuFUY3kDA7yyMnVm4WWMlU3vS0aguTUUva3CAskP6V8difKwvTNgeKae8dGv44TUtEHGvLjk1eWiBrThOEBpik5XOrt5Y_2d8YnWvbymfdh1QdqeU9o0yxC0tVQBDuGDjkfNVsETEGIK9Sy6ZHBOlQjElWxhelqVv6CaiKM8hKEtfTQoJAgJsgboz_5VGUU3hye0xJY18dQ0bQ23jPDl__tjztKa64n8Hw4BzvKDG_cP0J-1h-m3C9COokR6tTEWSzUyRtK98vafvKmkM8Jw_o9UnoxEN9dbo50aKeD88MUKYso3ijwz-H5DNJHK9wNhgnp2Yn3WkVR_ZtlQpfOcJO3hNmCVOGJDdZ9g3gUBDjQXFg1I_Ww7Wc636ttmFKGDuYeNvyyiwLCmXtbmVhkT29p2M-k4_CQZKh-nDzkUlD-B3oXw4DQr7qr9qXEPX7zFqi0KW521Bynrl2z_NP5nf-AWAun8hnjrpdxoedpcLYra9Qqw-7Qz2gptYkn1FBtRCdTMKEWvYiHlOcruhXC1PSTfyHahNxdVaNkhfDtfnF7LZu0NSlx-JOcMtigLfj8iGGneEDJMB3HlA674Hv6s2MoVnxU5E6x71lqwuC0n2oX5H8BRUx0IiOn40i9TcbEPpzDSwPR8hk3fyLQ0_LiReswY0HUhPAA=w1919-h918');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.5;
+  z-index: -2;
+  animation: flickerOpacity 6s ease-in-out infinite alternate;
+}
+
+
+
+    .star {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #00B0C8;
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: blink linear infinite, move linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes blink {
+  0% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
+  100% { opacity: 0.3; transform: scale(1); }
+}
+
+
+    @keyframes move {
+      0% { transform: translate(0, 0); }
+      50% {
+        transform: translate(
+          calc(var(--dx) * 1vw),
+          calc(var(--dy) * 1vh)
+        );
+      }
+      100% { transform: translate(0, 0); }
+    }
+
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      background-color: transparent;
+      text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff;
+    }
+
+    .neon-text {
+      text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+      animation: neon-blink 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes neon-blink {
+      0% {
+        text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+        opacity: 0.3; 
+      }
+      50% {
+        text-shadow: 0 0 2px rgba(255,255,255,0.5), 0 0 5px rgba(74,144,226,0.5), 0 0 10px rgba(74,144,226,0.5), 0 0 15px rgba(74,144,226,0.5);
+        opacity: 0.6;
+      }
+      100% {
+        text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+        opacity: 1;
+      }
+    }
+
+@keyframes flickerOpacity {
+ 0% {
+    opacity: 0.4;
+  }
+  30% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.1;
+  }
+}
+
+    .auto-image {
+      width: 600px !important;
+      height: 400px !important;
+      object-fit: contain;
+    }
+
+
+
+  </style>
+</head>
+
+<body>
+
+  <header class="w-full flex justify-between items-center px-6 py-4 z-10">
+    <div class="flex items-center"><a href="index.html" class="Logo">
+      <img src="https://lh3.googleusercontent.com/fife/ALs6j_FpAj7oMETlep3fCBHYuZGq6DWoc60B49wnyNHOTMWS4llCaS_Dp1WLetK1BMHmti4aHnoIXtcVTmgJozC5-VcrBMfRf_pmuzJwULdG9kDt6CALW-P5LRQI_XsXKEB9aJKmDaYTl6V1QaFdPJVpK5YNQBhlW2jdI_AuDvDA78CfUZ-unq3YrNsIHtalQg-UUQQ_3xPZT6uK4tsd1fLzGhG0-axfqtU9jKSbt_DqT5C0fbHcHdA3TFXzaC0PIVtdZWE7pevMcpAkE5GGH6e1RZ1Xa3bQVi4p-EefrONX0wqt1oGD9YFE6g6o6wYkUcyMgwmiAqyMLo4jUDkjfr2tQ_RAiu88W1AgAPtCm8VPp8iQqHsxxdJkEg-OM4kWXs6BhcT1HaUk-uyhd6V3u6qeaAugGSjTgzOhJE8_WB-Kg0_EMceh1aUtKxsKF6sL2s9SYoiBPeodHQZ_JOfPgfrJ9saqwzS1c12GHZQPA9214h2jB3B342DTmtnI3Kjke9ZACcerZTGmgs8r-M-KXZfaW3GGrMeGyuNiunkLZPpoaonQfsVmr1bTddKvcd2CIDuynW_IrFk8mGF7QWfEPunNbCRW5giSKO7G24DSsZxBI9z6ZKUTYc2yIVUMe6lvPUn0fiBncb1DvPN5KwQ-wo-085B42dWoe4A608RY0V0Zw7HX5z3nAqlMGoaugV4hlbRr4AM-utqOfrMeX_L1WyndUfUbzdAvb567Wm1lFLvBp68eP4SyQlwKolfA46zTPuSnYdIQZqeyQBz-k7LGf_KYqjdYJgQxs98ug55nA-K9l_S9JERHaBVe8f1WwxzDyLJyrS84EZFy8DeW113a6osXVO-appgYVBiLOwuxAiAMfLiOhHI6vnxaLm0_XnvRl-grtv4-B9wovOeAwWWJ53EYN-OvVwAKIrzORek9zZNaVE7ZdtHbO4fJ5GHKL6pGx8e45NdnMfBaPqLLUZvfY-lHnTfkxlNkauTHtsghHHd1IOtCREO-9sFepHhsZdyonnEyoOdfcDEIUUynaqkB9nJ6LRnTREJ57v2eKtxlRyczJVcMYAePf7iScHkDM8SXFKLbAzfXff9lBiZzqUXzpMW5wTiDb7YhHdCVFQzO48HMtmbHuegn7qYh1DDNbhzzFj1mjuadOJx1k5ifcrOCc-gaAQZTAOYSfddaqn2X1ISnpK326an-GOJ5NROtbwwXmpSApWXVR1S3te51R8E8YdGR4MIl_A3PoawJbN5OGh2BoPrrRuwxESmk5BbUtxjRagSnhCaAkOZ2pHzjL7kyYpCK6zfAgDfRKwFhU6UXddvgKIkcUkH-LgFj4-2IHb4AKILBiHIRcoImi8qHz-KvtxPTQMVUbUf44V1Lwqv6-JemKVzmGy8ZUJPaexdRtfJ1dwrNmm6K1otLVn7TKePyOS6UaD4FSxavVGJMijJNXZBXKA5OzU-ZP9h60Dil3L26hrte0m2ioVhqV_r5dBxmNhchgw8kyaaFomXDRYgj1nW9Ja5YMUOacyTc3Ms0icahuF3vUm25sjH4H8rjWGBUYKXIlM-K-QWrpRDD6HW5m5FzIlt_nNVirFunkfenUXCNEhJVg-khcWOEd7YEvbmk50xjUsAldDIUIsQ6t_qbEvAnM88NBSPLOOLHwCZvVuXbsp_dJAFRmXY0vhmb=w1919-h918?auditContext=prefetch" alt="Logo" class="h-10 rounded-lg shadow-lg">
+    </div></a>
+
+    <button id="menu-toggle" class="text-white text-3xl md:hidden focus:outline-none">☰</button>
+
+    <nav class="hidden md:flex space-x-4">
+      <a href="ai_gallery.html" class="nav-link whitespace-nowrap">AI GALLERY</a>
+      <a href="example.html" class="nav-link whitespace-nowrap">EXAMPLE</a>
+      <a href="https://truedo.github.io/zumi_mini_python_backup/" class="nav-link whitespace-nowrap">LIBRARY</a>
+      <a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=81&display_group=1" class="nav-link whitespace-nowrap">PURCHASE</a>
+    </nav>
+  </header>
+
+   <div id="mobile-menu" class="hidden flex-col items-center text-center bg-[#000C36] w-full py-4 space-y-10 md:hidden z-20">
+    <a href="ai_gallery.html" class="nav-link whitespace-nowrap">AI GALLERY</a><br>
+    <a href="example.html" class="nav-link whitespace-nowrap">EXAMPLE</a><br>
+    <a href="https://truedo.github.io/zumi_mini_python_backup/" class="nav-link whitespace-nowrap">LIBRARY</a><br>
+    <a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=81&display_group=1" class="nav-link whitespace-nowrap">PURCHASE</a>
+  </div>
+
+  <!-- 오버레이 (모바일 전용) -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden" onclick="toggleSidebar()"></div>
+
+
+<div class="flex">
+
+ 
+  <aside id="sidebar"  class="hidden md:flex w-64 bg-[#3B82F6] text-white p-4 rounded-r-xl flex-col space-y-2 transition-all duration-300 fixed md:relative z-40 h-screen md:h-auto top-0 left-0 md:translate-x-0">
+
+<div class="flex justify-between items-center mb-4 md:hidden">
+  <h2 class="text-lg font-bold">챕터 보기</h2>
+  <button onclick="toggleSidebar()" class="text-white text-2xl">✖</button>
+</div>
+
+
+<button id="pc-toggle-btn" onclick="togglePcSidebar()" class="hidden md:block text-white text-2xl mt-4">
+-
+</button>
+
+    <div class="space-y-2 text-sm sidebar-item">
+
+        <a href="ai_gallery_01" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">01 ITS : 지능형 교통 체계</a>
+        <a href="ai_gallery_02" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">02 V2X : 차량과 모든 것 </a>
+        <a href="ai_gallery_03" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">03 V2G V2D V2N </a>
+        <a href="ai_gallery_04" class="block bg-[#0845A8] text-[#ffffff] font-bold px-4 py-2 rounded ">04 V2P : 보행자 안전 시스템</a>
+        <a href="ai_gallery_05" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">05 -----</a>
+        <a href="ai_gallery_06" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">06 -----</a>
+        <a href="ai_gallery_07" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">07 -----</a>
+        <a href="ai_gallery_08" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">08 -----</a>
+        <a href="ai_gallery_09" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">09 -----</a>
+        <a href="ai_gallery_10" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">10 -----</a>
+        <a href="ai_gallery_11" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">11 -----</a>
+        <a href="ai_gallery_12" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">12 -----</a>
+      </div>
+
+      <!-- 페이지 이동 버튼 -->
+      <div class="flex-1 flex items-end">
+        <a href="#" class="block w-full text-center text-3xl mt-4">↑</a>
+      </div>
+
+
+
+    </aside>
+
+    <!-- 메인 콘텐츠 영역 -->
+   <main class="flex-1 max-w-screen-lg mx-auto p-4 sm:p-6 md:p-8 flex flex-col space-y-4 md:ml-0 md:pl-64">
+
+      <!-- 사이드바 열기 버튼 (모바일 전용) -->
+   <button onclick="toggleSidebar()" class="text-white text-2xl md:hidden mb-4 bg-[#2563EB]/90 px-4 py-2 rounded">
+  챕터 보기
+</button>
+
+
+
+      <h1 class="text-xl sm:text-2xl md:text-3xl font-bold">04 V2P : 보행자 안전 시스템 </h1>
+
+<!-- 흰색 상자-->
+<div class="bg-white text-black p-6 rounded-lg space-y-4">
+
+      <!-- 그림 영역 -->
+   <img src="https://lh3.googleusercontent.com/fife/ALs6j_FEalw8Uo_GeeQ-Y8-AgYsdEF3ykmOWJgv2fXM7PCvksEHvEWIC_jel0pxSZvmYqR-tN3rslaI_CKrSB77lTcl_bScCVLCZA8K_adW9Skyo8mFvsWwshqtIhhQ6r-YV_iZuBAm9VFlP-3ir5vTvwI8gu0bxUy93E-bdpCsf8Onz0LhPwejkYY_dVzBxNgHfIMOXgjNTRv1KCElZENpOD6RvVQCu_wMz4lbR0F2jCfTtISqrifsh5l1orzka9enWRSHQXIWdsePiNNMrYq9tvVXtqwswyI0hPqTMGg6oGTE2oaGLDwWnyShjc6HuLqIswBmCz1foOIVdSSsHPzZG_5-9aN5RM0KdamIIcisOMfx2UAcR9qe7shjeYxhcBcnRk2sNuaGtUIVDR_LyJCjuFeKJ8d7yMJvSVBI6Ixajgh6LBO0P958L6OpozaafMrQiEKu4kUBrT3YX_hlUnSckEKDk8ZarIUveQH6UqP4m-6CWR_LQSjZmZExldrTrs29Ir2QhR3Z2K43_sMh7cP_gnzafONR1T7FZtMT3Yn3zAfKF6tXnpOMDlLIQOVe2fC1eK-f0aa0md4efs5L2MV6KRr-hpibKQvJInVgwojp-gwvUCKu-Kpm6KNfBAfofPkExdMPWYkUJOwH9uBqii1nqoQmV4KbN7Lr1MKsxNbud9GU-DuevQXOlLzthorgyIwXf1jNY5dbHCQ-qfH0Ja8_-j5Z7HvHoVfw03Un9mxkzbN9hz4V4xjHOOj7GVWIWr0E8ulcGJSY79vg22khDKoElqFLhid5dEMsBBVMu4kb8ofsLxu-x7hJj0B8rgNhRaf8OQQRimLUGcd70YX10oI70qgqG1hbjG-d_T-0HPxYqi6YIs_ejT0Fz3sleZx3UOelQXKF_GyQsl84Dl5ZJkzf6j7MTHBr9pZPq4Yd7xKDk57g2zXsd1waUTfYSGEZcnYjest8IDk_uDLoAqWUr3IDsQDn1X3T4QDBY57A0okzPM8WXHk2U3WZfRrUhpKqGBcNljPShiziLGA6fa0hnivH7tRjmcAa4QOU7TLed9QwzyOLivfd9NWrspFx0BCXM2Y_vowChTN2Wgx1_y9UUFoWtTqwv-kFnUbFTx7CaYDkvjtOmDX0vYZTKBw6WY0vUlQ-1BJURI2-V0K1uMlGmwxYIfFF6zwCuxl-fPU4N9NBr6M1z1Cg5GcclHtjfCfp-E1bVNbdW8Dc4XFo4LyfofJTj14kBPWERtJHznpRn2juhcJxpW2u3wfJa0nu3yQlSGBuEfHq7KMJpmTBRUZmfGYD0jOBfYHfjpPpb37HHZqStZnqy5s5JnFvVCwJEWokFcC6VlP2QJG0zy0g3TZZXSQEuKwbPiWMmwLrOa2GbTOE5f_yimK_ZL3xZyL3D7N4mAi_MNYgMqf6FjTOUn4zPzp7kqiJ29CmXD1GGo3IJnv0ibjjN1NFIBVhJXp8eMBVJdpiOtwKksUH9xcYjXleQCstitGpx4SyAViu9YbBjMLHgyK5Z97ggsRzL8x4T4Zeh1P1FxC1mVDZ0s0xchBXLwnJ7KCLHvDXV1GE5oeyNv4x6CWxFK5EoovWeu1Y0HA5LjkA7yxmMZaT0ZyXfN_ZHx_KzFL4pUCfOCgP74PkCLpVh2L_lE7Ug68aEZoCKeB7byCYf7bCzjeeLecxT=w1919-h918?auditContext=prefetch" alt="그림1" class="w-full rounded-lg ">
+
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : 얼굴 인식 시반 보행자 안전 경고 시스템</p>
+
+      <!-- 설명 -->
+      <div class="bg-white text-black p-4 rounded">
+        <h2 class="text-lg font-bold mb-2">✅ V2X (Vehicle-to-Everything)의 하위 기술 (1) </h2>
+        <p class="text-sm"> 차량과 보행자 간의 통신을 의미하며, 보행자의 안전을 보호하기 위해 차량이 주변 보행자의 위치, 이동 방향, 상태를 인식하거나 보행자에게 차량 접근을 알릴 수 있습니다.
+
+<br><br>
+
+  <h2 class="text-lg font-bold mb-2">🟢  V2P (Vehicle-to-Pedestrian) 예시</h2>
+        <p class="text-sm">
+
+● 보행자의 스마트폰에서 위치 정보 전송 → 차량이 감지하고 자동 감속<br>
+● 시각장애인용 스마트 지팡이와 연동하여 차량 접근 시 진동/음성 알림 제공<br>
+● 횡단보도 진입 전, 차량이 보행자의 위치를 감지하고 LED 경고등 점등<br>
+● 차량이 보행자에게 "차량 접근 중" 알림을 스마트폰으로 전송하여 사고 예방<br><br>
+</p>
+
+
+ <h2 class="text-lg font-bold mb-2">💡 예시를 통한 이해</h2>
+        <p class="text-sm">
+📍 V2P 시나리오: <br>
+● <strong>보행자 감지 후 경고 표시 </strong><br>
+보행자가 도로 가장자리에 있을 때, 스마트폰의 신호가 감지되면 차량은 자동으로 감속하고 외부 디스플레이에 "주의: 보행자"라는 경고 메시지를 표시합니다.<br><br>
+
+●<strong>청각장애인 보행자 알림 시스템  </strong><br>
+차량이 청각장애인 보행자의 웨어러블 디바이스와 통신하게 되면, 위험 상황 시 해당 디바이스에 진동과 조명을 통해 경고 신호를 전달합니다.
+ <br><br>
+
+●<strong>야간 무단횡단 감지 시스템</strong><br> 
+어두운 환경에서는 보행자의 스마트폰이 차량에 자신의 위치 정보를 전송하고, 차량은 이를 인식해 자동으로 전조등을 켜고 경적 기능을 활성화하여 보행자와 주변 차량 모두에게 위험을 알립니다. <br><br>
+
+●<strong>얼굴 인식 기반 보행자 안전 경고 시스템</strong><br> 
+차량의 전방 카메라가 보행자의 얼굴을 감지하면, AI는 해당 보행자가 도로 근처에서 위험한 상황에 놓여 있는지를 판단합니다. 판단 결과 위험 가능성이 있다고 인식되면, V2P 통신을 통해 보행자의 스마트폰으로 진동 또는 알림 메시지를 전송하여 “차량 접근 중, 주의하세요”라는 경고를 제공합니다.<br><br>
+
+
+<h2 class="text-lg font-bold mb-2">1️⃣  주미 AI :  IP 확인하기 </h2>
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_HjwF2wIB66p1OUGKrx9lOItW1s9F6mFCl4EkA8QYj0S7jxK4wd_b9YtDDwPN2At5zaHmWPDxFkOrKOYayi9rtFWlNcWyHZ4dCM6DoEZlZvrRFOywcU7D-PjqDkXM41jhOxtLWXobrJ1rUiEndKaHDZWMEddoIHbNeoY_cbY8tPqrQethGuN8Rjt55qC5sfff5KEWLZQ7zNBYeUrEOajmAY5yG8SlsePZKUWQzDKkVrfqjrRu9SZ3fuk8FJQgT5h7E83G7Q2xFlyGuUKekTI40S0T6X3mCuG0WPPi7oIbWgml4MdKudI11blOkwbr1lo8p5qtBabiiQoa9iUulASNrDGwHEE79g5LqB2bG4NLSpNYtq6p-BkCs7sd-_Ws5UOQ0wxGf1-w7iAoYLqc7Miy7MjOG5nnTJRhPM9jDT1umX-iKUorplwqzo9vfpj0vO84FTt7gvo5burh9xzUMfp7xdfW-M-MQMWx55o9dr9fQz3n7It9xDhgjWDUKqhwJBYauABjEmqgNvJFtITDdJ6UMuOwCVeIt8cqGyzbxQlXoo8idgAniBCXR88GOv4LjmmpPlR4d6WG_1x2bW0mZsgMhp6uoNbla5rEHFpL03zsQo-GYgrZw8JoUj9JrAGbSLE7MScu4Aq7Gdbq6w4Ks1Do9dyGP1m0TLwPkjmsva4f38yC48mjKuzeiPkX8nR_mWQ_JH7tTR7EtqKASRnTit4Mh3CTrjw3vta_xjCtwTx8O407vUQ9CvuMYkOGPPKBv_nd_mEoGwlpeomCbpHRDZPhJeTJ7goQBuAMbL4mOFcJPHYCoZnRzKWEKx7fnkSRtwEAUOqwfesxVQatvB1LZju2IFsV8e1d0ZlDhdmQi6igGMrImS1jrG9-vHROZ2pL_HJX6OLqZOnD4jrQ3B2I1eqstC1s0afEHGHm7QX6MHs5GXjeNS_KpxAKRXZXdWROn24lNOoMxdSxJtK4__BZpBBlrPv-KdVRyTtlZgusn9LpfAFOBHIj6YpIAafQ-tVwMiblykmqMHq_wMj5JoWZ3WLetmTuwxW60RJi8mm-86yZYZy3G27-weQXvm3tnbD3oEu_h4VjlRq2y7i5uyYM_U3HLFs0V0SO0_tSraQWbANiSdCFmfHmtt-A0EOD2Z57ERkHCrplTNTz1bSrJQJ_A8Y2GZp1Hpxz3m1TLekMdFkUklc2ePwsAw9kbogOofp_G95WQl4qzcmt2aNMFont94_LrjKHZgll4xb4xvaAbe_V_AhCX7U4YOWE_3ACqlwxwBGy3OPWvTunMnsVPr2c3TOBbmZ2DXbj88_Iu88baxJZJVeoLpMcaU3xZ-1pAMVYRo7BexqNLbb4Kh7LxwIoRUZckBhPCshxewyhuTByQAqsD8qt1kNw-mBLKga3wYdaLuUaLbNhTTiV0ee8hI6LvWSfXFyfj-myLIMXhRK40uN8T3WetNJXDCTgJWFcYh-55advdH-B-2tpRV4cAgUbgEnnjg07igL9dfEKGmNdvpMx8vIaXnnWqu-svVHps2PYj4I40ZpQqwpNSh_SxCvnwAYMchs5Hu94rL9noFSjlPqZB2l0q3tQm2kKC_SezuJswPZCFA8OoDZxnhtlEld4rkt4mYH3n7O_VO8rhMnGTEBTWEeYqQpcP6CW5ir0negAALgukNjI_EYbS11g=w1919-h918?auditContext=prefetch" alt="그림1" class="w-full rounded-lg ">
+
+<p class="text-[14px] text-gray-500 ">
+* 자신의 주미 AI IP를 확인하여 예제의 zumiAI.connect() 함수에 IP 번호를 입력 합니다.
+</p><br>
+
+<h2 class="text-lg font-bold mb-2">2️⃣  주미 AI :  카메라 스트리밍 얼굴 인식 예제 </h2>
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_EA91EsO-_FJavHUmx11jyZ_kRcJYtHrdrHy5OlCpowRUFbCqGhywYHlUe8sGNYzAn2RD4Rqwr4LkrqdWmoyHqZVyhICcHSOPcIwL8pQEBnfDhRWf7eibHwP0VVPsLAvxqiZl0ylXVYjNtlFBcWjy5iQwBVraG3RBiFALn3mwiMAFPaJjthCZH40-yUD5vyO_wLeap-xHKDTwL7mgWHFEtbYLyRh7a515qn68tKPDqZJMehqN4pInm_HIirmqyE6EP7mP_dzEnBiNBJoBiXQmn4s2LFYE-BXpiIM_yidjXxDWHNVpwtYvEJP-V9DZpYHqws0L9fjJBhpItdPbQ73TtH0XBWmfudB4TRX17sE6RnrkKoXsWYOyBJwGzwkg48FIl59b_7htNd3DofHDNULjzYUMb1Gs2TN4tZ7fPzev3Hx01enNh26LPyg3t7RvNKQu2ZZvbXlvb5qM0s4Eyhs2d5EKjHULz7YckhkksR3HZEVHbSuh3HKfNZ7_cx7wyK0V0zURhd5RTnC2kCpdo8fY8aKAXpkdld3JSnL3UpUpoDLkA11JQijzSEFDi7d2kfT3CPg1ZxR3FzfkYPrWj8ERpWsg_cci9zkby9oLEP6Dz6yoQSXfiso56NheahHhsjbGmQdpqHsjIJYn_Bgs8bXjy5lDDx_bUWxAR0CHpq6pJF545qJLjQ5_Ul1DWAGlKASgZn5Q_xIdapEniLoEgTnN9-NpoCZAPb9dE4Se_cySkRkMBCNI6R8Ip1L23YtkRgcJTstB3XtDR0xw4k3oBIskcjJc2uoROoLKSepyXQzA57wyPm5xdjN01xcvmmvaiW2nbYre0ZYqJss6W7i4qagLvbk-YfHPhD2AEbpu5ieDBPZdB8glad5mzwvmMPavKif-zwZsb1LLldT04-PStKy_FwDpbCp0hFIBysKF3bv6obOUtNipdbNz64wuoYG7H5uYINczCVs7_JcySPeXI3FsBH8vV6r-_97aUVpTxGiPZDIV3_LNQ9PiSnXyquSQrOmPnN4-tj9hl-iaOcQPoWdxtnyR7jb3KxVwU4XtZXq8z1zCR8ru-gB9qahT49Ni07taYq-pBb_vsRT1ShsUI-i7wtoMS_fGS07NqzpfGaWHwONX2b8ivSW85FfCzVpCx8MUeKDi1hWD3UeHkwfKZZOtvOaEmfFAlrytpMJnY3QAwYj3Xd_Yf0YePmnHyN2t9SrJsbL3Smhv7obrSmnCxPs-v1zRNlpRZwB9SpIfiu7M9EYSgFQ6gd53XkhbBXOF9faw91t93sE-FbrVcUZl-apd3bDR4J7XvbyFDl5EpsaYRmXQRsLab_IPYZfaB_Kzbj0Ee0cOLtEGweAkT4QoHKTSYPpe5Mx4CskWw4zmTsIjkwo1u9BCDq61wzcCCHoOjBTiwzU92RlbEoATlkMPNlYf4_Q1L7T-dI5rH-JYpg1MD2YvtcicrltcuQs6F4I3HANjzaRWi8Sc4TEbAhBJ4ue3N4uJnhL0Z8n_npznS2PoRj0AxCmePkptweU6hCLUFXvXXakCT9YDjEqmc1_pMKAr1ZReAFiPY9Y3BtSKGuwm9fj-UCBSFMbI48JXun1HpBV0VOvgOp5bXrDtl0XBbOJI61FfqfCWd9ukw4JfF3FifHO7wlLvxDxYH7eUZBzvLZbGztZyjf8_Xbzw=w1919-h918?auditContext=prefetch" alt="그림1" class="w-full rounded-lg ">
+
+<!-- 파이썬 코드 설명&다운로드 버튼 -->
+<div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
+  <div id="output" class=" flex-1 bg-gray-800 text-white p-4 rounded h-30 text-sm"">
+  <p class="font-normal text-white text-sm">
+
+
+<span class="text-red-500"> # Zumi 인스턴스 생성 및 연결</span><br>
+zumiAI = ZumiAI() <br>
+zumiAI.connect( <span class="text-green-500">  "192.168.0.82"</span>)<span class="text-red-500">  # 카메라 스트리밍 시작</span><br>
+<br>
+
+
+<span class="text-red-500"> # 카메라 및 얼굴 인식 초기화</span><br>
+zumiAI.camera_stream_start() <span class="text-red-500">  # 카메라 스트리밍 시작</span><br>
+zumiAI.face_detector_init()  <span class="text-red-500">  # 얼굴 인식 초기화</span><br>
+zumiAI.face_detector_start() <span class="text-red-500">  # 얼굴 인식 시작</span><br>
+
+</p>
+  </div>
+
+<a href="https://drive.google.com/file/d/1p7Ned-TWy-XV9eUUwmpDEjDwKUrIq-Bu/view?usp=sharing" download="example.py" id="run-code-btn"
+   class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto inline-flex flex-col justify-center items-center text-center min-h-[64px]">
+ <button id="run-code-btn" class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto">
+  파이썬 코드 <br> 다운로드
+</button>
+</a>
+  </div>
+<br>
+</p> 
+
+
+<h2 class="text-lg font-bold mb-2">3️⃣  얼굴 인식 기반 보행자 안전 경고 시스템 </h2>
+        <p class="text-sm">
+
+<strong> 얼굴 인식 기반 보행자 안전 경고 시스템</strong><br> 
+Vision-Based Pedestrian Alert via Facial Recognition = 얼굴 인식 + V2P 통신 + 경고 시스템 <br><br>
+
+  <h2 class="text-lg font-bold mb-2">🔧핵심 기술 </h2>
+        <p class="text-sm">
+
+1. 👁️‍🗨️<strong> 얼굴 인식 기반 보행자 검출</strong><br> 
+Facial Detection & Recognition<br> 
+· 차량 전방 카메라가 실시간으로 보행자의 얼굴을 감지 및 인식<br> 
+· CNN 기반 알고리즘 사용 (예: MTCNN, RetinaFace, OpenCV DNN)<br> 
+· 얼굴이 인식되면, 차량은 해당 보행자의 존재와 위치를 파악<br><br> 
+
+2. 📡<strong> 스마트폰 연동 경고 시스템</strong><br> 
+Mobile Notification via V2P Communication<br> 
+· 얼굴이 감지된 보행자에게 경고 메시지를 실시간 전송<br> 
+· BLE, Wi-Fi Aware, C-V2X 등의 기술로 보행자의 스마트폰과 직접 통신<br> 
+· 스마트폰 소지 조건에서만 작동 (예: 앱이 설치된 디바이스에만 발신)<br><br> 
+
+3. 🤖 <strong>  상황 판단 AI</strong><br> 
+Contextual Risk Assessment AI<br> 
+· 차량 속도, 보행자 위치·이동 방향, 주변 교통상황 등을 종합 분석<br> 
+· 위험 가능성이 높을 경우 AI가 경고 트리거 판단<br> 
+· 무단횡단 가능성 등도 예측하여 경고 타이밍을 최적화<br><br> 
+
+ <h2 class="text-lg font-bold mb-2">💡 예시를 통한 이해</h2>
+        <p class="text-sm">
+📍 V2P 시나리오: <br>
+1. 차량 전방 카메라 ON <br>
+2. 보행자 얼굴 감지 및 위치 분석  <br>
+3. AI가 위험 상황 판단 (예: 보행자가 차량과 가까이 있음)<br> 
+4. 차량 → 스마트폰으로 경고 메시지 전송  <br> 
+5. 스마트폰에서 진동/알림 ("차량 접근 중, 주의하세요") <br> <br> 
+
+
+<h2 class="text-lg font-bold mb-2">4️⃣   V2P 얼굴 인식 기반 보행자 안전 경고 시스템</h2>
+
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_GQOhbRVQlHN8ShG9ecjFqy7ZlHYh2cT-SwdLqn0Q4XM6AvegOvjd7Z_c4iTHQpPLomBsrHqzHQu0qz2z2ZhPdMnBJq7ydcOP6xEyElgf3fWLnOpFo6AQiayv2v4BATsbZgSNuyyaOVRjxrOnkcL_3B3PNrcc7fTt7wLil4X4YhGvfT9-HIOH51bKoSeNoObVsSsXMHUHGuMJPHlQBY6psp3QNQxm7416XwQQV5SgPd6u51VRc0SkQ5I1OmJasKZAcLi2Aq8hz5LNyLkkbjgwXCXgDnqPUgG3BU0Soc26uIYDbFWSa9I9Rw6AHvlJBdBfxHKfx_2DVqhL_PkDASpO9CFMPIoZpVJYcQscxrZDI47jLh2giYITk4la-rezIIgFmoqAXGbpvC2eNOL7U1RbJ6WpVyKhMihRIjRxeLt5jU2yx8mbm_xtQNqE3S0CTyPFPuNDB1u7Jlezt5oybRrZBav7zzqgmZnmpUx31nJkt9Z_aZfYz7biQkp0zvWfFNcKaBDQMFE7SBMkf9S7xy7t6RtD_oH-Nyg0dSpr_Xam3gIFRYUP-Frpsly2bTGbqZ6-M-caPXa1PmaX1VSp0qwosZJpjt0nso9HeN3hfpJtJpgW9A1CoGse6AHgWas6yu038eMx8c_QTAj_Gt8062Ci8TEjM44WmhhVxwewa-b0rvcakNcOIjkCKC3W8VTRoJVmhemwpSgPk5z59YanBxmsX3o1s5-swzFUbrQprWd0dDGwCvPgKIfiZEX0eic0SZWFHHpzZZZJhg8tsyOAOB1t2d7IM2qwkDSOHIQ9lXG4-sS1PLbQfAnYAm9_Zvdp7Sd_ZtEmOFzEC7RU8wPmaRsru9mgb9IVBtW2a1s1Mc5FDUw1l9HWmRNsETvxxFRWULILEKTthxS6IIix5PGQsX79_UOoVjIQUsKCPznRS-0sMyvNCfxbGAqZlX6ra1InkIT22edotOTT0ofkwAjClqRwncctXy8bqAVtwuvbKqlVIu5WJP0OyacPsrc7G6dtnaCE4eYxnGDeVSpR1QAo2QGZSWAqeop9MqdGfbZt4mStlnkryP30LCwT7s2J1VmZ_4655BR7t8QMWoVxsSjl7_O9vrM8ShFY63Gjqo06NxyD1byYtSXXNLmbAy09B1Tj7OVKmoLUQmXl_rHaBQuh9FTlqy3N9bWfd6en-A_dxTZI998jO7ZJRLCjkbYnyzwhO5rExDqvQFfHQrQIBQHOYBtKCVas5ZwzoFKuv5gBpIwP-6gS0gLSumXRCmH5rra8Hq1WLuo5h1VLBByzj4pR9jIKjqLdL9bqu2DQP_u6YX1pl5RPoPaDaQH0wPOTABIkF4dPSrw0bE2_cO4qpVti5cJpvUsXOg1LV0aI0sCROJLfItAkol8mdqy7T5hEdh98dPUl8RdTWYRAtuVFggGlkyi5ceWVanKQihaNOn_VO81_ESXZbOXrUN8divgnlH4pa-W4XLzTPjwFm2nwsQyuLw-BEfCIP5GNT_BaBgJFM-0EVL1cNmMDw9NriBZH2ehJagPo2I8iTC02ZqcnJkiSr-l1bWxTuAvTU_49yLFQ-ZNpM1_sCQN5cN3OGGjHbviI6bWZd6ButwcBQS5kDyj9csj65uOg3J4M9o0nWeu1oGSXFzsv0JownTYEQYdTQ4mQtKtZMkP_7dbaX65w=w1919-h918?auditContext=prefetch" alt="그림2" class="w-full rounded-lg ">
+<p class="text-[14px] text-gray-500 ">
+
+* 이 예제는 tkinter와 threading 등의 모듈을 사용합니다. 별도의 설치는 필요 없지만, 만약 tkinter 관련 오류가 <br> &nbsp;발생한다면 Python 설치 시 tkinter가 포함되어 있는지 확인해주세요.
+</p>
+
+
+<!-- 파이썬 코드 설명&다운로드 버튼 -->
+<div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
+  <div id="output" class=" flex-1 bg-gray-800 text-white p-4 rounded h-30 text-sm"">
+  <p class="font-normal text-white text-sm">
+
+<span class="text-red-500">  # 얼굴 인식 시작했으니 실시간 감지중으로 변경</span><br>
+status_label.config(text=<span class="text-green-500">"실시간 감지 중..."</span>, bg=<span class="text-green-500">"#06C755"</span>)<br>
+
+&nbsp;&nbsp;<span class="text-orange-500">while True:</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;detected_unknown = zumiAI.is_face_detected(name="Unknown")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;center_x, center_y = zumiAI.get_face_center()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;face_size = zumiAI.get_face_size()<br>
+
+&nbsp;&nbsp;<span class="text-orange-500">if </span>(center_x != 0 <span class="text-orange-500">or</span> center_y != 0) <span class="text-orange-500">and</span> face_size > 0:<br>
+&nbsp;&nbsp;&nbsp; &nbsp; <span class="text-orange-500">if </span> face_size > 10000:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;  status_label.config(text=<span class="text-red-300">"충돌 주의!!"</span>, bg="red")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;  ...<br>
+&nbsp;&nbsp;&nbsp; &nbsp; <span class="text-orange-500">else: </span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; status_label.config(text=<span class="text-yellow-300">"사람 감지!!"</span>, bg="#FFD700")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...<br>
+&nbsp;&nbsp; <span class="text-orange-500">else: </span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;  status_label.config(text=<span class="text-green-300">"실시간 감지 중..."</span>, bg="#06C755")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  ...<br>
+
+</p>
+  </div>
+
+<a href="https://drive.google.com/file/d/1d0WmnYgjKZNdTF3yx1lnM4xTUTsILMTl/view?usp=sharing
+" download="example.py" id="run-code-btn"
+   class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto inline-flex flex-col justify-center items-center text-center min-h-[64px]">
+ <button id="run-code-btn" class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto">
+  파이썬 코드 <br> 다운로드
+</button>
+</a>
+  </div>
+<br>
+</p> 
+
+
+<h2 class="text-lg font-bold mb-2">5️⃣   카메라 스트리밍 : IP 연결 지원</h2>
+
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_FUqwqP7HAQKnCls34Te88Rs27IJY839FjRXlfG6AarhsIoqFF8JkuQezSbI60Jgbif3qRk-lSw5Wn0oj4RPX5v8_azQs85EFyKxw3wTilMfQqLH9yOEKqta9CMmg2djeL_YvRmsM_Wh440YX8Qas_20uaXw9RehJh5CQxuyxzUPOo4xNi51_TKm7dViRby_sCEZbFcmmyh5yhvhO56F54-AbSplJJMlYDwf6FG5N5xPLw3Ek8X1sQW-74Obr2EeI7vLJw-bVsHjsqlMG-GwoxMnTqMArjd2Togd5uwrrLWdAKkpyqoemzJ9z5gos4cX4owdNr5-Z5cL1w-tYOmWQ1E7XbzTv6cY5wHood5Y7aXGfXXqf_V44q4zLJdyCcx2u8SQIHhh5qd-7NewW6i1CdYsrH3oXbs3k91XMenU3VeSQ_-BypvfaFXRPWWXwS2tnUqB-8dS8ZJD4bBl_ZhByOVAwZ9g-xmOVfmHLnpI8iWmfP9SDSMwao2Zo9YoZ_XGVH6XY9e48GhfMrkojTyEyop3EudZRWsY_Oe0E8Ay-dHbBk1XHU7cQ6ZATeGk2GTyO99vS7fcbWz0UewBVtEOirFsvHw52WByXhdJZSqV-OyIWDexRAE-GnpnQTiXfDcCFB7PXTGHfJNRt_6MAkvuNTtQ10Wcf9NO5yUoqo52lQmCYuMAPGn_PBio5ofMTopzr5ETHWmjRz4kPZrp0HRQRYLbHhS3NKoB7E_l_KOxeVjh-bJRK2iZBOa-8eJ8t0DRs0MVT1PntUb8YHqDk92xHILFjcgW9J5iHoqezyjPUlS4ZettfLe4J8uZ_fWMFVRHVDNQ_x8iDScnzwxHNHAJedUb76zj_33ILIf9SplhC_F07NwrN_H4Ek5D8VupJ2sl3BOZJbfPyA0EBNnSj3jNm08jTQuXeQjo4IkcygUDlB1E8W09BwTxlL64I60T7AoGI6Y_INJa7RCVQUeCxwgLOvT2yicBz02MLspcg4shVkWn0bCAdBGRgEPcFThw7jW1477YglzhUuk4VKHJOAPSZuZlGF9GKIowzt1kggwx83S4sTUWmwqDKaVKnb7tN2R-d5b_gN0VnktvuWZxc6WG5RwgOBfHaz6QPYiufFahUGJYaDbJGILViCN-xXKZBAfyZVHo8DBP8lse2NEcTe-zjig6HOcgx1yJtuxIDbAlr9fnKPeoi3t9ea6roC4GkW-WT5MEes6Q8YjXuXkU_I4LKEiTbckHXctjMyev-6VQLezaQ72XVm97PF8sRVGyCatSYeDcc0qsu9E7wbnKxV4L8jzU8iyMPB3zqIAFCmEOo0OxBQIJMtT6HDNtlvJRRnud7xAfJVho8NSaeE7uGDNOTVW2DnwJK0IUZjJzIu3Qp6t9mc4uuuCuY5WXX9jcSU6WG4llj0QmYTuRco8UOmngBCldV--k9VvvCsL5Lu2RMkVvD3MuEtUAUuEkb5a46scNQCyw272uPmVZzpt5j9hLO3IUjCnizAfsU_OeKYWUtrkWhxCRJG7HoQ6L7dCzFxtuJqR7i4cFTPPavhzIGx9bgA-ViwWQ64e3R7s4PF5urtT1NC92IMX2q6B2_1x10G3rzwWKWnouq8EHUUixbSfj8K3b4hkM_NWhJqOueMJVZLuXTygmHVE6UEm3HElLsEYov28PJ6D6_0N=w1919-h918?auditContext=prefetch" alt="그림2" class="w-full rounded-lg ">
+
+
+
+      <!-- 설명 -->
+      <div class="bg-white text-black p-4 rounded">
+        <p class="text-sm"> 카메라 스트리밍은 주미 AI의 Wi-Fi 주소를 사용하여 PC와 연결하는 방식으로, IP를 연결 하였을 때에는 <br>동글이를 PC와 분리 하여도 사용이 가능합니다.
+
+</p>
+
+
+
+
+
+
+
+
+  
+
+ <br>
+
+
+
+<!-- 흰색 상자-->
+</div>
+
+    </main>
+  </div>
+
+
+  <!-- JS 스크립트 -->
+  <script>
+// 별 반짝반짝
+  const numStars = 80;
+  for (let i = 0; i < numStars; i++) {
+    const star = document.createElement("div");
+    star.className = "star";
+    star.style.top = Math.random() * 90 + "vh";
+    star.style.left = Math.random() * 90 + "vw";
+    const blinkDuration = (Math.random() * 3 + 3).toFixed(2);
+    const moveDuration = (Math.random() * 20 + 30).toFixed(2);
+    star.style.animationDuration = `${blinkDuration}s, ${moveDuration}s`;
+    star.style.setProperty("--dx", (Math.random() * 20 - 10).toFixed(2));
+    star.style.setProperty("--dy", (Math.random() * 20 - 10).toFixed(2));
+    document.body.appendChild(star);
+  }
+
+  // 모바일 메뉴 토글
+  const toggleButton = document.getElementById("menu-toggle");
+  const mobileMenu = document.getElementById("mobile-menu");
+
+  toggleButton.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+  });
+
+  // 모바일 '챕터 보기' 버튼 토글
+  function toggleSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    const isHidden = sidebar.classList.contains("hidden");
+
+    if (isHidden) {
+      sidebar.classList.remove("hidden");
+      overlay.classList.remove("hidden");
+    } else {
+      sidebar.classList.add("hidden");
+      overlay.classList.add("hidden");
+    }
+  }
+
+  // PC용 사이드바 토글
+  function togglePcSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const pcToggleBtn = document.getElementById("pc-toggle-btn");
+    const isCollapsed = sidebar.classList.contains("w-16");
+
+    if (isCollapsed) {
+      sidebar.classList.remove("w-16");
+      sidebar.classList.add("w-64");
+      pcToggleBtn.innerHTML = "-";
+      const items = sidebar.querySelectorAll(".sidebar-item");
+      items.forEach(el => el.classList.remove("hidden"));
+    } else {
+      sidebar.classList.remove("w-64");
+      sidebar.classList.add("w-16");
+      pcToggleBtn.innerHTML = "☰";
+      const items = sidebar.querySelectorAll(".sidebar-item");
+      items.forEach(el => el.classList.add("hidden"));
+    }
+  }
+
+  </script>
+
+</body>
+</html>
