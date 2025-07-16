@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>06 V2V 교차로 충돌 방지 시스템</title>
+
+  <!-- ✅ Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    #map {
+      height: 500px;
+      width: 100%;
+      border-radius: 0.5rem;
+    }
+
+  body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #010415, #000C36);
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+    }
+
+  body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; 
+  background-image: url('https://lh3.googleusercontent.com/fife/ALs6j_E782PyIFMYtfVVTWKJmz-NPOAMoNGyICJBadA4s8rszXoBW1pdOjGqEGLaJ6a0MTRkxoIZda-w1eEBdzmu7NpqU9QlaUX2XQY5BKLHSPbORtCE87IE3XMTnbsdNUIM2QDvRB41vYEKbzD3Y6bCsxXuLgblYo45APBATItrnaPs5SkcXeu9aMFuO8Q6kvoPorMCwyAObsM39R5G5_E_Ny4k4oc1IHZfhdJELCCBFT-uuiQtWHXXxmLmcqqCFV36Yub3GZcoAkilshppk0ij1iotqUM9Nk4fNUjg_HSqeXi7yzrZ4gofhiS8xQebPOsnnYHgk3L0SCghkoc6qFYFWAscDbY3J-T3eetqtbXbB6-v3GNFW7xti1pcvNbgLjZtRsaIGJynrnsWED8AUXQRHCk3EmYfxA0gY4wsBe-hWeGJZY9cofd4gEbj7ievulF49GZV7LRbry0cXnDZVSVQYrNcc8oxBM5UvAhNouLXYIJXJ1_XrT67zlzLmaWFvgQQjBnnk2oQX60UerK8qSGRhQ8Mmezkv_cMpiU9M46f8t9rwWVhsknkIxzWOEJEmq9ZT1gDIu8pJuJ3u-S9ZLVvKY8HBMqd09aJxwQfKpdcmEqOn2DjZJ5Ia6EDnV0d-41bYyXz0oZOcs1sDV1vh9Ecz35P12FNqpPjzcYZKRLxGdGyygvDYaACaFqHkqaXrW9pE58AAlqvnBmeyNW8NlG2c52S6Q2lsdbBpAWcXQp0iswofLRMi6Wd-Q1B6UUdMXZhyEAdOtiCngRDzpx8RasWmW-9ZMSqnwvl3B9eB113R5jXh6ZB_0eNjO20SZXZn1XEZP-iD0C0qZgHA_-dVp38zoiT-RutNUwTPiG22-Ff6w_JWic7E1tYgOgMCGWjKDdEbHZW3GB3zXyBrnyH81_8oPGApy1vjOa8_pqZS5jyX9PFbODsrQdPRwq4xTMYsW6OTvG08eM96O2lOThJ5PzHxrOYSpOR-kVKLM7VBUbQHPYq36ECuFUY3kDA7yyMnVm4WWMlU3vS0aguTUUva3CAskP6V8difKwvTNgeKae8dGv44TUtEHGvLjk1eWiBrThOEBpik5XOrt5Y_2d8YnWvbymfdh1QdqeU9o0yxC0tVQBDuGDjkfNVsETEGIK9Sy6ZHBOlQjElWxhelqVv6CaiKM8hKEtfTQoJAgJsgboz_5VGUU3hye0xJY18dQ0bQ23jPDl__tjztKa64n8Hw4BzvKDG_cP0J-1h-m3C9COokR6tTEWSzUyRtK98vafvKmkM8Jw_o9UnoxEN9dbo50aKeD88MUKYso3ijwz-H5DNJHK9wNhgnp2Yn3WkVR_ZtlQpfOcJO3hNmCVOGJDdZ9g3gUBDjQXFg1I_Ww7Wc636ttmFKGDuYeNvyyiwLCmXtbmVhkT29p2M-k4_CQZKh-nDzkUlD-B3oXw4DQr7qr9qXEPX7zFqi0KW521Bynrl2z_NP5nf-AWAun8hnjrpdxoedpcLYra9Qqw-7Qz2gptYkn1FBtRCdTMKEWvYiHlOcruhXC1PSTfyHahNxdVaNkhfDtfnF7LZu0NSlx-JOcMtigLfj8iGGneEDJMB3HlA674Hv6s2MoVnxU5E6x71lqwuC0n2oX5H8BRUx0IiOn40i9TcbEPpzDSwPR8hk3fyLQ0_LiReswY0HUhPAA=w1919-h918');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.5;
+  z-index: -2;
+  animation: flickerOpacity 6s ease-in-out infinite alternate;
+}
+
+
+
+    .star {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #00B0C8;
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: blink linear infinite, move linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes blink {
+  0% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
+  100% { opacity: 0.3; transform: scale(1); }
+}
+
+
+    @keyframes move {
+      0% { transform: translate(0, 0); }
+      50% {
+        transform: translate(
+          calc(var(--dx) * 1vw),
+          calc(var(--dy) * 1vh)
+        );
+      }
+      100% { transform: translate(0, 0); }
+    }
+
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      background-color: transparent;
+      text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff;
+    }
+
+    .neon-text {
+      text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+      animation: neon-blink 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes neon-blink {
+      0% {
+        text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+        opacity: 0.3; 
+      }
+      50% {
+        text-shadow: 0 0 2px rgba(255,255,255,0.5), 0 0 5px rgba(74,144,226,0.5), 0 0 10px rgba(74,144,226,0.5), 0 0 15px rgba(74,144,226,0.5);
+        opacity: 0.6;
+      }
+      100% {
+        text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+        opacity: 1;
+      }
+    }
+
+@keyframes flickerOpacity {
+ 0% {
+    opacity: 0.4;
+  }
+  30% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.1;
+  }
+}
+
+    .auto-image {
+      width: 600px !important;
+      height: 400px !important;
+      object-fit: contain;
+    }
+
+
+
+  </style>
+</head>
+
+<body>
+
+  <header class="w-full flex justify-between items-center px-6 py-4 z-10">
+    <div class="flex items-center"><a href="index.html" class="Logo">
+      <img src="https://lh3.googleusercontent.com/fife/ALs6j_FpAj7oMETlep3fCBHYuZGq6DWoc60B49wnyNHOTMWS4llCaS_Dp1WLetK1BMHmti4aHnoIXtcVTmgJozC5-VcrBMfRf_pmuzJwULdG9kDt6CALW-P5LRQI_XsXKEB9aJKmDaYTl6V1QaFdPJVpK5YNQBhlW2jdI_AuDvDA78CfUZ-unq3YrNsIHtalQg-UUQQ_3xPZT6uK4tsd1fLzGhG0-axfqtU9jKSbt_DqT5C0fbHcHdA3TFXzaC0PIVtdZWE7pevMcpAkE5GGH6e1RZ1Xa3bQVi4p-EefrONX0wqt1oGD9YFE6g6o6wYkUcyMgwmiAqyMLo4jUDkjfr2tQ_RAiu88W1AgAPtCm8VPp8iQqHsxxdJkEg-OM4kWXs6BhcT1HaUk-uyhd6V3u6qeaAugGSjTgzOhJE8_WB-Kg0_EMceh1aUtKxsKF6sL2s9SYoiBPeodHQZ_JOfPgfrJ9saqwzS1c12GHZQPA9214h2jB3B342DTmtnI3Kjke9ZACcerZTGmgs8r-M-KXZfaW3GGrMeGyuNiunkLZPpoaonQfsVmr1bTddKvcd2CIDuynW_IrFk8mGF7QWfEPunNbCRW5giSKO7G24DSsZxBI9z6ZKUTYc2yIVUMe6lvPUn0fiBncb1DvPN5KwQ-wo-085B42dWoe4A608RY0V0Zw7HX5z3nAqlMGoaugV4hlbRr4AM-utqOfrMeX_L1WyndUfUbzdAvb567Wm1lFLvBp68eP4SyQlwKolfA46zTPuSnYdIQZqeyQBz-k7LGf_KYqjdYJgQxs98ug55nA-K9l_S9JERHaBVe8f1WwxzDyLJyrS84EZFy8DeW113a6osXVO-appgYVBiLOwuxAiAMfLiOhHI6vnxaLm0_XnvRl-grtv4-B9wovOeAwWWJ53EYN-OvVwAKIrzORek9zZNaVE7ZdtHbO4fJ5GHKL6pGx8e45NdnMfBaPqLLUZvfY-lHnTfkxlNkauTHtsghHHd1IOtCREO-9sFepHhsZdyonnEyoOdfcDEIUUynaqkB9nJ6LRnTREJ57v2eKtxlRyczJVcMYAePf7iScHkDM8SXFKLbAzfXff9lBiZzqUXzpMW5wTiDb7YhHdCVFQzO48HMtmbHuegn7qYh1DDNbhzzFj1mjuadOJx1k5ifcrOCc-gaAQZTAOYSfddaqn2X1ISnpK326an-GOJ5NROtbwwXmpSApWXVR1S3te51R8E8YdGR4MIl_A3PoawJbN5OGh2BoPrrRuwxESmk5BbUtxjRagSnhCaAkOZ2pHzjL7kyYpCK6zfAgDfRKwFhU6UXddvgKIkcUkH-LgFj4-2IHb4AKILBiHIRcoImi8qHz-KvtxPTQMVUbUf44V1Lwqv6-JemKVzmGy8ZUJPaexdRtfJ1dwrNmm6K1otLVn7TKePyOS6UaD4FSxavVGJMijJNXZBXKA5OzU-ZP9h60Dil3L26hrte0m2ioVhqV_r5dBxmNhchgw8kyaaFomXDRYgj1nW9Ja5YMUOacyTc3Ms0icahuF3vUm25sjH4H8rjWGBUYKXIlM-K-QWrpRDD6HW5m5FzIlt_nNVirFunkfenUXCNEhJVg-khcWOEd7YEvbmk50xjUsAldDIUIsQ6t_qbEvAnM88NBSPLOOLHwCZvVuXbsp_dJAFRmXY0vhmb=w1919-h918?auditContext=prefetch" alt="Logo" class="h-10 rounded-lg shadow-lg">
+    </div></a>
+
+    <button id="menu-toggle" class="text-white text-3xl md:hidden focus:outline-none">☰</button>
+
+    <nav class="hidden md:flex space-x-4">
+      <a href="ai_gallery.html" class="nav-link whitespace-nowrap">AI GALLERY</a>
+      <a href="example.html" class="nav-link whitespace-nowrap">EXAMPLE</a>
+      <a href="https://truedo.github.io/zumi_mini_python_backup/" class="nav-link whitespace-nowrap">LIBRARY</a>
+      <a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=81&display_group=1" class="nav-link whitespace-nowrap">PURCHASE</a>
+    </nav>
+  </header>
+
+   <div id="mobile-menu" class="hidden flex-col items-center text-center bg-[#000C36] w-full py-4 space-y-10 md:hidden z-20">
+    <a href="ai_gallery.html" class="nav-link whitespace-nowrap">AI GALLERY</a><br>
+    <a href="example.html" class="nav-link whitespace-nowrap">EXAMPLE</a><br>
+    <a href="https://truedo.github.io/zumi_mini_python_backup/" class="nav-link whitespace-nowrap">LIBRARY</a><br>
+    <a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=81&display_group=1" class="nav-link whitespace-nowrap">PURCHASE</a>
+  </div>
+
+  <!-- 오버레이 (모바일 전용) -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden" onclick="toggleSidebar()"></div>
+
+
+<div class="flex">
+
+ 
+  <aside id="sidebar"  class="hidden md:flex w-64 bg-[#3B82F6] text-white p-4 rounded-r-xl flex-col space-y-2 transition-all duration-300 fixed md:relative z-40 h-screen md:h-auto top-0 left-0 md:translate-x-0">
+
+<div class="flex justify-between items-center mb-4 md:hidden">
+  <h2 class="text-lg font-bold">챕터 보기</h2>
+  <button onclick="toggleSidebar()" class="text-white text-2xl">✖</button>
+</div>
+
+
+<button id="pc-toggle-btn" onclick="togglePcSidebar()" class="hidden md:block text-white text-2xl mt-4">
+-
+</button>
+
+    <div class="space-y-2 text-sm sidebar-item">
+
+        <a href="ai_gallery_01" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">01 ITS : 지능형 교통 체계</a>
+        <a href="ai_gallery_02" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">02 V2X : 차량과 모든 것 </a>
+        <a href="ai_gallery_03" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">03 V2G V2D V2N </a>
+        <a href="ai_gallery_04" class="block bg-[#0845A8] text-[#ffffff] font-bold px-4 py-2 rounded ">04 V2P : 보행자 안전 시스템</a>
+        <a href="ai_gallery_05" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">05 -----</a>
+        <a href="ai_gallery_06" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">06 V2V : 교차로 충돌 방지 시스템</a>
+        <a href="ai_gallery_07" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">07 -----</a>
+        <a href="ai_gallery_08" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">08 -----</a>
+        <a href="ai_gallery_09" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">09 -----</a>
+        <a href="ai_gallery_10" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">10 -----</a>
+        <a href="ai_gallery_11" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">11 -----</a>
+        <a href="ai_gallery_12" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">12 -----</a>
+      </div>
+
+      <!-- 페이지 이동 버튼 -->
+      <div class="flex-1 flex items-end">
+        <a href="#" class="block w-full text-center text-3xl mt-4">↑</a>
+      </div>
+
+
+
+    </aside>
+
+    <!-- 메인 콘텐츠 영역 -->
+   <main class="flex-1 max-w-screen-lg mx-auto p-4 sm:p-6 md:p-8 flex flex-col space-y-4 md:ml-0 md:pl-64">
+
+      <!-- 사이드바 열기 버튼 (모바일 전용) -->
+   <button onclick="toggleSidebar()" class="text-white text-2xl md:hidden mb-4 bg-[#2563EB]/90 px-4 py-2 rounded">
+  챕터 보기
+</button>
+
+
+
+      <h1 class="text-xl sm:text-2xl md:text-3xl font-bold">6. V2V : 교차로 충돌 방지 시스템 </h1>
+
+<!-- 흰색 상자-->
+<div class="bg-white text-black p-6 rounded-lg space-y-4">
+
+      <!-- 그림 영역 -->
+   <img src="https://lh3.googleusercontent.com/fife/ALs6j_G6cex5EhhW8AHvoWe4_2ikGpU7jcwDtkWsLuoTik72ukkd7KyGkiVUpUjJOdywDAHeS5FwWlsjozxTbhLDHVF_rESnKoDQhl6IG-eIWJlG2Cii2-_s8GyS0COzE6K_dKvthFzxhGzTpye7tkbaltzZQwp3f7D1Us5MQ5arA9lyjO_fMmrL272gqBIjjr8TaXGO3F_h37FRQzvdjL4DS7n2ddC17AHOjqux75-_zzXTV3QR8OTatvhhZCSWbDPihDSrGPneNKSZah1sHg8orP4SCJiPKil0xQ3C53FYMz1EC4nGlkHTukCnDY5LkFKnh9sr-rhDiquXsJMa2GT0QV5vOZ6TgF9XnYT6kctC5ks50mtMAGBXFmHSMFQ8h95ROXn70JPXCH8cyl1Jhwhvc1ohU8rwkiV8Pk0faxDRpiqO4LfLVIYHWlu3y2VjklqDaPfQzPI5s4qXw8eNhl8D_D2weVTFdTmoCgA3anJjLsngt2h3bEri6XRh4CrVt-gib-DOHJVzj7LKnqFb7iixbgt4pfDjOGuBEiD93-RsWknKo7mben-cfdLwQPChnQyMmvBzN2UbDcIbOP7MHgVFT927LkdUnHtowh5LdwsNHxm4iZS6V5aByzmb7oyy5qYutpMSGddvgzOKna5n9WFYmb0HMscBs8WKGYy7jAUIyOO87dqVBKKvMZX16fkzhSK1t6ARo4ECQnKdMN_6u7PpiTNQ0Fp0Ki91wxFzYTGGu9qGaFB60m0jlzkKqmSdnyHD_Cw5AerxKLpOb6jagQe6KJnEHChZSIjEjwsIH1PcYWtUEQ4t_5bJhfSVPXp0AvMR-xyNrK6Bbbu26y2tjwM9z_HUTuXJz1c24_SOTMcJN9JSal1Se8KGqFrVgQcZwhrnXnLFVmZIAKuRT9w6nckE_d6Iu4D_FwpdohmA2nzUWpsEIKqb2X7khx0L7MPiJpK3cmG91Sx0gqR1-22ckX7i3IyLWIPrFYuAQVAziiMwDbWWqgLAhkViTTlYurzUZmGsf6E_wnpLWxNNUgs9j9yNLSogbblVFFhTYJqHLSIf6taXfqolK73hGTHsaYp1qL7DP6BdufZAMYCOhyjAvgfWIadJXLPYJBoJ44WpsZL6EtyIuiP_BqwNcdhYbmovhYGfOCudncf4v3K_H_n9oHa8lhK9-OxWKmSFSLY9WomKkumL3yiJnkrcVlZn5t6sWiDJk2Cwm2sQzff7YPG6qIlEMpMiP3BBHXgOFLenft_Oh1uUO4pddPAhlLXv9k0A_wHR9XHnMWdA8153dCVkZGAjlw97fRxE7WFCkAcU7OwKBIuIVkehONtb_UUIoJMIgGrCkz-xKrXpdmI8sdpmcLLVhOCxeP5u_-7CMf-rRbAk7Cl5sZOd-hRWP-9aajs8lsq9OIIMrJM1cEC9nvRlycnB5-8Qh8UgqE1Ala8RsjQlxdq-SSM_vMhLwJ-DfoLXT6ZI6VkbrXHdLN-L-4McZZ9k5C7sXJyGPZbrPg5Ta-vtKDUJmg-Ak7XebUoQVekGeiqWtU-i6VMKrLjdVEzuIrLtlgX7W0e4O3y4B5gvMs-GHOsEGl9VDy0m_upV4THsvsNyOh8YHBRoGwqaHPBap8iBFEC4bAXtwlXkEwoo6is0njRwcZ8HUdc8nI_veViJxuwk9NIcIIVqeQufIw=w1919-h918?auditContext=forDisplay" alt="그림1" class="w-full rounded-lg ">
+
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : 얼굴 인식 시반 보행자 안전 경고 시스템</p>
+
+      <!-- 설명 -->
+      <div class="bg-white text-black p-4 rounded">
+        <h2 class="text-lg font-bold mb-2">✅ V2X (Vehicle-to-Everything)의 하위 기술</h2>
+        <p class="text-sm"> 차량 간 통신을 의미하며, 도로 위의 차량들이 서로 위치, 속도, 방향, 제동 정보 등을 실시간으로 공유하여 충돌 예방, 교통 흐름 개선, 긴급 상황 대응 등을 가능하게 합니다.
+
+<br><br>
+
+  <h2 class="text-lg font-bold mb-2">⚪ V2V (Vehicle-to-Vehicle) 예시</h2>
+        <p class="text-sm">
+
+● 앞차가 급정거 시, 뒷차에 자동 제동 신호 전송 → 추돌 사고 예방<br>
+● 고속도로 합류 시, 인접 차량에게 진입 차량의 속도/위치 정보 전송 → 안전한 합류 유도<br>
+● 차량 간 실시간 정체/사고 정보 공유 → 우회 경로 안내<br>
+● 차량이 곡선도로에서 상대 차량의 존재를 인식하고 사전 감속<br>
+● 눈, 비 등 악천후 시, 차량이 주행 안정 정보(타이어 미끄러짐 등)를 주변 차량과 공유 <br><br>
+</p>
+
+
+ <h2 class="text-lg font-bold mb-2">💡 예시를 통한 이해</h2>
+        <p class="text-sm">
+📍 V2V 시나리오: <br>
+● <strong> 급정지 경고 시스템 </strong><br>
+앞차가 갑자기 제동할 경우, 해당 차량은 뒤따르는 차량에 "급정지" 신호를 V2V로 전송합니다. 뒷차는 이 정보를 받아 자동으로 제동하거나 운전자에게 경고를 줘서 추돌을 예방합니다..<br><br>
+
+●<strong>차선 변경 협조 시스템  </strong><br>
+차선 변경을 원하는 차량이 방향지시등과 함께 V2V 신호를 인근 차량에 전송합니다. 후방 차량은 이를 인식하고 속도를 줄이거나 차선 변경을 허용해 사고를 줄입니다.
+ <br><br>
+
+●<strong>비상차량 접근 알림 시스템</strong><br> 
+구급차나 소방차가 접근할 경우, 해당 차량은 주변 차량에 V2V로 자신의 위치와 진행 방향을 공유하여, 일반 차량들이 신속하게 비켜 갈 수 있도록 합니다.<br><br>
+
+●<strong>교차로 충돌 방지 시스템</strong><br> 
+교차로에서 두 차량이 동시에 진입하려 할 때, 각 차량은 상대 차량의 이동 경로와 속도를 V2V로 파악하여 충돌 가능성을 판단하고, 위험 시 자동으로 정지하거나 경고를 보냅니다. <br><br>
+
+
+<h2 class="text-lg font-bold mb-2">1️⃣  교차로 충돌 방지 시스템 만들어 보기 </h2>
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_EpFloikDZuZdwDyYrpciVPmG1o-O9rJZuxiR8q61_3TY-NXI07emAhx4NzVuE3ezXGu-Hvzllf1vPS-Obq7Nfx9oeytjIvGOEaSBKdhqUk0MNmlEuuvn0ViQjAl_AXaFZzq11rB0CVF7U-lbUsMDhN-qSwFcj0Y5qUm94aEpKfv1HUQv0ZXwg1XtqAKTtfdZASAFTT2Fp4BIz-8CLukmVW6LH00t3RFSikQeeRde1F02oWxfpedAi5WHs5O5V6vz9Al-nV1fHrpt5-qfW__GV8lYvU8xWUYFtaDyu1eAVloBM9y8sb6-W3qmt2r-M9ZAKTPfKiFyzNBsTTYBHNWDykK3VN8Zmlk0xU6zoY92pQ1J2M0zLGoU63vbgfzy5pinT6QcFIuDE71PHCHwEHI3yU9Uw_uVs2Q2GqdUuRX5ti5_-JcfK3JHaEAjXeObNZaIV7osm2-Ux_58aYIW-sTTH-CZngPDqFu6VV-HA9LNXlnXmP2hkqB5TaTiyhnux-veK4e0KNq6lZ59an10VWGXmugeqLPGqdOEuHCTYrIvMmg_DSZRcuOlCizlgIKmzyhS6dnkTZ9nqnhvMpl-_HdATjrkgrm3NDfY2nOieeEYyT78CH4RSfykJj1J8_e8XRuJ74zZNFFUyZaT2QxKGdEYgRgoyEV2GeJ00AfnQUD-9ltGDwR_Ty_CQGemqpUKxNjuo17AJkZXgQd3rQGze-m8_JK-zPa91MAsyHKLzhhFgIR-p0O2JZ_xvElOuyc8VxbDDL79fPUXOTFk3ruvERJBk_qMxniBwv3Hlw05BNFk3vixeGr7_zPJhNG2c7-dgkV7DLYak7uPNdkfGuhrDd6yutEV8zY-1bWIln2yIYCltVe54jGaQ11GQxWaN9r-bkMkLWDNrejQiE-khJnIDLuJI3N40DbZC2es80MvKyezW8g49aNW0382ipn7baUMfFXxx2eOi3T1Sp7s8ymThdWdH2O_LoZLO21z5WnW8wj04Mf1Xsy1_5-c_I0LnSOJa1vCw7HEgVse_debgJUKaE4AiJ5FsfTdw8briDGM0_vtC8gV9nxdkSwZd_QKnpkOq_ZmPp1_8F7G1dhy0CFFR_CLybSbbnWH9wqPk13Ak4IMHjMGHbg6MunAmMne0WfJ1QbrtLwJtPfHaiiRZuwycJId98D61FXO_QVJ62LW8MXtblNVjAEVsWM-yz8_qSXfA2QsuqC80cFOamURraxCMKq4LINuHKOUtBdZ89HTe5w3Qn3YKpDwb8A1b8VP96ea7VK-68wjavj_J9Z2dnv1SpILyrF8rpJ74gq1sHjP7Em2OM51_92cqV6nN95EAgW3hcgOj4tV2XLEP4drsgGYnE3XHQYQ_1HWWcDIFPf6O7LiLhvx4HClTtpf1MZUh2bGg1qIQU6dMrUboYVDAnX3CAGtwi_dzZrFgOSjIHYcVro0ra9H_6bWpJYKqrj8k2c2WCHmi9Ajq1mIMi3XR6TZ7dHrCaLG8PcfSsECgTkzst4UQksdmdyps40TViPdTQwNW9-GWxEUzU7N9Mb4EXqPrRPaFfT-CBlhgOxA7E79HV6J58Gw36_GLqtM4cvVFJvlTmkXcb1v4Ai8dH4gjvPzkxIXVtUUQXVIsvAwonUxiEE346pAhbXNUmAV9RV6SAl4_Y65RePRGAgECTWQ=w1919-h918?auditContext=forDisplay" alt="그림1" class="w-full rounded-lg ">
+
+<p class="text-[14px] text-gray-500 text-center">
+* 2개의 차량이 교차로에 동시에 진입하려 할 때 
+</p><br>
+
+<h2 class="text-lg font-bold mb-2">2️⃣   교차로 충돌 방지 시스템 파이썬 예제</h2>
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_EIYqmWbW9B134Fx7K6sv3gcKMjZYS9d28sHFy2AWxLeGUjN4JS4AwSjjymi-2cc_84FUtP0EYj_h5ndsLmXgYPOFCKQ_0qys7AqyH6AyQ_e4tn4NYI03wz2Jf248aRj3ejZStdexH_j1nQmvdw4mtCTdhBlTIpkRnW_N0eyN-nWxeSAv-WHMLM0oSNSefCMfb_BHQ99WKoeO2U8aVNOcxoccz3fyIS_RRFwmhJ78RBLenbexYzEOIlTUaHhUtnUoRf4tkU_yKXRrnjIclkgWn7tcJiiUMD4I-DPSMl8jXasW99g1SnzuGdOihmgawaYQyBrbvev2DyxJJJXbDShCuPue2ZPWSbDPuAiu-guPzsZ0w4Bb4kGCU1p882c4LDj3DktxHLEUgpGI8GBzwOSG_SPbtlgNtoHWSG6v9q3z_LzmE-Dk_Jl4LrcCTb0IP2kki_30KYofZy_kUPhunFONgtVoVENyYsoQc39z9zmbJqjnm8GTSaXSZi_9QaBD_RAV58uZPVdtunP6ostl6bClD7NOl9WZleSMTqUXid-xzQH2u2liVYXwi1F4bm2_coFznim4f0IyfkAOA4VEyHS0dxGX5At8yiA3ChAewHUZM8Fssmxqpa89TnHp-GCfrUto91l5z68fz_3tMg4Vg_-M-w4n3kPMEt9twJu41hQx47lf1onFuh0c8G8V-0klDJfGQF4ONpVWp5VXRIi5syK4OXPP9qYavAyjAHHRK8HMnixsZ11YMmx8sGoo7-p9So88gY1OzEqXbnOTYEzHkxeQ2p3o59imE-iPzKmVFF963DZHZA40dyBFIHYFRHjV0V6qj3sbanv-skrlKqpS7FiVf11as9sFaT5FDggSuZBhnFRET2sdWdjCZ-pU_IWDgGjgBmo2u6S7DsghltpZo7WaBAe21BpVzjgRtRiV-9p_y4RuSizx6UYHYhoqYpiHClBk7tg3lkcMfF10X-XDZKYRAz03stnWzAR76412s6TKDtAWL8ttTI9eC2Wk5-FDlL1tp-4QwKEs72Mmw3sme7dRlCQ1e3ERJXwwApxQdeTtuooQlkE_nKuib6yw21a5lTsjin7L6P4Fsid5w_47pXr8oiy63dBrNYJDtvxc9wZFxXMf5mdORfF5drwNFC2tVpx0qdzn7RCKTUJVyCywOex8VTIt027K6dPHOn4-kDzOTMn_I92sDpqVy9ZO-jYW6Nz35rmSeiz_gxBM1rA9PSsn0xt6OxJTkeQZhgfpiVdbnNyLWcOLnSOT5z40ZxprQvVV5DfButxEW3Ta2CcBBNqIJ4esN7vbOA9LfQzBfMUrzrXjqYBUrI8wYEgS5S0_NR3A0BuEeZKshrCDG1VMB7wJkDpysYKeIX5nf2Tfk6j9IdGG-zT25XJzRHZ3FVwS-oZYVZqXP3SHinb96-NBJPH5BXGPX6hobjKjFXZrobPwgtw0bxDnh8ksB7rb7D-4B4E6AOzhluMfkJeVHSHDIVr6StfJLf9q21TjnfWEMEEA5K3gGzaOgv7zGnZ2q7pKkFfI0jdCzBXwVU_8bbabHQoJbEU1GFKfP3dPCsf4a8uSczaIGiyLDPD6kKXKU5s0MCjwX9iycqiwg6cdX8zBqTmnaPLo_7HmoHo1OGqtMGJy-6-fCsLPFO0NGQ-5Vfk18aNe7-s3C_zNKBTw=w1919-h918?auditContext=forDisplay" alt="그림1" class="w-full rounded-lg ">
+<br>
+
+<!-- 파이썬 코드 설명&다운로드 버튼 -->
+<div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
+  <div id="output" class=" flex-1 bg-gray-800 text-white p-4 rounded h-30 text-sm"">
+  <p class="font-normal text-white text-sm">
+
+
+<span class="text-orange-500">def </span><span class="text-blue-500">after_step1</span>(self):<br>
+self.car1_status.config(text=<span class="text-green-500">"긴급정지"</span>, bg=<span class="text-green-500">"#FF3333"</span>, fg="white")<br>
+self.car1_status.place(x=120, y=420)<br>
+self.car2_status.config(text=<span class="text-green-500">"우선 진입"</span>, bg=<span class="text-green-500">"#ED7D31"</span>, fg="white")<br>
+self.car2_status.place(x=520, y=420)    <span class="text-red-500"># 속도값 및 색상 설정</span><br>
+<br><br>
+<span class="text-red-300">#시뮬레이션 내용</span><br>
+<span class="text-red-300">#1.차량 1, 2가 서로 교차로 쪽으로 주행하며 이동 속도와 방향을 공유</span><br>
+<span class="text-red-300">#2.교차로 진입 시 차량 1을 긴급정지 하고 차량 2가 우선 진입</span> <br>
+<span class="text-red-300">#3.차량2가 교차로 진입 후 차량 1이 교차로 진입</span>
+
+</p>
+  </div>
+
+<a href="https://drive.google.com/file/d/18y3078QKVgTWeK0Qth04bosglfNNceTS/view?usp=sharing" download="example.py" id="run-code-btn"
+   class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto inline-flex flex-col justify-center items-center text-center min-h-[64px]">
+ <button id="run-code-btn" class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto">
+  파이썬 코드 <br> 다운로드
+</button>
+</a>
+  </div>
+
+</p> 
+
+<p class="text-[14px] text-gray-500 ">
+* 이 예제는 tkinter와 threading 등의 모듈을 사용합니다. 별도의 설치는 필요 없지만, 만약 tkinter 관련 오류가 <br>
+ 발생한다면 Python 설치 시 tkinter가 포함되어 있는지 확인해주세요.
+</p><br>
+
+
+
+
+
+
+
+
+<h2 class="text-lg font-bold mb-2">3️⃣   2개의 주미 AI 연결 및 제어하기</h2>
+
+      <!-- 설명 -->
+      <div class="bg-white text-black p-4 rounded">
+        <p class="text-sm">시뮬레이션을 실제로 테스트하기 전에, V2V 통신은 차량 간 정보를 주고받아야 하므로 두 대 이상의 주미 AI가 필요합니다. 특히 한 대의 컴퓨터에서 여러 대의 주미 AI를 제어하려면, 아래 예제를 참고하고 연결 방법을 알아봅니다.
+<br><br>
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_Hi7OnM5kmDnoJmLb7ZGBHoxhJhTK_HB3bqiXxG0MN-2vXUGugbas_nhAWFrktOTLI8x4Vzm5f6ly2Fi4KLR8Q75rGR9bzWs-qc99YUlCuWZh0gdwrBGqEKGP-0RSxFYAScEfy8noZEsU_wvp0ss1X1pinrJx8vfNNaKG7mcK-gHYke6Q1E9ztUsrEhB0lf8eHDgq9qwrEBv1cNuZnJ2tRKYQ_2eEs0_FIHHK4NP39griBcS035TbJVzAOayq5cFWnjKE2kSE1-IHWdAOEn-I9_UOveHqygdRKUUavEfbODfbobmKqAUMaLABv9oPZ1YjgfDtOSCXqZa_KtZixUHZECEd7NFrCUhiRgYKyO9ul9M1Cr9-ifLafWtDifmWSCBWF3yd66Ys_-16STQdcjJ8lXdOKfrO3MBJovrDLdMYJKQgnB4-rHsW2OofHrSR5OjTCY8_JbQ61GYDqKmiecTuMGsoZEQdrLfHHFzes6A9vCi8u8rAI06r3h9MchqClRxjDJwpy_Wts2KmEQOtz4BBZTp8iAvAHE0_4kwxJo-a1jNQdg9doWtIwl6EbsFcoY7KKk8Y4PgL4ORaL8P7Wn8UIoMZae-xxpUcPgPZra8L1Yw6stm27bInxhhgzka5GvFdLN6AG02NN9s2gijRIUFQXFfQs70TM5EZfuHc0CsszjFd-6HXbprGUTijSfbtxiozRcQIqmAmdvvag6aUei2CdoFok7w53eYBkW_3Iri6ieVvKOvIQ33x-YL_F3eOH6Rr_jarFOoAC7Mqk9kM6ULEbRc2aeYal2Lf9SYEN2p3vI8bpqbqie2ALA8ZRucRZaPn0yfmr83rLoyVrPLkzUR0jPLKPO0SRQbQ4AJd76XalrtzYwM_VArO-zclsHNzlb98PZCFXPJGjkv0VI8sWnJQ57gLzwWgoce7t6OsipL0lNmCCbGwEjmT_n2Q0CsNKnNoGVcNBtX1sE6mSmc78-azLep23c_J0Hpkb2U1K0rek7nbWtU_wwb9hc-Jqiy1RTH5bdYQcgEZa45tpNKS-yE_5T9xOd4YsiInJdyuFIECd3KKGiGRkbJNWOXOWBx5taS1s4MbT0Tv8_3wklzumHT82TMTlkfJTrg3d0WQDTr8roj3r9sikar3mQONjPscVKFQX0O5RrVvVXdurOl5wqqxI6gs9Zr2H5I3H46YT6stbPtmXif219S79LJlIW_QgSC-5ItTbU0FSvOHCllmrd_bRQ_srG606YBwfzjMzaFcHjCL2UeEO5f0eLAUelh6l3SAFCXW6D3-3THXFB039eiErPuL8voTp-m91w7aAUpIWo23DLtzwpSsLIVaYrum6Uc6E4tuhrzxzOXjSS-x5QVIkWKCofkD0-aSQkYtOJ-GFBpsAC0ZW2JVfA0yrJTh_BBgWDjX6UmD6mtJRqI2FOvKqyviQbj2N9sQoQ9cWbBxX0PJTg4GuPuydLZWPynpEYPPoI5N-Mm60WlirtCmRpfd7dmrtrjJT8gTyQdKXnSX5M7-ddRdHTIAia9O4GsF2xL3954tuhq7hvTGActhqdOP9xzD4cgvrUiyFm_P4SmRPe0bE7zQK9Z8CP1Bpyhhiuvaj7hOUDlsfwtfyw5ti7ZnsciG3xS4qzKc7CezSSroy5SiBrrmsAQIaPWHBHHcXwt7q9B_VukBFq8A=w1919-h918?auditContext=forDisplay" alt="그림1" class="w-full rounded-lg ">
+<br>
+
+<!-- 파이썬 코드 설명&다운로드 버튼 -->
+<div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
+  <div id="output" class=" flex-1 bg-gray-800 text-white p-4 rounded h-30 text-sm"">
+  <p class="font-normal text-white text-sm">
+
+Q 버튼을 누르면 연결 된 1번 주미AI 가 전진하고 <br>
+W 버튼을 누르면 연결 된 2번 주미가 전진 합니다. <br>
+
+<br>
+<span class="text-red-500"># 1번 주미 연결</span><br>
+zumi1 = ZumiAI()<br>
+zumi1.connect(<span class="text-green-500">"192.168.0.86"</span>)<span class="text-red-500"><br>
+# 이 부분에 연결하는 주미 AI의 IP를 입력합니다.</span>
+<br><br>
+
+<span class="text-red-500"># 2번 주미 연결</span><br>
+zumi2 = ZumiAI()<br>
+zumi2.connect(<span class="text-green-500">"192.168.0.87"</span>)<span class="text-red-500"><br>
+#  이 부분에 연결하는 주미 AI의 IP를 입력합니다.</span>
+<br><br>
+
+zumi1.forward_dist_quick(20)<span class="text-red-500"> #zumi1 = ZumiAI()</span><br>
+zumi2.forward_dist_quick(20)<span class="text-red-500"> #zumi2 = ZumiAI()</span>
+
+</p>
+  </div>
+
+<a href="https://drive.google.com/file/d/1iWCWQ80nT2D-9ELwjbrLDwt2PVxK4Yk3/view?usp=sharing" download="example.py" id="run-code-btn"
+   class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto inline-flex flex-col justify-center items-center text-center min-h-[64px]">
+ <button id="run-code-btn" class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto">
+  파이썬 코드 <br> 다운로드
+</button>
+</a>
+  </div>
+
+</p> 
+
+<p class="text-[14px] text-gray-500 ">
+* 이 예제는 keyboard모듈을 사용합니다. keyboard 모듈이 없다면 pip install keyboard를 사용하여 설치 해주세요<br>
+</p><br>
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="text-lg font-bold mb-2">4️⃣  V2V 교차로 충돌 방지 시스템</h2>
+        <p class="text-sm">
+
+<strong> 🚘 교차로 충돌 방지 시스템</strong><br> 
+Intersection Collision Avoidance via V2V Communication = 교차로 상황 인지 + V2V 통신 + 차량 제어 시스템 <br><br>
+
+  <h2 class="text-lg font-bold mb-2">🔧핵심 기술 </h2>
+        <p class="text-sm">
+
+1. 👁️‍🗨️<strong> 실시간 차량 위치 및 속도 추적 시스템</strong><br> 
+Real-Time Vehicle Trajectory Monitoring<br> 
+· 각 차량은 GPS 및 IMU 센서로 자신의 위치, 속도, 방향 데이터를 측정<br>
+· 주기적으로 주변 차량들과 해당 정보를 공유<br>
+· 고정밀 GNSS 및 DSRC / C-V2X 기반 통신 기술 사용<br><br> 
+
+2. 📡<strong> 차량 간 V2V 통신 모듈</strong><br> 
+V2V Communication for Trajectory Sharing<br> 
+· DSRC 또는 C-V2X 기술을 통해 교차로 진입 차량 간 데이터 송수신<br> 
+· 주변 차량의 속도 및 방향 데이터를 수신하여 충돌 위험 예측<br> 
+· 300m 이내 차량들과 지속적 데이터 교환<br><br> 
+
+3. 🤖 <strong>충돌 위험 예측 AI</strong><br> 
+Collision Risk Assessment AI<br> 
+· 양 차량의 속도·위치·경로를 바탕으로 시간-공간 상의 충돌 가능성을 계산<br>
+· 딥러닝 기반 예측 모델 활용 (예: LSTM 기반 경로 예측)<br>
+· 위험 판단 시, 긴급 제동 또는 경고 시스템 트리거<br><br> 
+
+ <h2 class="text-lg font-bold mb-2">💡 예시를 통한 이해</h2>
+        <p class="text-sm">
+📍 V2V 시나리오: 교차로 충돌 방지 <br>
+1. 🚗🚙 두 차량이 서로 보이지 않는 교차로에 동시에 접근 ON <br>
+2. 차량 A와 차량 B는 각각 자신의 위치 및 속도를 V2V로 전송  <br>
+3. AI가 두 차량의 이동 경로를 분석하여 충돌 가능성 판단<br> 
+4. 충돌 위험이 높다고 판단되면  <br> 
+- 차량 A는 자동으로 '긴급 정지'<br> 
+- 차량 B에는 “차량 접근 중”이라는 경고가 표시됨<br> 
+5. 두 차량 모두 안전하게 정지하거나 속도를 조절하여 충돌 회피 <br> <br> 
+
+
+<h2 class="text-lg font-bold mb-2">5️⃣   V2V 기반 교차로 충돌 방지 시스템 </h2>
+      <!-- 설명 -->
+      <div class="bg-white text-black p-4 rounded">
+        <p class="text-sm">이제 시뮬레이션 프로그램에 주미 AI를 연결하여, V2V 기반 교차로 충돌 방지 시스템이 정상적으로 작동하는지 확인해봅니다.
+<br><br>
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_E9JXhZqLLfmAN8swjWpqvP8JhUVcmKNENPhVzIX_G7WFfU4iCg-Y_z2r4FsXLBz5I6bK2nmTfJ2zRNGhO9EjsFqU4_oT3IrvYzRVDXeZ-ikAk5QR1YV4sbQoTWb0-EPrNG8-kbyPWjiXVPJGbz0kkx2PXw4TODcn5L0AMULMH1jlfreVMPkJbqZzWdC4UdYJYyPg6WHBlyr1rPSw0u8oE8NDsIp0-cfsMZCY-sY9QSQQJlIm0rTC9kviEkV3hl8Fo9RZ_lWrBnHMYm7rAC5P3RXl2GdBqATCrzWiceNZ8z_ljmVMBjz63sOKuUdzc1n9DRPr4iIUqhMwrl8qhCjf-U49KB1TVPRmzgRe3Ql50UlsKsvqlfG38dyp0Pt9jr1TGDKt6S5CbIWRR5BOy9kbkELuAJjwSV9mTqO_0UmxsFqdmDI2Y8-FOoobrI_az0QY2jy94jaqQH5MiFAne57O4_9ttv0IvgtgPJh2IwYok5c3rc9iPgwEe_Ruq61VjnAUYeQd9tR0zXFVyLRx2oMldsXlPjXosPGMpcVZwRYABPrtzIy9Euqdd_ahKzjZbjpBCs4CFcAaLO3GB9PQOIYYpSbtNxDAjLCQQf14YQSr7KFDE-shA-91_XMzKrgE109hZffCXMqujPAanIqIv6dRtEEOjuzynMF0G3XEd5DyoPJaIeSMV5xFFImOAe1t4-ewZdpkssZ6bA8h0baNuCF-bomzEAW-scp6S4SEmrw91xzTC2pVXjoOwEu4Bii_s4We3MzEVTZTL-hf-pjwU3HjTV2LaEKxvxsgYMTsw0Zj3Amm0orn-eSDQNO1yOlpNTK-RRgbJ5p2QcTBtlnZ14B9LhZpUd0ymT8nLMceO8m-C4iA09rPcI21CcNW1MIojlFRw2CbijDPAIXBjjb45Lf-xvzt-2-EnBkS0-JSzU9pla6AuZzsHV-7osaq8nf7hAUTYfShz4TM21Y3SdVSLH_033wYhGnyFTNNcMpRUBuSX059aeNJqb6FbK2EU0OLP7Drm6e2YuKOkGW9sbD2P-y1zGEjKR11qZNkSLNhbWbemSlppeUN83j6wr7jQ5JhwnBnpZr-V5BF-VLapX1lbDRVli3IfJcXTMbezoLDVadRViLBkHwo34wgCShM3CO9LtB7wi9SNnrwZKQa22UnUWd3O2-wFRkapy-gm0mGADOFA-u8LEwYpSWw6M52IJpWpZsHmzYoEgXuHQ-M4avjRheKIfOtK7B4xkwT1hMfWdQ4U9exj0Ilk7BtEkduEHEZaKJgyVKUJyGeQb7Umm2HIwiKnk-XjrilCsZ3x18MqGfGzivDXawomLl8R4WEeg0DfRwkpzf2Hu8cnYSDRi5dGe4PZCtENaoNOgRXgxIZpTF3vhjuKZjbVm3skdPu63EB5QX83X4W0ILe5HylsIRrr2zZlhpITyv6_qN9Hr26bSNEbZgXU0bcpkoqz9ovyGlrvqBKIWF04Ojjzo6Zi-MiGZmFkiRoeOR8hwY_42yywFas8CZ_dZWFYbgx6DapEyDzuObBw0LUpLuPhHzaz6olFeFyiFedNflSGH0wwdLMgPDtCk-f6ZTTrLlvk65QdcKatQDo90kDTDkBlxoEQDpjWId8V0JDd441fEpLKF9Y6ejWoTLyK-73ihXFNpb6EnHCoM4ldLV4k2oIGq_w=w1919-h918?auditContext=forDisplay" alt="그림4" class="w-full rounded-lg ">
+
+<p class="text-[14px] text-gray-500 ">
+
+* 2대의 주미 AI는 약 60cm 이상의 거리를 둔 상태로 프로그램 예제를 실행 시켜 주세요 
+</p><br>
+
+
+<!-- 파이썬 코드 설명&다운로드 버튼 -->
+<div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
+  <div id="output" class=" flex-1 bg-gray-800 text-white p-4 rounded h-30 text-sm"">
+  <p class="font-normal text-white text-sm">
+
+
+<span class="text-red-500">#연결 할 주미의 IP 를 작성해주세요</span><br>
+zumi_ip_1 =<span class="text-green-500"> "192.168.0.86"</span><br>
+zumi_ip_2 = <span class="text-green-500">"192.168.0.87"</span><br><br>
+
+<span class="text-red-500"># 1,2번 주미 연결</span><br>
+zumi1 = ZumiAI()<br>
+zumi1.connect(zumi_ip_1)<br>
+
+zumi2 = ZumiAI()<br>
+zumi2.connect(zumi_ip_2)<br><br>
+
+<span class="text-red-500"># 긴급정지시 빨간 LED를 깜빡이고 소리를 냅니다.</span><br>
+self.canvas.itemconfig(self.car1, fill=<span class="text-green-500">"red"</span>) <br>
+zumi1.led_control(10, 0, 0)<br>
+zumi1.play_sound(4)<br>
+zumi1.led_control(0, 0, 0)<br>
+
+
+</p>
+  </div>
+
+<a href="https://drive.google.com/file/d/1dlUzTQcbZVuBmr0Ln7KTv-vmfliOI_XY/view?usp=sharing" download="example.py" id="run-code-btn"
+   class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto inline-flex flex-col justify-center items-center text-center min-h-[64px]">
+ <button id="run-code-btn" class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto">
+  파이썬 코드 <br> 다운로드
+</button>
+</a>
+  </div>
+<br>
+</p> 
+
+
+
+
+
+
+
+  
+
+ <br>
+
+
+
+<!-- 흰색 상자-->
+</div>
+
+    </main>
+  </div>
+
+
+  <!-- JS 스크립트 -->
+  <script>
+// 별 반짝반짝
+  const numStars = 80;
+  for (let i = 0; i < numStars; i++) {
+    const star = document.createElement("div");
+    star.className = "star";
+    star.style.top = Math.random() * 90 + "vh";
+    star.style.left = Math.random() * 90 + "vw";
+    const blinkDuration = (Math.random() * 3 + 3).toFixed(2);
+    const moveDuration = (Math.random() * 20 + 30).toFixed(2);
+    star.style.animationDuration = `${blinkDuration}s, ${moveDuration}s`;
+    star.style.setProperty("--dx", (Math.random() * 20 - 10).toFixed(2));
+    star.style.setProperty("--dy", (Math.random() * 20 - 10).toFixed(2));
+    document.body.appendChild(star);
+  }
+
+  // 모바일 메뉴 토글
+  const toggleButton = document.getElementById("menu-toggle");
+  const mobileMenu = document.getElementById("mobile-menu");
+
+  toggleButton.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+  });
+
+  // 모바일 '챕터 보기' 버튼 토글
+  function toggleSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    const isHidden = sidebar.classList.contains("hidden");
+
+    if (isHidden) {
+      sidebar.classList.remove("hidden");
+      overlay.classList.remove("hidden");
+    } else {
+      sidebar.classList.add("hidden");
+      overlay.classList.add("hidden");
+    }
+  }
+
+  // PC용 사이드바 토글
+  function togglePcSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const pcToggleBtn = document.getElementById("pc-toggle-btn");
+    const isCollapsed = sidebar.classList.contains("w-16");
+
+    if (isCollapsed) {
+      sidebar.classList.remove("w-16");
+      sidebar.classList.add("w-64");
+      pcToggleBtn.innerHTML = "-";
+      const items = sidebar.querySelectorAll(".sidebar-item");
+      items.forEach(el => el.classList.remove("hidden"));
+    } else {
+      sidebar.classList.remove("w-64");
+      sidebar.classList.add("w-16");
+      pcToggleBtn.innerHTML = "☰";
+      const items = sidebar.querySelectorAll(".sidebar-item");
+      items.forEach(el => el.classList.add("hidden"));
+    }
+  }
+
+  </script>
+
+</body>
+</html>
