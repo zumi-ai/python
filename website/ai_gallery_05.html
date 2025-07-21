@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>05 V2I 신호등 통신 감지 시스템</title>
+
+  <!-- ✅ Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    #map {
+      height: 500px;
+      width: 100%;
+      border-radius: 0.5rem;
+    }
+
+  body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #010415, #000C36);
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+    }
+
+  body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; 
+  background-image: url('https://lh3.googleusercontent.com/fife/ALs6j_E782PyIFMYtfVVTWKJmz-NPOAMoNGyICJBadA4s8rszXoBW1pdOjGqEGLaJ6a0MTRkxoIZda-w1eEBdzmu7NpqU9QlaUX2XQY5BKLHSPbORtCE87IE3XMTnbsdNUIM2QDvRB41vYEKbzD3Y6bCsxXuLgblYo45APBATItrnaPs5SkcXeu9aMFuO8Q6kvoPorMCwyAObsM39R5G5_E_Ny4k4oc1IHZfhdJELCCBFT-uuiQtWHXXxmLmcqqCFV36Yub3GZcoAkilshppk0ij1iotqUM9Nk4fNUjg_HSqeXi7yzrZ4gofhiS8xQebPOsnnYHgk3L0SCghkoc6qFYFWAscDbY3J-T3eetqtbXbB6-v3GNFW7xti1pcvNbgLjZtRsaIGJynrnsWED8AUXQRHCk3EmYfxA0gY4wsBe-hWeGJZY9cofd4gEbj7ievulF49GZV7LRbry0cXnDZVSVQYrNcc8oxBM5UvAhNouLXYIJXJ1_XrT67zlzLmaWFvgQQjBnnk2oQX60UerK8qSGRhQ8Mmezkv_cMpiU9M46f8t9rwWVhsknkIxzWOEJEmq9ZT1gDIu8pJuJ3u-S9ZLVvKY8HBMqd09aJxwQfKpdcmEqOn2DjZJ5Ia6EDnV0d-41bYyXz0oZOcs1sDV1vh9Ecz35P12FNqpPjzcYZKRLxGdGyygvDYaACaFqHkqaXrW9pE58AAlqvnBmeyNW8NlG2c52S6Q2lsdbBpAWcXQp0iswofLRMi6Wd-Q1B6UUdMXZhyEAdOtiCngRDzpx8RasWmW-9ZMSqnwvl3B9eB113R5jXh6ZB_0eNjO20SZXZn1XEZP-iD0C0qZgHA_-dVp38zoiT-RutNUwTPiG22-Ff6w_JWic7E1tYgOgMCGWjKDdEbHZW3GB3zXyBrnyH81_8oPGApy1vjOa8_pqZS5jyX9PFbODsrQdPRwq4xTMYsW6OTvG08eM96O2lOThJ5PzHxrOYSpOR-kVKLM7VBUbQHPYq36ECuFUY3kDA7yyMnVm4WWMlU3vS0aguTUUva3CAskP6V8difKwvTNgeKae8dGv44TUtEHGvLjk1eWiBrThOEBpik5XOrt5Y_2d8YnWvbymfdh1QdqeU9o0yxC0tVQBDuGDjkfNVsETEGIK9Sy6ZHBOlQjElWxhelqVv6CaiKM8hKEtfTQoJAgJsgboz_5VGUU3hye0xJY18dQ0bQ23jPDl__tjztKa64n8Hw4BzvKDG_cP0J-1h-m3C9COokR6tTEWSzUyRtK98vafvKmkM8Jw_o9UnoxEN9dbo50aKeD88MUKYso3ijwz-H5DNJHK9wNhgnp2Yn3WkVR_ZtlQpfOcJO3hNmCVOGJDdZ9g3gUBDjQXFg1I_Ww7Wc636ttmFKGDuYeNvyyiwLCmXtbmVhkT29p2M-k4_CQZKh-nDzkUlD-B3oXw4DQr7qr9qXEPX7zFqi0KW521Bynrl2z_NP5nf-AWAun8hnjrpdxoedpcLYra9Qqw-7Qz2gptYkn1FBtRCdTMKEWvYiHlOcruhXC1PSTfyHahNxdVaNkhfDtfnF7LZu0NSlx-JOcMtigLfj8iGGneEDJMB3HlA674Hv6s2MoVnxU5E6x71lqwuC0n2oX5H8BRUx0IiOn40i9TcbEPpzDSwPR8hk3fyLQ0_LiReswY0HUhPAA=w1919-h918');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.5;
+  z-index: -2;
+  animation: flickerOpacity 6s ease-in-out infinite alternate;
+}
+
+
+  
+.traffic-container {
+  width: 100px;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.traffic-light {
+  width: 100%;
+  padding: 10px;
+  background: #333;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.traffic-stand {
+  width: 20px;
+  height: 60px;
+  background-color: #222;
+  border-radius: 0px;
+  margin-top: 0;
+}
+   .light {
+  width: 60px;
+  height: 60px;
+  margin: 10px auto;
+  border-radius: 50%;
+  background-color: #111;
+  transition: background-color 0.3s;
+}
+
+
+.red {
+  background-color: #4d0000;
+}
+.yellow {
+  background-color: #4d3b00; 
+}
+.green {
+  background-color: #003300; 
+}
+
+
+.red.on {
+  background-color: red;
+}
+.yellow.on {
+  background-color: yellow;
+}
+.green.on {
+  background-color: limegreen;
+}
+
+    .buttons {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+   .buttons button {
+  margin: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 8px; 
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.red-btn:hover {
+  background-color: red;
+}
+
+.yellow-btn:hover {
+  background-color: gold;
+}
+
+.green-btn:hover {
+  background-color: green;
+}
+
+    .star {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #00B0C8;
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: blink linear infinite, move linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes blink {
+  0% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
+  100% { opacity: 0.3; transform: scale(1); }
+}
+
+
+    @keyframes move {
+      0% { transform: translate(0, 0); }
+      50% {
+        transform: translate(
+          calc(var(--dx) * 1vw),
+          calc(var(--dy) * 1vh)
+        );
+      }
+      100% { transform: translate(0, 0); }
+    }
+
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      background-color: transparent;
+      text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff;
+    }
+
+    .neon-text {
+      text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+      animation: neon-blink 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes neon-blink {
+      0% {
+        text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+        opacity: 0.3; 
+      }
+      50% {
+        text-shadow: 0 0 2px rgba(255,255,255,0.5), 0 0 5px rgba(74,144,226,0.5), 0 0 10px rgba(74,144,226,0.5), 0 0 15px rgba(74,144,226,0.5);
+        opacity: 0.6;
+      }
+      100% {
+        text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+        opacity: 1;
+      }
+    }
+
+@keyframes flickerOpacity {
+ 0% {
+    opacity: 0.4;
+  }
+  30% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.1;
+  }
+}
+
+    .auto-image {
+      width: 600px !important;
+      height: 400px !important;
+      object-fit: contain;
+    }
+
+
+
+
+  </style>
+</head>
+
+<body>
+
+  <header class="w-full flex justify-between items-center px-6 py-4 z-10">
+    <div class="flex items-center"><a href="index.html" class="Logo">
+      <img src="https://lh3.googleusercontent.com/fife/ALs6j_FpAj7oMETlep3fCBHYuZGq6DWoc60B49wnyNHOTMWS4llCaS_Dp1WLetK1BMHmti4aHnoIXtcVTmgJozC5-VcrBMfRf_pmuzJwULdG9kDt6CALW-P5LRQI_XsXKEB9aJKmDaYTl6V1QaFdPJVpK5YNQBhlW2jdI_AuDvDA78CfUZ-unq3YrNsIHtalQg-UUQQ_3xPZT6uK4tsd1fLzGhG0-axfqtU9jKSbt_DqT5C0fbHcHdA3TFXzaC0PIVtdZWE7pevMcpAkE5GGH6e1RZ1Xa3bQVi4p-EefrONX0wqt1oGD9YFE6g6o6wYkUcyMgwmiAqyMLo4jUDkjfr2tQ_RAiu88W1AgAPtCm8VPp8iQqHsxxdJkEg-OM4kWXs6BhcT1HaUk-uyhd6V3u6qeaAugGSjTgzOhJE8_WB-Kg0_EMceh1aUtKxsKF6sL2s9SYoiBPeodHQZ_JOfPgfrJ9saqwzS1c12GHZQPA9214h2jB3B342DTmtnI3Kjke9ZACcerZTGmgs8r-M-KXZfaW3GGrMeGyuNiunkLZPpoaonQfsVmr1bTddKvcd2CIDuynW_IrFk8mGF7QWfEPunNbCRW5giSKO7G24DSsZxBI9z6ZKUTYc2yIVUMe6lvPUn0fiBncb1DvPN5KwQ-wo-085B42dWoe4A608RY0V0Zw7HX5z3nAqlMGoaugV4hlbRr4AM-utqOfrMeX_L1WyndUfUbzdAvb567Wm1lFLvBp68eP4SyQlwKolfA46zTPuSnYdIQZqeyQBz-k7LGf_KYqjdYJgQxs98ug55nA-K9l_S9JERHaBVe8f1WwxzDyLJyrS84EZFy8DeW113a6osXVO-appgYVBiLOwuxAiAMfLiOhHI6vnxaLm0_XnvRl-grtv4-B9wovOeAwWWJ53EYN-OvVwAKIrzORek9zZNaVE7ZdtHbO4fJ5GHKL6pGx8e45NdnMfBaPqLLUZvfY-lHnTfkxlNkauTHtsghHHd1IOtCREO-9sFepHhsZdyonnEyoOdfcDEIUUynaqkB9nJ6LRnTREJ57v2eKtxlRyczJVcMYAePf7iScHkDM8SXFKLbAzfXff9lBiZzqUXzpMW5wTiDb7YhHdCVFQzO48HMtmbHuegn7qYh1DDNbhzzFj1mjuadOJx1k5ifcrOCc-gaAQZTAOYSfddaqn2X1ISnpK326an-GOJ5NROtbwwXmpSApWXVR1S3te51R8E8YdGR4MIl_A3PoawJbN5OGh2BoPrrRuwxESmk5BbUtxjRagSnhCaAkOZ2pHzjL7kyYpCK6zfAgDfRKwFhU6UXddvgKIkcUkH-LgFj4-2IHb4AKILBiHIRcoImi8qHz-KvtxPTQMVUbUf44V1Lwqv6-JemKVzmGy8ZUJPaexdRtfJ1dwrNmm6K1otLVn7TKePyOS6UaD4FSxavVGJMijJNXZBXKA5OzU-ZP9h60Dil3L26hrte0m2ioVhqV_r5dBxmNhchgw8kyaaFomXDRYgj1nW9Ja5YMUOacyTc3Ms0icahuF3vUm25sjH4H8rjWGBUYKXIlM-K-QWrpRDD6HW5m5FzIlt_nNVirFunkfenUXCNEhJVg-khcWOEd7YEvbmk50xjUsAldDIUIsQ6t_qbEvAnM88NBSPLOOLHwCZvVuXbsp_dJAFRmXY0vhmb=w1919-h918?auditContext=prefetch" alt="Logo" class="h-10 rounded-lg shadow-lg">
+    </div></a>
+
+    <button id="menu-toggle" class="text-white text-3xl md:hidden focus:outline-none">☰</button>
+
+    <nav class="hidden md:flex space-x-4">
+      <a href="ai_gallery.html" class="nav-link whitespace-nowrap">AI GALLERY</a>
+      <a href="example.html" class="nav-link whitespace-nowrap">EXAMPLE</a>
+      <a href="https://truedo.github.io/zumi_mini_python_backup/" class="nav-link whitespace-nowrap">LIBRARY</a>
+      <a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=81&display_group=1" class="nav-link whitespace-nowrap">PURCHASE</a>
+    </nav>
+  </header>
+
+   <div id="mobile-menu" class="hidden flex-col items-center text-center bg-[#000C36] w-full py-4 space-y-10 md:hidden z-20">
+    <a href="ai_gallery.html" class="nav-link whitespace-nowrap">AI GALLERY</a><br>
+    <a href="example.html" class="nav-link whitespace-nowrap">EXAMPLE</a><br>
+    <a href="https://truedo.github.io/zumi_mini_python_backup/" class="nav-link whitespace-nowrap">LIBRARY</a><br>
+    <a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=81&display_group=1" class="nav-link whitespace-nowrap">PURCHASE</a>
+  </div>
+
+  <!-- 오버레이 (모바일 전용) -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden" onclick="toggleSidebar()"></div>
+
+
+<div class="flex">
+
+ 
+  <aside id="sidebar"  class="hidden md:flex w-64 bg-[#3B82F6] text-white p-4 rounded-r-xl flex-col space-y-2 transition-all duration-300 fixed md:relative z-40 h-screen md:h-auto top-0 left-0 md:translate-x-0">
+
+<div class="flex justify-between items-center mb-4 md:hidden">
+  <h2 class="text-lg font-bold">챕터 보기</h2>
+  <button onclick="toggleSidebar()" class="text-white text-2xl">✖</button>
+</div>
+
+
+<button id="pc-toggle-btn" onclick="togglePcSidebar()" class="hidden md:block text-white text-2xl mt-4">
+-
+</button>
+
+    <div class="space-y-2 text-sm sidebar-item">
+
+        <a href="ai_gallery_01" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">01 ITS 지능형 교통 체계</a>
+        <a href="ai_gallery_02" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">02 V2X 차량과 모든 것 </a>
+        <a href="ai_gallery_03" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">03 V2G V2D V2N </a>
+        <a href="ai_gallery_04" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">04 V2P 보행자 안전 시스템 </a>
+        <a href="ai_gallery_05" class="block bg-[#0845A8] text-[#ffffff] font-bold px-4 py-2 rounded ">05 V2I 신호등 통신 감지 시스템</a>
+        <a href="ai_gallery_06" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">06 V2V 교차로 충돌 방지 시스템</a>
+        <a href="ai_gallery_07" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">07 DMS 운전자 상태 인식 시스템</a>
+        <a href="ai_gallery_08" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">08 -----</a>
+        <a href="ai_gallery_09" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">09 -----</a>
+        <a href="ai_gallery_10" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">10 -----</a>
+        <a href="ai_gallery_11" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">11 -----</a>
+        <a href="ai_gallery_12" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">12 -----</a>
+      </div>
+
+      <!-- 페이지 이동 버튼 -->
+      <div class="flex-1 flex items-end">
+        <a href="#" class="block w-full text-center text-3xl mt-4">↑</a>
+      </div>
+
+
+
+    </aside>
+
+    <!-- 메인 콘텐츠 영역 -->
+   <main class="flex-1 max-w-screen-lg mx-auto p-4 sm:p-6 md:p-8 flex flex-col space-y-4 md:ml-0 md:pl-64">
+
+      <!-- 사이드바 열기 버튼 (모바일 전용) -->
+   <button onclick="toggleSidebar()" class="text-white text-2xl md:hidden mb-4 bg-[#2563EB]/90 px-4 py-2 rounded">
+  챕터 보기
+</button>
+
+
+
+      <h1 class="text-xl sm:text-2xl md:text-3xl font-bold">5. V2I 신호등 통신 감지 시스템 </h1>
+
+<!-- 흰색 상자-->
+<div class="bg-white text-black p-6 rounded-lg space-y-4">
+
+      <!-- 그림 영역 -->
+   <img src="https://lh3.googleusercontent.com/fife/ALs6j_Fu_14kd0V58tVYdCMfLQKNK0bQ9UHSomEVy3p16WeJMXDIfuZvT7nytdMhqpCDB7KDaVW1eq81C_IlEEN90V9znf9Bmh9e4OJACGH0Zgx2DG44nRAKqdopGicDFiC0tvDc6m4EgWJmcHMo_qU8lAD-J6ib0Sfmw2ls3o5MG-I8q_d2wxdrzdoGtBA-Gc_suao5t0WYTvrFnUVI_WMpBjyCTUZZ9U5Vq4wVQ-eo9bLSdJ8NPIlQESLiK_wzy3-u_Nmf3bQFqsnzd6vlXLLmD9f254_OM70CAYxPaxvut4GYLshLsMOu46k8l3y2XTVHMVNdGtEp-R0idsnZVxfO0Flt5T3241dLSSuv_ODhy0HHzqsEASRxIhoDlGDDhIR849U6NJA3gifzMguhTdsSzrtHVeYAJZU-jDJOMCPMpqI7wgxvWQs3dG0scJPGeif3BUYdnf7bDbI8O6nu5nubpUzCJCsuTRX8AWThvySuT4JJ2om0Im3B81XmuKwN-X3ZQC2tTyPmJVTgVvflA8S4Hz-DBCmPw4FJMI2mpbtTC_Nby-Z3OlZQOZvlnIM5Ycfe-ctSKJEHEAZVoS3Imbibh_TInzQe7WnfbVENjVn8iV8DP4ENB16PQLGESfSTAdd5MykS_zNX1htVzHFEc9JYI80iSynEHmVEvVsXQQ9Eejmj2ghHJziARTgOxtPIozc3wUDMxPkgsfFmftY-dLaFc0T2r6Rw19Uerlc-VY6NB07OCOXXtQX6Y2K_CEINjnu7skA_QQaErAeO59LnWGyJxzTt0jbk45aNCgh5P7UVx3rigDYPXWE1U_z0-evjpnoQMZsAIg1npu8TgG8T_mx-H46FZsCOnk4MDv_z362b6QPaAfwt7TBLhdt0ocbGOqdLpM53ZduOihemE90p8k3_eKTFzLwK8L2Wqofo4dxUXNE6I6BF60NgevkuyhcSnw3mGT6vq6IWxSde4sTfz4BP1RzX_KfUb065wShqyC3UuUnxUPivd0fHKGfLexBsjxmdwKA6e0ZbL7FsYwObWyi5daDKVGh636e2iAEdf8wadwIcTjhtErjvY-72BpwyvbsnYhCuFQVDLXE7j18_Dya6ejr3aCRYGmVEk8TdiXFqpo0qOcGGyW5f3DB37rtgxxgjIUJqPG0KmP2YtP9btWsIciNgWCXSW2Rad4eHIU3GNjBwEmVYYt-wQ03o4RETpsgZZtoiV1baWyujrBYAvkdkMJ1dbwrJTdJM8mIWtNH6HS9miwA0eqIc_3MEyFdP6DfLUFSyNKxyGtRxn6ZZmcl1123ex4zlCsV0VYUvNhvwv8ebU6zJiCkb7S7IvFQ0eVPYt8Phti-wHZzzRBjZmhVHbNP2TjDRtNadt-VXhJLbk-v25qFLDMCLyYqwDhcbMAMcnCGHFFTdlLGtd25SQsr0Q1-zf_UiiYWN4rCZdkuCY9CwOvMYg7q9lAWGjctnBSCu_xxGN3dZHCFmYA586XPoI0TIFY2RIZGV6T9x3f6A1_01j2UzK118eO3xo66J4eQRlN1FQBpOSbfOZR43EGUxK0xrNBHN3M3LT_OxRl0AQMLXG2_YffF5EXD80BuVfYowEIynBNYX8q7cmvNtXBwCrfE_nIdLlZUVRfhN_Oy5F_Nc_St4qHfOqxGsQZElu_vgiZX-g2VQycss=w1919-h918?auditContext=forDisplay" alt="그림1" class="w-full rounded-lg ">
+
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : 신호등 인식 기반 보행자 안전 경고 시스템</p>
+
+      <!-- 설명 -->
+      <div class="bg-white text-black p-4 rounded">
+        <h2 class="text-lg font-bold mb-2">✅  V2I (Vehicle-to-Infrastructure)</h2>
+        <p class="text-sm"> 차량과 도로 인프라(신호등, 도로 센서, 교통 제어 시스템, 정류장, 도로 표지 등) 간의 통신을 의미합니다.이 기술은 차량이 주변 교통 인프라와 정보를 주고받아 주행 안전성 향상, 교통 흐름 개선, 에너지 효율성 증대 등의 효과를 가져옵니다.
+
+<br><br>
+
+  <h2 class="text-lg font-bold mb-2">⚪ V2I (Vehicle-to-Infrastructure) 예시</h2>
+        <p class="text-sm">
+
+● 차량이 교차로의 신호등과 통신하여 신호 주기를 실시간으로 수신하고, 적절한 속도로 주행해 정지 없이 교차로 통과<br>
+● 도로 노면 상태 센서(결빙·침수 등)가 차량으로 정보를 전송하여, 차량이 자동으로 감속하거나 노선 우회<br>
+● 고속도로 진입 시, 교통량 정보를 수신하여 최적 경로와 속도를 자동 설정<br><br>
+
+</p>
+
+
+ <h2 class="text-lg font-bold mb-2">💡 예시를 통한 이해</h2>
+        <p class="text-sm">
+📍 V2I 시나리오: <br><br>
+● <strong> 실시간 교차로 신호 연동 속도 제어 </strong><br>
+- 차량이 교차로 전방에서 신호등과 통신하여, 다음 신호 전환까지의 남은 시간을 수신<br>
+- 차량은 해당 정보를 바탕으로 자동으로 감속 또는 가속을 조절<br>
+- 불필요한 정지 없이 교차로를 통과함으로써 연비를 향상시키고, 교통 흐름을 최적화
+<br><br>
+
+●<strong>스마트 횡단보도 감지 시스템 연동</strong><br>
+- 횡단보도에 설치된 센서 또는 스마트 신호등이 보행자(어린이, 고령자, 시각장애인 등)를 감지<br>
+- 감지된 정보가 RSU를 통해 접근 차량에 실시간 전송<br>
+- 차량은 자율적으로 정지하거나 제한 속도를 낮춰 보행자 안전을 확보 <br><br>
+
+●<strong>적응형 우회 경로 안내 시스템</strong><br> 
+- 도로 인프라에 설치된 센서(공사 감지, 침수, 낙석, 사고 등)가 도로 이상 상태를 실시간 탐지<br>
+- 수집된 정보는 RSU를 통해 차량에 전송<br>
+- 차량 내비게이션 시스템이 이를 바탕으로 최적의 우회 경로를 자동 설정하여 사고 구간을 회피<br><br>
+
+●<strong>긴급차량 접근 경고 및 신호 우선 시스템</strong><br> 
+구급차, 소방차 등 긴급차량이 도로 인프라(RSU)에 우선 통과 요청 신호를 전송<br>
+RSU는 교차로 신호제어기에 명령을 전달하여, 긴급차량 방향의 신호를 즉시 녹색으로 전환<br>
+동시에 일반 차량들에게는 “긴급차량 접근 중” 경고를 전송, 자율 감속 또는 정지 유도<br><br>
+
+
+<h2 class="text-lg font-bold mb-2">1️⃣  신호등 프로그램 만들어 보기 </h2>
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_Ev1jNIBFTtD4CLSXo6kxkmVLAuql940MHGyOhZRK0ufvw7a29iz2WOYjRtZDuLQrcCbRtyXiuxpmztfWHKI6JZfNcTbgple4_5r3v6EIeIMB77q9yYKbd9Foa2qJ5JGtq6RBngrL2Omf8hAoHKGbJRAc0j4nm6WNKZy3Js1wKisHG0ETvM6ORxYMRX87j1xEaGP0VB4XUiqay1GecC-ihskRXdyraV1inQ0bY5z_ZwZUzAPUxXV5HT5axUv0gGYD80TturKOxAC2rrnpOm7znnvcsFhzhKiJhS-y-ZPs8dxye3GMKpkxwQl7zEWL7y-iPm3_CHVPw2QdaTq0_7C1dHVfIim3WzKw7TgmlIRAkpL9x50UoPw5eC25znNZwSoM5-pYox-xf64eJ8v1BAg8A8k-nSe-PUHL6_yhAnkvpsE6Ecg88s10ir8lWRSerjdoon3vX0ckEkEg_d-54OncLTzkngIEC1LsC_seSbVgnMGcJ9QsUUm0BL-M6Oxd7aqf_NK95qaKidzAVi3c5ICFbM0jK5TCWwRSB92oO-dXpUpkFAaxxOw5c5VH_-pQ-itYEWOKEVjjpO_yB4Zr0B4Hv3pav21UuCVTESjIm6HMV7_5G-JdYSOKr1Tid0SOAvRVtAcl0SLg-RnAc8cXDYAFnVUoCmBOcR6veEwGOQ6qHrmYI8lIPn2pLum7heyEu8l5frlTOg1wnHALPWZlLN8e7sGLAD5WhQ1vfIJyKS8papKAMSjegrKtzCXixCw4dfx0FctNBGwXv6T6Pa3A3kwI0j6KgQLd1fls-2GGJf_NAXghY4tOp1h_v606PgIwbx9eUHRQfbVmVDm94gPEhyEcl17goGEfAXlvBwFbz1YeU7liJ2CGstAsxJgBqitRu1HjUJ9vyUXDLpWeRXX4HXdAP637kTqBSQJj8V3XHW6NSsjrtaFSmdkeEhBYVZGk2HpsH7A75KSvv5NhU3ApVm-3QPS6eqTav13FhDzpjqgwRgyCwPs6IvTnai8OqpjB886Xh-PqGBHtyg5Md6-ASTZtqrV-3xm65FBSnwspAWD5XN4CMoldjIqECl1BxekA6Tjtd6yDd2T0F4PCuUDMJmguDaNdXtnytHHeuSQZTndzMN6xDpaIWnSbxr5NxpkDH1jKhBnE36HHQb2_2Wh5ofDi9NmMOVu-qVx_iVHtu3KyiqhwfQT5kSl2sW-1uUukSc0Qg_SfZ1Xgy9MG9hAMPRD0nCB1XM74QwI8nYxYkXEEPFRX7JJNihAMR8uI2y1PKnn8HgVBif7Kj1_ncMLo-hrZpzjH1Oc5hGjkNvoNCRiZE8Xcv0MzlM-ZEJ5qXExB4M4zq052jWrFyohW2mc6SKAPGEaO3oV_VEN7UJ47yNFN--VphWHQ0n4Bvryp16EAbwVrdfu1CQbIs41-XjW01ENhrqL72OaC4X3Blw-z3zfzZcEvu3kn6khsPoG4_RTr0q3U9KKi4XeSBQemmi1jngxdGjZtDYH7rPz4aYu3zOY4jj8Wn4Ld_DV_tUrMX_g5l8HeHR-jz-cXp9ELeR8HArNMbXrZzq6A6lfXrWBjz7b7V5QfiIBIGGxVf9tu1XGSyTpB5UoaCB_4WmOa03ktxXcLQssfZsX5bpikWr2he8BusQ7lThEASASqxL1uAaZmK6pXNYgz1T_cduJw=w1919-h918?auditContext=forDisplay" alt="그림1" class="w-full rounded-lg ">
+
+<p class="text-[14px] text-gray-500 text-center">
+* R (8초) → Y (4초) → G(8초)
+</p><br>
+
+<p class="text-sm">
+이 신호등 프로그램은 20초를 주기로, 빨간불(8초) → 노란불(4초) → 녹색불(8초) 순서로 점등되며 반복 작동합니다.<br><br>
+
+단, 신호등의 불빛이 임의로 랜덤하게 바뀌는 것은 아니며, 신호 주기는 항상 동일하게 유지됩니다.<br>
+즉, 프로그램을 중간에 껐다가 다시 켜도, 항상 같은 시점에서 동일한 불빛이 들어온 상태로 시작하게 됩니다.<br><br>
+
+실제로 도로교통공사 등에서 제공하는 신호 데이터도 이와 유사합니다. 신호등은 정해진 주기로 동작하기 때문에, <br>
+프로그램이 언제 실행되든 현재 어떤 불이 들어와 있는지 즉시 확인할 수 있으며,<br>
+앞으로 몇 초 뒤에 신호가 어떻게 바뀔지 예측할 수 있습니다.<br><br>
+
+예를 들어, 멀리 있는 교차로의 신호 상태를 직접 보지 못하더라도, 해당 신호등의 정보를 불러올 수 있으면 <br>
+차량은 교차로에 도달하는 시점에 어떤 색상의 불이 켜져 있을지, 녹색불까지 몇 초가 남았는지 미리 알 수 있습니다.<br>
+이런 기능은 스마트 교통 시스템이나 V2I 통신 기반 자율주행 차량의 핵심 요소로 활용됩니다.<br><br>
+</p>
+
+
+<!-- 파이썬 코드 설명&다운로드 버튼 -->
+<div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
+  <div id="output" class=" flex-1 bg-gray-800 text-white p-4 rounded h-30 text-sm"">
+  <p class="font-normal text-white text-sm">
+
+
+<span class="text-red-300">#시간 실시간 연동</span><br>
+<span class="text-red-300">#교통정보 API를 불러와야 하지만, <br>
+여기서는 datetime (현재 시간)을 import 하여 20 초 주기로 신호를 표시 합니다.</span><br><br>
+
+
+<span class="text-red-300">#0.x 초 타이머</span><br>
+
+self.root.after(30, self.update_animation)  <span class="text-red-300"># 30ms 간격</span><br>
+<span class="text-red-300"> # 0~9 총 10프레임 (1초 = 10*30ms ≈ 300ms)</span><br>
+self.anim_frame = 9<br>
+
+</p>
+  </div>
+
+<a href="https://drive.google.com/file/d/1hCehc1DsRFwOWqyCXclQdsgj-ImIuIUM/view?usp=sharing" download="example.py" id="run-code-btn"
+   class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto inline-flex flex-col justify-center items-center text-center min-h-[64px]">
+ <button id="run-code-btn" class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto">
+  파이썬 코드 <br> 다운로드
+</button>
+</a>
+  </div>
+
+</p> 
+
+
+<p class="text-[14px] text-gray-500 ">
+* 이 예제는 tkinter와 datetime 등의 모듈을 사용합니다. 별도의 설치는 필요 없지만, 만약 tkinter 관련 오류가 <br>
+ 발생한다면 Python 설치 시 tkinter와 datetime 모듈이 포함되어 있는지 확인해주세요.
+</p><br>
+
+<h2 class="text-lg font-bold mb-2">2️⃣   신호등을 색상을 감지하는 프로그램 </h2>
+
+<p class="text-sm">
+아래 프로그램을 다운로드하여 실행하면 주미 AI 카메라가 실행됩니다.<br>
+이후 웹사이트의 신호등 버튼(빨간불, 노란불, 초록불)을 클릭해 신호등 색상을 변경해보세요.<br>
+</p>
+
+
+<div class="traffic-container">
+  <div class="traffic-light">
+    <div id="red" class="light red"></div>
+    <div id="yellow" class="light yellow"></div>
+    <div id="green" class="light green"></div>
+  </div>
+  <div class="traffic-stand"></div>
+</div>
+
+
+<div class="buttons">
+  <button class="btn red-btn" onclick="turnOn('red')">빨간불 켜기</button>
+  <button class="btn yellow-btn" onclick="turnOn('yellow')">노란불 켜기</button>
+  <button class="btn green-btn" onclick="turnOn('green')">녹색불 켜기</button>
+  </div>
+<br>
+
+<p class="text-[14px] text-gray-500 ">
+* 다른 신호등 그림이나 사진을 이용하여도 신호등의 색상을 찾아서 감지 합니다.</p><br>
+
+<p class="text-sm">
+아래의 그림 처럼 AI 카메라가 해당 색상을 정상적으로 감지하는지 확인해보시면 됩니다.<br><br>
+</p>
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_HxKoYh19k8z3j1p9IzqtBWIcsfoo5Un0KmgJ4KKoZAKFJYRW5wTJg1UgkfvLLTmfaidY3i21Yavf3MevkzW8pfKfr3-ZbtSCx30BazDcOilwQym-jvuaj6BfJIXqFrizV5KNAsReeSwTchi2pb-ZHxGqD4si6dS7x-FJ55VNwYGbm0cHxE5Oetlon6cnspvO6s_9kvaTaazUeH5NCcBDd1crdKcG9XQHR5luGBMQIA_iVnZjXWrwfMTVjPynJ3SJdo9cz46U5_lL-nwMDRPtYiYwOfBPEHJHL_9RifxAXP66YstoLkpE1agkhVx80d4lfTy5BcAeTcDmt9Lcn23azbtz0ttSzEG--nMndlrKsK3yjflyiZ1lcePV-5OTHCh1ko27KVVIPoX53ttmjblz9Di5kxtD041KSWt3Gkn77CLgZ_i8awPbT32RcGOffUDoVOYcakuuHY1_IOTokoVVKEtBFzQqEpjIv5vwcoEeflNOemMx3xiI0f6YW0BbNJAqXbD_y8UTz_zY6eLGSs-dtEkSbB96XvFNX4WNzUNwrGhrHEhocqf0snLI22gVdY_TjJKEl4yNcg9l7_H1t8XPzTvx4VwpID0Nhzrw7FbBIf_ysZ8E6gGWHzqllQyAfaf_O1EwpF1w8rwxugu-rpiv-k9iQ6EGF8ahfxtuS_3wS4PeF0rOQktJ6KCoHsQwdXQz8qa9OHvcEQsT5Bn0LR9yQDu_j1umXKI-6AfdOj-jlHuOM4aFKU8yvHNUb3kGpchNzEH851-TtljVbIokDDoJaO3-WjtpvPOPRn2yJzPxOitkaQsMmWcROQbUIkrGggrJpClgSByrfGowBDcrgXTJaYItfbu1TBhN8HbeQI6qMOwviAiSgdD8xIvUL2qTOmfHEMbSsdfjj8VuZjEEfghhZf8Qfng5iMka40EAcAVyKrSKihUlz5sbU3CHwMd_WjvMIuqWjCYK6yPkA5j9CwmZYnd-ydwW6rHWdjGWQj3yLjzfDLn7kBBG_mWQzTmTpWvZysckS7CQRXCotPutfZPPs5tXe9AE9krpuISmDwfNB3Bcq0vIFgH0IRQt8zpd2faLRY2Rva8IPdYS3wECcbLVcqG-_5DTRoVpMK_nybHNlEQATtwKWc9QNnCM-n8m7fkwe6OeqKUmt_6iHg9Cm-qh38H7D5lJoT4WRUimpsAzC-b25HAvyA96MtRvWAiF11MqLQQ3ZKryl9SMvlAI7--pIGjQXbJv3bDJJlbI_XlA52Y4PrIRqpILtTXHIw6pZ8no4QFSTvJgqJhByumQXZcLlfIxxHtGmoxBHsQAzSwMSu_2rsvQqsdRorVi5ktoWZlhUVWP08yXM1JEBu8z4zj8rHisLqC8Q6Ff8TWMtEODLlEf_d0n3CEnZ9kw9l7xWatULjoJSjpAglzOfoP6d978hjeXoKwSAg2x2nBDaiDKgSMfDyn4Qlor9luckAOkLwqqhKaeEuI5UI_rc861W4QVmdYbmyGWt8TK_IKWPKOrgBHpqHGqDnpG9SQnBE1pV5XCaGpCroeLlk2fmMt4nks3rH5mAYa0cvCoKucUsoMp6skgc2ypD9PI6J-M9-OozGDMGcWAzxVUXMt_3vffETZautpyw0zNlwIg7HXbbd35UeJ_fW1xLGLblbnkEfaPHZv9_TBDi53Pnr=w1919-h918?auditContext=prefetch" alt="그림1" class="w-full rounded-lg ">
+<br>
+
+<!-- 파이썬 코드 설명&다운로드 버튼 -->
+<div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
+  <div id="output" class=" flex-1 bg-gray-800 text-white p-4 rounded h-30 text-sm"">
+  <p class="font-normal text-white text-sm">
+
+<span class="text-red-300">#connect IP 부분을 알맞게 수정 해주세요<br></span>
+zumiAI = ZumiAI()<br>
+zumiAI.connect(<span class="text-green-500">"192.168.0.82"</span>)<br>
+<br>
+
+<span class="text-red-300">#신호등 색상 인식 예제</span><br>
+light_color = zumiAI.get_traffic_light_color()<br>
+&nbsp; <span class="text-orange-500">if</span> light_color == <span class="text-green-500">"RED"</span>:<br>
+&nbsp; &nbsp; <span class="text-purple-500">print</span>(<span class="text-green-500">"신호등이 빨간색입니다! 정지하세요."</span>)<br>
+
+</p>
+  </div>
+
+<a href="https://drive.google.com/file/d/1zyoAQpzAXV4K7-StWE-UzGp10PNAQtoY/view?usp=sharing" download="example.py" id="run-code-btn"
+   class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto inline-flex flex-col justify-center items-center text-center min-h-[64px]">
+ <button id="run-code-btn" class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto">
+  파이썬 코드 <br> 다운로드
+</button>
+</a>
+  </div>
+
+</p> 
+
+
+<br>
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="text-lg font-bold mb-2">3️⃣   V2I 기반 스마트 횡단보도 감지 시스템</h2>
+        <p class="text-sm">
+
+<strong> 🚦 스마트 신호등 연동 주행 지원 시스템</strong><br> 
+Smart Traffic-Light Awareness System via V2I Communication = 신호등 상태 인식 + V2I 통신 + 차량 속도 및 출발 타이밍 제어 시스템 <br><br>
+
+<strong> 스마트 횡단보도 감지 시스템이란? </strong>
+
+<p class="text-sm">
+스마트 횡단보도 감지 시스템은 차량이 V2I(Vehicle-to-Infrastructure) 통신을 통해 횡단보도 및 신호등 상태를 실시간으로 수신하고, 보행자 보호와 차량의 원활한 주행을 동시에 지원하는 지능형 교통 시스템입니다.
+
+차량은 녹색불이 켜지는 타이밍을 사전에 인식하여 출발 준비를 하거나, 보행자 감지를 통해 자동으로 정지하거나 감속하며 교통안전과 흐름 최적화를 동시에 달성할 수 있습니다.
+</p> <br>
+
+  <h2 class="text-lg font-bold mb-2">🔧핵심 기술 </h2>
+        <p class="text-sm">
+
+1. 👁️‍🗨️<strong> 횡단보도 신호 및 보행자 감지 시스템</strong><br> 
+Real-Time Pedestrian & Signal Detection<br> 
+· 신호 제어기가 횡단보도 신호 상태(적색/녹색 및 남은 시간)를 실시간 분석<br>
+· 횡단보도 인근 센서를 통해 보행자, 유모차, 휠체어 등 감지<br>
+· RSU 또는 스마트 신호제어기를 통해 인식 정보 차량에 무선 송신<br><br> 
+
+2. 📡<strong> V2I 통신 모듈</strong><br> 
+Vehicle-to-Infrastructure Communication<br> 
+· 차량은 DSRC 또는 C-V2X 통신으로 교차로 및 횡단보도와 직접 연결<br> 
+· 보행자 감지 여부, 신호 전환 타이밍, 교차로 상태 등의 정보를 수신<br> 
+· 주기: 0.1초 ~ 1초 간격의 고속 통신으로 실시간 반응 가능<br><br> 
+
+3. 🤖 <strong>충돌 위험 예측 AI</strong><br> 
+AI-Based Adaptive Speed & Stop Control <br> 
+· 차량 위치와 속도, 보행자 존재 여부, 신호 상태 등을 종합 분석<br>
+· 보행자 감지 시 자동 감속 또는 정지 준비<br>
+· 정차 또는 출발 타이밍을 예측하여 불필요한 급제동 없이 주행 유지<br> 
+· 연비 최적화, 승차감 향상, 보행자 안전 확보<br><br>
+
+ <h2 class="text-lg font-bold mb-2">💡 예시를 통한 이해</h2>
+        <p class="text-sm">
+📍  V2I 시나리오: 스마트 횡단보도 감지 시스템<br><br>
+1. 차량이 교차로에 접근하면, AI 시스템과 연동되어 전방 카메라가 자동으로 활성화됩니다.<br>
+2. 카메라는 횡단보도 신호등을 감지하고, 현재 신호등 색상(빨간불, 노란불, 녹색불)을 인식합니다.<br>
+3. 신호등이 정상적으로 감지되면, 스마트 주행 프로그램이 작동하여 주행 결정을 준비합니다.<br>
+4. 차량은 인식된 신호에 따라 아래와 같이 반응합니다:<br>
+&nbsp;🔴 빨간불일 경우: 노란불이 켜질 때까지 대기 후, 녹색불로 바뀌면 출발<br>
+&nbsp;🟡 노란불일 경우: 곧 이어지는 녹색불 전환에 맞춰 출발 준비<br>
+&nbsp;🟢 녹색불일 경우: 즉시 전진 가능, 보행자 상황 등을 함께 고려<br>
+5. 교차로를 통과한 후, 시스템은 다음 횡단보도 접근 시 다시 신호등 감지 절차를 반복합니다.<br><br>
+
+
+<h2 class="text-lg font-bold mb-2">4️⃣   V2I 기반 신호등 연동 주행 프로그램 </h2>
+      <!-- 설명 -->
+      <div class="bg-white text-black p-4 rounded">
+        <p class="text-sm">이제 위의 시나리오 처럼 작동 하는지 아래의 예제를 통해 확인 해봅니다.
+</p>
+<br><br>
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_EzoWKgju-tTS8p4y1M0UPxHCYDDywMJHtCDjwkL496yR4hCBIPPe6zK5zrTV0zTBYv9tt76WCQKL5g-6AdPTiHP3fnLpjtqo8dk8w4kKDkkGyJnqLglJWX-zQ0u7213Fu8-AC___Xds3pj1WkBT0JM028SItgeH5cSyFxxHDxqIgHxOKxmHBUzMTKg8hzpWp5gi1b2emU3v1jwAOKFXWhGmdI-2Fil2aTHqLrBhIOLU075dj_hXKhK_-WeUa3j9ngOWw6JKt1Kyw7ZalRe1LjmrZSLWN-Pk6eFzhNmRmKxlmB9B2TJCsOTzkuKF_xDdVa93xMmUgNquvYtXdIjiAR4MGveln1VQbO7MGvGmXw0nU1D5oovp5024EMJhsQFh5XuZ2mvXn2NqOBNlvCpOo-arbnDvux7SMbiJPSdzBYc9nobqmC5ZdgahM-7T_EJusT-RVloNovSDF6Tto-Tvv7iZ_a_60UQJxDx0T_875ZcObEjeGaUau78n5ufinY8Orl5Nahd59J3vwQeWCUMhw9nofYlyeeqjSI6UfPAN22PFCCKNr-_GfoR1P1-VYi-TTi9FuTrHNrePavTNiqlUzMv9rEphWxam5mHtKdfFqtpocVKCcoEcc5JFJj87bxh-31ZQas-l3WGrKyb_FLduKx3i0YbXFvYioJwjDpfy9TWayWxEu3ntO4-fqrJlqQCiTSC5oUKoCATDa70LULC0lPZa3Kak88qrsmNNo1jcUlAb0wVbL0CsjFm42zBhR3LO1mcjC8b6uPTuKyxUyRncMQIzkKzq_U3L6YNEHeez1u_Hd5JuKTlrYXamM3TH5ZGdyiQc3j64hoOSOYrkYgvZSS79Ny6aXTIpQWjBclwBlgkaD6rBp19YNDj4uPzvDXT8Gy2VNhwtlVNc7OWZAmyjE6Yr_A6bphzJciA6q81t_dqghyvFVz2dxZ6XlE0-4UUHAHI0dYYSzP_DJ_KnJRYaOxnuhL3ka5VaPbtSaWqhc6gMoZTVc2kjlt4fwt18fzzHKrG_J7fj__C3bIOnzzzyzQzRyglo9ZdTEnXyiAU_KETfGBfE1TEDzraPjxNfr7UJiHKs0eZPu5EXeSxBeAu5JP8t4mYykrGclGDR8QxsniKZ6oBunTYGAKnVKITh_zTGE4O1eiBW7EQkTvAznT5ltMbcncRCHp5USrL1dbhVT6wT35_yYgxiWxePL1mWe4TUassiKVBRINvnKw5dA5DCIoiasDhZfXXFdL-IRdtvIhtbbK5tY4eTUQat4PDT9SCE8YzJQzKAMXFWZednr14PRvfbsGxTIP9sA90m6dEzFVEGRRDQWrhkd4onRpg_PUtSr23PPdHndkhDqilupJcHlXQ2w2WWUmeEoDplhgU5UPua-qKVI9OuCn098cfB5XVXNDDBA6oparqCq6u3YBBMT-22EiY3xbp8JfFlEIqCYFbKaT_3iZ8FzVzq1LmwJchj6lo41tSlhNXIa0hvZ5aBGD-THXFOAiQkviCZkIoAUEzEhbR3ih7c7erw2rZQ1M_MlWE6RnUrNBOmaWrs0we07OW4WdHWf_YSjbJI_S7YN1GeBbAHpTf8J0tKC8X-v9-hyBAC3w22Dwbn3TCmi4F5DPFD8EBewk3fGHd6D82Dq6jU6AEIfX7C2MuckhsdTyYGf-SROYhwI_FfA=w1919-h918?auditContext=forDisplay" alt="그림4" class="w-full rounded-lg ">
+
+
+<!-- 파이썬 코드 설명&다운로드 버튼 -->
+<div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
+  <div id="output" class=" flex-1 bg-gray-800 text-white p-4 rounded h-30 text-sm"">
+  <p class="font-normal text-white text-sm">
+
+<span class="text-red-500">#중복 감지로 2번 동작이 실행 되지 않도록 쿨다운 시간을 코딩합니다.</span><br>
+cooldown_time = 10  <span class="text-red-500">## 쿨다운 시간 (초)</span><br><br>
+<span class="text-orange-500"> if </span>now_time - last_action_time < cooldow<br>
+<span class="text-purple-500">  print</span>(<span class="text-green-500">"▶ 쿨다운 중 - 무시됨"</span>)<br>
+
+
+
+
+</p>
+  </div>
+
+<a href="https://drive.google.com/file/d/1jTKbjTHaZfl0Upwb3jZ-RrM9mVBsW2YD/view?usp=sharing" download="example.py" id="run-code-btn"
+   class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto inline-flex flex-col justify-center items-center text-center min-h-[64px]">
+ <button id="run-code-btn" class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto">
+  파이썬 코드 <br> 다운로드
+</button>
+</a>
+  </div>
+<br>
+</p> 
+
+<h2 class="text-lg font-bold mb-2">5️⃣    RSU (Road Side Unit)란? </h2>
+
+        <p class="text-sm">RSU(Road Side Unit)는 도로 인프라 측에 설치되는 통신 장치로, 차량과의 실시간 무선 통신을 통해 교통 정보를 주고받는 V2X(Vehicle-to-Everything) 기술의 핵심 구성 요소입니다. 주로 V2I (Vehicle-to-Infrastructure) 통신에서 인프라 측 노드 역할을 수행합니다.
+</p> <br>
+
+<strong>📦 RSU의 구성 요소</strong><br><br>
+●통신 모듈 <br>
+DSRC, C-V2X, 5G NR-V2X 등 무선통신 프로토콜 지원<br><br>
+●프로세서/제어기 <br>
+수신 데이터 처리 및 판단 알고리즘 실행<br><br>
+●GPS 및 타이밍 장치<br>
+정확한 위치/시간 정보 제공<br><br>
+●네트워크 인터페이스<br>
+백엔드 시스템(교통 관제소 등)과의 연결<br><br>
+●센서/연동 인터페이스<br>
+신호등, 카메라, 레이더, 차량검지기 등과 연동<br><br>
+
+<strong>📡 V2I 통신 흐름에서 RSU의 위치:</strong><br>
+
+<div class="bg-gray-300 p-6 rounded-lg shadow-md md:space-x-4 space-y-1 md:space-y-0">
+<strong>🚗 자율주행 차량 <br></strong>
+    ⇅  무선 통신 (DSRC, C-V2X)<br>
+<strong>📶 RSU (도로변 통신 장치) <br></strong>
+    ⇅  유선/무선 백홀 (5G, 광케이블 등)<br>
+<strong>🧠 교통 관제 센터 / ☁️ 클라우드<br></strong>
+</div><br>
+RSU는 차량과 인프라 사이에서 정보를 중계하거나, 독립적으로 데이터를 판단해 차량에 지시를 내릴 수 있습니다.<br>
+
+ <br>
+
+
+<strong>🧩 RSU 실생활 적용 사례 (V2I 기반) </strong><br><br>
+<strong>1. 스마트 신호등 제어 </strong><br>
+
+    RSU는 차량으로부터 속도와 위치를 수신 <br>
+
+    여러 차량의 정보를 분석해 신호 주기를 조절 <br>
+
+    교차로 충돌 위험이 있는 경우 차량에 경고 메시지 전송 <br><br>
+
+<strong>2. 긴급차량 우선 통행 지원</strong> <br>
+
+    구급차나 소방차가 접근하면 RSU가 이를 감지 <br>
+
+    신호등을 자동 조절해 우선 통과 유도 <br>
+
+    주변 차량에 양보 지시 전송 (V2V + V2I 연계) <br><br>
+
+<strong>3. 도로 위험 정보 전송</strong> <br>
+
+    도로에 결빙, 공사, 낙하물 발생 시 <br>
+
+    RSU가 해당 위치 차량이나 센서로부터 정보를 받아 <br>
+
+    후속 차량에 경고 메시지 전송 (예: "200m 앞 결빙 구간") <br><br>
+
+<strong>4. 보행자 보호</strong> <br>
+
+    RSU가 횡단보도 인근 보행자 감지 센서 또는 CCTV와 연동 <br>
+
+    차량에 "보행자 접근 중" 메시지를 실시간 전송 <br>
+
+
+
+
+<!-- 흰색 상자-->
+</div>
+
+    </main>
+  </div>
+
+
+  <!-- JS 스크립트 -->
+  <script>
+// 별 반짝반짝
+  const numStars = 80;
+  for (let i = 0; i < numStars; i++) {
+    const star = document.createElement("div");
+    star.className = "star";
+    star.style.top = Math.random() * 90 + "vh";
+    star.style.left = Math.random() * 90 + "vw";
+    const blinkDuration = (Math.random() * 3 + 3).toFixed(2);
+    const moveDuration = (Math.random() * 20 + 30).toFixed(2);
+    star.style.animationDuration = `${blinkDuration}s, ${moveDuration}s`;
+    star.style.setProperty("--dx", (Math.random() * 20 - 10).toFixed(2));
+    star.style.setProperty("--dy", (Math.random() * 20 - 10).toFixed(2));
+    document.body.appendChild(star);
+  }
+
+  // 모바일 메뉴 토글
+  const toggleButton = document.getElementById("menu-toggle");
+  const mobileMenu = document.getElementById("mobile-menu");
+
+  toggleButton.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+  });
+
+  // 모바일 '챕터 보기' 버튼 토글
+  function toggleSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    const isHidden = sidebar.classList.contains("hidden");
+
+    if (isHidden) {
+      sidebar.classList.remove("hidden");
+      overlay.classList.remove("hidden");
+    } else {
+      sidebar.classList.add("hidden");
+      overlay.classList.add("hidden");
+    }
+  }
+
+  // PC용 사이드바 토글
+  function togglePcSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const pcToggleBtn = document.getElementById("pc-toggle-btn");
+    const isCollapsed = sidebar.classList.contains("w-16");
+
+    if (isCollapsed) {
+      sidebar.classList.remove("w-16");
+      sidebar.classList.add("w-64");
+      pcToggleBtn.innerHTML = "-";
+      const items = sidebar.querySelectorAll(".sidebar-item");
+      items.forEach(el => el.classList.remove("hidden"));
+    } else {
+      sidebar.classList.remove("w-64");
+      sidebar.classList.add("w-16");
+      pcToggleBtn.innerHTML = "☰";
+      const items = sidebar.querySelectorAll(".sidebar-item");
+      items.forEach(el => el.classList.add("hidden"));
+    }
+  }
+
+  // 신호등
+ function turnOn(color) {
+      const lights = ['red', 'yellow', 'green'];
+      lights.forEach(function(light) {
+        document.getElementById(light).classList.remove('on');
+      });
+      document.getElementById(color).classList.add('on');
+    }
+
+
+  </script>
+
+</body>
+</html>
