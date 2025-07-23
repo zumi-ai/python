@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>8. Object Detection 객체 탐지</title>
+
+  <!-- ✅ Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    #map {
+      height: 500px;
+      width: 100%;
+      border-radius: 0.5rem;
+    }
+
+  body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #010415, #000C36);
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+    }
+
+  body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; 
+  background-image: url('https://lh3.googleusercontent.com/fife/ALs6j_E782PyIFMYtfVVTWKJmz-NPOAMoNGyICJBadA4s8rszXoBW1pdOjGqEGLaJ6a0MTRkxoIZda-w1eEBdzmu7NpqU9QlaUX2XQY5BKLHSPbORtCE87IE3XMTnbsdNUIM2QDvRB41vYEKbzD3Y6bCsxXuLgblYo45APBATItrnaPs5SkcXeu9aMFuO8Q6kvoPorMCwyAObsM39R5G5_E_Ny4k4oc1IHZfhdJELCCBFT-uuiQtWHXXxmLmcqqCFV36Yub3GZcoAkilshppk0ij1iotqUM9Nk4fNUjg_HSqeXi7yzrZ4gofhiS8xQebPOsnnYHgk3L0SCghkoc6qFYFWAscDbY3J-T3eetqtbXbB6-v3GNFW7xti1pcvNbgLjZtRsaIGJynrnsWED8AUXQRHCk3EmYfxA0gY4wsBe-hWeGJZY9cofd4gEbj7ievulF49GZV7LRbry0cXnDZVSVQYrNcc8oxBM5UvAhNouLXYIJXJ1_XrT67zlzLmaWFvgQQjBnnk2oQX60UerK8qSGRhQ8Mmezkv_cMpiU9M46f8t9rwWVhsknkIxzWOEJEmq9ZT1gDIu8pJuJ3u-S9ZLVvKY8HBMqd09aJxwQfKpdcmEqOn2DjZJ5Ia6EDnV0d-41bYyXz0oZOcs1sDV1vh9Ecz35P12FNqpPjzcYZKRLxGdGyygvDYaACaFqHkqaXrW9pE58AAlqvnBmeyNW8NlG2c52S6Q2lsdbBpAWcXQp0iswofLRMi6Wd-Q1B6UUdMXZhyEAdOtiCngRDzpx8RasWmW-9ZMSqnwvl3B9eB113R5jXh6ZB_0eNjO20SZXZn1XEZP-iD0C0qZgHA_-dVp38zoiT-RutNUwTPiG22-Ff6w_JWic7E1tYgOgMCGWjKDdEbHZW3GB3zXyBrnyH81_8oPGApy1vjOa8_pqZS5jyX9PFbODsrQdPRwq4xTMYsW6OTvG08eM96O2lOThJ5PzHxrOYSpOR-kVKLM7VBUbQHPYq36ECuFUY3kDA7yyMnVm4WWMlU3vS0aguTUUva3CAskP6V8difKwvTNgeKae8dGv44TUtEHGvLjk1eWiBrThOEBpik5XOrt5Y_2d8YnWvbymfdh1QdqeU9o0yxC0tVQBDuGDjkfNVsETEGIK9Sy6ZHBOlQjElWxhelqVv6CaiKM8hKEtfTQoJAgJsgboz_5VGUU3hye0xJY18dQ0bQ23jPDl__tjztKa64n8Hw4BzvKDG_cP0J-1h-m3C9COokR6tTEWSzUyRtK98vafvKmkM8Jw_o9UnoxEN9dbo50aKeD88MUKYso3ijwz-H5DNJHK9wNhgnp2Yn3WkVR_ZtlQpfOcJO3hNmCVOGJDdZ9g3gUBDjQXFg1I_Ww7Wc636ttmFKGDuYeNvyyiwLCmXtbmVhkT29p2M-k4_CQZKh-nDzkUlD-B3oXw4DQr7qr9qXEPX7zFqi0KW521Bynrl2z_NP5nf-AWAun8hnjrpdxoedpcLYra9Qqw-7Qz2gptYkn1FBtRCdTMKEWvYiHlOcruhXC1PSTfyHahNxdVaNkhfDtfnF7LZu0NSlx-JOcMtigLfj8iGGneEDJMB3HlA674Hv6s2MoVnxU5E6x71lqwuC0n2oX5H8BRUx0IiOn40i9TcbEPpzDSwPR8hk3fyLQ0_LiReswY0HUhPAA=w1919-h918');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.5;
+  z-index: -2;
+  animation: flickerOpacity 6s ease-in-out infinite alternate;
+}
+
+
+
+    .star {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #00B0C8;
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: blink linear infinite, move linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes blink {
+  0% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
+  100% { opacity: 0.3; transform: scale(1); }
+}
+
+
+    @keyframes move {
+      0% { transform: translate(0, 0); }
+      50% {
+        transform: translate(
+          calc(var(--dx) * 1vw),
+          calc(var(--dy) * 1vh)
+        );
+      }
+      100% { transform: translate(0, 0); }
+    }
+
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      background-color: transparent;
+      text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff;
+    }
+
+    .neon-text {
+      text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+      animation: neon-blink 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes neon-blink {
+      0% {
+        text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+        opacity: 0.3; 
+      }
+      50% {
+        text-shadow: 0 0 2px rgba(255,255,255,0.5), 0 0 5px rgba(74,144,226,0.5), 0 0 10px rgba(74,144,226,0.5), 0 0 15px rgba(74,144,226,0.5);
+        opacity: 0.6;
+      }
+      100% {
+        text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+        opacity: 1;
+      }
+    }
+
+@keyframes flickerOpacity {
+ 0% {
+    opacity: 0.4;
+  }
+  30% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.1;
+  }
+}
+
+    .auto-image {
+      width: 600px !important;
+      height: 400px !important;
+      object-fit: contain;
+    }
+
+
+.filter-buttons {
+      margin-bottom: 15px;
+    }
+
+    .filter-buttons button {
+      background-color: #f2f2f2;
+      border: 1px solid #ccc;
+      color: #333;
+      padding: 8px 14px;
+      margin: 5px 5px 5px 0;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-buttons button.active {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .search-box {
+      margin-bottom: 20px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .card-container {
+     display: flex;
+     flex-wrap: wrap;
+     gap: 15px;
+     max-height: min(300px, 80vh);  
+     overflow-y: auto;
+     border: 1px solid #eee;
+     padding: 10px;
+}
+
+    .card {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px 15px;
+      width: 180px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      font-size: 15px;
+    }
+
+    .card.hidden {
+      display: none !important;
+    }
+
+    .card .label {
+      font-weight: bold;
+    }
+
+    .card .value {
+      color: #555;
+      margin-left: 5px;
+    }
+
+
+  </style>
+</head>
+
+<body>
+
+  <header class="w-full flex justify-between items-center px-6 py-4 z-10">
+    <div class="flex items-center"><a href="index.html" class="Logo">
+      <img src="https://lh3.googleusercontent.com/fife/ALs6j_FpAj7oMETlep3fCBHYuZGq6DWoc60B49wnyNHOTMWS4llCaS_Dp1WLetK1BMHmti4aHnoIXtcVTmgJozC5-VcrBMfRf_pmuzJwULdG9kDt6CALW-P5LRQI_XsXKEB9aJKmDaYTl6V1QaFdPJVpK5YNQBhlW2jdI_AuDvDA78CfUZ-unq3YrNsIHtalQg-UUQQ_3xPZT6uK4tsd1fLzGhG0-axfqtU9jKSbt_DqT5C0fbHcHdA3TFXzaC0PIVtdZWE7pevMcpAkE5GGH6e1RZ1Xa3bQVi4p-EefrONX0wqt1oGD9YFE6g6o6wYkUcyMgwmiAqyMLo4jUDkjfr2tQ_RAiu88W1AgAPtCm8VPp8iQqHsxxdJkEg-OM4kWXs6BhcT1HaUk-uyhd6V3u6qeaAugGSjTgzOhJE8_WB-Kg0_EMceh1aUtKxsKF6sL2s9SYoiBPeodHQZ_JOfPgfrJ9saqwzS1c12GHZQPA9214h2jB3B342DTmtnI3Kjke9ZACcerZTGmgs8r-M-KXZfaW3GGrMeGyuNiunkLZPpoaonQfsVmr1bTddKvcd2CIDuynW_IrFk8mGF7QWfEPunNbCRW5giSKO7G24DSsZxBI9z6ZKUTYc2yIVUMe6lvPUn0fiBncb1DvPN5KwQ-wo-085B42dWoe4A608RY0V0Zw7HX5z3nAqlMGoaugV4hlbRr4AM-utqOfrMeX_L1WyndUfUbzdAvb567Wm1lFLvBp68eP4SyQlwKolfA46zTPuSnYdIQZqeyQBz-k7LGf_KYqjdYJgQxs98ug55nA-K9l_S9JERHaBVe8f1WwxzDyLJyrS84EZFy8DeW113a6osXVO-appgYVBiLOwuxAiAMfLiOhHI6vnxaLm0_XnvRl-grtv4-B9wovOeAwWWJ53EYN-OvVwAKIrzORek9zZNaVE7ZdtHbO4fJ5GHKL6pGx8e45NdnMfBaPqLLUZvfY-lHnTfkxlNkauTHtsghHHd1IOtCREO-9sFepHhsZdyonnEyoOdfcDEIUUynaqkB9nJ6LRnTREJ57v2eKtxlRyczJVcMYAePf7iScHkDM8SXFKLbAzfXff9lBiZzqUXzpMW5wTiDb7YhHdCVFQzO48HMtmbHuegn7qYh1DDNbhzzFj1mjuadOJx1k5ifcrOCc-gaAQZTAOYSfddaqn2X1ISnpK326an-GOJ5NROtbwwXmpSApWXVR1S3te51R8E8YdGR4MIl_A3PoawJbN5OGh2BoPrrRuwxESmk5BbUtxjRagSnhCaAkOZ2pHzjL7kyYpCK6zfAgDfRKwFhU6UXddvgKIkcUkH-LgFj4-2IHb4AKILBiHIRcoImi8qHz-KvtxPTQMVUbUf44V1Lwqv6-JemKVzmGy8ZUJPaexdRtfJ1dwrNmm6K1otLVn7TKePyOS6UaD4FSxavVGJMijJNXZBXKA5OzU-ZP9h60Dil3L26hrte0m2ioVhqV_r5dBxmNhchgw8kyaaFomXDRYgj1nW9Ja5YMUOacyTc3Ms0icahuF3vUm25sjH4H8rjWGBUYKXIlM-K-QWrpRDD6HW5m5FzIlt_nNVirFunkfenUXCNEhJVg-khcWOEd7YEvbmk50xjUsAldDIUIsQ6t_qbEvAnM88NBSPLOOLHwCZvVuXbsp_dJAFRmXY0vhmb=w1919-h918?auditContext=prefetch" alt="Logo" class="h-10 rounded-lg shadow-lg">
+    </div></a>
+
+    <button id="menu-toggle" class="text-white text-3xl md:hidden focus:outline-none">☰</button>
+
+    <nav class="hidden md:flex space-x-4">
+      <a href="ai_gallery.html" class="nav-link whitespace-nowrap">AI GALLERY</a>
+      <a href="example.html" class="nav-link whitespace-nowrap">EXAMPLE</a>
+      <a href="https://truedo.github.io/zumi_mini_python_backup/" class="nav-link whitespace-nowrap">LIBRARY</a>
+      <a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=81&display_group=1" class="nav-link whitespace-nowrap">PURCHASE</a>
+    </nav>
+  </header>
+
+   <div id="mobile-menu" class="hidden flex-col items-center text-center bg-[#000C36] w-full py-4 space-y-10 md:hidden z-20">
+    <a href="ai_gallery.html" class="nav-link whitespace-nowrap">AI GALLERY</a><br>
+    <a href="example.html" class="nav-link whitespace-nowrap">EXAMPLE</a><br>
+    <a href="https://truedo.github.io/zumi_mini_python_backup/" class="nav-link whitespace-nowrap">LIBRARY</a><br>
+    <a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=81&display_group=1" class="nav-link whitespace-nowrap">PURCHASE</a>
+  </div>
+
+  <!-- 오버레이 (모바일 전용) -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden" onclick="toggleSidebar()"></div>
+
+
+<div class="flex">
+
+ 
+  <aside id="sidebar"  class="hidden md:flex w-64 bg-[#3B82F6] text-white p-4 rounded-r-xl flex-col space-y-2 transition-all duration-300 fixed md:relative z-40 h-screen md:h-auto top-0 left-0 md:translate-x-0">
+
+<div class="flex justify-between items-center mb-4 md:hidden">
+  <h2 class="text-lg font-bold">챕터 보기</h2>
+  <button onclick="toggleSidebar()" class="text-white text-2xl">✖</button>
+</div>
+
+
+<button id="pc-toggle-btn" onclick="togglePcSidebar()" class="hidden md:block text-white text-2xl mt-4">
+-
+</button>
+
+    <div class="space-y-2 text-sm sidebar-item">
+
+        <a href="ai_gallery_01" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">01 ITS 지능형 교통 체계</a>
+        <a href="ai_gallery_02" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">02 V2X 차량과 모든 것 </a>
+        <a href="ai_gallery_03" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">03 V2G V2D V2N </a>
+        <a href="ai_gallery_03" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">04 V2P 보행자 안전 시스템 </a>
+        <a href="ai_gallery_05" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">05 V2I 신호등 통신 감지 시스템</a>
+        <a href="ai_gallery_06" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">06 V2V 교차로 충돌 방지 시스템</a>
+        <a href="ai_gallery_07" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">07 DMS 운전자 상태 인식 시스템</a>
+        <a href="ai_gallery_08" class="block bg-[#0845A8] text-[#ffffff] font-bold px-4 py-2 rounded ">08 Object Detection 객체 탐지</a>
+        <a href="ai_gallery_09" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">09 -----</a>
+        <a href="ai_gallery_10" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">10 -----</a>
+        <a href="ai_gallery_11" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">11 -----</a>
+        <a href="ai_gallery_12" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">12 -----</a>
+      </div>
+
+      <!-- 페이지 이동 버튼 -->
+      <div class="flex-1 flex items-end">
+        <a href="#" class="block w-full text-center text-3xl mt-4">↑</a>
+      </div>
+
+
+
+    </aside>
+
+    <!-- 메인 콘텐츠 영역 -->
+   <main class="flex-1 max-w-screen-lg mx-auto p-4 sm:p-6 md:p-8 flex flex-col space-y-4 md:ml-0 md:pl-64">
+
+      <!-- 사이드바 열기 버튼 (모바일 전용) -->
+   <button onclick="toggleSidebar()" class="text-white text-2xl md:hidden mb-4 bg-[#2563EB]/90 px-4 py-2 rounded">
+  챕터 보기
+</button>
+
+
+
+
+
+      <h1 class="text-xl sm:text-2xl md:text-3xl font-bold">8. Object Detection 객체 탐지 </h1>
+
+<!-- 흰색 상자-->
+<div class="bg-white text-black p-6 rounded-lg space-y-4">
+
+      <!-- 그림 영역 -->
+   <img src="https://lh3.googleusercontent.com/fife/ALs6j_Fduvmk2NDaBxLxnIBalOsRRhZ3Uz9fwvgQFDkvZmKU6qEftqB0ZwuUxkhITwhNIAjJeDXXXdLLh_3R8i46d2oJDayh2T9Asfbu5iPDXnTKSh07RhBlXsT_3Jg5agRv98ihRZeTMPGfW_a2T3pnWgqt8B62Hxp5lgvDYRe4BuiFCgudUmranODYKy-ECSwvKmIDNv3dgGUzRCdiMpfdoWQjuHbBrZBAM00rHajO5K6TXqtZ2EyzidlhhmK9MOhyqGRKzzG1JuhrhgQJdl3jW_Vtrzs0th6RM-2adDhUUclyTimvwOu8y_BaosOHZjU-ic5IxW1v2XOdiaVKksIExWbflgWp575eL5uDNxIFZ6DsS6izwS9eE-6AYXIMhm056361y56t0rkHmkopE6tO44C1-rsxYfdok2fecMoHXVnNxSrT2x38x-ISkH-St3POztwVdfE6fBBlTsqgm7Nm3Vc7A6XYnTQCrjQPe_tOO-uXpoQIXLbkVlLnzwUh1BbFcvfj5VvQ3UnEFDtm4nGK1uV9IgbuFnrJ-BcYI9NkDohiPh5TrVSKeEDGnHtJbn8nKKkLslvGl6Utja6TcdMmGZQSuqNFLINGj1cr0Qmq-W8exgI_xRNSgngx13zhGUOBIOj98rrSiRQc_mcTzayxPKA48_In0V-pIWqrhsAH2EBXHAMmJn4h0hpRsDUc2ztNvFQvDHYCL82DUijgES1ssdbCtPxSGWLUUeQ044zp3VFveBBQbd-YJe2FuyS43i5vBZimfB9YJKiQYLpvEWsiIfOFmJOka9-lAKtAluZUT2cEDg9q9d4Bi4jYLoipoxmussmlgeh-djuW0pfuo7mu3iw0AJCRerIrnRF9It3n52od-dU86DRKSIpvymlAr47RVICm6sOXZYpA9rfsMp1iEjTmEiEPRvmDm05VXOh8GAJeHoXDd72lwFabdcCvmLqzhS_90s_xGQev3_XSbU7INeTfACsRV_KNRfWe8RhcV3GGX8cJsCkQ0JwdzyvhdNOHvWM1BhpiaybCEo40-LasgVY78dTWpvXHeDh62UJozbI6i_LIb2TVczWZe9iYETUQpEIEI_DNwoOuzpel-mItq6Lm8kmT4PLvHZqCeDUrLCsO_f5buVyrs5L8fYpFtAy_0rBZxF-bFzMy6c_noLld59Xzk5JgqF7YmX-LrklptADeHuXQadUoOgXoUh6oPr2cZbg4wnXb1jwOumRPvJaBBLhy5HV4dQnZKt0LbtAXlAJ2lPQ21Jrlk0GDed3AwtDY1-5HCLOq-ym1IDbfm-4ZX9fPwvn-iiYIUp-JnwPDm6wlx_QGYxl85YUVff29MyzhWraFAI4wNq_IKecy9TjupZZInX33wJ6k1jmdr2J3_MJJfZtF--kRS9LZvvX9plDANeDBPvWQjudrEuuu__k8m33LwJ4om6VWKq5a4Bpui2PPYZSlkWX9EEm8FMSUgdsOQgWtt9i0GvJ4WDNVuo83W-iiRBv7sZi7Fs7h_68O4o-xgwD5H8aOq7DKmlnrQMujyp2tPZQLpta6519orNUGo_Mjn-74ykpStih1LyyeQ0OEWKLYaGFUI6z-D_dPvePkYXEd-BPXJhaFnc-zAcbbxs1JdYqf4yAfF5kiQXDdNuvfn3QO3sriGO7PO1n-bRrYAkwrSeq2VqL2Xw=w1919-h918?auditContext=forDisplay" alt="그림1" class="w-full rounded-lg ">
+
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : 객체 탐지 시스템</p>
+
+      <!-- 설명 -->
+      <div class="bg-white text-black p-4 rounded">
+        <h2 class="text-lg font-bold mb-2">✅지각·인지 시스템 (Perception System)</h2>
+        <p class="text-sm">지각·인지 시스템 (Perception System) 은 자율주행차의 눈과 두뇌 역할을 하며, 카메라, 라이다, 레이다 등의 센서를 통해 주변 환경을 실시간으로 감지하고 분석합니다.이 시스템은 차량이 도로 위의 신호등, 보행자, 차량, 차선, 장애물 등을 인식하여 안전한 주행을 가능하게 합니다.
+<br><br>
+
+<h2 class="text-lg font-bold mb-2">🟩 객체 탐지 기술</h2>
+        
+<p class="text-sm">
+<strong>1. Computer Vision (컴퓨터 비전)</strong><br>
+- 가장 넓은 상위 개념으로 카메라로 촬영한 이미지/영상을 이해하고 분석하는 인공지능 분야 전체를 지칭<br>
+- 자율주행에서 사용되는 객체 탐지, 추적, 분할, 인식, 행동 분석 등 모두 포함<br><br>
+
+<strong>2. Perception System (지각 시스템, 인지 시스템)</strong><br>
+- 차량이 카메라, 라이다, 레이다 등으로 주변 상황을 인지하는 전체 시스템을 말함<br>
+- 객체 탐지 (Object Detection) 기술은 의 지각 · 인지 시스템 (Perception System)의 핵심 구성 요소<br><br>
+
+<strong>3. Scene Understanding (장면 이해)</strong><br>
+- 객체 탐지 + 상황 파악 개념으로 주변에 무엇이 있고, 어떻게 움직이며, 무슨 상황인지까지 파악하는 기술<br>
+- 자율주행에서 "이건 횡단보도야 + 사람이 걸어오고 있어 = 멈춰야 함" 같은 판단을 가능하게 함<br><br>
+
+<strong>4. Environment Perception / Environmental Sensing</strong><br>
+- 차량이 주행 환경을 이해하기 위한 센서 기반 기술 전체로 라이다, 레이다, 카메라 등을 활용한 감지 기술 묶음<br>
+- 객체 탐지뿐 아니라 거리 계산, 날씨 인식, 도로 경계 인식 등도 포함<br><br>
+</p>
+
+  <h2 class="text-lg font-bold mb-2">⚪ 지각·인지 시스템 (Perception System) 예시</h2>
+        
+<p class="text-sm">
+● 신호등, 횡단보도, 차량, 보행자, 자전거 등 도로 위 객체 인식<br>
+● 객체의 거리, 방향, 속도 추정<br>
+● 차선 인식 및 주행 경로 판단 보조<br>
+● 주행 가능한 도로 영역(Free Space) 탐지<br>
+● 돌발 상황 대응을 위한 실시간 판단 근거 제공<br><br>
+</p>
+
+
+  <h2 class="text-lg font-bold mb-2"><strong>🛠 주요 구성 요소<br></strong></h2>
+<p class="text-sm">
+<strong>1. 카메라 (Camera)</strong> : 주변 환경의 2D 이미지를 수집하고 색상, 텍스처, 형태 등 시각적 정보를 인식하여 객체 탐지, 차선 인식, 신호등 감지 등 시각 기반 인지에 필수적으로 사용됩니다.<br><br>
+<strong>2. 라이다 (LiDAR)</strong> : 레이저 빔을 이용해 3D 거리 정보를 획득하며, 객체의 위치·형상·높이 등을 정밀하게 인식하고 공간 지도(SLAM) 생성에 활용됩니다.<br><br>
+<strong>3. 레이다 (Radar)</strong> : 전파를 기반으로 거리와 속도를 측정하며, 움직이는 물체 감지 및 차량 간 거리·속도 추정에 효과적이고 날씨나 조도 변화에도 강한 특성을 가집니다.<br><br>
+<strong>4. 초음파 센서 (Ultrasonic Sensor)</strong> : 초근거리 장애물 감지를 위한 센서로, 주차 보조나 저속 주행 시 장애물 인식에 활용되며 좁은 거리 내에서 안정적인 거리 측정이 가능합니다.<br><br>
+
+  <h2 class="text-lg font-bold mb-2"><strong>🎯 주요목적</strong><br></h2>
+● 도로 환경 내 모든 객체를 정확하게 감지하여 인식<br>
+● 안전한 주행 제어(Control)를 위해 인식하는 모든 정보를 운전자에게 제공<br>
+● 보행자, 차량, 장애물, 도로 구조물과의 충돌 방지<br>
+● 자율주행 높은 인식률과 정확도를 가진 데이터를 사용<br><br>
+
+</p>
+
+ <h2 class="text-lg font-bold mb-2">💡 예시를 통한 이해</h2>
+        <p class="text-sm">
+📍 Object Detection 예시<br><br>
+
+●<strong>보행자 탐지</strong><br> 
+도심 주행 중, 차량 전방 RGB 카메라가 거리 앞쪽 이미지를 캡처합니다. 이 이미지를 분석해 "사람" 객체를 감지합니다.이후지각·인지 시스템은 사람의 위치를 기반으로 정지 또는 감속 명령을 제어 시스템에 전달합니다.<br><br>
+
+● <strong>정지 표지판(Stop Sign) 감지 </strong><br>
+차량 전방 카메라가 정지 표지판을 인식하면 해당 객체를 "stop sign"으로 탐지합니다. 지각·인지 시스템은 차량이 교차로 또는 골목 진입 전 정지해야 한다는 의미로 해석하고, 자동 정지 또는 운전자에게 시각·청각 경고를 제공합니다.<br><br>
+
+●<strong>주차 미터기(Parking Meter) 감지  </strong><br>
+스마트 주차 시스템에서 카메라가 도로변 주차 공간을 스캔하고 "parking meter"를 감지하여 유료 주차 여부 판단에 활용할 수 있습니다.도시 환경에서는 주차 공간 분석, 주차 유무 인식 등에 사용됩니다.
+ <br><br>
+
+●<strong> 자전거 탐지 예시</strong><br> 
+차선 옆을 주행 중인 자전거를 RGB 카메라가 포착하고, Object Detection 모델이 해당 영역을 "bicycle"로 분류합니다.모델은 자전거와 차량 간의 거리와 상대 속도를 함께 고려해,안전 간격 확보 및 차선 변경 판단에 반영됩니다. <br><br>
+
+●<strong>동물 감지 예시 (야간 포함)</strong><br> 
+전방의 카메라와 라이다가 도로에 갑작스레 출현하는 고양이나 개와 같은 동물을 감지합니다. 감지된 이 객체를 "animal" 또는 미리 학습된 클래스 중 하나로 인식하고, 감지 위치에 따라 속도 조절 및 경고음을 활성화합니다.<br><br>
+
+</p>
+
+<h2 class="text-lg font-bold mb-2">1️⃣  물체가 감지되는 원리</h2>
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_Gocv5mK861lRPSbZLKf2abzGeMYFggQnDkk1Y7PmndxBWmGyNclZBImlyZJDYdv8Mnfz6UFSNc9mieZNHTGhLB5_fznAwERByEioM5uHP7eVI0bzZIcrYy-G8wk4_JUCtvdejGAc8jcEgTQrl9EMqlvsmxSqh0GdWRraqsY8iOLKMuSGIcyxZBaXKVDjZo45d6FFX-8Inyo_clpHshQ3CCsJNfUe6gdBapvirsqBBN7mde0wRZVLQe-rBSO0TUiuWaGTvIRxF2mqqU6TXprgR17HeeURHRi246-GIN-ik2fuOPFZp6W4dnXO-hIMMxm3q8-3AL-PtxinpN30XOow4j0bgtpMXngTC6bdnwjVH6QDj3ulK-Kc2J2CxJHch-Dt-yBjXsC-9bn2JG9oAae9atKHzo0RVETQHMcZ_gpmwNbJu8a9fcxTwQwxHZo_ghkJQ0dAvqHkt62VOGV0FC_nhE-X8QO6GzqBMMaGiObLc-7618Kn4GTAaW72-pU4E9jvH7vj5yJdUMOr4EjzN3ordPF06IT0_wS8NcMbShWlc32zFOxVgBgFdTji8cXmD9bNe6dpb_GOl_SuStstuYc6h3sZdj3jraYh47tiuMsMV3JjhrFwk_a6nNi66t3zj8EiD8WQADLmdHgTA7vM6_AtLMiOZwU_ZtlsQsIfBNvuL65Y-vRR3vjmyZDR7ATG3zkkbOpKhL09z7Jq3EGgCkrPbLQvFCIyGFqhhrhqzpf_gd_dM_cTXTLhFhkiG56AHlqBbIqm8ykar1_zEx-SGbd5fhR8MKhM0UBOnffO5cR0dcLqiNAU1w62rgl4fA941ZuE9wzk4bKK2S94rhtfokEyJhYelxqInDmEqL2epHO_E3JkJ0j7cyck8QkPyxtnz3QFabAp45dggYOTPxAQbBmTCT4aYKntI32jdrbXndt6EjoK4w2sAOtZY0X4bOvnRfR9lBCUcuUhZKBCbReKMIX2xyu7lmXDXTigtWZIS1R-b4hWQvCoXg40nfFayalNy6yakpTGSenAD1QTEpMMFkD0LWuxTKhBVsRS8eKAifGN1vr80BOm2XPh6nYUQEM4qia7MI7aAs4rEBRl0VmpFIvND5P1fk3d5BS8kT6T-QhiWIh6-sC7hPxlqqydtV-gapRXS83No08I-ObCKYdOaUDt7Dd7jZ6I_c_rdiFVDtgjvmT9aEJ0rMvI9KLTXVIe3YiHeFRYUAl45ge--XlJQmZaoG_EloiMX8l58Df-miqhOxaPQ5kH4sUvwhJXSP5q-yfxVlpD_bKsvUWt-Vht_3HhDWAwXwNK_1TLNsROTavLjPColl2pFMFuoNrIuY1R0JEMCwA9S9PxE0CvJS7krOmWgjGyP017QYFHivaFvwzptDXLs-3Wi_CJ4cHK2xGDAMQhv1x_8R20tkD17ZCNYd8yLc8CJe_UYZOx0KZmTis6SSbYnmEcWGjxRKIZv6NhxpIkXWmZ2_1MWJicL1Xu_qRch-KzA6aUen5ds2FZJg2gjIc2l6QpWqdgEJ3jadi3hc75QBu_EIccCMV7pqHGANS7LkmXqgf4-QZWpKxRnycTDN_Y6NwAsOrGpAeQKm1r1EHqH5mtaidVPDDaMMvYbEiIk0HHpILx9Z70WR6a9x4KcY9UFrn-6pRJzzadJ-6eKhrFWeyn8zL0QF3g=w1273-h918?auditContext=forDisplay" alt="그림1" class="w-full rounded-lg ">
+
+<p class="text-[14px] text-gray-500 text-center">
+* 물체 감지 원리
+</p><br>
+
+ <p class="text-sm">
+
+
+<h2 class="text-lg font-bold mb-2"> 🟨 자율주행 자동차 기반 Object  Detection의 감지 원리</h2><br>
+  <p class="text-sm">
+
+    <strong> 1. 자율주행 자동차의 센서(카메라, 라이다 등)가 실시간으로 주변 환경을 관찰합니다.   </strong><br>
+    차량에 장착된 센서들이 도로, 차량, 사람, 표지판 등의 정보를 포함한 영상 또는 거리 데이터를 수집합니다. 특히 카메라는 Object Detection의 주요 입력 수단입니다.<br><br>
+
+      <strong>2. 센서가 수집한 데이터를 처리 시스템(ECU, GPU 등)으로 전송합니다.</strong><br>
+    이 데이터는 프레임 단위의 이미지 또는 포인트 클라우드 형식으로 인식 시스템에 전달됩니다. 예를 들어, 전방 카메라에서 촬영된 이미지가 분석의 입력이 됩니다.<br><br>
+
+      <strong>3. 내장된 Object Detection 모델(YOLO, SSD 등)을 통해 데이터를 분석합니다.</strong><br>
+    차량 내부에는 사전 학습된 딥러닝 모델이 탑재되어 있으며, 이 모델은 다양한 객체의 시각적 특징을 학습한 상태입니다.<br><br>
+
+      <strong>4. 모델이 영상 속 시각적 특징을 분석하여 학습된 객체와 비교합니다.</strong><br>
+    윤곽, 색상, 모양, 질감 등을 기준으로 영상 속 사물과 기존 학습 데이터를 비교하여 해당 위치에 무엇이 있는지 파악합니다.<br><br>
+
+      <strong>5. 감지된 객체를 분류(Class)합니다.</strong><br>
+    감지된 물체(예: 사람, 차량, 신호등 등)는 이름(Label)과 함께 화면상의 위치(Box)가 표시되며, 이 정보는 경로 계획·제동·회피 판단 등에 실시간으로 전달됩니다.<br><br>
+</p>
+
+ 
+</p>
+
+<h2 class="text-lg font-bold mb-2">2️⃣   주미 AI 기반 Object Detection의 감지 원리</h2>
+
+        <p class="text-sm">주미 AI 는 카메라를 통해 실시간으로 감지하는 물체와 이미 학습 된 모델을 불러와서 비교하여 물체를 감지 합니다.  
+<br><br>
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_HhtmRhRHpwpy7XZI15leskPMDPYhqm-eAdcHSGFZbGevDyextF3B0NGV80l_SdUWFXvESISeaA7uw3T9z-Z8-FSZ9DTDt-1WNcyPAR87i_eT9fsCKIJdVrC2LuEFM0wbWZAJkJePjHDrc34A3j1xzmNXAH2KVSZnwPrnYnj51IJTuaoFpOGotBUgIY1zLUSd5L1yMNZ11XMde2Rb6W8yd6qswZH64vx5JST3j9ospoIs-ivl08bs8gtCC8BL-NYxOQC58h7ebO1srPPPWGHq9J9syDw1LIkXmssWzbvSAm6yC1o3at5SpHGl_Qq32E6ThxFtAWh1ogNdUt4jyDzEOuns3y98xJvCYrcZ1Wgcx-4WuwP6CkCRzrek0IP2w7h6Ie6w2L--nXbUc6RsZgDlNVYcIiGj1WuUf5wIckk8Nnhs1o1IJ2W1ZQxywcgZ8OoRsUUgYa1IADBtXtzx8P30oa88hNva0S_pc1PRZ1qpoW12yZniZEgZPF8zPyE7Y1f2-6v-Yo9Nnu-fvRYCeOzsMQ5D5uM21LCn1wjEKjqF0vXWQU3g-BCy2kabQ2lT31O7cr4WCs30Bxi9lbLsx3fWvMaOwnCA68YuRYRh807EaGjKRRox61UjeY7T8QmVTNduEuqQJv9-Va2q7iyVikFGsSHZsoHH9HZylMxiLn3Lc6iVfH9tToLE_CUJv1T82Gwi6MMGB6sA8FX5rOiBfj7UXv3gWQyZMOojJShb72ZqduXfpe12YwpIMe7pGVNfbU6bRMcgvwY2iVcocIocqAHLZcb_dYnlWxgdCp_yMUkGnZriCbuKd0SUOQpCOgLGwaVAdAjq8Jy4Lkj2si1U8q_SnqHn0-3v54A-IcX427ZVRNxPUwBpWi9RRFWJ3_1XRRIwwhzFB7mci9YieIjFurztHYtzebjJOoPdUQ5tjYJp5uUzUyPdIa7KxJcOah07W04yV34cAM8gRXrLTEqehg1oPyAe6_15_0Hwt9rphOcWSfnAlvWtkCnkHqrrTNKMp1a-IUWxRp4NJVvYwX2Fm6Ot4vuUNSfpg7GC9v1D1z8I96im1PoQjU7YrKUlHLrPwECVZU4uJDK3B70AyyHqc1RCa2kc8_WBQSBslZ2wn35lD2k5NNPZnrS9zkSDRrVIiZkaLY5VcrnyZGCT_WF6lJ357yf5_akdn29p3dk8p5YHnTbVV-WDwpxobqo3jxUsIFdw0vILRau2l_v_N3GLIgDt0WfbRn_uvuOW9mbmASU49ac9-pDu659yDtw2-X_rGTIn2rzlx9OKFWmbaFIT-f9a71A_f6I6dEHTcCS_grCkFXYiD9QjcvohSvsvFw7tI4tYg9iCbGXIttnrC5FQbstEDwPEWpWmfqdBetyh_SGickchZt5c3sgkvlPtPZ8p3C6n_uNktnaaEvq3f75yoh2pDDtqoT3cfezMhEDxotk97-_DEenUjJLLjdQu5XxXjsDnuE1IxezvuDxdh3huPzoDdCC0FLpdJzsuQo_89lLqVVAl6Ld7NaVIClQxVYwmnMN5RhcZxwPfJBUtWwHSmQ3LUgBqbl_9BDuqAuPi3tnr2_IFYnh4QpUJ4ko1N3jsrwotMzIzzqYvvwOMzoWKgMKWZJjy605iu6CyJ-vPGNx_truFNexc7SUknv7Zz2W9mQEbQHKdTC9FxW0g=w1919-h918?auditContext=forDisplay" alt="그림1" class="w-full rounded-lg "><br>
+
+<p class="text-[14px] text-gray-500 ">
+
+* 본 프로그램은 다른 예제에 비해 Run Module(F5) 실행 후 시작까지 다소 시간이 걸릴 수 있습니다.
+</p><br>
+
+
+ <p class="text-sm">
+
+
+<h2 class="text-lg font-bold mb-2"> 🟩 주미 AI 기반 Object  Detection의 감지 원리</h2>
+  <p class="text-sm">
+
+    <strong> 1. 주미 AI의 카메라가 켜집니다.  </strong><br>
+    주미는 주변 환경을 실시간으로 촬영하고, 이 영상 데이터를 자율주행 자동차의 카메라·라이다·레이다처럼 외부 정보를 인식하는 수단으로 사용합니다.<br><br>
+
+      <strong>2. 주미AI 의 카메라가 실시간 이미지를 감지합니다..</strong><br>
+    카메라는 물체가 포함된 장면(예: 사람, 의자, 책상 등)을 프레임 단위로 수집합니다. 이 영상은 그대로 인식 시스템에 전달됩니다.<br><br>
+
+      <strong>3. 코드에서 미리 학습된 Object Detection 모델(YOLO)을 불러옵니다.</strong><br>
+    이 모델은 수많은 이미지 데이터를 통해 사전에 다양한 객체(예: 사람, 고양이, 컵 등)를 학습한 상태로, 각 객체의 시각적 특징을 알고 있습니다.<br><br>
+
+      <strong>4. 주미Ai 의 카메라 영상과 학습된 모델 데이터를 비교합니다.</strong><br>
+    모델은 실시간으로 카메라 영상 속 패턴(색상, 윤곽선, 모양 등)을 분석하여 자신이 학습한 객체들과 유사한 패턴을 찾습니다..<br><br>
+
+      <strong>5. 객체가 감지되면 사각형(Bounding Box)과 함께 이름을 표시합니다.</strong><br>
+    사람이 감지되면 화면에 "Person"이라고 표시하며, 해당 위치를 사각형으로 강조합니다. 이는 주미가 눈으로 보고 무엇이 어디에 있는지 인식하는 것과 같은 원리입니다..<br><br>
+</p>
+ <p class="text-sm">
+      <strong>※ 기본적으로 학습되어진 모델</strong><br>
+“person” (사람)<br>
+“car” (자동차)<br>
+“bus” (버스)<br>
+“truck” (트럭)<br>
+“traffic light” (신호등)<br>
+“stop sign” (정지 표지판)<br>
+“cat” (고양이)<br>
+“dog” (개)
+</p>
+<br><br>
+
+<a href="https://lh3.googleusercontent.com/fife/ALs6j_HDst1IJoSeVJnt0UdrmOAe3_zYq8B9uVlwxFAW05NPnAiQwqqwqUN6Q4wCNzJiAML4Bdfkx7ZmVgJU1NV5p9_jeSJJTO_qyQOI32Eor0eMaPu8m9KqdFs3Fh3OVDx3rPrU5UcD_KR8FCU0JULERZTzM9XMlGFx1XxjFYDRF9100nkeFS0gPN_KVtJNJFdQmaeXVXiuWZY8mgi6WEAdAd53HDBkh17lltTHHsQJocGBm1p-jIfrkr0PlEXg_ynD4YEsi-e-PnV3eDFXVThkU1xTeecdG8pMdxoowQ-PK1Wx2Csj4KVJerHIocYV6U-zKG7Dk-qRE5XJLBUM4KpcYCZDx_s6uWyV4O7sT5y-z6OXPelwD7_ONCFOg21eSezHpVbDUQbNFlyFmR5It5eAb_AyQsfiLGoZgvtVhFk_xLapesMfvivnIyupXvnFIVunnTm_JdmtJy8nmkVbb27asqgU0IOgMljuDtDzc6FfZjMAWtjtKiTgmEj2jlPnDsXRBi3lUC2Y9WVk7C-NFLBLDUjOwMUrYEWNSEYL3KvuJZj9Kt82NRMnELSSIHpgKv6iKS90_NeCvJBeNVhIdhEsPbWPU3sdVDp2ExtyXL04UIp4s2EEutCkH2GzBztGmOAkqPMr4JQMjp19R1t8MZB2d32W5itLRgp9lJjQjLcEWOCuVfokURbldLp1RkKOJjeEg0laKWS-jEYaW9SAmKpQoK6_EchrEt4WjMWLw9V68mhn65eT16F-PAilPnF1HaNpV7CHMe-6JBY___w8N2fMaCBldmwMnRKLJWJYMOrJTU_7BIGSGjSBi2qK2d2CqWHICFxnuTaHz23O1GxGeINmETqBdfPQzSdWfRDUkF_ReNZXDf1zxXF2D04_VKeWzHAn9f-xCrfigq-GN39BrCECH5byd18dZpePkePWApD79imVcVl-RABf2nAhW1GS4bk023fmoFKjMstHOKI_DcObP0e6aYAJW9NJ7QL63aODjTFmZLZBTwjwi2Yoe6aCjAAzCVqK8AXq3YmQ7ohl3NrLOCY5Iiy8Hs4nudMJM-0C4eK3lWs1X6zIDBqtsvANsJtvRgBqsnxLWd8qSzh8ognkMPQO-v5jPsxlNShGiPYYrHqGyeckNTqo2XendYVILRVniM42MaidUphntqX7zkxKz1c9GpnZv1pdAfut2mYr-xb0z8c--RP__sIMB4M7Er0LAXXJeK2HteixKL92ZUlbw7XIgQYpP4Q_klyEG4tpeHBXaGhmJ8WgIjSi4DHUG7D7EHBShwqBbAPVYK4pVBjI-LzmJzkjV_fJls3z7NNcRqbfFE4C5svCHaAkrsjf39UfmzPCPEMbG_78efGKUepU8d5mXDJP3ql4ssBgZjaIBruIqYKe_E6SEJ6cQEgyRgHrlUhEzo1fwn_PeixrbxG9GaKIS7ta8b4XlUK38DLOG_HhavXVGMUDcth_2qAYpiUBxtwTqjP1R9lJTHvOC4c9yNTEPT7RJOIs4sItWUnYh4-Rb0ZlGqIPOhObquNg_9GoRAtejpl5VlIGiq-EwyLRPyQRCI-KG5B4klfaNsnEMaKnfnB_VLaPG_whCerBRgvnNNp3bgRpMTPXS5x2Pi2beCJ88TNoTPn3nrXZlkMGjdZXK3b0XNi6KbWOEAuidka9rE8RWKhwEyrd=w1919-h918?auditContext=forDisplay" target="_blank">
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_HDst1IJoSeVJnt0UdrmOAe3_zYq8B9uVlwxFAW05NPnAiQwqqwqUN6Q4wCNzJiAML4Bdfkx7ZmVgJU1NV5p9_jeSJJTO_qyQOI32Eor0eMaPu8m9KqdFs3Fh3OVDx3rPrU5UcD_KR8FCU0JULERZTzM9XMlGFx1XxjFYDRF9100nkeFS0gPN_KVtJNJFdQmaeXVXiuWZY8mgi6WEAdAd53HDBkh17lltTHHsQJocGBm1p-jIfrkr0PlEXg_ynD4YEsi-e-PnV3eDFXVThkU1xTeecdG8pMdxoowQ-PK1Wx2Csj4KVJerHIocYV6U-zKG7Dk-qRE5XJLBUM4KpcYCZDx_s6uWyV4O7sT5y-z6OXPelwD7_ONCFOg21eSezHpVbDUQbNFlyFmR5It5eAb_AyQsfiLGoZgvtVhFk_xLapesMfvivnIyupXvnFIVunnTm_JdmtJy8nmkVbb27asqgU0IOgMljuDtDzc6FfZjMAWtjtKiTgmEj2jlPnDsXRBi3lUC2Y9WVk7C-NFLBLDUjOwMUrYEWNSEYL3KvuJZj9Kt82NRMnELSSIHpgKv6iKS90_NeCvJBeNVhIdhEsPbWPU3sdVDp2ExtyXL04UIp4s2EEutCkH2GzBztGmOAkqPMr4JQMjp19R1t8MZB2d32W5itLRgp9lJjQjLcEWOCuVfokURbldLp1RkKOJjeEg0laKWS-jEYaW9SAmKpQoK6_EchrEt4WjMWLw9V68mhn65eT16F-PAilPnF1HaNpV7CHMe-6JBY___w8N2fMaCBldmwMnRKLJWJYMOrJTU_7BIGSGjSBi2qK2d2CqWHICFxnuTaHz23O1GxGeINmETqBdfPQzSdWfRDUkF_ReNZXDf1zxXF2D04_VKeWzHAn9f-xCrfigq-GN39BrCECH5byd18dZpePkePWApD79imVcVl-RABf2nAhW1GS4bk023fmoFKjMstHOKI_DcObP0e6aYAJW9NJ7QL63aODjTFmZLZBTwjwi2Yoe6aCjAAzCVqK8AXq3YmQ7ohl3NrLOCY5Iiy8Hs4nudMJM-0C4eK3lWs1X6zIDBqtsvANsJtvRgBqsnxLWd8qSzh8ognkMPQO-v5jPsxlNShGiPYYrHqGyeckNTqo2XendYVILRVniM42MaidUphntqX7zkxKz1c9GpnZv1pdAfut2mYr-xb0z8c--RP__sIMB4M7Er0LAXXJeK2HteixKL92ZUlbw7XIgQYpP4Q_klyEG4tpeHBXaGhmJ8WgIjSi4DHUG7D7EHBShwqBbAPVYK4pVBjI-LzmJzkjV_fJls3z7NNcRqbfFE4C5svCHaAkrsjf39UfmzPCPEMbG_78efGKUepU8d5mXDJP3ql4ssBgZjaIBruIqYKe_E6SEJ6cQEgyRgHrlUhEzo1fwn_PeixrbxG9GaKIS7ta8b4XlUK38DLOG_HhavXVGMUDcth_2qAYpiUBxtwTqjP1R9lJTHvOC4c9yNTEPT7RJOIs4sItWUnYh4-Rb0ZlGqIPOhObquNg_9GoRAtejpl5VlIGiq-EwyLRPyQRCI-KG5B4klfaNsnEMaKnfnB_VLaPG_whCerBRgvnNNp3bgRpMTPXS5x2Pi2beCJ88TNoTPn3nrXZlkMGjdZXK3b0XNi6KbWOEAuidka9rE8RWKhwEyrd=w1919-h918?auditContext=forDisplay" alt="그림1" class="w-full rounded-lg ">
+</a>
+
+<br>
+
+<p class="text-[14px] text-gray-500 ">
+* 위 이미지는 AI로 생성되었으며, AI 이미지가 아닌 실제 대상들도 이 프로그램으로 감지가 가능합니다.<br>.<br>
+</p>
+
+<!-- 파이썬 코드 설명&다운로드 버튼 -->
+<div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
+  <div id="output" class=" flex-1 bg-gray-800 text-white p-4 rounded h-30 text-sm"">
+  <p class="font-normal text-white text-sm">
+
+zumiAI.camera_stream_start()  <span class="text-red-300"># 카메라 스트리밍 시작</span><br>
+zumiAI.object_detector_init(performance_mode=<span class="text-green-300">"balance"</span>)
+<br><span class="text-red-300"># 물체 인식 초기화</span><br>
+zumiAI.object_detector_start() <span class="text-red-300"># 물체 인식 시작</span><br>
+<span class="text-purple-500"> print</span>(<span class="text-green-300">"▶ 물체 인식 시작"</span>)<br><br>
+
+<span class="text-orange-500">while True</span>:<br>
+&nbsp;&nbsp;    <span class="text-orange-500">elif </span>zumiAI.is_obj_detected(name=<span class="text-green-300">"bus"</span>): <br>
+&nbsp;&nbsp;&nbsp;       <span class="text-purple-500"> print</span>(<span class="text-green-300">"버스"</span>)<br><br>
+
+&nbsp;&nbsp;    <span class="text-orange-500">elif </span>zumiAI.is_obj_detected(name=<span class="text-green-300">"car"</span>): <br>
+ &nbsp;&nbsp;&nbsp;       <span class="text-purple-500">print</span>(<span class="text-green-300">"자동차"</span>)<br>
+
+
+
+
+</p>
+  </div>
+
+<a href="https://drive.google.com/file/d/1_Dj9FANtJHvx44Kik0qQDAEnB3P3JgNf/view?usp=sharing" download="example.py" id="run-code-btn"
+   class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto inline-flex flex-col justify-center items-center text-center min-h-[64px]">
+ <button id="run-code-btn" class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto">
+  파이썬 코드 <br> 다운로드
+</button>
+</a>
+  </div>
+</p> 
+
+
+<br>
+
+<a href="https://lh3.googleusercontent.com/fife/ALs6j_Ft7AOQjWjR-euyd5_klwkfoLCjE5_oCVbvNKgkGrjEdRQREyDsdN4GmVOfwB8ZxMpbD2jE6F7C8wGxRj_L-RANvzuif6YYdOAqD5NvbkZ-C8eG8AkZ1WvP4XXtpdHWIb1LuKXNlJLyblFYTrlwfb-lUHJgFFsc-1vdFgzFrmv7VLBRQCkbf7nyU5Jm0urZWbOxn7VfRReh6eH76KVyY2b7bc-UTf9AqcE5CFtItpoPBJKbMsPAI5ZL1VpVJkx7rna2VsTH6DnFXtnx8RWpsKOS8mvIUriM49aHyHskGiCHc-7oAFxRW9Zzk2H5YmEt0PO25VNG9aj2MYzXCVKeutgT2IBCxlyU6Z7kUrJXgtZ-9VK9FKZYzJt_cv0_9RKLIQth0aL3QaXEGwPiMGQFAoY2YLHTt4U99eJCoJ2nZnAygDuvLvy3nDZM7NfHA9kwiOUSivCDHSGzOB_OUCvmTjnt1DJ5Wufv6gxFQLZLl9k6YtKE0vxI9CtsYRgYrNK0BA8tNWqI5b0DHzZ1op5CwrtkqcZnyIVXtjUvMgUS5wGlQMerbVMUSd6nXxYyuGwjxMjMrPKBpvcvXpUCw5QQya-pkbsiZTMi9yawVMFmHVAbdJCBlJydunlcp5se9D-Hhb5Bu81l3l9hHuz8T1yvPNumpb68bZ35ORqKmzuyCfn0hhUH8XhJ5T5tft4J8dA7vYd4y9M2y_O8DMs0uFbyDCitK6xMPD7RaTAHlxvkXWkS80QhJRGhOvuXvnInocwNUEHVViMONEU0jYfN6WbyfAJDol3kmsCsD8H-soZt2AOOPwM0neM_OliL4NEwQ6aXC-7MNQcdWH6M1C9Es-w7vVusXwPyaV0aGlM2RXnl0HC-p2Dy8RALHD30pnsw6ExP3ctz3wWhsDL4Qjv1ria9wJYBY98RRndvJcSQq6Ii1LMWVvJrTrLUgqO-ueuKzjexEv9GI0b5cECQQbwa3zYRxVW3JLbolsJVK7te7Ab6Bi0_MAc-X5QWRIeb3bTsgjocXwdyTo-CqJtEQdKYSm1uu6o5KHPUM_UHtRjhAIk0TMJ53r5Sg6YYM6eQ-Bs0Zf3gQNjYB7JPaR_sT5a5z2AwFWMuYSvfGniYtgUzOwcRQkPXKq9TS5AwtHU5PUkRrggVu-6DxSRWfHZ-1XCvcPT7kDHU5E9AFTxeHVK8zGSNUnyPKMlkqVMMu9r-IvBY7qIRYSeO9mKXHYnOUFB5mej5gD-NnwkdEOwAQapoyyRSdUNRapB00Iior871mF3ouO8d3oVftyJEEFX-TTdkQol4t8LuioSi2918eY4ozf2T14Dx_nY5FZ7zET1ZGHqYvlXb0WBOMa9MqtftVwLHCkENtzQTDCE_0-YKvYb8AqgzwPgw8Zof06Ro1ZHqtcmdMQVcHZ1f2IT0b9Yv2rq48no9L0msJjZAh2HNHgD9RR-uMCSOLxi_c7BKF0BSj0bXqGKW88_JNvfwpn0CFh8VOsqHwf6hNruTzSFXYFJ-mbm59oMj4ISH7jGPoRvRzSUnhAFmMaDyniamZlzHU_KLWwMH0Th7eodV3xd5zrDDgCw2Y68AoWzqjeikGvZQkB3KCkR3EbHySqG_Zbrixfl4bodMqr2KaDiJAkfo5QiZ7DUrw10SNdQf7aiNI0Zc4VO1qQXBCmqwXS-I14w5Hw=w1919-h918?auditContext=forDisplay" target="_blank">
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_Ft7AOQjWjR-euyd5_klwkfoLCjE5_oCVbvNKgkGrjEdRQREyDsdN4GmVOfwB8ZxMpbD2jE6F7C8wGxRj_L-RANvzuif6YYdOAqD5NvbkZ-C8eG8AkZ1WvP4XXtpdHWIb1LuKXNlJLyblFYTrlwfb-lUHJgFFsc-1vdFgzFrmv7VLBRQCkbf7nyU5Jm0urZWbOxn7VfRReh6eH76KVyY2b7bc-UTf9AqcE5CFtItpoPBJKbMsPAI5ZL1VpVJkx7rna2VsTH6DnFXtnx8RWpsKOS8mvIUriM49aHyHskGiCHc-7oAFxRW9Zzk2H5YmEt0PO25VNG9aj2MYzXCVKeutgT2IBCxlyU6Z7kUrJXgtZ-9VK9FKZYzJt_cv0_9RKLIQth0aL3QaXEGwPiMGQFAoY2YLHTt4U99eJCoJ2nZnAygDuvLvy3nDZM7NfHA9kwiOUSivCDHSGzOB_OUCvmTjnt1DJ5Wufv6gxFQLZLl9k6YtKE0vxI9CtsYRgYrNK0BA8tNWqI5b0DHzZ1op5CwrtkqcZnyIVXtjUvMgUS5wGlQMerbVMUSd6nXxYyuGwjxMjMrPKBpvcvXpUCw5QQya-pkbsiZTMi9yawVMFmHVAbdJCBlJydunlcp5se9D-Hhb5Bu81l3l9hHuz8T1yvPNumpb68bZ35ORqKmzuyCfn0hhUH8XhJ5T5tft4J8dA7vYd4y9M2y_O8DMs0uFbyDCitK6xMPD7RaTAHlxvkXWkS80QhJRGhOvuXvnInocwNUEHVViMONEU0jYfN6WbyfAJDol3kmsCsD8H-soZt2AOOPwM0neM_OliL4NEwQ6aXC-7MNQcdWH6M1C9Es-w7vVusXwPyaV0aGlM2RXnl0HC-p2Dy8RALHD30pnsw6ExP3ctz3wWhsDL4Qjv1ria9wJYBY98RRndvJcSQq6Ii1LMWVvJrTrLUgqO-ueuKzjexEv9GI0b5cECQQbwa3zYRxVW3JLbolsJVK7te7Ab6Bi0_MAc-X5QWRIeb3bTsgjocXwdyTo-CqJtEQdKYSm1uu6o5KHPUM_UHtRjhAIk0TMJ53r5Sg6YYM6eQ-Bs0Zf3gQNjYB7JPaR_sT5a5z2AwFWMuYSvfGniYtgUzOwcRQkPXKq9TS5AwtHU5PUkRrggVu-6DxSRWfHZ-1XCvcPT7kDHU5E9AFTxeHVK8zGSNUnyPKMlkqVMMu9r-IvBY7qIRYSeO9mKXHYnOUFB5mej5gD-NnwkdEOwAQapoyyRSdUNRapB00Iior871mF3ouO8d3oVftyJEEFX-TTdkQol4t8LuioSi2918eY4ozf2T14Dx_nY5FZ7zET1ZGHqYvlXb0WBOMa9MqtftVwLHCkENtzQTDCE_0-YKvYb8AqgzwPgw8Zof06Ro1ZHqtcmdMQVcHZ1f2IT0b9Yv2rq48no9L0msJjZAh2HNHgD9RR-uMCSOLxi_c7BKF0BSj0bXqGKW88_JNvfwpn0CFh8VOsqHwf6hNruTzSFXYFJ-mbm59oMj4ISH7jGPoRvRzSUnhAFmMaDyniamZlzHU_KLWwMH0Th7eodV3xd5zrDDgCw2Y68AoWzqjeikGvZQkB3KCkR3EbHySqG_Zbrixfl4bodMqr2KaDiJAkfo5QiZ7DUrw10SNdQf7aiNI0Zc4VO1qQXBCmqwXS-I14w5Hw=w1919-h918?auditContext=forDisplay" alt="그림1" class="w-full rounded-lg "><br>
+
+</a>
+</p>
+ <p class="text-sm">
+정상적으로 인식 되면 위 그림 처럼 테두리와 감지 된 모델의 이름이 표시 됩니다.
+</p><br>
+
+   <h2 class="text-lg font-bold mb-2">3️⃣   YOLO 모델의 기본 개념</h2>
+        <p class="text-sm">기존의 객체 탐지 방식은 어디에 물체가 있는지 찾기 (Region Proposal) 그 영역을 분류하기 (Classification) 2개의 단계로 진행 되었습니다. 하지만 YOLO는 이 과정을 한 번에(End-to-End) 처리하는 모델 입니다.
+<br><br>
+
+ <p class="text-sm">
+   <h2 class="text-lg font-bold mb-2">🔍 YOLO의 구조: 어떻게 작동하나요?</h2>
+<strong>💡 백본 (Backbone)</strong><br>
+- 입력 이미지를 받아 특징(feature)을 추출하는 역할<br>
+- CNN 구조 (예: YOLOv5는 CSPDarknet 사용)<br>
+- 계층이 깊을수록 복잡한 형태를 인식함 (에지 → 모양 → 물체)<br><br>
+
+<strong>🧠 Neck</strong><br>
+- Feature Pyramid Network (FPN) 등을 사용해서 다양한 크기의 객체를 잘 인식하도록 함<br><br>
+
+<strong>🎯 출력 헤드 (Detection Head</strong><br>
+- 출력은 S×S 격자로 나뉜 각 셀마다 Bounding box, confidence, class probability를 예측<br>
+- 예: (x, y, w, h, confidence, class1, class2, ..., classN)장<br><br>
+
+
+<strong>🧾 YOLO의 출력 예시</strong><br>
+
+각 바운딩 박스는 다음 정보를 포함해요:<br>
+
+1. x, y: 중심 좌표 (셀 기준)<br>
+2. w, h: 박스의 너비와 높이 (이미지 기준)<br>
+3. Size : 감지된 물체의 크기 (물체와의 거리)<br>
+4. Confidence: 이 박스가 실제 물체일 확률<br>
+5. Class probabilities: 이 물체가 어떤 클래스(예: 사람, 자동차, 신호등 등)일 확률<br><br>
+
+
+<strong>📦 YOLO가 물체를 감지하는 방식 요약</strong><br>
+1. 입력 이미지를 S×S 격자로 나눔<br>
+2. 각 격자가 물체의 중심을 포함할 가능성 있음<br>
+3. 격자마다 여러 개의 bounding box를 예측<br>
+4. 각 박스는 위치 + 물체일 확률 + 클래스 확률 포함<br>
+5. 가장 확률 높은 박스들만 남기고(NMS) 최종 출력<br><br>
+
+
+
+<div style="border-bottom: 1px solid #ccc; margin: 10px 0;"></div>
+<br>
+
+   <h2 class="text-lg font-bold mb-2" style="text-align: center;">Zumi AI  Object Detection (YOLO) 객체 필터</h2>
+
+<p class="text-sm text-center">
+총 80종의 모델을 인식 할 수 있으며, 아래의 버튼을 누르면 물체의 이름이 클립보드에 복사 됩니다.
+</p>
+<br>
+
+<!-- 검색창 -->
+<div class="search-box">
+  <input type="text" id="searchInput" placeholder="검색어 입력 (예: dog, 사람, pizza)">
+</div>
+
+<!-- 해시태그 버튼 -->
+<div class="filter-buttons">
+  <button class="filter-btn active" data-filter="all">#전체</button>
+  <button class="filter-btn" data-filter="person-animal">#사람및동물</button>
+  <button class="filter-btn" data-filter="vehicles">#차량</button>
+  <button class="filter-btn" data-filter="outdoor">#야외</button>
+  <button class="filter-btn" data-filter="accessories">#악세사리</button>
+  <button class="filter-btn" data-filter="sports">#스포츠</button>
+  <button class="filter-btn" data-filter="kitchen">#주방</button>
+  <button class="filter-btn" data-filter="food">#음식</button>
+  <button class="filter-btn" data-filter="furniture">#가구</button>
+  <button class="filter-btn" data-filter="electronics">#전자제품</button>
+</div>
+
+
+
+<!-- 카드 목록 -->
+<div class="card-container" id="cardContainer">
+ <!-- 사람 및 동물 (person-animal) -->
+<div class="card person-animal" data-copy="person" style="cursor:pointer;"><span class="label">사람:</span><span class="value">person</span></div>
+<div class="card person-animal" data-copy="bicycle" style="cursor:pointer;"><span class="label">자전거:</span><span class="value">bicycle</span></div>
+<div class="card person-animal" data-copy="motorcycle" style="cursor:pointer;"><span class="label">오토바이:</span><span class="value">motorcycle</span></div>
+<div class="card person-animal" data-copy="bird" style="cursor:pointer;"><span class="label">새:</span><span class="value">bird</span></div>
+<div class="card person-animal" data-copy="cat" style="cursor:pointer;"><span class="label">고양이:</span><span class="value">cat</span></div>
+<div class="card person-animal" data-copy="dog" style="cursor:pointer;"><span class="label">개:</span><span class="value">dog</span></div>
+<div class="card person-animal" data-copy="horse" style="cursor:pointer;"><span class="label">말:</span><span class="value">horse</span></div>
+<div class="card person-animal" data-copy="sheep" style="cursor:pointer;"><span class="label">양:</span><span class="value">sheep</span></div>
+<div class="card person-animal" data-copy="cow" style="cursor:pointer;"><span class="label">소:</span><span class="value">cow</span></div>
+<div class="card person-animal" data-copy="elephant" style="cursor:pointer;"><span class="label">코끼리:</span><span class="value">elephant</span></div>
+<div class="card person-animal" data-copy="bear" style="cursor:pointer;"><span class="label">곰:</span><span class="value">bear</span></div>
+<div class="card person-animal" data-copy="zebra" style="cursor:pointer;"><span class="label">얼룩말:</span><span class="value">zebra</span></div>
+<div class="card person-animal" data-copy="giraffe" style="cursor:pointer;"><span class="label">기린:</span><span class="value">giraffe</span></div>
+
+<!-- 차량 (vehicles) -->
+<div class="card vehicles" data-copy="car" style="cursor:pointer;"><span class="label">자동차:</span><span class="value">car</span></div>
+<div class="card vehicles" data-copy="airplane" style="cursor:pointer;"><span class="label">비행기:</span><span class="value">airplane</span></div>
+<div class="card vehicles" data-copy="bus" style="cursor:pointer;"><span class="label">버스:</span><span class="value">bus</span></div>
+<div class="card vehicles" data-copy="train" style="cursor:pointer;"><span class="label">기차:</span><span class="value">train</span></div>
+<div class="card vehicles" data-copy="truck" style="cursor:pointer;"><span class="label">트럭:</span><span class="value">truck</span></div>
+<div class="card vehicles" data-copy="boat" style="cursor:pointer;"><span class="label">보트:</span><span class="value">boat</span></div>
+
+<!-- 야외 및 거리 (outdoor) -->
+<div class="card outdoor" data-copy="traffic light" style="cursor:pointer;"><span class="label">신호등:</span><span class="value">traffic light</span></div>
+<div class="card outdoor" data-copy="fire hydrant" style="cursor:pointer;"><span class="label">소화전:</span><span class="value">fire hydrant</span></div>
+<div class="card outdoor" data-copy="stop sign" style="cursor:pointer;"><span class="label">정지 표지판:</span><span class="value">stop sign</span></div>
+<div class="card outdoor" data-copy="parking meter" style="cursor:pointer;"><span class="label">주차 미터기:</span><span class="value">parking meter</span></div>
+<div class="card outdoor" data-copy="bench" style="cursor:pointer;"><span class="label">벤치:</span><span class="value">bench</span></div>
+
+<!-- 액세서리 (accessories) -->
+<div class="card accessories" data-copy="backpack" style="cursor:pointer;"><span class="label">배낭:</span><span class="value">backpack</span></div>
+<div class="card accessories" data-copy="umbrella" style="cursor:pointer;"><span class="label">우산:</span><span class="value">umbrella</span></div>
+<div class="card accessories" data-copy="handbag" style="cursor:pointer;"><span class="label">핸드백:</span><span class="value">handbag</span></div>
+<div class="card accessories" data-copy="tie" style="cursor:pointer;"><span class="label">넥타이:</span><span class="value">tie</span></div>
+<div class="card accessories" data-copy="suitcase" style="cursor:pointer;"><span class="label">여행 가방:</span><span class="value">suitcase</span></div>
+
+<!-- 스포츠 (sports) -->
+<div class="card sports" data-copy="frisbee" style="cursor:pointer;"><span class="label">프리스비:</span><span class="value">frisbee</span></div>
+<div class="card sports" data-copy="skis" style="cursor:pointer;"><span class="label">스키:</span><span class="value">skis</span></div>
+<div class="card sports" data-copy="snowboard" style="cursor:pointer;"><span class="label">스노보드:</span><span class="value">snowboard</span></div>
+<div class="card sports" data-copy="sports ball" style="cursor:pointer;"><span class="label">스포츠 공:</span><span class="value">sports ball</span></div>
+<div class="card sports" data-copy="kite" style="cursor:pointer;"><span class="label">연:</span><span class="value">kite</span></div>
+<div class="card sports" data-copy="baseball bat" style="cursor:pointer;"><span class="label">야구 배트:</span><span class="value">baseball bat</span></div>
+<div class="card sports" data-copy="baseball glove" style="cursor:pointer;"><span class="label">야구 글러브:</span><span class="value">baseball glove</span></div>
+<div class="card sports" data-copy="skateboard" style="cursor:pointer;"><span class="label">스케이트보드:</span><span class="value">skateboard</span></div>
+<div class="card sports" data-copy="surfboard" style="cursor:pointer;"><span class="label">서핑보드:</span><span class="value">surfboard</span></div>
+<div class="card sports" data-copy="tennis racket" style="cursor:pointer;"><span class="label">테니스 라켓:</span><span class="value">tennis racket</span></div>
+
+<!-- 주방 및 식기 (kitchen) -->
+<div class="card kitchen" data-copy="bottle" style="cursor:pointer;"><span class="label">병:</span><span class="value">bottle</span></div>
+<div class="card kitchen" data-copy="wine glass" style="cursor:pointer;"><span class="label">와인잔:</span><span class="value">wine glass</span></div>
+<div class="card kitchen" data-copy="cup" style="cursor:pointer;"><span class="label">컵:</span><span class="value">cup</span></div>
+<div class="card kitchen" data-copy="fork" style="cursor:pointer;"><span class="label">포크:</span><span class="value">fork</span></div>
+<div class="card kitchen" data-copy="knife" style="cursor:pointer;"><span class="label">칼:</span><span class="value">knife</span></div>
+<div class="card kitchen" data-copy="spoon" style="cursor:pointer;"><span class="label">숟가락:</span><span class="value">spoon</span></div>
+<div class="card kitchen" data-copy="bowl" style="cursor:pointer;"><span class="label">그릇:</span><span class="value">bowl</span></div>
+
+<!-- 음식 (food) -->
+<div class="card food" data-copy="banana" style="cursor:pointer;"><span class="label">바나나:</span><span class="value">banana</span></div>
+<div class="card food" data-copy="apple" style="cursor:pointer;"><span class="label">사과:</span><span class="value">apple</span></div>
+<div class="card food" data-copy="sandwich" style="cursor:pointer;"><span class="label">샌드위치:</span><span class="value">sandwich</span></div>
+<div class="card food" data-copy="orange" style="cursor:pointer;"><span class="label">오렌지:</span><span class="value">orange</span></div>
+<div class="card food" data-copy="broccoli" style="cursor:pointer;"><span class="label">브로콜리:</span><span class="value">broccoli</span></div>
+<div class="card food" data-copy="carrot" style="cursor:pointer;"><span class="label">당근:</span><span class="value">carrot</span></div>
+<div class="card food" data-copy="hot dog" style="cursor:pointer;"><span class="label">핫도그:</span><span class="value">hot dog</span></div>
+<div class="card food" data-copy="pizza" style="cursor:pointer;"><span class="label">피자:</span><span class="value">pizza</span></div>
+<div class="card food" data-copy="donut" style="cursor:pointer;"><span class="label">도넛:</span><span class="value">donut</span></div>
+<div class="card food" data-copy="cake" style="cursor:pointer;"><span class="label">케이크:</span><span class="value">cake</span></div>
+
+<!-- 가구 (furniture) -->
+<div class="card furniture" data-copy="chair" style="cursor:pointer;"><span class="label">의자:</span><span class="value">chair</span></div>
+<div class="card furniture" data-copy="couch" style="cursor:pointer;"><span class="label">소파:</span><span class="value">couch</span></div>
+<div class="card furniture" data-copy="potted plant" style="cursor:pointer;"><span class="label">화분:</span><span class="value">potted plant</span></div>
+<div class="card furniture" data-copy="bed" style="cursor:pointer;"><span class="label">침대:</span><span class="value">bed</span></div>
+<div class="card furniture" data-copy="dining table" style="cursor:pointer;"><span class="label">식탁:</span><span class="value">dining table</span></div>
+<div class="card furniture" data-copy="toilet" style="cursor:pointer;"><span class="label">변기:</span><span class="value">toilet</span></div>
+
+<!-- 전자기기 및 실내 물품 (electronics) -->
+<div class="card electronics" data-copy="tv" style="cursor:pointer;"><span class="label">TV:</span><span class="value">tv</span></div>
+<div class="card electronics" data-copy="laptop" style="cursor:pointer;"><span class="label">노트북:</span><span class="value">laptop</span></div>
+<div class="card electronics" data-copy="mouse" style="cursor:pointer;"><span class="label">마우스:</span><span class="value">mouse</span></div>
+<div class="card electronics" data-copy="remote" style="cursor:pointer;"><span class="label">리모컨:</span><span class="value">remote</span></div>
+<div class="card electronics" data-copy="keyboard" style="cursor:pointer;"><span class="label">키보드:</span><span class="value">keyboard</span></div>
+<div class="card electronics" data-copy="cell phone" style="cursor:pointer;"><span class="label">휴대폰:</span><span class="value">cell phone</span></div>
+<div class="card electronics" data-copy="microwave" style="cursor:pointer;"><span class="label">전자레인지:</span><span class="value">microwave</span></div>
+<div class="card electronics" data-copy="oven" style="cursor:pointer;"><span class="label">오븐:</span><span class="value">oven</span></div>
+<div class="card electronics" data-copy="toaster" style="cursor:pointer;"><span class="label">토스터:</span><span class="value">toaster</span></div>
+<div class="card electronics" data-copy="sink" style="cursor:pointer;"><span class="label">싱크대:</span><span class="value">sink</span></div>
+<div class="card electronics" data-copy="refrigerator" style="cursor:pointer;"><span class="label">냉장고:</span><span class="value">refrigerator</span></div>
+<div class="card electronics" data-copy="book" style="cursor:pointer;"><span class="label">책:</span><span class="value">book</span></div>
+<div class="card electronics" data-copy="clock" style="cursor:pointer;"><span class="label">시계:</span><span class="value">clock</span></div>
+<div class="card electronics" data-copy="vase" style="cursor:pointer;"><span class="label">꽃병:</span><span class="value">vase</span></div>
+<div class="card electronics" data-copy="scissors" style="cursor:pointer;"><span class="label">가위:</span><span class="value">scissors</span></div>
+<div class="card electronics" data-copy="teddy bear" style="cursor:pointer;"><span class="label">테디 베어:</span><span class="value">teddy bear</span></div>
+<div class="card electronics" data-copy="hair drier" style="cursor:pointer;"><span class="label">헤어 드라이어:</span><span class="value">hair drier</span></div>
+<div class="card electronics" data-copy="toothbrush" style="cursor:pointer;"><span class="label">칫솔:</span><span class="value">toothbrush</span></div>
+
+</div>
+
+
+
+<br>
+
+
+
+
+<div style="border-bottom: 1px solid #ccc; margin: 10px 0;"></div>
+<br>
+<br>
+
+
+
+ <p class="text-sm">
+   <h2 class="text-lg font-bold mb-2">️4️⃣  감지 객체 모델 추가하기</h2>
+
+ <p class="text-sm">
+자율주행이나 AI 비전 시스템에서 YOLO 모델을 사용할 때,감지할 객체의 종류(클래스)를 지정하는 것이 매우 중요합니다.
+이때 사용되는 주요 명령어는 다음과 같습니다</p><br> 
+
+<div class="flex items-center bg-gray-100 px-3 py-1 rounded shadow-sm text-sm max-w-3xl">
+  <div class="w-3/7 bg-gray-300 text-center py-2 px-2 rounded text-gray-800 font-mono break-all text-m leading-tight">
+    <strong>object_check_add_obj(obj_name)</strong>
+  </div>
+  <div class="w-4/7 pl-3 text-gray-700 text-m leading-tight">
+    : 특정 물체를 인식 목록에 추가합니다.
+  </div>
+</div>
+
+      <p class="text-sm text-gray-500 "> 
+&nbsp;&nbsp;&nbsp;*예시 : zumiAI.object_check_add_obj(<span class="text-green-500">"bicycle"</span>)
+</p> 
+
+<br>
+
+<div class="flex items-center bg-gray-100 px-3 py-1 rounded shadow-sm text-sm max-w-3xl">
+  <div class="w-3/7 bg-gray-300 text-center py-2 px-2 rounded text-gray-800 font-mono break-all text-m leading-tight">
+    <strong>object_check_all_add_obj()</strong>
+  </div>
+  <div class="w-4/7 pl-3 text-gray-700 text-m leading-tight">
+   : 모든 물체(COCO 데이터셋 80종)를 인식 목록에 추가합니다.
+  </div>
+</div>
+
+      <p class="text-sm text-gray-500 "> 
+&nbsp;&nbsp;&nbsp;*너무 많은 모델을 추가하면 인식률이 저하 될 수 있습니다.
+</p> 
+
+
+<br>
+
+<div class="flex items-center bg-gray-100 px-3 py-1 rounded shadow-sm text-sm max-w-3xl">
+  <div class="w-3/7 bg-gray-300 text-center py-2 px-2 rounded text-gray-800 font-mono break-all text-m leading-tight">
+    <strong>object_check_del_obj(obj_name)</strong>
+  </div>
+  <div class="w-4/7 pl-3 text-gray-700 text-m leading-tight">
+   : 특정 물체를 인식 목록에서 제거합니다.
+  </div>
+</div>
+
+      <p class="text-sm text-gray-500 "> 
+&nbsp;&nbsp;&nbsp;*예시 : zumiAI.object_check_del_obj(<span class="text-green-500">"bicycle"</span>)
+</p> 
+
+<br>
+
+
+<div class="flex items-center bg-gray-100 px-3 py-1 rounded shadow-sm text-sm max-w-3xl">
+  <div class="w-3/7 bg-gray-300 text-center py-2 px-2 rounded text-gray-800 font-mono break-all text-m leading-tight">
+    <strong>object_check_all_del_obj()</strong>
+  </div>
+  <div class="w-4/7 pl-3 text-gray-700 text-m leading-tight">
+   : 모든 물체를 인식 목록에서 제거합니다.
+  </div>
+</div>
+
+   <p class="text-sm text-gray-500 "> 
+&nbsp;&nbsp;&nbsp;*기본으로 등록 되어진 모델도 함께 삭제 됩니다.
+</p> 
+
+<br>
+
+<h2 class="text-lg font-bold mb-2">️
+⚠️ 주의: 너무 많은 객체를 동시에 등록할 경우</h2>
+
+<p class="text-sm">
+YOLO 모델은 여러 객체를 동시에 감지할 수 있지만,감지 대상이 많아질수록 인식률(정확도)과 속도가 떨어질 수 있습니다. 따라서
+모델이 더 많은 클래스 간 비교 연산을 수행해야 하므로, 연산 자원이 분산되고, 실시간성이 중요한 환경에서는 오탐/누락 가능성이 높아질 수 있습니다.
+
+</p>
+<br>
+
+
+<h2 class="text-lg font-bold mb-2">️✅ 권장 사용 방법</h2>
+
+<p class="text-sm">
+● 감지하고자 하는 필요한 객체만 선택적으로 추가하세요.<br>
+<p class="text-sm text-gray-500 "> 
+(예: 사람이 중심이라면 "person"만 등록)
+</p>
+<br>
+
+●사용 도중 필요하지 않은 객체는<br>
+    object_check_del_obj(obj_name) 명령어로 제거하는 것이 좋습니다.<br>
+<p class="text-sm text-gray-500 "> 
+    (예: object_check_del_obj("cup") → 컵 감지 제외)
+</p>
+<br>
+
+● 이렇게 하면 모델이 더 빠르고 정확하게 감지할 수 있으며,<br>
+    시스템 자원도 효율적으로 활용할 수 있습니다.<br>
+
+</p>
+<br>
+<h2 class="text-lg font-bold mb-2">5️⃣   Object Detection 객체 감지 (확장) </h2>
+     
+
+<strong> 🚘 Object Detection 객체 감지 </strong><br> 
+Object Detection & Object Classification  = 지각 시스템, 인지 시스템 + 객체 탐지 및 분류 <br><br>
+
+        <p class="text-sm">아래 프로그램을 다운로드 받아서, 원하는 객체를 추가하고 감지해보도록 합니다. </p> 
+
+
+
+<br>
+
+<a href="https://lh3.googleusercontent.com/fife/ALs6j_GI6jy6sfvhnNovFEE-xc99NVyPqrv-wwcsLV3l6zsFDd_TlibLKJjMUdYa0JSfsPAl1WiefD9p9N4Jaaak4vLcfzEHgrb2C9hIENxGkPQz_KbyYeKfdRexgRAnAtpXuq9CQzbO1hmY6GInnJNGR6Gphlg3j2Xr_cJhmPNGYukusWgMtX4mKE954X55o5ILRd-_oHjcPNgei5ZGdQPdd8aMqLOpSQpn84-U27XXbmmQVULckQXZlhgEvahwTUMthQI083ILsHoozor6kvnxOeCEpm1RR8gh8AYkcjBH--BH6Bj18b5Q6s0Brm1fpZAaiWqZOMunAc83qekSlGsgB38kH70ILUnVWPV7Dr7Nqg9CSBOjcTma9KeFKrjzhE7oiU6xeZuEhYpG4TPcovHq2mD6nb5DaURs8CAeYjaKe2BuoaR6NjqMR1O6RiCgNPdIKNM78L8EiZUFvi5g8hUz1wBJPMJzv2AYJ2i1v6IHzvQhYwiEzCfWSSFWxXcL5meJdgpuiXXkpjqsjhrtVyNT0zIp-rFivioSsj6_GAViL_gxaB174zuuTTP-CYxatI7vQyFqXau23F6JaUEywL1pF2rr8JQOTkl2fxUoirUODqqcY3v2rQmRcfk_WaFxykwS7bQDq9lFl6qHilG3vJHhTsbrnU-U9SCWkeZ5ziDSsfqMdtOelwFZKUFkqNCrlWXfuHiuVBcELEdnPzr9UhYwOrk4n7t3zfMWZK8GN8S3CMeR3PTu41gVdtFcZ0XseoU6Nxq-LTW_XIa9wTI__uihpXMql3wRJXLQ_TEFYjH990N2kKSAwAmu3UJvxAb6rlcf2xVP_qxZ-L3q4x59Fz2Xr5QIPjDBYoPsHMUqE2MiwJReiERlI9WFOA0wnIfMnxeDjrrQ7wnRBgz3VdXqlRqlxvRAK0EcVDHG6ajfXkeysikNKhAQsCkDpeOCPzZr2WkHmql2EMDrFQytqk70B4AnQm_iP8-ZMiRVcYl_F6e26Wfew7mlmmKMh80nQwmwu-r65U53HqzyPne1z9H804_3jpsBIwyeMrEJ5thcHTvtG6EW7fxz9dT_Pu7S_Kpt2YxHziOCVaZkInfGYxG16pOhVRreUy79KSynO4o9K5A9gs80dypyjGMx5AYUh1pTYnB-73rDNY_SXafBw-iAolh8D8CxPIhr7RXhzcC1jP5X2scBAYhzStIMELeNK2q7Lvg33EcfaDCe5wE42EFBbJEbKiqLi3zrWEKqq40QmxC5pUMU2Es18UdQfmFf2DY_FKlP3x1drx3iDCb0JOITffCQXwHv6NJ8H0FB0Lv0kCg96RfJonTO50-VL4Ng1RuBtzomP4Y2RWY1F4sARXyidVSpIUIs7r2MuMxi4cbt6E_H-TC-CMraPRmx97yHq80OHYMlkIbfGI6WxyUyqjuElSs72_2F6jKpgVD87K-v0iDzEkYKyuZd5VzE0twhSFCuEi8fo_yW-0ui-KmR3VJrPhY1MkhmPTXq3-h6Vtazwj1gTCGOCHuD2CxxaWXmw0qkaFdzrB_7PCvWJHV63C0bZmSSCCo-zMrV60nPgcxjzywBCzbIRywCdVeWRzkaB2qqbFgLNMetgbv_E1-rKVszmWKHRq8VBosRuNNXFgiRzviKf8Xs1Y4kzSO31R-DaDvI2CtGWIuULS07_ee8=w1920-h918?auditContext=forDisplay" target="_blank">
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_GI6jy6sfvhnNovFEE-xc99NVyPqrv-wwcsLV3l6zsFDd_TlibLKJjMUdYa0JSfsPAl1WiefD9p9N4Jaaak4vLcfzEHgrb2C9hIENxGkPQz_KbyYeKfdRexgRAnAtpXuq9CQzbO1hmY6GInnJNGR6Gphlg3j2Xr_cJhmPNGYukusWgMtX4mKE954X55o5ILRd-_oHjcPNgei5ZGdQPdd8aMqLOpSQpn84-U27XXbmmQVULckQXZlhgEvahwTUMthQI083ILsHoozor6kvnxOeCEpm1RR8gh8AYkcjBH--BH6Bj18b5Q6s0Brm1fpZAaiWqZOMunAc83qekSlGsgB38kH70ILUnVWPV7Dr7Nqg9CSBOjcTma9KeFKrjzhE7oiU6xeZuEhYpG4TPcovHq2mD6nb5DaURs8CAeYjaKe2BuoaR6NjqMR1O6RiCgNPdIKNM78L8EiZUFvi5g8hUz1wBJPMJzv2AYJ2i1v6IHzvQhYwiEzCfWSSFWxXcL5meJdgpuiXXkpjqsjhrtVyNT0zIp-rFivioSsj6_GAViL_gxaB174zuuTTP-CYxatI7vQyFqXau23F6JaUEywL1pF2rr8JQOTkl2fxUoirUODqqcY3v2rQmRcfk_WaFxykwS7bQDq9lFl6qHilG3vJHhTsbrnU-U9SCWkeZ5ziDSsfqMdtOelwFZKUFkqNCrlWXfuHiuVBcELEdnPzr9UhYwOrk4n7t3zfMWZK8GN8S3CMeR3PTu41gVdtFcZ0XseoU6Nxq-LTW_XIa9wTI__uihpXMql3wRJXLQ_TEFYjH990N2kKSAwAmu3UJvxAb6rlcf2xVP_qxZ-L3q4x59Fz2Xr5QIPjDBYoPsHMUqE2MiwJReiERlI9WFOA0wnIfMnxeDjrrQ7wnRBgz3VdXqlRqlxvRAK0EcVDHG6ajfXkeysikNKhAQsCkDpeOCPzZr2WkHmql2EMDrFQytqk70B4AnQm_iP8-ZMiRVcYl_F6e26Wfew7mlmmKMh80nQwmwu-r65U53HqzyPne1z9H804_3jpsBIwyeMrEJ5thcHTvtG6EW7fxz9dT_Pu7S_Kpt2YxHziOCVaZkInfGYxG16pOhVRreUy79KSynO4o9K5A9gs80dypyjGMx5AYUh1pTYnB-73rDNY_SXafBw-iAolh8D8CxPIhr7RXhzcC1jP5X2scBAYhzStIMELeNK2q7Lvg33EcfaDCe5wE42EFBbJEbKiqLi3zrWEKqq40QmxC5pUMU2Es18UdQfmFf2DY_FKlP3x1drx3iDCb0JOITffCQXwHv6NJ8H0FB0Lv0kCg96RfJonTO50-VL4Ng1RuBtzomP4Y2RWY1F4sARXyidVSpIUIs7r2MuMxi4cbt6E_H-TC-CMraPRmx97yHq80OHYMlkIbfGI6WxyUyqjuElSs72_2F6jKpgVD87K-v0iDzEkYKyuZd5VzE0twhSFCuEi8fo_yW-0ui-KmR3VJrPhY1MkhmPTXq3-h6Vtazwj1gTCGOCHuD2CxxaWXmw0qkaFdzrB_7PCvWJHV63C0bZmSSCCo-zMrV60nPgcxjzywBCzbIRywCdVeWRzkaB2qqbFgLNMetgbv_E1-rKVszmWKHRq8VBosRuNNXFgiRzviKf8Xs1Y4kzSO31R-DaDvI2CtGWIuULS07_ee8=w1920-h918?auditContext=forDisplay" alt="그림1" class="w-full rounded-lg ">
+</a>
+
+<br>
+
+<p class="text-[14px] text-gray-500 ">
+* 위 이미지는 AI로 생성되었으며, AI 이미지가 아닌 실제 대상들도 이 프로그램으로 감지가 가능합니다.<br>.<br>
+</p>
+
+
+
+<!-- 파이썬 코드 설명&다운로드 버튼 -->
+<div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
+  <div id="output" class=" flex-1 bg-gray-800 text-white p-4 rounded h-30 text-sm"">
+  <p class="font-normal text-white text-sm">
+
+
+
+zumiAI.object_check_add_obj(performance_mode=<span class="text-green-300">"bicycle"</span>)<br>
+zumiAI.object_check_add_obj(performance_mode=<span class="text-green-300">"motorcycle"</span>)<br>
+zumiAI.object_check_add_obj(performance_mode=<span class="text-green-300">"parking meter"</span>)<br>
+zumiAI.object_check_add_obj(performance_mode=<span class="text-green-300">"elephant"</span>)<br>
+<span class="text-purple-500"> print</span>(<span class="text-green-300">"▶ 물체 인식 추가"</span>)<br><br>
+
+<span class="text-orange-500">while True</span>:<br>
+&nbsp;&nbsp;    <span class="text-orange-500">if </span>zumiAI.is_obj_detected(name=<span class="text-green-300">"bicycle"</span>): <br>
+&nbsp;&nbsp;&nbsp;       <span class="text-purple-500"> print</span>(<span class="text-green-300">"자전거"</span>)<br><br>
+
+&nbsp;&nbsp;    <span class="text-orange-500">elif </span>zumiAI.is_obj_detected(name=<span class="text-green-300">"motorcycle"</span>): <br>
+ &nbsp;&nbsp;&nbsp;       <span class="text-purple-500">print</span>(<span class="text-green-300">"오토바이"</span>)<br><br>
+
+&nbsp;&nbsp;    <span class="text-orange-500">elif </span>zumiAI.is_obj_detected(name=<span class="text-green-300">"parking meter"</span>): <br>
+ &nbsp;&nbsp;&nbsp;       <span class="text-purple-500">print</span>(<span class="text-green-300">"주차미터기"</span>)<br><br>
+
+&nbsp;&nbsp;    <span class="text-orange-500">elif </span>zumiAI.is_obj_detected(name=<span class="text-green-300">"elephant"</span>): <br>
+ &nbsp;&nbsp;&nbsp;       <span class="text-purple-500">print</span>(<span class="text-green-300">"코끼리"</span>)<br>
+
+
+</p>
+  </div>
+
+<a href="https://drive.google.com/file/d/1CjkkP9tlPf9f8QqaLY-iBU_OwP5WcaSb/view?usp=sharing" download="example.py" id="run-code-btn"
+   class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto inline-flex flex-col justify-center items-center text-center min-h-[64px]">
+ <button id="run-code-btn" class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto">
+  파이썬 코드 <br> 다운로드
+</button>
+</a>
+
+  </div>
+<br>
+
+
+<a href="https://lh3.googleusercontent.com/fife/ALs6j_FxFsF1jz9QXmJAf1sBlYQuAuH9ZWe2qcPtpuyDwncLqWVrZtPcyMkvi2lxyw4oN-NIUcAllZgjsoqraHMWNEQipuY1djZjMcG5PwAtcw-gV-_PsSQu-hAckP0fieKUVaEWNOR-NmFS8XUroC7KH4laXClZqBallpioiKt814ycovSWU2fxr-CXatHRShuf39zgjaRFX5N3lDKMzFeDoRnlY0e0TFjvE82pJ5PMR01ReTMFljVjoVIH5m2BDXMWHNyR8LoxXYysB8HmrxscqVgahhdsUFW3XLCfToZK3PdNQqmpMCA2AlYCiOMNP1iIWlXD1TOmx3IoJGyIuc-B9qbkER3CeMqxbt9AIsLrcIbgfjAVpxIr9lke2mlajmuAqAvykm38udhDoVL7rtMZolsgRtgOHE4gfxllXDUezD1xNuUGiHd8k-MGNa9OHGeVMvFTJylNjUb66UHXby_wR6pxckYd_GY6XgY74ZAQoiOShb-cLtdNN40t0DzwBq7eRa0iqVbQH6ORKxvG5xudgSzJbmbRS6v3xW4EZ744b7JnYZQIXLrkx8uZ0QhjuEf3K1Zwn2EgI5HG3f0QXUx9nsGX_DMI1Q3aBxGc2pF1E_n82vBVh-Q_6X7t2MPqFMuVr0CFSUl_6nATbPgXss2oyNseknt3taGI1s5gIfvgaG1qLo_6EtItHxJn5sRc6xsa0GUGOXOauhZRR1na3cK_q_nVIj6prCgiLd13RCvRBC-O95lv2ZRsMhjKcqZb4oYZ8WroaWkK0rBmLXiu0ZJcpKJQjhjndIAvdl9VXp4PMYtmgDXtX62o8Y44OwGtSBsJb60ni0DykoFcM6YlnO8owaGhnQyXu_MLb4gFDepnqymtdR5RH6d2XTZZLrM35dT_0H9qEcWa2eXZIQFY7M2ifH1l8o_KO-q2si3qpnwB39MfwEPHvJhoAHf7HhZJ2vOX1bi4Dqood4gOMbjW1mXl5Bhxa29mwp2UydIH1d2yqviJB1tPMoaSjhc82SArjI2Vkac5Pry2Mgk08V9BjnzWDWiJ78sW5_9aO-5qyoE5ePOoa5xvj2M--UfRWuVx9kfnMJ4r-R0O5lynkQ--yfpuZUIxbzw9n3a6ngz5rLQaKwr4lxAp6w2x6kGAPAMJ3tACou6n5cxUtMnQ1ljsn_UGi784izFInNJypcfvEf-d92Pw66sqgE70ajtx7wdFSWUNb_51HugOswPw2f_JyFqqf4K01iwdyuhWS77_43MYleg2GA2F8TwXh0t-oB36kJ1qPGgCLHz4jhnKy-TJsH6Jsg6hKQytOqyCJZyEcr9ROGbusW7gj2rMqqJDbw4_855qF2l6csxEBhIfntln-v-7mK0zfZokCxsCWgoqCGjXiGSZDhoeC7o6Y0Uz5BbahnserTp_oXmAy2OXXHqx7NLvAmOI4KTNPFitdq4kxy-rKsiv7dCYUWodN0FWKJkH4MdzLYYM3nhJpBd1cAgrcyFiXUB-FNav8CosnAyb2zFEfSOJnxP5MB8G9_X_HQgt-fbWT_A-Q8J1i9MLiZZ5l4vQHNPpsDfsoQzrNCqmCbZTwhumAAtb1fti51qS8XwtAM_ATD8sAllMeSVmWMYLUbXpupsDHE6D7J1HI-v1ohqBXfGWW-Gdt566fVGVeBmVnH6gpBm2sbrOAH5Z_w=w1920-h918?auditContext=forDisplay" target="_blank">
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_FxFsF1jz9QXmJAf1sBlYQuAuH9ZWe2qcPtpuyDwncLqWVrZtPcyMkvi2lxyw4oN-NIUcAllZgjsoqraHMWNEQipuY1djZjMcG5PwAtcw-gV-_PsSQu-hAckP0fieKUVaEWNOR-NmFS8XUroC7KH4laXClZqBallpioiKt814ycovSWU2fxr-CXatHRShuf39zgjaRFX5N3lDKMzFeDoRnlY0e0TFjvE82pJ5PMR01ReTMFljVjoVIH5m2BDXMWHNyR8LoxXYysB8HmrxscqVgahhdsUFW3XLCfToZK3PdNQqmpMCA2AlYCiOMNP1iIWlXD1TOmx3IoJGyIuc-B9qbkER3CeMqxbt9AIsLrcIbgfjAVpxIr9lke2mlajmuAqAvykm38udhDoVL7rtMZolsgRtgOHE4gfxllXDUezD1xNuUGiHd8k-MGNa9OHGeVMvFTJylNjUb66UHXby_wR6pxckYd_GY6XgY74ZAQoiOShb-cLtdNN40t0DzwBq7eRa0iqVbQH6ORKxvG5xudgSzJbmbRS6v3xW4EZ744b7JnYZQIXLrkx8uZ0QhjuEf3K1Zwn2EgI5HG3f0QXUx9nsGX_DMI1Q3aBxGc2pF1E_n82vBVh-Q_6X7t2MPqFMuVr0CFSUl_6nATbPgXss2oyNseknt3taGI1s5gIfvgaG1qLo_6EtItHxJn5sRc6xsa0GUGOXOauhZRR1na3cK_q_nVIj6prCgiLd13RCvRBC-O95lv2ZRsMhjKcqZb4oYZ8WroaWkK0rBmLXiu0ZJcpKJQjhjndIAvdl9VXp4PMYtmgDXtX62o8Y44OwGtSBsJb60ni0DykoFcM6YlnO8owaGhnQyXu_MLb4gFDepnqymtdR5RH6d2XTZZLrM35dT_0H9qEcWa2eXZIQFY7M2ifH1l8o_KO-q2si3qpnwB39MfwEPHvJhoAHf7HhZJ2vOX1bi4Dqood4gOMbjW1mXl5Bhxa29mwp2UydIH1d2yqviJB1tPMoaSjhc82SArjI2Vkac5Pry2Mgk08V9BjnzWDWiJ78sW5_9aO-5qyoE5ePOoa5xvj2M--UfRWuVx9kfnMJ4r-R0O5lynkQ--yfpuZUIxbzw9n3a6ngz5rLQaKwr4lxAp6w2x6kGAPAMJ3tACou6n5cxUtMnQ1ljsn_UGi784izFInNJypcfvEf-d92Pw66sqgE70ajtx7wdFSWUNb_51HugOswPw2f_JyFqqf4K01iwdyuhWS77_43MYleg2GA2F8TwXh0t-oB36kJ1qPGgCLHz4jhnKy-TJsH6Jsg6hKQytOqyCJZyEcr9ROGbusW7gj2rMqqJDbw4_855qF2l6csxEBhIfntln-v-7mK0zfZokCxsCWgoqCGjXiGSZDhoeC7o6Y0Uz5BbahnserTp_oXmAy2OXXHqx7NLvAmOI4KTNPFitdq4kxy-rKsiv7dCYUWodN0FWKJkH4MdzLYYM3nhJpBd1cAgrcyFiXUB-FNav8CosnAyb2zFEfSOJnxP5MB8G9_X_HQgt-fbWT_A-Q8J1i9MLiZZ5l4vQHNPpsDfsoQzrNCqmCbZTwhumAAtb1fti51qS8XwtAM_ATD8sAllMeSVmWMYLUbXpupsDHE6D7J1HI-v1ohqBXfGWW-Gdt566fVGVeBmVnH6gpBm2sbrOAH5Z_w=w1920-h918?auditContext=forDisplay" alt="그림1" class="w-full rounded-lg ">
+</a>
+<br>
+
+<p class="text-sm">
+정상적으로 동작 한다면 위의 그림 처럼 추가 된 객체가 감지 됩니다.
+
+</p>
+<br>
+
+
+
+<!-- 흰색 상자-->
+</div>
+
+    </main>
+  </div>
+
+
+
+<div id="toast" style="
+  visibility: hidden;
+  min-width: 200px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 10px;
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+"></div>
+
+
+
+  <!-- JS 스크립트 -->
+  <script>
+// 별 반짝반짝
+  const numStars = 80;
+  for (let i = 0; i < numStars; i++) {
+    const star = document.createElement("div");
+    star.className = "star";
+    star.style.top = Math.random() * 90 + "vh";
+    star.style.left = Math.random() * 90 + "vw";
+    const blinkDuration = (Math.random() * 3 + 3).toFixed(2);
+    const moveDuration = (Math.random() * 20 + 30).toFixed(2);
+    star.style.animationDuration = `${blinkDuration}s, ${moveDuration}s`;
+    star.style.setProperty("--dx", (Math.random() * 20 - 10).toFixed(2));
+    star.style.setProperty("--dy", (Math.random() * 20 - 10).toFixed(2));
+    document.body.appendChild(star);
+  }
+
+  // 모바일 메뉴 토글
+  const toggleButton = document.getElementById("menu-toggle");
+  const mobileMenu = document.getElementById("mobile-menu");
+
+  toggleButton.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+  });
+
+  // 모바일 '챕터 보기' 버튼 토글
+  function toggleSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    const isHidden = sidebar.classList.contains("hidden");
+
+    if (isHidden) {
+      sidebar.classList.remove("hidden");
+      overlay.classList.remove("hidden");
+    } else {
+      sidebar.classList.add("hidden");
+      overlay.classList.add("hidden");
+    }
+  }
+
+  // PC용 사이드바 토글
+  function togglePcSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const pcToggleBtn = document.getElementById("pc-toggle-btn");
+    const isCollapsed = sidebar.classList.contains("w-16");
+
+    if (isCollapsed) {
+      sidebar.classList.remove("w-16");
+      sidebar.classList.add("w-64");
+      pcToggleBtn.innerHTML = "-";
+      const items = sidebar.querySelectorAll(".sidebar-item");
+      items.forEach(el => el.classList.remove("hidden"));
+    } else {
+      sidebar.classList.remove("w-64");
+      sidebar.classList.add("w-16");
+      pcToggleBtn.innerHTML = "☰";
+      const items = sidebar.querySelectorAll(".sidebar-item");
+      items.forEach(el => el.classList.add("hidden"));
+    }
+  }
+
+  // YOLO 카드 부분
+const buttons = document.querySelectorAll('.filter-btn');
+const cards = document.querySelectorAll('.card');
+const searchInput = document.getElementById('searchInput');
+
+let currentFilter = 'all';
+
+buttons.forEach(button => {
+  button.addEventListener('click', () => {
+    buttons.forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+
+    currentFilter = button.getAttribute('data-filter');
+    applyFilters();
+  });
+});
+
+searchInput.addEventListener('input', () => {
+  applyFilters();
+});
+
+function applyFilters() {
+  const keyword = searchInput.value.toLowerCase();
+
+  cards.forEach(card => {
+    const text = card.textContent.toLowerCase();
+    const matchesFilter = currentFilter === 'all' || card.classList.contains(currentFilter);
+    const matchesSearch = text.includes(keyword);
+    card.classList.toggle('hidden', !(matchesFilter && matchesSearch));
+  });
+}
+
+// 복사 기능: 이벤트 위임으로 카드 클릭 시 복사 처리
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.style.visibility = 'visible';
+  toast.style.opacity = '1';
+
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    setTimeout(() => {
+      toast.style.visibility = 'hidden';
+    }, 500);
+  }, 2000);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('cardContainer').addEventListener('click', (event) => {
+    const card = event.target.closest('.card');
+    if (!card) return;
+
+    const textToCopy = card.getAttribute('data-copy');
+    if (!textToCopy) return;
+
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      showToast(`"${textToCopy}" 이(가) 클립보드에 복사되었습니다!`);
+    }).catch(() => {
+      showToast('복사에 실패했습니다.');
+    });
+  });
+});
+
+  </script>
+
+</body>
+</html>
