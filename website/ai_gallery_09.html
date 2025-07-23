@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>9. Sensor Fusion 센서 퓨전</title>
+
+  <!-- ✅ Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    #map {
+      height: 500px;
+      width: 100%;
+      border-radius: 0.5rem;
+    }
+
+  body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #010415, #000C36);
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+    }
+
+  body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; 
+  background-image: url('https://lh3.googleusercontent.com/fife/ALs6j_E782PyIFMYtfVVTWKJmz-NPOAMoNGyICJBadA4s8rszXoBW1pdOjGqEGLaJ6a0MTRkxoIZda-w1eEBdzmu7NpqU9QlaUX2XQY5BKLHSPbORtCE87IE3XMTnbsdNUIM2QDvRB41vYEKbzD3Y6bCsxXuLgblYo45APBATItrnaPs5SkcXeu9aMFuO8Q6kvoPorMCwyAObsM39R5G5_E_Ny4k4oc1IHZfhdJELCCBFT-uuiQtWHXXxmLmcqqCFV36Yub3GZcoAkilshppk0ij1iotqUM9Nk4fNUjg_HSqeXi7yzrZ4gofhiS8xQebPOsnnYHgk3L0SCghkoc6qFYFWAscDbY3J-T3eetqtbXbB6-v3GNFW7xti1pcvNbgLjZtRsaIGJynrnsWED8AUXQRHCk3EmYfxA0gY4wsBe-hWeGJZY9cofd4gEbj7ievulF49GZV7LRbry0cXnDZVSVQYrNcc8oxBM5UvAhNouLXYIJXJ1_XrT67zlzLmaWFvgQQjBnnk2oQX60UerK8qSGRhQ8Mmezkv_cMpiU9M46f8t9rwWVhsknkIxzWOEJEmq9ZT1gDIu8pJuJ3u-S9ZLVvKY8HBMqd09aJxwQfKpdcmEqOn2DjZJ5Ia6EDnV0d-41bYyXz0oZOcs1sDV1vh9Ecz35P12FNqpPjzcYZKRLxGdGyygvDYaACaFqHkqaXrW9pE58AAlqvnBmeyNW8NlG2c52S6Q2lsdbBpAWcXQp0iswofLRMi6Wd-Q1B6UUdMXZhyEAdOtiCngRDzpx8RasWmW-9ZMSqnwvl3B9eB113R5jXh6ZB_0eNjO20SZXZn1XEZP-iD0C0qZgHA_-dVp38zoiT-RutNUwTPiG22-Ff6w_JWic7E1tYgOgMCGWjKDdEbHZW3GB3zXyBrnyH81_8oPGApy1vjOa8_pqZS5jyX9PFbODsrQdPRwq4xTMYsW6OTvG08eM96O2lOThJ5PzHxrOYSpOR-kVKLM7VBUbQHPYq36ECuFUY3kDA7yyMnVm4WWMlU3vS0aguTUUva3CAskP6V8difKwvTNgeKae8dGv44TUtEHGvLjk1eWiBrThOEBpik5XOrt5Y_2d8YnWvbymfdh1QdqeU9o0yxC0tVQBDuGDjkfNVsETEGIK9Sy6ZHBOlQjElWxhelqVv6CaiKM8hKEtfTQoJAgJsgboz_5VGUU3hye0xJY18dQ0bQ23jPDl__tjztKa64n8Hw4BzvKDG_cP0J-1h-m3C9COokR6tTEWSzUyRtK98vafvKmkM8Jw_o9UnoxEN9dbo50aKeD88MUKYso3ijwz-H5DNJHK9wNhgnp2Yn3WkVR_ZtlQpfOcJO3hNmCVOGJDdZ9g3gUBDjQXFg1I_Ww7Wc636ttmFKGDuYeNvyyiwLCmXtbmVhkT29p2M-k4_CQZKh-nDzkUlD-B3oXw4DQr7qr9qXEPX7zFqi0KW521Bynrl2z_NP5nf-AWAun8hnjrpdxoedpcLYra9Qqw-7Qz2gptYkn1FBtRCdTMKEWvYiHlOcruhXC1PSTfyHahNxdVaNkhfDtfnF7LZu0NSlx-JOcMtigLfj8iGGneEDJMB3HlA674Hv6s2MoVnxU5E6x71lqwuC0n2oX5H8BRUx0IiOn40i9TcbEPpzDSwPR8hk3fyLQ0_LiReswY0HUhPAA=w1919-h918');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.5;
+  z-index: -2;
+  animation: flickerOpacity 6s ease-in-out infinite alternate;
+}
+
+
+
+    .star {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #00B0C8;
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: blink linear infinite, move linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes blink {
+  0% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
+  100% { opacity: 0.3; transform: scale(1); }
+}
+
+
+    @keyframes move {
+      0% { transform: translate(0, 0); }
+      50% {
+        transform: translate(
+          calc(var(--dx) * 1vw),
+          calc(var(--dy) * 1vh)
+        );
+      }
+      100% { transform: translate(0, 0); }
+    }
+
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      background-color: transparent;
+      text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff;
+    }
+
+    .neon-text {
+      text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+      animation: neon-blink 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes neon-blink {
+      0% {
+        text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+        opacity: 0.3; 
+      }
+      50% {
+        text-shadow: 0 0 2px rgba(255,255,255,0.5), 0 0 5px rgba(74,144,226,0.5), 0 0 10px rgba(74,144,226,0.5), 0 0 15px rgba(74,144,226,0.5);
+        opacity: 0.6;
+      }
+      100% {
+        text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+        opacity: 1;
+      }
+    }
+
+@keyframes flickerOpacity {
+ 0% {
+    opacity: 0.4;
+  }
+  30% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.1;
+  }
+}
+
+    .auto-image {
+      width: 600px !important;
+      height: 400px !important;
+      object-fit: contain;
+    }
+
+
+
+
+  </style>
+</head>
+
+<body>
+
+  <header class="w-full flex justify-between items-center px-6 py-4 z-10">
+    <div class="flex items-center"><a href="index.html" class="Logo">
+      <img src="https://lh3.googleusercontent.com/fife/ALs6j_FpAj7oMETlep3fCBHYuZGq6DWoc60B49wnyNHOTMWS4llCaS_Dp1WLetK1BMHmti4aHnoIXtcVTmgJozC5-VcrBMfRf_pmuzJwULdG9kDt6CALW-P5LRQI_XsXKEB9aJKmDaYTl6V1QaFdPJVpK5YNQBhlW2jdI_AuDvDA78CfUZ-unq3YrNsIHtalQg-UUQQ_3xPZT6uK4tsd1fLzGhG0-axfqtU9jKSbt_DqT5C0fbHcHdA3TFXzaC0PIVtdZWE7pevMcpAkE5GGH6e1RZ1Xa3bQVi4p-EefrONX0wqt1oGD9YFE6g6o6wYkUcyMgwmiAqyMLo4jUDkjfr2tQ_RAiu88W1AgAPtCm8VPp8iQqHsxxdJkEg-OM4kWXs6BhcT1HaUk-uyhd6V3u6qeaAugGSjTgzOhJE8_WB-Kg0_EMceh1aUtKxsKF6sL2s9SYoiBPeodHQZ_JOfPgfrJ9saqwzS1c12GHZQPA9214h2jB3B342DTmtnI3Kjke9ZACcerZTGmgs8r-M-KXZfaW3GGrMeGyuNiunkLZPpoaonQfsVmr1bTddKvcd2CIDuynW_IrFk8mGF7QWfEPunNbCRW5giSKO7G24DSsZxBI9z6ZKUTYc2yIVUMe6lvPUn0fiBncb1DvPN5KwQ-wo-085B42dWoe4A608RY0V0Zw7HX5z3nAqlMGoaugV4hlbRr4AM-utqOfrMeX_L1WyndUfUbzdAvb567Wm1lFLvBp68eP4SyQlwKolfA46zTPuSnYdIQZqeyQBz-k7LGf_KYqjdYJgQxs98ug55nA-K9l_S9JERHaBVe8f1WwxzDyLJyrS84EZFy8DeW113a6osXVO-appgYVBiLOwuxAiAMfLiOhHI6vnxaLm0_XnvRl-grtv4-B9wovOeAwWWJ53EYN-OvVwAKIrzORek9zZNaVE7ZdtHbO4fJ5GHKL6pGx8e45NdnMfBaPqLLUZvfY-lHnTfkxlNkauTHtsghHHd1IOtCREO-9sFepHhsZdyonnEyoOdfcDEIUUynaqkB9nJ6LRnTREJ57v2eKtxlRyczJVcMYAePf7iScHkDM8SXFKLbAzfXff9lBiZzqUXzpMW5wTiDb7YhHdCVFQzO48HMtmbHuegn7qYh1DDNbhzzFj1mjuadOJx1k5ifcrOCc-gaAQZTAOYSfddaqn2X1ISnpK326an-GOJ5NROtbwwXmpSApWXVR1S3te51R8E8YdGR4MIl_A3PoawJbN5OGh2BoPrrRuwxESmk5BbUtxjRagSnhCaAkOZ2pHzjL7kyYpCK6zfAgDfRKwFhU6UXddvgKIkcUkH-LgFj4-2IHb4AKILBiHIRcoImi8qHz-KvtxPTQMVUbUf44V1Lwqv6-JemKVzmGy8ZUJPaexdRtfJ1dwrNmm6K1otLVn7TKePyOS6UaD4FSxavVGJMijJNXZBXKA5OzU-ZP9h60Dil3L26hrte0m2ioVhqV_r5dBxmNhchgw8kyaaFomXDRYgj1nW9Ja5YMUOacyTc3Ms0icahuF3vUm25sjH4H8rjWGBUYKXIlM-K-QWrpRDD6HW5m5FzIlt_nNVirFunkfenUXCNEhJVg-khcWOEd7YEvbmk50xjUsAldDIUIsQ6t_qbEvAnM88NBSPLOOLHwCZvVuXbsp_dJAFRmXY0vhmb=w1919-h918?auditContext=prefetch" alt="Logo" class="h-10 rounded-lg shadow-lg">
+    </div></a>
+
+    <button id="menu-toggle" class="text-white text-3xl md:hidden focus:outline-none">☰</button>
+
+    <nav class="hidden md:flex space-x-4">
+      <a href="ai_gallery.html" class="nav-link whitespace-nowrap">AI GALLERY</a>
+      <a href="example.html" class="nav-link whitespace-nowrap">EXAMPLE</a>
+      <a href="https://truedo.github.io/zumi_mini_python_backup/" class="nav-link whitespace-nowrap">LIBRARY</a>
+      <a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=81&display_group=1" class="nav-link whitespace-nowrap">PURCHASE</a>
+    </nav>
+  </header>
+
+   <div id="mobile-menu" class="hidden flex-col items-center text-center bg-[#000C36] w-full py-4 space-y-10 md:hidden z-20">
+    <a href="ai_gallery.html" class="nav-link whitespace-nowrap">AI GALLERY</a><br>
+    <a href="example.html" class="nav-link whitespace-nowrap">EXAMPLE</a><br>
+    <a href="https://truedo.github.io/zumi_mini_python_backup/" class="nav-link whitespace-nowrap">LIBRARY</a><br>
+    <a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=81&display_group=1" class="nav-link whitespace-nowrap">PURCHASE</a>
+  </div>
+
+  <!-- 오버레이 (모바일 전용) -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden" onclick="toggleSidebar()"></div>
+
+
+<div class="flex">
+
+ 
+  <aside id="sidebar"  class="hidden md:flex w-64 bg-[#3B82F6] text-white p-4 rounded-r-xl flex-col space-y-2 transition-all duration-300 fixed md:relative z-40 h-screen md:h-auto top-0 left-0 md:translate-x-0">
+
+<div class="flex justify-between items-center mb-4 md:hidden">
+  <h2 class="text-lg font-bold">챕터 보기</h2>
+  <button onclick="toggleSidebar()" class="text-white text-2xl">✖</button>
+</div>
+
+
+<button id="pc-toggle-btn" onclick="togglePcSidebar()" class="hidden md:block text-white text-2xl mt-4">
+-
+</button>
+
+    <div class="space-y-2 text-sm sidebar-item">
+
+        <a href="ai_gallery_01" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">01 ITS 지능형 교통 체계</a>
+        <a href="ai_gallery_02" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">02 V2X 차량과 모든 것 </a>
+        <a href="ai_gallery_03" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">03 V2G V2D V2N </a>
+        <a href="ai_gallery_03" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">04 V2P 보행자 안전 시스템 </a>
+        <a href="ai_gallery_05" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">05 V2I 신호등 통신 감지 시스템</a>
+        <a href="ai_gallery_06" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">06 V2V 교차로 충돌 방지 시스템</a>
+        <a href="ai_gallery_07" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">07 DMS 운전자 상태 인식 시스템</a>
+        <a href="ai_gallery_07" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">08 Object Detection 객체 탐지</a>
+        <a href="ai_gallery_08" class="block bg-[#0845A8] text-[#ffffff] font-bold px-4 py-2 rounded ">09 Sensor Fusion 센서 퓨전</a>
+        <a href="ai_gallery_09" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">09 -----</a>
+        <a href="ai_gallery_10" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">10 -----</a>
+        <a href="ai_gallery_11" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">11 -----</a>
+        <a href="ai_gallery_12" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">12 -----</a>
+      </div>
+
+      <!-- 페이지 이동 버튼 -->
+      <div class="flex-1 flex items-end">
+        <a href="#" class="block w-full text-center text-3xl mt-4">↑</a>
+      </div>
+
+
+
+    </aside>
+
+    <!-- 메인 콘텐츠 영역 -->
+   <main class="flex-1 max-w-screen-lg mx-auto p-4 sm:p-6 md:p-8 flex flex-col space-y-4 md:ml-0 md:pl-64">
+
+      <!-- 사이드바 열기 버튼 (모바일 전용) -->
+   <button onclick="toggleSidebar()" class="text-white text-2xl md:hidden mb-4 bg-[#2563EB]/90 px-4 py-2 rounded">
+  챕터 보기
+</button>
+
+
+
+
+
+      <h1 class="text-xl sm:text-2xl md:text-3xl font-bold">9. Sensor Fusion 센서 퓨전 </h1>
+
+<!-- 흰색 상자-->
+<div class="bg-white text-black p-6 rounded-lg space-y-4">
+
+      <!-- 그림 영역 -->
+   <img src="https://lh3.googleusercontent.com/fife/ALs6j_HsGJp8Cf4S5pxd8KZKL0jm30fWGId6woXFNc6e_Rwjbs25_WAoZaUtpUbhq9O4eAA32FhAbBxX4wOroMgIb1PhKLvgNRWXcPG2JF0kembnGCQUOhTN7a2mx2blT6aFqdzm2xXPnnu7XyY_HZqDFrbtnADz5od2IbvVjMshmtMlGDh6p1tXvQdZFIpxzNobFzksIvO5ZVce7T5cDsTp8fCegb2M4bzDkdFFfqVOaaQMevRwpHerFaIMCGPxzu02OuCEbBvaiC4cIRjFEMzxuLTxqnwttDl6drsSpeRE6D4DVIyNCjHLjQfm_bUrlyyCxj0PT8WsRQe-AX2_pVmObqz3A7ecpU_zRukH1u_lTQIaYWKy8G6_8qaUp9nJbxE4NXbubursLpJZ6gXxZaaaoIhVLCD0Y05hCCgH6i4GfHzLK0MpgCvqDhLnKdhghqpDMYfO77PY4LF9T7NBFVVTZpkSkSqt4IRGNQfJ4zs_qVQvS4oe2DqSZWsLYG0yqeENWjx3_tK0fm2x2tI6VI4P0h0SxEUZC7LExZEZ3Cq8TgfoXUCdaPHHptvFQVJXGQQV6vDYRYw8PS9uaXWLWdQKv8906FTYnROG0FQ20-mawnZHP5V4nkxNqFg8v_kzLnwsXPh1STnxZ3Xc8npL8ZVRuBOCpJZMdwBHlprEWVqx-kP4kHA3YpXxIsbkWeyXn7qaWt0TFklrCjkyoLpQ3CIm1JtU4_mM09UiAJDUqveQys4RLh1yVwnYFGbqVcZB3QAe06eOeORZlYsqtmLg8vPvmTJa9NJ1E29iTTmBG-J8DIivP8Xhibjl8PfhhtztdyZLuIC_ByhP_w_O_dx1cIO4YsR7THyHMfqX_3KYvlbwg9QOFXWyyU79eFNZgLUawJt_3dWMymsiqB9psjiD9LwPdHQLb7AT5uo_PRVVsDNU68zJeVCm2da-nnbaBYOYP6z6fHvW64wpLBQ_TSIMYVi4Dedh5Md2zqiWHRgSU62tXLKZcKs6-5zFyIsH-YYVjCH8Kr--Oqr3C78WPWBPTIX-g3N3etmJmVMspqUgQcqf_R4Z4KCtvRAr0fpjFp0kQcDT4-baxwtiv1WUKft3qJPvVap_sytBetD3TOzhqXCRalkcNrLdUZujTAiKWV3E1mA9h1wrcafrY3If1jMKH8JUo7R0BNrpJF5cNHN_3OsU7JiSMDqwkGs1Wtmu1CB2gg3ZvP2QfT3L4nXfkY6s_fzlIOPmnXKq1TrOY-9nV85trP-_2eM6hbUrj4GdWapEOuCX00BY77NgRCKhuAIfGQJoq7Tky9ZKUnSH8NbyBi-Eqglx3UZ80k7EaQ6qWg_2AA74kT6z3t-NXnxbo2_Ab5MInmfOUCoVXbWZjhbbe_FFKYc6FdifYEoEWR0Z9DVh7BRLJkk1FpQHdroskATLoriCq2KIHt_OeZKU3fP6OaCINpWSHSPSPD0puUR0Cgy1pguSQJkcd6lqzKJK1IiOXqr-LNbW5b0oFtfLEZEzTI5w_NvSbALuOiRu_FxQcbjF_0__XyzjXZ5BoaRIrJAGRg4KQjnjopFcB8gpmN2gKjopIyhGr-yjHaP6Sl580q0ooWqNrBoc0Y5zo5VajOLz9QnUmPuXaTvlRCyQvryNHs7VwXH7O-keDyGwhtp4xIjPo5WD7XfSg2BPrcsxWw=w1920-h918?auditContext=forDisplay" alt="그림1" class="w-full rounded-lg ">
+
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : 센서 퓨전</p>
+
+      <!-- 설명 -->
+      <div class="bg-white text-black p-4 rounded">
+        <h2 class="text-lg font-bold mb-2">✅ 센서 퓨전 (Sensor Fusion)</h2>
+        <p class="text-sm">센서 퓨전(Sensor Fusion)은 자율주행차가 여러 종류의 센서(카메라, 라이다, 레이다 등)에서 얻은 데이터를 통합하여 더 정밀하고 안정적인 판단을 내리는 기술입니다.
+단일 센서만으로는 한계가 있는 인식 성능을 보완하고, 센서 간 약점을 서로 보완함으로써 신뢰도 높은 주변 인식을 가능하게 합니다. 예를 들어, 비 오는 날 레이더는 안정적인 탐지가 가능하지만 카메라는 시야가 흐릴 수 있으므로, 이를 함께 활용하여 정확도를 높입니다.
+<br><br>
+
+<h2 class="text-lg font-bold mb-2">🟩 센서 퓨전 기술</h2>
+        
+<p class="text-sm">
+<strong>1. Sensor Fusion (센서 퓨전)</strong><br>
+- 서로 다른 유형의 센서 데이터를 결합하여 더 정확한 인식과 예측을 수행<br>
+- 자율주행차, 드론, 로봇 등 다양한 인공지능 시스템에서 핵심 기술로 사용됨<br>
+- 라이다로 거리, 카메라로 객체 형태를 파악하여 상호보완적으로 인식 성능 향상<br><br>
+
+<strong>2. Multi-Sensor Fusion (다중 센서 융합)</strong><br>
+- 2개 이상의 센서를 조합해 객체 인식, 추적, 위치 파악 등을 수행<br>
+- 예: LiDAR + Radar + Camera → 차량 + 보행자 + 장애물 동시 탐지<br><br>
+
+<strong>3. Sensor-Level / Feature-Level / Decision-Level Fusion</strong><br>
+- Sensor-Level: 원시 데이터(예: 이미지 + 포인트 클라우드)를 직접 결합<br>
+- Feature-Level: 각 센서에서 추출한 특징(예: 경계, 거리, 속도 등)을 통합<br>
+- Decision-Level: 센서별 인식 결과를 최종적으로 종합해 판단<br><br>
+
+<strong>4. Probabilistic Fusion (확률 기반 융합)</strong><br>
+- 칼만 필터, 베이지안 필터 등을 활용해 센서 간 불확실성을 줄이고 정확도 향상<br>
+- GPS, IMU, 라이다 데이터를 융합해 차량의 실시간 위치 예측에 사용됨<br><br>
+</p>
+
+  <h2 class="text-lg font-bold mb-2">⚪ 센서 퓨전(Sensor Fusion) 적용 예시</h2>
+        
+<p class="text-sm">
+● 전방 거리 센서 + 카메라 영상 융합 → 보행자/장애물 탐지 시 자동 정지<br>
+● 라이다 + 레이더 융합 → 악천후 속에서도 안정적인 거리·속도 판단<br>
+● 카메라 + 초음파 융합 → 근거리 주차 시 사물 감지 정밀도 향상<br>
+● GPS + IMU + 라이다 융합 → 정밀 위치 추정(Localization) 구현<br>
+● 다중 센서 기반 객체 추적 → 주변 차량의 위치·방향 예측 정확도 향상<br>
+● 온도 센서 + 카메라 → 열 감지 기반 야간 보행자 탐지 및 화재 징후 인식<br>
+● 환경 센서 + 라이다 → 안개·비·조도 변화 감지에 따라 감지 알고리즘 자동 조정<br>
+● 사운드 센서 + 카메라 → 사이렌 소리 감지 시 긴급 차량(구급차·소방차) 위치 추적<br>
+● 바람 센서 + 라이다 → 드론·도심 자율이동체의 비행 안정성 확보<br>
+● 지자기 센서 + IMU + GPS → GPS 음영지역(터널 등)에서 보조 위치 인식<br>
+● 적외선 카메라(IR) + RGB 카메라 → 야간 주행 시 보행자·동물 탐지 정확도 향상<br><br>
+</p>
+
+
+  <h2 class="text-lg font-bold mb-2"><strong>🛠 주요 구성 요소<br></strong></h2>
+<p class="text-sm">
+<strong>1. 카메라 (Camera)</strong><br> : 2D 이미지를 통해 사물의 형태, 색상, 차선, 신호등 등을 인식합니다.센서 퓨전 시 시각 정보를 제공하며, 객체 인식의 기반 역할을 합니다.<br>
+<strong>2. 라이다 (LiDAR)</strong><br> : 고정밀 3D 거리 정보를 제공하며, 공간 구조 인식 및 장애물 회피 등에 활용됩니다.<br>
+<strong>3. 레이다 (Radar)</strong><br> : 거리와 속도 측정에 강하며, 악천후와 야간 환경에서도 안정적인 감지가 가능합니다.<br>
+<strong>4. 관성 측정 센서(GPS + IMU)</strong><br> : 위치, 가속도, 방향, 회전 등을 추적하며, 실시간 위치 인식에 필수적입니다.<br>
+<strong>5. 초음파 센서 (Ultrasonic Sensor)</strong><br> : 근거리 장애물 감지에 유용하며, 주차나 저속 주행 시 보조 역할을 합니다.<br>
+<strong>6. 적외선 카메라 (Infrared Camera, IR)</strong><br> : 야간이나 어두운 환경에서 사람, 동물 등의 열 신호를 탐지하여 시야 확보를 도와줍니다.<br>
+<strong>7. 환경 센서 (Weather/Light Sensor)</strong><br> : 조도, 비, 안개, 온도 등 외부 환경 상태를 감지하여 다른 센서의 감지 민감도나 판단 알고리즘 조정에 사용됩니다.<br>
+<strong>8. 사운드 센서 (Microphone / Acoustic Sensor)</strong> <br>: 사이렌, 경적, 외부 충격 소리 등을 감지해 긴급 상황 대응이나 주변 차량 탐지에 활용됩니다.<br>
+<strong>9. 지자기 센서 (Magnetometer)</strong><br> : 지구 자기장을 기반으로 방향을 감지하며, GPS 신호가 약한 지역에서 방향 보조 정보로 활용됩니다.<br>
+<strong>10. 온도 센서 / 열 감지 센서 (Thermal Sensor)</strong><br> : 전자 장비 과열 감지, 외부 기온 감지, 열 기반 객체 탐지(사람, 동물) 등 다양한 역할 수행 가능<br><br>
+
+
+  <h2 class="text-lg font-bold mb-2"><strong>🎯 주요목적</strong><br></h2>
+● 센서의 단점을 상호 보완하여 정확한 객체 인식 및 상황 판단<br>
+● 주행 중 다양한 환경 조건(조도, 날씨, 거리 등)에서도 신뢰도 유지<br>
+● 자율주행 판단의 안정성 향상, 오탐률 감소<br>
+● 복잡한 도심 환경에서 객체, 도로 구조, 위치 등의 고정밀 분석 가능<br>
+● 센서 고장 또는 일시적 오작동에도 대응할 수 있는 시스템 안정성 강화<br><br>
+
+</p>
+
+ <h2 class="text-lg font-bold mb-2">💡 예시를 통한 이해</h2>
+        <p class="text-sm">
+📍 Object Detection 예시<br><br>
+
+●<strong>보행자 감지 (Camera + LiDAR)</strong><br> 
+전방의 카메라가 보행자의 형태를 인식하고, LiDAR가 거리 데이터를 함께 제공해 보행자의 정확한 위치를 계산합니다. 이를 통해 차량은 감속 또는 정지합니다.<br><br>
+
+● <strong>차선 인식 + 차량 감지 (Camera + Radar) </strong><br>
+카메라는 차선을 인식하고, 레이더는 앞 차량의 속도와 거리 정보를 제공합니다. 이를 융합하여 차량은 차간거리 유지 및 차선 중심 주행을 수행합니다.<br><br>
+
+●<strong>정밀 위치 추정 (GPS + IMU + LiDAR)  </strong><br>
+도심 주행 중 GPS 신호가 약해질 경우, 관성 센서(IMU)와 LiDAR 데이터를 함께 사용하여 차량의 위치를 정밀하게 추정하고 경로를 유지합니다.
+ <br><br>
+
+●<strong>주차 보조 (Camera + Ultrasonic Sensor)</strong><br> 
+카메라가 주차 공간을 인식하고, 초음파 센서가 주변의 장애물까지 감지해 안전한 주차를 지원합니다. <br><br>
+</p>
+
+<h2 class="text-lg font-bold mb-2">1️⃣  다중 객체 감지</h2>
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_FjEtgwPm6FWnlrcbNvXsFvjMO8axkXu-sqQ7I6CzT9ngyJK8smqsz3O2MxwNU-33aQh4oTLimWGHN-QjhBPRdKJvQWDOKfNK0NcVamhEdzKKk0hvprMQQx6hM2uPlaHTRBGmW5hR1ozJyV-TGSvPPPADj1-CfBTQEqwlpj97sLlCX64_vD4g-HYV5M6lBDp6nGe3RwYba_rRHbNTYxe7fbBtDajnrDTAWxITtJe2oEDkC4vYhE7qAdhtm5Vmjk0gMDSWoM0_x65k1mgeCu-LjB4tDdfaHmi2EdY9B2l1hunPTu5tWXdyOyRJYm4FnTYUDmqPKMfMGLuy3llszHsVaY3iw9LZAhGVzNZyzMUwfJwn0szub6k3TsC_QW-3HPkZm4UbpxqSmp0CtPxefpt657XMJfrnbrUlHXndAuiyfHLHvA04Di3UM09esuwu23bT6Hc7-mO1DcRLx9mn2p5nFa8XkXocl6A7ri0it1NlWvIAZ69Ct7MR4NvtAvOmUvd6f1mxLk0vaHcxHnk4IK5jwK5WKUwEBApuGpl7mFmI2rlyyUPcPgz4JDtzj7mwZQzzNPWJ5J9Msyv156JPiBF3E7USGUMqEAIQDMSCjfOSn46kDiP4q5-cgENdgy8rqeN3Ve1MiqlbRs_in99S1_TXMWdtbtSQszjzTg_R7wCggDw67EUdiWkbG10rHJYPLwcCFkOz-7UZbg8uPC85GAtg45AEGNVmZnp6xBLtW_r691koO6l0dj9Agsp4WT_I9BfQGFPfVF8CmrOiCAKOyLYehMm6xWhlG7atRuiSHN0gmzABa__muFvoeEe7IvrzyqZAqOBLQEb88DStkX51PeYXSf7yl9Ex7Q_Hzpxg-m02e2NUg4kuGrtQvB14DJ4wEqK0bcJlAHQo-S7rqroRXiTf9w7_6kAYHJX7_tEMBEuOmiVosokJX_H23JrJDsgSJQlZKDK9ntxXcZDABjbhUkU8l-NvVlUd91_SVOmUxQcZ6bMGbI1itSIQIJk6K77yqd1Ggx5b5da81WItduz4xjkWGRLg21-mIatjDk12EnEZCyXgOxrjZvEuirWzdmYLZNIK0TaHodu9yrq06JPKTJ8Y6RlGRTglA66wCui9Qd5g9CyCo0ftBiTvYdTbmjNFHfeVDyu8xnAg6Xad77pou6zU8BJWNzCYtDXdFJ1JeZLsWQFSFUEDH7QGQ9rvpLKX4U_ws1BG3H_2ejdHydmseMwPcHobVWnJL9Pb1fuSX6EHHMbCTjM3zcmWBXkPkkzdWWwLKKhRtU9r-Ppy_uasNlz9TbeKuhIiYuD5P6dVMEpWZsEBG25vQOvEobT4IOetcy0_6x_6gjJs9W0bth2q7CTiIBq7ey5qvKebtZbxrGYkb3OsZ7bJM3dWVMF8PyG9M1pRl9Iikba5u2beEFr1ZoaJRgs5-6Zc78XpIiksXcBHllfJwVo0UE7CttlpkATjJIoMYJ7L4JM5_GkEIlkM2rTGvEAoiqhijxWU5WeTTGwplZaY2LUyfTC9aZWkUzYi8aNWikKuWtPmtd53o3ywF_sB3Qj4BwfnLByCVFiOKN-vJLCRV6SvPiayg8hReHN7Rc_hOz0OL9TuB18UNernKCn5sIHpt_SaZAGJ4vyt7UOY0IzvdvJIvdZr48DyHqkDfJ1lP-e3Y5JLnihw=w1920-h918?auditContext=forDisplay" alt="그림1" class="w-full rounded-lg ">
+
+ <p class="text-sm">
+<br>
+
+
+<div class="flex items-center justify-between mb-2">
+  <h2 class="text-lg font-bold leading-none"> 🟪 다중 객체 감지 (Multi-Object Detection)의 원리</h2>
+  <a href="https://drive.google.com/file/d/1gureHV7y5uL_KYiIUaNciWUJyinhyNsS/view?usp=sharing" download target="_blank" rel="noopener noreferrer"
+   class="bg-blue-600 text-white text-sm px-4 py-1 rounded hover:bg-blue-700 transition h-8 flex items-center whitespace-nowrap min-w-[120px] justify-center">
+오토바이 그림 다운로드
+  </button>
+  </a>
+</div>
+
+  <p class="text-sm">
+
+    <strong> 1. 자율주행 차량 ‘주미’는 전진 주행 중 전방의 카메라로 객체를 감지합니다.   </strong><br>
+    감지되는 Camera 객체 중 2개의 객체가 감지 되었다면, Camera 1은 보행자(person), Camera 2는 오토바이(motorcycle) 등 이동체로 감지 합니다.<br><br>
+
+      <strong>2. 두 카메라는 각각 촬영한 실시간 영상을 인식 시스템(V2N 등)으로 전송합니다.</strong><br>
+    이 영상 데이터는 프레임 단위로 처리되며, 각 카메라의 입력은 각각 독립적으로 Object Detection 모델에 적용됩니다.<br><br>
+
+      <strong>3. 사전 학습된 딥러닝 기반 객체 감지 모델(YOLO 계열 등)으로 데이터를 비교합니다.</strong><br>
+    각 모델은 이미지 속 객체의 위치와 특징(모양, 크기, 색상 등)을 분석하여 지정된 클래스(person, motorcycle 등)와 비교 합니다.<br><br>
+
+     <strong>4. 종류(Label)와 위치 좌표(Bounding Box)를 전달합니다.</strong><br>
+    비교 되어진 데이터를 중점 적으로 보행자(person) 나 오토바이(motorcycle)를 유사하면
+    해당 객체의 종류(Label)와 위치 좌표(Bounding Box)가 자동으로 추출되어 차량 시스템에 전달됩니다.<br><br>
+
+      <strong>5. 차량의 판단 로직은 두 카메라 중 하나라도 위험 요소를 감지한 경우, 즉시 제동 명령을 실행하여 정지합니다.</strong><br>
+    이처럼 복수 센서의 감지 결과를 통합적으로 활용하는 방식은 센서 융합(Sensor Fusion)의 일환으로, 단일 센서 감지 실패에 대비하고, 자율주행의 안전성과 신뢰도를 높일 수 있습니다.<br><br>
+</p>
+
+ 
+</p>
+
+
+
+<!-- 파이썬 코드 설명&다운로드 버튼 -->
+<div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
+  <div id="output" class=" flex-1 bg-gray-800 text-white p-4 rounded h-30 text-sm"">
+  <p class="font-normal text-white text-sm">
+
+
+
+<span class="text-orange-500">while True:</span><br>
+&nbsp; &nbsp; motorcycle_size = zumiAI.get_obj_size(name=<span class="text-green-300">"motorcycle"</span>)<br>
+&nbsp; &nbsp; person_size = zumiAI.get_obj_size(name=<span class="text-green-300">"person"</span>)<br><br>
+
+<span class="text-red-300">
+&nbsp; &nbsp;    # 오토바이 감지 및 크기 판별</span><br>
+&nbsp; &nbsp;   <span class="text-orange-500"> if </span>motorcycle_size > 0:<br>
+&nbsp; &nbsp;&nbsp; &nbsp;        <span class="text-purple-500">print</span>(<span class="text-green-300">f"오토바이(motorcycle)의 크기: {motorcycle_size}"</span>)<br>
+&nbsp; &nbsp;&nbsp; &nbsp;        <span class="text-orange-500">if </span>motorcycle_size > 8000:<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;            <span class="text-purple-500">print</span>(<span class="text-green-300">"오토바이가 가까이 있습니다!"</span>)<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;            zumiAI.play_sound(5)<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;            zumiAI.stop()<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;         <span class="text-orange-500">   break</span> <br>
+
+<span class="text-red-300"><br>
+&nbsp; &nbsp;    # 사람 감지 및 크기 판별</span><br>
+&nbsp; &nbsp;  <span class="text-orange-500">if </span>person_size > 0: <br>
+&nbsp; &nbsp;&nbsp; &nbsp;        <span class="text-purple-500">print</span>(<span class="text-green-300">f"사람(person)의 크기: {person_size}"</span>)<br>
+&nbsp; &nbsp;&nbsp; &nbsp;     <span class="text-orange-500">   if </span>person_size > 5000:<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;           <span class="text-purple-500"> print</span>(<span class="text-green-300">"사람이 가까이 있습니다!"</span>)<br>
+ &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;           zumiAI.play_sound(5) <br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;            zumiAI.stop()<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;      <span class="text-orange-500">    break</span>
+
+
+
+</p>
+  </div>
+
+<a href="https://drive.google.com/file/d/1DnHfPtJIip2nB8mXUBdvDcfLUmZyapiw/view?usp=sharing" download="example.py" id="run-code-btn"
+   class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto inline-flex flex-col justify-center items-center text-center min-h-[64px]">
+ <button id="run-code-btn" class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto">
+  파이썬 코드 <br> 다운로드
+</button>
+</a>
+  </div>
+
+<br>
+
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_Fr2soOt_7n4fIcgsBwR-MGnNIISvmjWrzQGg47s0ML8Zn3D0tu87bIqUkWGlDmmCGkdL93FR3UtNc-w_Vf8wdDahEKvaVVn50PHZ9EZqW1-4BFZmL2o3WjA1U3WAj75VVfX871kxWU5hEYUwmWJMglHCHlc2AdrJp6yLlK-rSB5yymyHoOqMS0PoXNp2zN2nGuwNjK2FtgWN54YsYDpTZgA2KVX23cI2hVpUtR_7hrPzxUp8br91OLmgtrVbSzY_nArLaJTCO3kwMd8anrGmbYEJKlcZCzuNPPk4g2LCvR6kF5mBjBBeAthgSVVjmOonE8NYgGQcRndLKmxq8hqahOKNTkXN0su9AJ2F2fSpN02Nj7FoHOkImCE7tANOpHBMvhBBCPw1MmTnppRm-ASQXebmjjPrMsjYSgYl7k408R5EkYBrvMtQZ5en9Q1CfxoQYpaYzSR8jL7JekVjOIor4_qF2dm8wm0PKeSYNnqSnawUA4Xyogo9laSibhJGwSXaTEbsflqbjiLVgBlSgVsWJ0t7t_fFaI9RWVAA0Z0tL5zvkds-CTyOqLwK_El8l8m5i6dKv-uq7qSfZs_5DFZzr7mGc3G9-1uGTQUZfDrQgwPHfZPQleb8dofr68hgWsoNpw9NwvA-YoTb-Lzbhl6FSF1W52na6UlwuNZJvQn-UUkEdUHzC7YkXAfwyXFt4_7j8diP0mGjFV6cJK16J9q6VRZGeZcRSxk9s69w47J9FzQz3OPFgfv_vZctrs31ImvEkjhWLM6_jLNS4vVe7ljXtBOIi_S88xpj_4SVBjHi8EdqgVcndkqVZVBrGZxYfn1OvPN3OnyEcqW72k4s8fD9UmvFYZBdKacvE0syKit2HtK_ETS7vQfZcVRQviGfuLRSFRCGatT7W86fF28Gfx_zkpyo0TUrlw9kgE0sPoLdjXpYVH0KuoyjcIEPUkLEArN5u5vM4SL84j8SkmsAEFmNF2ViNki7rEvlCf2NwPoUGcqSOqFVK3X9epr43GV0hFq_liU1uTsSJ4VBLe34p6okcsV92UHsbD_HcDxWSE8Au6OJ62NpQMzkYznzIX7fXQ-S4QV2ZBUkyiYFLjykLop_5wXYgmV_xxMt7sMVi7elU42lWuYZNaBdfRskB7FKu8NNK0lMmefNVnMxPXngRY9BrYtPLfxgkX8XMoMIVIsB85PplZIn64epV8XzrOrl_8wdP3lUTEaIDl1Y4Eu373u48d0STLIyJxrzDhlfNeiXyn50j3sFn8VucBfL7YiWxSZpxt6FmzU9MK_bKhulitBLIVuCNlAmJP3_THKqbSahDD26q-6RMes3qT_ir8NASY6E4zPvCuz44-0eZb6KXqdhsMNG0QMprfKYTw_ulE4jWbMk7D6CYrznLxapRfLggtz4oEZJNmAvrW1rMAf67YOUXlKH7UZbgig2Dy1EolbP6TImBpElVBV7vft9OQ74ffQzGVfRJQKoUsIzlOMkWNcMMzJP2NYUZ6yz-FXTGZvxNLliHiRFw7LBSszEl7R7a0QnS5xe0EfDptR2rA3_vxyhEU1fxOKFALNLmNu4Aysj79E9skPYVLd4T080MQq809utgnGzbXGmoPfAHb_pXT4JWsepASdgmfrADqZi6v1Fh_wbWOtNHidgchBHJsEZ9HDkc80bSQCJ9-=w1920-h918?auditContext=forDisplay">
+
+<h2 class="text-lg font-bold mb-2">🛑 프로그램 실행 시 주의사항</h2>
+ <p class="text-sm">
+● 이 프로그램은 실행 하자 마자 주미 AI가 무한히 전진 합니다.<br>
+● 따라서 실행 전에 왼쪽 그림 처럼 주미 AI 와 객체를 어느정도 멀리 두고 프로그램을 실행 해주세요, <br>
+● 정상적으로 동작이 된다면 오른쪽 그림 처럼 물체가 감지 되고, 정상적으로 감지 되었다면 주미 AI가 정지합니다. <br>
+●주미 AI마다 카메라 성능이나 감지 거리에는 차이가 있을 수 있으므로, 정지하고자 하는 거리는 각 기기의 특성에 맞게 숫자를 조정하여 프로그래밍해 주세요.<br>
+</p>
+<br>
+<h2 class="text-lg font-bold mb-2">2️⃣   다중 객체를 감지 하는 프로그램 순서</h2>
+
+
+  <p class="text-sm">
+
+    <strong> 1. Zumi AI 객체 생성 및 연결  </strong><br>
+    ZumiAI 클래스 객체를 만들고, Zumi 로봇과 IP 주소를 통해 연결합니다. 연결이 성공하면 로봇과 통신할 준비가 완료된 상태가 됩니다.<br><br>
+
+      <strong>2. 카메라 스트림 및 물체 인식 초기화 </strong><br>
+    카메라 영상을 실시간으로 받아올 수 있도록 스트림을 시작합니다.물체 인식 기능을 ‘balance’ 모드로 초기화해서 성능과 속도 사이 적절한 균형을 맞추고 물체 인식 기능을 실행시켜서 감지를 시작합니다.<br><br>
+
+      <strong>3. 감지할 물체 종류 설정</strong><br>
+    감지 대상 물체로 ‘오토바이(motorcycle)’와 ‘사람(person)’을 추가하며 이 두 가지 물체를 인식해서 크기를 측정하는 데 집중합니다.<br><br>
+
+      <strong>4. 무한 루프로 계속 물체 크기를 받아옵니다.</strong><br>
+    get_obj_size()는 인식된 물체의 영상 내 크기를 숫자로 반환하며 물체의 크기가 클수록 카메라에 가까운 상태이고, 작을수록 멀리 있는 상태를 의미합니다.
+예를 들어 오토바이 크기가 8000 이상이면 “가까이 있음”을 판단해 경고음 재생 후 멈추거나 사람 크기가 5000 이상이면 “가까이 있음”을 판단해 경고음 재생 후 멈춥니다.<br><br>
+
+      <strong>5. 감지된 객체의 크기 (size)</strong><br>
+    물체가 카메라 영상에서 차지하는 크기(size)가 클수록 물체가 카메라에 가깝다는 뜻이며 반대로 size 값이 작으면 멀리 있다는 의미입니다.
+그래서 프로그램에서는 일정 크기(8000, 5000)를 넘으면 “물체가 가까이 있다” 판단해서 멈추는 동작을 하도록 설계되어 있습니다.<br><br>
+</p>
+ <p class="text-sm">
+
+<br>
+
+
+   <h2 class="text-lg font-bold mb-2">3️⃣   다중 센서 융합 (Multi-Sensor Fusion)</h2>
+        <p class="text-sm">다중 센서 융합(Multi-Sensor Fusion)이란 자율주행 자동차를 시스템에서 두 개 이상의 서로 다른 종류의 센서 데이터를 통합하여 하나의 일관된 정보로 재구성하는 기술입니다. 이를 통해 각 센서의 한계를 보완하고, 보다 정밀하고 신뢰도 높은 객체 인식, 움직임 추적, 위치 파악, 주변 환경 이해 등을 가능하게 합니다. 예를 들어, 카메라가 제공하는 시각 정보와 라이다의 거리 정보, 레이더의 속도 감지 데이터를 함께 분석함으로써 차량은 다양한 상황에서 더욱 정확하고 빠르게 판단을 내릴 수 있습니다.
+</p>
+<br>
+
+
+
+
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_GHMptANPJwSPPusDwhnB77ftwICAVVApDVV93O6_UyMwu7MK4ccp5g2lHtMeP9X3c5VcXfM2RgvB0K8tHKG8H-6687WfsJe0wnJnqy_njrXrNH5GtoB9AvFXIc3z02gcEaU-zWctD-QvbwPz_RBuxT8MOFuk4y4m2lWPRdJ8P2PmroMuzzqwPL_TyzWrho6gyBEgldyofgkBQ3tt7cA6J5QG4DHtpYyjqE5_WMtM0qCI9jGRIK86EzTtMiv5LcanrPEq6nVCqIQCv9QtHOdLnkXgrQjFHjLC5cYupydIEBy8fcDHdLA8yZHR2Gv5AVkHhysYq0tHzP1jPh2QHRB4WWU9H-b-kPV3TBTx6_iA353xJAlEqwfvmX6Cd5UIHb2rpt4R6rFjyHLIwqxiYPDfL5mOgFf1pf3THkZn3DT3MOKr55WZOdiXE_0j3PRvFGUjot_jjZ_BPry8vqOUijNYm7ldeLti7PDiRS7aLnTLBBtfElNMnwI9d7Rfokr6vU_FcKtaRdGkBe2ZlM6wA2pFzaOmCzZ45xJW73lsQ7JKVU7VD7tBM-GdcoLTEYL5XRamClevAeF5K8gqSMWpb8KnHh5U4BsBika6Kag4o-H0yR8mnyr_MEORGSh7bGxMa6KN7QjvA-UK6Q3P_fT_yNUb0ydAJ22JiIHeTFw-wL5b_EDPBprFCZHXN98LnuubmxLeQGGkhmsy943Xp2CF-BlOET5S721ty4RB_FFINifJwR0YKQDDlj21Od0eO68bfXurpMtfxFzwwucFXvRh5rRrmiNHdrpXGNWWlxJspFwuti9iiTjDYX0rB8VLDtjHiSLoBkB91OzGz97guko1x7GaDOI6GhLWXPTDxCUYG1ViJTRYUN6uxq6XjyfR3WGb8dpiuN9OdcUQb9K8OI-00kM4Rd7P242KmvbdpcbsDOtfSCpLc37kDx9LzP42DieUw6xIRiBU62S3UdE380r7PXsHmnNE1RS-zdAyxEe3PdQ7eAftyotsTjzgV--crJ3_1G74aNWvvDh3v26Q-Yzk06f9jgndMwvMvPFkoWPjdMFOlqMK20SMIGgNEv2SbFOVtprog8KoR6TNpCCTMPjHer17yGk6Fy9r8YsdPDWb82y02ilBn_Q59kYj7iBxJrL2t1KOQBmYSXo6_yO8NdvCMdzqf1H3DEz4rR4rVIWwqznF33lXRrRbQPaOXrk5Ae9jkqAYdRg3382vMPHqak149QtBLFtuOEW_zIsjw01g-3QHkN_CpTXDD4HGVMwdWWjw6s3hozr0HEAT1Wv1C6uTVBzF9IZjPN5VeMKXQ18FUE8sgawe-TV0mOxronKtJyK1H_jZTSPYKgoPRRG1P4p5ZEr3Ff4undXMhloUCZ4moDZasU-ifoN93LHjKmI5tiu62cmYHgOnIRwB4XXdAVCoXPqd_0G6hrwl_-0Oqg_qcykpTSoheZCUBGfuv5VVHUk2s_aFuvCM5tqXKlAbZnSwOh_V95IKiGlSuQmfJCA1e1VqTlSf1JY_ya8YHohuHrmz52WplBxdv-8HcYCE18YUggvMQjDLwq4kI1WdJU5L4uD_yfIJ6hu6kj_DaGAuUhrxEhfyL1YaBtIGJPk2pwRJXY0PxTBotaTumXy8gqcjUpjeNhwg_TSCFLWdpyuLc-4O7gBkMpSB6xJ42BKQ=w1920-h918?auditContext=forDisplay" alt="그림1" class="w-full rounded-lg ">
+
+<br>
+
+
+<h2 class="text-lg font-bold mb-2">✅ 주미 AI 기반 센서 융합 예시</h2>
+        <p class="text-sm">
+<strong>카메라 영상 융합</strong><br>
+● 기능: 영상 데이터를 기반으로 객체(사람, 오토바이 등)를 인식<br>
+● 활용: 사람 또는 오토바이 감지 시 자동 정지 기능 활성화<br><br>
+
+<strong>전방 거리 센서 (예: Radar, 초음파 센서 등)</strong><br>
+●기능: 차량 전방의 물체와의 거리 측정<br>
+●활용: 전방에 물체 감지 시 자동 정지 기능 작동<br><br>
+</p>
+
+<h2 class="text-lg font-bold mb-2">🎯 결과</h2>
+<p class="text-sm">
+    다양한 센서의 정보를 결합하여 보다 정밀하고 안전한 자율 주행 구현 가능<br>
+    상황 인식 능력 향상 → 충돌 방지, 보행자 보호, 운전자 안전성 확보<br><br>
+</p>
+
+
+<!-- 파이썬 코드 설명&다운로드 버튼 -->
+<div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
+  <div id="output" class=" flex-1 bg-gray-800 text-white p-4 rounded h-30 text-sm"">
+  <p class="font-normal text-white text-sm">
+
+
+<span class="text-orange-500">while True:</span><br>
+&nbsp;&nbsp;     <span class="text-red-300"># 객체 크기 감지</span><br>
+&nbsp;&nbsp;     motorcycle_size = zumiAI.get_obj_size(<span class="text-green-300">"motorcycle"</span>)<br>
+&nbsp;&nbsp;     person_size = zumiAI.get_obj_size(<span class="text-green-300">"person"</span>)<br><br>
+
+&nbsp;&nbsp;     <span class="text-red-300"># IR 센서값 가져오기 (전방 왼쪽/오른쪽)</span><br>
+&nbsp;&nbsp;     left_ir, right_ir = zumiAI.get_IR_sensor_front()<br><br>
+
+&nbsp;&nbsp;     <span class="text-red-300"># 정지 조건 확인</span><br>
+&nbsp;&nbsp;     <span class="text-orange-500">if</span> left_ir < 175 <span class="text-orange-500">or </span>right_ir < 175:<br>
+&nbsp;&nbsp;  &nbsp;&nbsp;       <span class="text-purple-500"> print</span>(<span class="text-green-300">"전방에 장애물 감지 "</span>)<br>
+&nbsp;&nbsp;   &nbsp;&nbsp;       zumiAI.play_sound(5)<br>
+&nbsp;&nbsp;   &nbsp;&nbsp;       time.sleep(0.1)<br>
+&nbsp;&nbsp;   &nbsp;&nbsp;       zumiAI.stop()<br>
+&nbsp;&nbsp;   &nbsp;&nbsp;      <span class="text-orange-500"> break</span><br>
+
+
+
+
+</p>
+  </div>
+
+<a href="https://drive.google.com/file/d/1mx9T09fJ-3o0TTVRwykil3dsW0uuri9x/view?usp=sharing" download="example.py" id="run-code-btn"
+   class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto inline-flex flex-col justify-center items-center text-center min-h-[64px]">
+ <button id="run-code-btn" class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto">
+  파이썬 코드 <br> 다운로드
+</button>
+</a>
+  </div>
+</p> 
+
+
+<br>
+
+ <p class="text-sm">
+
+
+</p>
+<br>
+
+   <h2 class="text-lg font-bold mb-2">4️⃣  센서 융합 비교</h2>
+        <p class="text-sm">단일 센서(카메라)보다 카메라 + IR 센서를 융합한 다중 센서 시스템은 다양한 환경에서 더 안정적이고 정확한 객체 인식을 가능하게 하며, 특히 사람, 동물, 오토바이 등 열이 있는 객체를 구분하는 데 매우 효과적입니다.
+</p>
+<br>
+
+
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_HpwpeVFNiOrVQ3PQwQXfyMZwCjYFDS0ClwNu-x3dLLlPQ4ptjr-XDKIaZ86EXStfq-LXFUOheYy7PT0U6fhYZr_l7qU3zp-rDcp5oQNNXQB9bHC0IGqFnzBWjC6JDPn-yYuaIlWFG67U_EPfsKKz9Mkym5kLhuRJ0sjg1FzwzjiF-epBMbT2OqL1902XEUe4l6iE60afb4GjQ0-oimh0o7teMl3Yl7__YVVQwvPbKV0cJfrJiTp0YuHK5KKJ1hJm83JginUE3KIKTLDxsn7rWhjrl3VJ2nKHwfb1WPkFPjhzP57g2F1e9PHgtWB-FsBXMY5VpcL7ls1uTARMvZOW5kyDaWajIJJ__lQJIl5dxne2CnEnjwV-1gM-TZ_ScfEQBVPh9SZ7RdlbnEWxMN1SQlDcE2rkH9aeQ8vaKuc-MLZshoa3O7IWPn1qwgBPsWeF3zCbrwyGcSmYiYQYKNHwju7ta-6JRFvE8ox8ZICjZF9QUVU3jMDheV_BB4kWTrUQ_fi_9bQ0lFzSVJBZN9t8NzuJu9U67iBzIGCYlb-yxmRyhfX937-KKXVp0zd6mL8272-jv778LMJVFti7Zu1Oxf3l9pt5ckUJdN41sNt0K4zk6XnYPlDfoQloHEgdgY3uQ0qjIogFyuxglQ1Tq9eDXmU_6sZJmu4gkZMlwpmepe-RXjcLeS0Wqpjq73VPy70wS_cs10n3fBy5JopcI-FiYwfg9dHcAKkigviDAHZRxnq4tebRBgTEcrHYFa4F9r1-psb7o2-bCy54rPkAlTu7Qvfi4Uw-9TzoX-vdlCiruyJAPWZoAcBsOnBnxZFkIZ1YdXOxx-Xbz114TkI_s49sfpM6g-jsFixSL5RQySvvDPrw7-yP9z_tUlEn_lE4h89TDMSZu65ZS2nDEzhNW36CtqlbxwNIQiOEh2sicamG60cEU0wvHcr9b3Mws0KF32wQC5A1qdgOHPpDHUz6BRlSnWRKcY05h6BjIrDPbxUSjc6Ye6F0KBKHiIXSeZLz8hTSXoOQxn5xeVqs8ig_BBlFly402fyLRKA5oMNBqqPgbPWeltTHU4XE8MwuHthiKSqvqKSbWZo7owSzjIpZHbSbQmbnG-xURITrNnP9d9vQhO7xB7CaA-L2vik4QMvRr6o_hHc8WAmckwPxXlWMurgU-ecdfi6EuRZDQa6kFXHou_OMRZnC2hn2lqZSnLzzgEg0Itn55H1HRvaohNLVgNVWp39AlQQB21KfxyQybCorTeVZrflL3s20i00BYZwXkQ_0TZtKUcsTXfzk54it73fi9y5CdSGS-Kqetf7WkxZwawWLnmP628g8PYWIoKCxFFPzWVI8ZAoEtmY3_sXP2QamGspFZJQoPW5BVOQeuEBhduQonkZ_PH5z0ncj-VVNgOPtKm-MjfcTuA4XeUYIG9hLrql7Fc-SF6fVsOEsaG3Mxs-AOYtlwRyzqB_kP424qYFBspIbkmA0o_UK1geDtn5tkBo2eIYhuspEoPROq8cDUwF9we_kY-xT6rwUKvD-KZENy2EDJ89wTI-rMUL-tsKPILik8bKtyn2qO53kD-o-sh12o60DiDIJ5JjSBgdAsTLPkPtfGD-kLQWs1ENk_ElE96qiJjEAAVVq20mlf-sEMhv2hMoBUYZqRcH9pfQi68KfVSeMF7MBhFBg=w1920-h918?auditContext=forDisplay" alt="그림1" class="w-full rounded-lg ">
+
+<h2 class="text-lg font-bold mb-2">️📷 카메라만 사용한 다중 객체 감지의 한계</h2>
+<p class="text-sm">
+- 조명 의존성: 어두운 환경, 역광, 야간 등에서는 객체를 제대로 인식하지 못할 수 있음<br>
+- 피사체 혼동: 배경과 색이 비슷하거나 빠르게 움직이는 객체는 인식 정확도가 떨어질 수 있음<br>
+- 온도 정보 없음: 카메라는 사람과 사물의 온도를 구분할 수 없어 객체 구분에 제한이 있음<br><br>
+</p>
+
+<h2 class="text-lg font-bold mb-2">️🔄 카메라 + IR 센서 융합 (다중 센서 융합)의 특징</h2>
+<p class="text-sm">
+- 어두운 곳에서도 감지 가능: IR 센서는 적외선 신호로 열을 감지하므로 야간이나 조도가 낮은 환경에서도 사람, 동물 등의 열원을 감지 가능<br>
+- 객체 특성 구분 강화: 시각 정보(카메라)와 열 정보(IR)를 결합함으로써, 사람과 배경 또는 물체를 더 쉽게 구분<br>
+- 감지 누락 감소: 카메라에서 놓칠 수 있는 객체도 IR 센서가 보완<br>
+- 다중 객체 인식 정확도 향상: 같은 장면에서도 중복된 관점(시각 + 열)을 통해 더욱 신뢰성 있는 감지 가능<br><br>
+</p>
+
+
+<h2 class="text-lg font-bold mb-2">️✅ 다중 센서 융합의 장점</h2>
+
+<p class="text-sm">
+
+
+<strong>1. 센서 간 약점 보완</strong><br>
+        각 센서는 장점과 단점을 가짐<br>
+        (예시)<br>
+            카메라는 색상, 형태 인식에 뛰어나지만 어두운 환경에 약함<br>
+            LiDAR는 거리 측정에 정확하지만 날씨(비, 눈)에 민감함<br>
+            Radar는 악천후에서도 작동하지만 해상도가 낮음<br>
+            → 센서 융합으로 이러한 단점을 상호 보완 가능<br><br>
+
+<strong>2. 정확도 향상</strong><br>
+        다양한 데이터를 통합 분석함으로써 객체 인식, 거리 측정, 위치 파악의 정확도와 신뢰도 증가<br>
+        (예시) 보행자 위치를 카메라로 확인하고, LiDAR로 거리까지 파악<br><br>
+
+<strong>3. 강인한 상황 인식</strong><br>
+        날씨 변화, 조도 변화 등 다양한 외부 환경에서도 안정적인 인식 성능 유지<br><br>
+
+<strong>4. 실시간 반응 및 판단력 강화</strong><br>
+        융합된 정보를 기반으로 시스템이 더 빠르고 정확한 결정을 내림<br>
+        (예시) 사람 + 거리 정보 → 즉시 정지 명령 수행<br><br>
+
+<strong>5. 자율주행 안정성 향상</strong><br>
+        주변 상황을 더 정확하게 이해함으로써 사고 위험 감소<br>
+        자율주행 시스템의 전반적인 안전성과 신뢰성 향상<br> <br>
+
+</p>
+
+
+
+<!-- 흰색 상자-->
+</div>
+
+    </main>
+  </div>
+
+
+
+<div id="toast" style="
+  visibility: hidden;
+  min-width: 200px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 10px;
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+"></div>
+
+
+
+  <!-- JS 스크립트 -->
+  <script>
+// 별 반짝반짝
+  const numStars = 80;
+  for (let i = 0; i < numStars; i++) {
+    const star = document.createElement("div");
+    star.className = "star";
+    star.style.top = Math.random() * 90 + "vh";
+    star.style.left = Math.random() * 90 + "vw";
+    const blinkDuration = (Math.random() * 3 + 3).toFixed(2);
+    const moveDuration = (Math.random() * 20 + 30).toFixed(2);
+    star.style.animationDuration = `${blinkDuration}s, ${moveDuration}s`;
+    star.style.setProperty("--dx", (Math.random() * 20 - 10).toFixed(2));
+    star.style.setProperty("--dy", (Math.random() * 20 - 10).toFixed(2));
+    document.body.appendChild(star);
+  }
+
+  // 모바일 메뉴 토글
+  const toggleButton = document.getElementById("menu-toggle");
+  const mobileMenu = document.getElementById("mobile-menu");
+
+  toggleButton.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+  });
+
+  // 모바일 '챕터 보기' 버튼 토글
+  function toggleSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    const isHidden = sidebar.classList.contains("hidden");
+
+    if (isHidden) {
+      sidebar.classList.remove("hidden");
+      overlay.classList.remove("hidden");
+    } else {
+      sidebar.classList.add("hidden");
+      overlay.classList.add("hidden");
+    }
+  }
+
+  // PC용 사이드바 토글
+  function togglePcSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const pcToggleBtn = document.getElementById("pc-toggle-btn");
+    const isCollapsed = sidebar.classList.contains("w-16");
+
+    if (isCollapsed) {
+      sidebar.classList.remove("w-16");
+      sidebar.classList.add("w-64");
+      pcToggleBtn.innerHTML = "-";
+      const items = sidebar.querySelectorAll(".sidebar-item");
+      items.forEach(el => el.classList.remove("hidden"));
+    } else {
+      sidebar.classList.remove("w-64");
+      sidebar.classList.add("w-16");
+      pcToggleBtn.innerHTML = "☰";
+      const items = sidebar.querySelectorAll(".sidebar-item");
+      items.forEach(el => el.classList.add("hidden"));
+    }
+  }
+
+
+  </script>
+
+</body>
+</html>
