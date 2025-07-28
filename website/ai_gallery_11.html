@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>11. Sketch Learning 스케치 학습</title>
+
+  <!-- ✅ Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    #map {
+      height: 500px;
+      width: 100%;
+      border-radius: 0.5rem;
+    }
+
+  body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #010415, #000C36);
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+    }
+
+  body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; 
+  background-image: url('https://lh3.googleusercontent.com/fife/ALs6j_E782PyIFMYtfVVTWKJmz-NPOAMoNGyICJBadA4s8rszXoBW1pdOjGqEGLaJ6a0MTRkxoIZda-w1eEBdzmu7NpqU9QlaUX2XQY5BKLHSPbORtCE87IE3XMTnbsdNUIM2QDvRB41vYEKbzD3Y6bCsxXuLgblYo45APBATItrnaPs5SkcXeu9aMFuO8Q6kvoPorMCwyAObsM39R5G5_E_Ny4k4oc1IHZfhdJELCCBFT-uuiQtWHXXxmLmcqqCFV36Yub3GZcoAkilshppk0ij1iotqUM9Nk4fNUjg_HSqeXi7yzrZ4gofhiS8xQebPOsnnYHgk3L0SCghkoc6qFYFWAscDbY3J-T3eetqtbXbB6-v3GNFW7xti1pcvNbgLjZtRsaIGJynrnsWED8AUXQRHCk3EmYfxA0gY4wsBe-hWeGJZY9cofd4gEbj7ievulF49GZV7LRbry0cXnDZVSVQYrNcc8oxBM5UvAhNouLXYIJXJ1_XrT67zlzLmaWFvgQQjBnnk2oQX60UerK8qSGRhQ8Mmezkv_cMpiU9M46f8t9rwWVhsknkIxzWOEJEmq9ZT1gDIu8pJuJ3u-S9ZLVvKY8HBMqd09aJxwQfKpdcmEqOn2DjZJ5Ia6EDnV0d-41bYyXz0oZOcs1sDV1vh9Ecz35P12FNqpPjzcYZKRLxGdGyygvDYaACaFqHkqaXrW9pE58AAlqvnBmeyNW8NlG2c52S6Q2lsdbBpAWcXQp0iswofLRMi6Wd-Q1B6UUdMXZhyEAdOtiCngRDzpx8RasWmW-9ZMSqnwvl3B9eB113R5jXh6ZB_0eNjO20SZXZn1XEZP-iD0C0qZgHA_-dVp38zoiT-RutNUwTPiG22-Ff6w_JWic7E1tYgOgMCGWjKDdEbHZW3GB3zXyBrnyH81_8oPGApy1vjOa8_pqZS5jyX9PFbODsrQdPRwq4xTMYsW6OTvG08eM96O2lOThJ5PzHxrOYSpOR-kVKLM7VBUbQHPYq36ECuFUY3kDA7yyMnVm4WWMlU3vS0aguTUUva3CAskP6V8difKwvTNgeKae8dGv44TUtEHGvLjk1eWiBrThOEBpik5XOrt5Y_2d8YnWvbymfdh1QdqeU9o0yxC0tVQBDuGDjkfNVsETEGIK9Sy6ZHBOlQjElWxhelqVv6CaiKM8hKEtfTQoJAgJsgboz_5VGUU3hye0xJY18dQ0bQ23jPDl__tjztKa64n8Hw4BzvKDG_cP0J-1h-m3C9COokR6tTEWSzUyRtK98vafvKmkM8Jw_o9UnoxEN9dbo50aKeD88MUKYso3ijwz-H5DNJHK9wNhgnp2Yn3WkVR_ZtlQpfOcJO3hNmCVOGJDdZ9g3gUBDjQXFg1I_Ww7Wc636ttmFKGDuYeNvyyiwLCmXtbmVhkT29p2M-k4_CQZKh-nDzkUlD-B3oXw4DQr7qr9qXEPX7zFqi0KW521Bynrl2z_NP5nf-AWAun8hnjrpdxoedpcLYra9Qqw-7Qz2gptYkn1FBtRCdTMKEWvYiHlOcruhXC1PSTfyHahNxdVaNkhfDtfnF7LZu0NSlx-JOcMtigLfj8iGGneEDJMB3HlA674Hv6s2MoVnxU5E6x71lqwuC0n2oX5H8BRUx0IiOn40i9TcbEPpzDSwPR8hk3fyLQ0_LiReswY0HUhPAA=w1919-h918');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.5;
+  z-index: -2;
+  animation: flickerOpacity 6s ease-in-out infinite alternate;
+}
+
+
+
+    .star {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #00B0C8;
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: blink linear infinite, move linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes blink {
+  0% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
+  100% { opacity: 0.3; transform: scale(1); }
+}
+
+
+    @keyframes move {
+      0% { transform: translate(0, 0); }
+      50% {
+        transform: translate(
+          calc(var(--dx) * 1vw),
+          calc(var(--dy) * 1vh)
+        );
+      }
+      100% { transform: translate(0, 0); }
+    }
+
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      background-color: transparent;
+      text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff;
+    }
+
+    .neon-text {
+      text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+      animation: neon-blink 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes neon-blink {
+      0% {
+        text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+        opacity: 0.3; 
+      }
+      50% {
+        text-shadow: 0 0 2px rgba(255,255,255,0.5), 0 0 5px rgba(74,144,226,0.5), 0 0 10px rgba(74,144,226,0.5), 0 0 15px rgba(74,144,226,0.5);
+        opacity: 0.6;
+      }
+      100% {
+        text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+        opacity: 1;
+      }
+    }
+
+@keyframes flickerOpacity {
+ 0% {
+    opacity: 0.4;
+  }
+  30% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.1;
+  }
+}
+
+    .auto-image {
+      width: 600px !important;
+      height: 400px !important;
+      object-fit: contain;
+    }
+
+
+
+
+  </style>
+</head>
+
+<body>
+
+  <header class="w-full flex justify-between items-center px-6 py-4 z-10">
+    <div class="flex items-center"><a href="index.html" class="Logo">
+      <img src="https://lh3.googleusercontent.com/fife/ALs6j_FpAj7oMETlep3fCBHYuZGq6DWoc60B49wnyNHOTMWS4llCaS_Dp1WLetK1BMHmti4aHnoIXtcVTmgJozC5-VcrBMfRf_pmuzJwULdG9kDt6CALW-P5LRQI_XsXKEB9aJKmDaYTl6V1QaFdPJVpK5YNQBhlW2jdI_AuDvDA78CfUZ-unq3YrNsIHtalQg-UUQQ_3xPZT6uK4tsd1fLzGhG0-axfqtU9jKSbt_DqT5C0fbHcHdA3TFXzaC0PIVtdZWE7pevMcpAkE5GGH6e1RZ1Xa3bQVi4p-EefrONX0wqt1oGD9YFE6g6o6wYkUcyMgwmiAqyMLo4jUDkjfr2tQ_RAiu88W1AgAPtCm8VPp8iQqHsxxdJkEg-OM4kWXs6BhcT1HaUk-uyhd6V3u6qeaAugGSjTgzOhJE8_WB-Kg0_EMceh1aUtKxsKF6sL2s9SYoiBPeodHQZ_JOfPgfrJ9saqwzS1c12GHZQPA9214h2jB3B342DTmtnI3Kjke9ZACcerZTGmgs8r-M-KXZfaW3GGrMeGyuNiunkLZPpoaonQfsVmr1bTddKvcd2CIDuynW_IrFk8mGF7QWfEPunNbCRW5giSKO7G24DSsZxBI9z6ZKUTYc2yIVUMe6lvPUn0fiBncb1DvPN5KwQ-wo-085B42dWoe4A608RY0V0Zw7HX5z3nAqlMGoaugV4hlbRr4AM-utqOfrMeX_L1WyndUfUbzdAvb567Wm1lFLvBp68eP4SyQlwKolfA46zTPuSnYdIQZqeyQBz-k7LGf_KYqjdYJgQxs98ug55nA-K9l_S9JERHaBVe8f1WwxzDyLJyrS84EZFy8DeW113a6osXVO-appgYVBiLOwuxAiAMfLiOhHI6vnxaLm0_XnvRl-grtv4-B9wovOeAwWWJ53EYN-OvVwAKIrzORek9zZNaVE7ZdtHbO4fJ5GHKL6pGx8e45NdnMfBaPqLLUZvfY-lHnTfkxlNkauTHtsghHHd1IOtCREO-9sFepHhsZdyonnEyoOdfcDEIUUynaqkB9nJ6LRnTREJ57v2eKtxlRyczJVcMYAePf7iScHkDM8SXFKLbAzfXff9lBiZzqUXzpMW5wTiDb7YhHdCVFQzO48HMtmbHuegn7qYh1DDNbhzzFj1mjuadOJx1k5ifcrOCc-gaAQZTAOYSfddaqn2X1ISnpK326an-GOJ5NROtbwwXmpSApWXVR1S3te51R8E8YdGR4MIl_A3PoawJbN5OGh2BoPrrRuwxESmk5BbUtxjRagSnhCaAkOZ2pHzjL7kyYpCK6zfAgDfRKwFhU6UXddvgKIkcUkH-LgFj4-2IHb4AKILBiHIRcoImi8qHz-KvtxPTQMVUbUf44V1Lwqv6-JemKVzmGy8ZUJPaexdRtfJ1dwrNmm6K1otLVn7TKePyOS6UaD4FSxavVGJMijJNXZBXKA5OzU-ZP9h60Dil3L26hrte0m2ioVhqV_r5dBxmNhchgw8kyaaFomXDRYgj1nW9Ja5YMUOacyTc3Ms0icahuF3vUm25sjH4H8rjWGBUYKXIlM-K-QWrpRDD6HW5m5FzIlt_nNVirFunkfenUXCNEhJVg-khcWOEd7YEvbmk50xjUsAldDIUIsQ6t_qbEvAnM88NBSPLOOLHwCZvVuXbsp_dJAFRmXY0vhmb=w1919-h918?auditContext=prefetch" alt="Logo" class="h-10 rounded-lg shadow-lg">
+    </div></a>
+
+    <button id="menu-toggle" class="text-white text-3xl md:hidden focus:outline-none">☰</button>
+
+    <nav class="hidden md:flex space-x-4">
+      <a href="ai_gallery.html" class="nav-link whitespace-nowrap">AI GALLERY</a>
+      <a href="example.html" class="nav-link whitespace-nowrap">EXAMPLE</a>
+      <a href="https://truedo.github.io/zumi_mini_python_backup/" class="nav-link whitespace-nowrap">LIBRARY</a>
+      <a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=81&display_group=1" class="nav-link whitespace-nowrap">PURCHASE</a>
+    </nav>
+  </header>
+
+   <div id="mobile-menu" class="hidden flex-col items-center text-center bg-[#000C36] w-full py-4 space-y-10 md:hidden z-20">
+    <a href="ai_gallery.html" class="nav-link whitespace-nowrap">AI GALLERY</a><br>
+    <a href="example.html" class="nav-link whitespace-nowrap">EXAMPLE</a><br>
+    <a href="https://truedo.github.io/zumi_mini_python_backup/" class="nav-link whitespace-nowrap">LIBRARY</a><br>
+    <a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=81&display_group=1" class="nav-link whitespace-nowrap">PURCHASE</a>
+  </div>
+
+  <!-- 오버레이 (모바일 전용) -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden" onclick="toggleSidebar()"></div>
+
+
+<div class="flex">
+
+ 
+  <aside id="sidebar"  class="hidden md:flex w-64 bg-[#3B82F6] text-white p-4 rounded-r-xl flex-col space-y-2 transition-all duration-300 fixed md:relative z-40 h-screen md:h-auto top-0 left-0 md:translate-x-0">
+
+<div class="flex justify-between items-center mb-4 md:hidden">
+  <h2 class="text-lg font-bold">챕터 보기</h2>
+  <button onclick="toggleSidebar()" class="text-white text-2xl">✖</button>
+</div>
+
+
+<button id="pc-toggle-btn" onclick="togglePcSidebar()" class="hidden md:block text-white text-2xl mt-4">
+-
+</button>
+
+    <div class="space-y-2 text-sm sidebar-item">
+
+        <a href="ai_gallery_01.html" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">01 ITS 지능형 교통 체계</a>
+        <a href="ai_gallery_02.html" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">02 V2X 차량과 모든 것 </a>
+        <a href="ai_gallery_03.html" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">03 V2G V2D V2N </a>
+        <a href="ai_gallery_04.html" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">04 V2P 보행자 안전 시스템 </a>
+        <a href="ai_gallery_05.html" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">05 V2I 신호등 통신 감지 시스템</a>
+        <a href="ai_gallery_06.html" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">06 V2V 교차로 충돌 방지 시스템</a>
+        <a href="ai_gallery_07.html" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">07 DMS 운전자 상태 인식 시스템</a>
+        <a href="ai_gallery_08.html" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">08 Object Detection 객체 탐지</a>
+       <a href="ai_gallery_09.html" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">09 Sensor Fusion 센서 퓨전</a>     
+        <a href="ai_gallery_10.html" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">10 HAR 인간 활동 인식 시스템</a>
+   <a href="ai_gallery_11.html" class="block bg-[#0845A8] text-[#ffffff] font-bold px-4 py-2 rounded ">11 Sketch Learning 스케치 학습</a>
+        <a href="ai_gallery_12.html" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">12 Teachable Machine 인식</a>
+      </div>
+
+      <!-- 페이지 이동 버튼 -->
+      <div class="flex-1 flex items-end">
+        <a href="#" class="block w-full text-center text-3xl mt-4">↑</a>
+      </div>
+
+
+
+    </aside>
+
+    <!-- 메인 콘텐츠 영역 -->
+   <main class="flex-1 max-w-screen-lg mx-auto p-4 sm:p-6 md:p-8 flex flex-col space-y-4 md:ml-0 md:pl-64">
+
+      <!-- 사이드바 열기 버튼 (모바일 전용) -->
+   <button onclick="toggleSidebar()" class="text-white text-2xl md:hidden mb-4 bg-[#2563EB]/90 px-4 py-2 rounded">
+  챕터 보기
+</button>
+
+
+
+
+
+      <h1 class="text-xl sm:text-2xl md:text-3xl font-bold">11. Sketch Learning 스케치 학습</h1>
+
+<!-- 흰색 상자-->
+<div class="bg-white text-black p-6 rounded-lg space-y-4">
+
+      <!-- 그림 영역 -->
+   <img src="https://lh3.googleusercontent.com/fife/ALs6j_FUgbQ-Xc3knL9OZZprz8U9ft_PwQbsmo0L7Fuk36Td1BoQ60h7ttFp-cxx5xGruPVf-MbjDWKssZwGrKVEZRCsGFlESNTz1ZBvLaif4NvIYuso0ydwg2q5y4vQteoY6w6SRr0gj1yV0_yKpu0cfj6RMasuAqFFa3ddizWQZVuYaYTlC-7Q7ky7Ht0PhJzYnc4urBS2bFKZQw6fhsQi_Hj6LsDYBk53Z13U_RpHw9dpl8zUOWIdHYyocHmiyrWxqqlkY-b5IKRa9e6XeHWSVsfmCq2ZqqkMihLnW3fo4UAE_CQuBcXLYB8vi-liuN2SOEmvtHf2ZpEISue0eMu5kQBD06Mf_J3H-qsdPlFkp-9bw6lQ6BauZRlUYxI_eiWakSSU4TezlR1OVytsKJA4_tUewnOphZQ8JX1EsFZ2StLVtyj9utNOSEKQPBPPQ-Oe3TWpbcfSGfVjGErOTPL-5wfmJmsIoT21eql9-3GpdtqLUZcAKqrWnFjQ-fA7ItFXOn9zqzxBe8rOx9ZpJslYrZF4dsjeOu1Qyjs0PS1IZJRtMoQ5bqRH7a21dDbApnGniW9J-bhiPw-y82vc1WVsljEBA41G1toRhIe6bfGnUIn8jkWNQEiHFPa-QRwuXpv0hcprSF642E7FltCf2V91QCYZY9YMexBk3kCIytTW8dLXAY7mJPX1C6ULj_lfu3uaWLqsvLzo4LvKIls9XO6Qbv7_xtqxYZidUalxB8fnJCgvR7bzgcgPxg2WKnaOIWqE4rX0CkIwrnCIGn3-vkOJyjOLoMESSH0jjJrq9h2tSS0iPWoj2hvxqqOKyXu66wJOo7czeD2_3WzYnMUuLKp3Z9nPkc6PsQnexVPOgXFMDDFfKth6JCsBZX2HcQ8RZgMZCh2aYHzgvtXwbFz7wg2t4o8k86qwv-NQWYZFpD_-crbJ56K0pKEBaWDfHslaXx5e0kHaPeOuWbozRx6Qfpta7yL42Y_1yk5TGxGg-1fFJkvb3_eC6-Cz-LKxTu6TJYGcRPYn5lG8QwVRZymuh5HuywzzAxuQeTxCcO0yxI5IUM60CO1QNWFv8f3vmlooeHNkdcG90hiGzpTlZMjUCiBpThmhNALt2Xp3QbNW7MnReb-OEA8-CqjJHfSis-DLKY06--Jn9aCd4rIOeyiWM5fzDbd_HpRFI_v8UoQatsde8t5jlTK2mch7bGv0wbU2YhbzltDen58SfM3d8mlux5ZfiOC3-G-ZXZH7M_KishvxWVC0JJvO5vnZpDu3MkddOMuBzCSpOXGZiTOeWWtSOMv7BCLGKS1qZWDjshdQOW3aBVgzmrKlfXBkkc4yvxaq0f_RabsaQxy_9DtHx-4BEUmuQnfYuzRGqUQyAwYcSIQteJROesqfOQeIyzGhuGbMDHBjgYGVMGgu6WECZIEdW-_LVHpbAe7UjHQCDWhWz_K4HRazvrqyQg0JqmJ9MgP_2t-_neb9i1-vBWgr20VQRxy4IZchplOugtkrL8dsDDJnGvho2TmFNzbOI4WK52elFEUWDR6xbk2DJI-g3vh23M63Qnpiy4RIBDYYDz9wxnQ4ZhXrJt0Khfpf64VL3gCe4c7lC9Ry7RhaSpDFvn275zpqIROE06VxdyAZ99-pa1o48IQREKm4d8jAb0eNt5ZhWMIRSr_4BnJT5UGU=w1919-h918?auditContext=forDisplay" alt="그림1" class="w-full rounded-lg ">
+
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : 스케치 학습</p>
+
+      <!-- 설명 -->
+      <div class="bg-white text-black p-4 rounded">
+        <h2 class="text-lg font-bold mb-2">✅ 스케치 학습으로 배우는 자율주행 머신러닝</h2>
+        <p class="text-sm">스케치 학습(Sketch Learning)은 아이가 반복해서 스케치북에 그림을 그리며 점점 더 정확하고 멋진 그림을 완성해 가는 과정과 같습니다. 처음에는 선도 어설프고 모양도 불분명하지만, 계속 그리고 지우면서 점점 더 잘 그리게 되죠. 이런 과정처럼, 자율주행 자동차에서 머신러닝 (Machine Learning) 이라고 정의합니다. <br><br>
+머신러닝(Machine Learning)도 아이가 그림을 배우는 것처럼, 도로 위 사람, 자동차, 신호등 같은 많은 데이터를 반복해서 보고 배우는 과정을 거치며 점점 더 정확한 인식을 할 수 있게 됩니다.
+자율주행 자동차는 처음에는 보행자와 차선 등을 제대로 구분하지 못하지만, 학습을 거듭할수록 점점 정확하게 인식하고 안전하게 판단할 수 있게 되죠.
+즉, 머신러닝은 자율 주행 자동차에게 있어서 스케치 학습처럼 ‘많이 보고, 반복하고, 실수를 고치며 배우는 과정’이며 복잡한 도로 환경에서 안전하게 운행할 수 있게 됩니다.<br><br>
+</p>
+
+<h2 class="text-lg font-bold mb-2">⚪ 스케치 학습이란?</h2>
+<p class="text-sm">
+1. 데이터를 ‘스케치북에 하나씩 그리는 과정’처럼 하나씩 보면서<br>
+2. 점점 더 많은 그림(데이터)을 경험하고, 실수를 고치면서<br>
+3. 점점 더 정확한 ‘그림’(패턴과 규칙)을 배우는 머신러닝 학습 방식을 뜻합니다.<br>
+</p>
+
+<br>
+
+<h2 class="text-lg font-bold mb-2">⚙️ 자율주행 자동차에서 머신러닝</h2>
+<p class="text-sm">
+- 예를 들어, 아이가 여러 장의 스케치북 그림을 보며 ‘사람’이라는 개념을 익히듯, 자율주행 자동차도 수많은 사진과 영상 데이터를 반복 학습하여 보행자를 정확하게 인식할 수 있게 됩니다.<br><br>
+- 자율주행 자동차는 카메라, 라이다, 레이더 등 다양한 센서를 통해 주변 환경을 실시간으로 인식합니다. 이 과정에서 머신러닝은 인식과 판단의 핵심 역할을 수행합니다.<br><br>
+- 자동차가 도로 위의 신호등, 보행자, 차선 등을 구분할 수 있는 이유는 머신러닝 모델이 방대한 양의 데이터를 학습하여 각각의 객체를 정확히 식별하기 때문입니다.<br><br><br>
+
+
+<h2 class="text-lg font-bold mb-2">1️⃣  자율주행 자동차에서의 머신러닝 사례</h2>
+<p class="text-sm">
+<strong> 1. 객체 인식</strong><br>
+- 사람의 동작(걷기, 뛰기)부터 제스처(손짓, 수신호)까지 포함<br>
+- 자율주행 자동차는 수많은 도로 사진과 영상을 ‘스케치북에 반복해서 그림을 그리듯’ 학습합니다.<br>
+- 초기에는 ‘사람’, ‘차량’, ‘신호등’ 등 객체를 명확히 구분하지 못하지만, <br>&nbsp; 점차 학습이 진행되면서 더욱 정확한 인식이 가능해집니다.<br>
+- 이처럼 다양한 데이터를 반복적으로 학습하며 특징을 체계적으로 익히는 과정이 머신러닝입니다.<br><br>
+
+<strong> 2. 차선 인식</strong><br>
+- 도로 위 차선을 센서 데이터와 이미지로 반복 학습하며, 차선의 굴곡, 두께, 색상 등 세밀한 특징을 하나씩 습득합니다.<br>
+- 이를 통해 차량은 점차 정확하게 차선을 따라 주행할 수 있게 됩니다.<br><br>
+
+<strong>3. 행동 예측</strong><br>
+- 주변 차량과 보행자의 움직임을 다양한 사례로 학습하여, ‘이동 패턴에 따라 어떻게 대응할 것인가’에 대한 규칙을 <br>&nbsp; 스케치하듯 만들어 갑니다.<br>
+- 이를 통해 상황에 맞는 안전한 판단과 대응이 가능해집니다.<br><br>
+
+<strong>4. 신호등 및 제스처 인식</strong><br>
+- 교통 신호와 사람의 손동작 역시 반복 학습을 통해 인식 정확도를 높입니다.<br>
+- 예컨대, 교통경찰이 손을 들어 정지 신호를 보내는 동작을 인지하여 차량이 즉시 멈출 수 있도록 하는 <br>&nbsp; 규칙을 학습합니다.<br><br>
+
+</p>
+
+  <h2 class="text-lg font-bold mb-2">🟩 자율주행 자동차 머신러닝의 핵심 원리와 적용</h2>
+        
+<p class="text-sm">
+
+<strong>🧾 데이터 품질과 양의 중요성</strong><br>
+1. 머신러닝 성능은 단순히 ‘많은 데이터’뿐 아니라 ‘질 좋은 데이터’가 결정적인 역할을 합니다.<br>
+
+2. 스케치북에 그린 그림이 흐리거나 엉성하면 제대로 배우기 어려운 것처럼, <br>
+&nbsp;&nbsp;자율주행차도 부정확하거나 편향된 데이터가 많으면 오작동 가능성이 높아집니다.<br>
+
+3. 따라서 비, 눈, 밤, 낮, 도로 공사 등 다양한 환경에서 수집한 폭넓고 다양한 데이터가 필수적입니다.<br><br>
+
+<strong>🔄 지속적 학습과 모델 업데이트</strong><br>
+1.  도로 환경이 계속 변하기 때문에 자율주행차는 새로운 데이터를 꾸준히 수집해 모델을 업데이트합니다.<br>
+2. 새로운 교통 표지판이나 도로 구조 변경 등의 변화에 적응하기 위해 반복 학습이 필수입니다.<br>
+3. 이러한 학습 방식을 ‘지속적 학습(Continuous Learning)’이라 합니다.<br><br>
+
+<strong>🚧 안전을 위한 보완 시스템</strong><br>
+1. 머신러닝 모델만으로는 완벽한 판단이 어려워, 규칙 기반 알고리즘과 센서 융합 기술을 함께 사용합니다.<br>
+2. 머신러닝이 오작동해도 다른 시스템이 차량의 안전을 보장하도록 여러 겹의 안전장치가 구축되어 있습니다.<br>
+3. 이를 통해 예상치 못한 상황에서도 안전한 운행이 가능하도록 설계됩니다.<br><br>
+</p>
+
+
+
+  <h2 class="text-lg font-bold mb-2">📊 머신러닝의 작동 원리와 학습-추론 과정</h2>
+
+<p class="text-sm">
+머신러닝은 크게 두 단계, 학습(Training)과 추론(Inference) 으로 구성됩니다. 이를 아이가 스케치북에 그림을 그리며 배우는 과정에 비유해 설명할 수 있습니다.<br><br>
+
+<strong>1. 데이터 수집 </strong><br>
+: 아이가 스케치북에 여러 장의 그림을 그리기 위해 다양한 그림 자료를 모으듯, 머신러닝도 사진, 소리, 숫자 등 다양한 데이터를 광범위하게 수집합니다.<br><br>
+
+<strong>2. 학습 (Training)</strong><br>
+: 아이가 ‘이건 고양이, 이건 강아지’라고 반복해서 그림을 그리며 특징을 익히는 것처럼, 머신러닝 모델도 수많은 데이터를 보면서 패턴과 규칙을 스스로 학습합니다.<br>
+이 과정은 스케치북에 계속해서 그림을 그려가며 점점 더 정확하게 완성해 가는 과정과 같습니다.<br><br>
+
+<strong>3. 검증 (Validation)</strong><br>
+: 아이가 자신이 그린 고양이가 잘 그려졌는지 확인하는 것처럼, 학습된 모델은 새로운 데이터로 평가를 받으며 얼마나 정확하게 인식하는지 점검합니다.<br><br>
+
+<strong>4. 추론 (Inference) / 예측 (Prediction)</strong><br>
+: 이제 아이가 배운 그림 실력을 바탕으로 자유롭게 그림을 그릴 수 있듯, 학습된 머신러닝 모델은 실시간으로 새로운 데이터를 보고 상황을 판단하거나 예측합니다.<br>
+자율주행 자동차는 이 추론 단계를 통해 주변 환경을 인식하고, 즉각적으로 안전한 주행 결정을 내립니다.<br><br>
+
+</p>
+<br>
+
+
+<h2 class="text-lg font-bold mb-2"><strong>2️⃣  자율주행 자동차의 머신러닝 구성<br></strong></h2> <p class="text-sm">
+
+<strong>1. 학습 데이터 수집 (Training Data Collection)</strong><br>
+- 보행자, 차량, 신호등, 차선 등 다양한 도로 객체를 포함한 데이터 수집<br>
+- 다양한 날씨, 시간대, 도로 상황 등에서 수집된 데이터를 사용해 모델의 일반화 성능 강화<br><br>
+
+<strong>2. 학습 알고리즘 및 모델 설계 (Machine Learning Model Design)</strong><br>
+- CNN, RNN, Transformer 등의 딥러닝 모델을 사용해 시각적 특징을 학습<br>
+- 데이터 속에서 패턴과 규칙을 스스로 찾아내도록 설계<br><br>
+
+<strong>3. 센서 융합 (Sensor Fusion)</strong><br>
+- 카메라, 라이다, 레이더 등 다양한 센서 정보를 통합 분석<br>
+- 거리, 속도, 형태 등 각기 다른 정보를 조합하여 더 정밀한 환경 인식 수행<br><br>
+
+<strong>4. 실시간 추론 및 판단 시스템 (Real-time Inference & Decision Making)</strong><br>
+- 학습된 모델을 이용해 도로 상황을 실시간으로 분석<br>
+- 인식 결과에 따라 주행, 정지, 회피 등 차량 행동을 즉시 결정<br><br>
+
+<strong>5. 지속적 학습 및 업데이트 (Continual Learning & Update)</strong><br>
+- 주행 중 새롭게 수집되는 데이터를 기반으로 주기적인 모델 개선 수행<br>
+- 도로 공사, 기상 변화, 지역 특성 등 환경 변화에 유연하게 대응<br><br>
+
+</p>
+
+
+
+
+
+<h2 class="text-lg font-bold mb-2"><strong>🛠 자율주행 머신러닝의 주요 구성 요소<br></strong></h2> 
+<p class="text-sm"> 
+<strong>1. 학습 데이터 (Training Data)</strong><br> 
+- 보행자, 차량, 차선, 신호등 등 다양한 상황을 담은 이미지 및 센서 데이터를 수집<br> 
+- 스케치북에 그림을 하나씩 그리듯, 모델이 반복적으로 데이터를 보고 학습<br><br>
+
+<strong>2. 학습 알고리즘 및 모델 (Machine Learning Model)</strong><br>
+- CNN, RNN, Transformer 등 다양한 딥러닝 구조를 이용해 패턴을 학습<br>
+- 데이터를 바탕으로 각 객체의 특징과 행동을 인식하고 예측하는 규칙을 형성<br><br>
+
+<strong>3. 센서 융합 시스템 (Sensor Fusion)</strong><br>
+- 카메라, 라이다, 레이더 등의 센서 데이터를 통합하여 더 정확한 주변 인식 수행<br>
+- 다양한 감각(시각, 거리, 속도)을 결합해 복잡한 상황을 다층적으로 분석<br><br>
+
+<strong>4. 추론 및 판단 시스템 (Inference Engine)</strong><br>
+- 학습된 모델이 실시간으로 환경을 분석하고, 주행 판단을 내리는 핵심 모듈<br>
+- 도로 상황, 객체 행동 예측 등을 기반으로 차량의 이동 경로를 결정<br><br>
+
+<strong>5. 지속적 업데이트 시스템 (Continuous Learning)</strong><br>
+- 새로운 데이터나 환경이 등장하면, 다시 학습하여 모델을 최신 상태로 유지<br>
+- 도로 구조 변경, 계절 변화, 도시별 교통 습관 등에 적응 가능<br><br>
+
+</p> 
+
+
+
+
+
+<h2 class="text-lg font-bold mb-2"><strong>🎯 머신러닝 기반 자율주행의 주요 목적<br></strong></h2> 
+
+<p class="text-sm"> 
+● 복잡한 도로 환경에서도 사람, 사물, 신호 등을 정확히 인식하고 안전하게 판단<br> 
+● 반복 학습을 통해 인간처럼 상황을 유연하게 이해하고 반응하는 시스템 구현<br> 
+● 센서 융합 및 패턴 분석을 통해 실시간 위험 예측과 회피 가능<br> 
+● 다양한 교통 시나리오에 적응하며 지속적으로 발전하는 자율주행 시스템 구축<br> 
+● 스케치 학습 방식으로 모델이 점점 더 정교해져, 예측 정확도와 안전성 향상<br> </p>
+
+<br>
+
+
+
+<h2 class="text-lg font-bold mb-2">3️⃣   스케치 학습 체험 </h2>
+
+<p class="text-sm"> 
+머신러닝의 원리를 직접 체험해 보기 위해, 먼저 흰 배경의 종이에 검정색 굵은 마카로 집 모양을 그려보겠습니다.<br> 
+이후 이 집 그림을 여러 장 촬영해 모델에 학습시키고, 스스로 집 이미지를 인식할 수 있도록 해볼 예정입니다.<br> <br> 
+
+먼저, 흰 종이에 그려진 이미지가, 스케치 이미지인지 판단할 수 있는 프로그램을 다운로드하고 실행해보겠습니다.<br> <br> 
+</p>
+
+
+
+   <img src="https://lh3.googleusercontent.com/fife/ALs6j_HDNoBDPFvL-EnOGsdZK7M91Egl5Y5zSdfZvKxyIDf6pIzcHVNzZ6uBTicQucWgQHCk9fJUSgxs-oKTyquBxQQQ7O9JNBgu5KfgZt7W3c-1GWDzMHQtVQOnyItMousmPyqg-AJvPxpl8iLdp29HLRYt_wKbW8cnmmI8UFfH2pCmMIJKfzq9DsNthioVxM70u57RZt2DgaLqHEjtgkNSrAK84QinodpAuhbf7kj10BZjIz_s_vJfyu99B7K0khkgswEJcwFZkLls6o6U1vpJb21gzF60yu_JZz_IsKgWf4YRqMkozPhTP7TYdaJfa8O69qj6zirUtfNHmKXtOGJnIequg3I8q4nnX4_9hTmfNKYgIJ7RBRokcMyO6mBK6OeVpHv99Se9XRgfY4-S-sAv44P8MzWtJmph15lnnamYnXaHX-a3nXfR5fMhzl_DjEdQmtYyslG6RfQ-nDt9NC3kmiNH2jrs9wELYL9ugVzg3sAx-pgY0RqA5IaV9fbhxXXlQNOsh3qRNCHm2l5QBF3Sxt9F2uDxmasvIeT8dAGiHF6ZXuq0WvXd-1Tioi9Qdenm4bslMDlP0DwjRfs_-0a1YdzxgPCgYGv0mrR_PSSfv-ZJb6Q99ozJ7PHW9EF4pc_ErOes5EuMy_X62o66RuZK-2TO-w7kohiwSL2nPdVukbIcdGSSRtaVr6qkl33fiLB7Qgtn9p4lrSf1GlKVlOX4HcZKhlgOYq2xzGJOCOTP3ZHe0FYrjWuv4Nx0hBAQbAToBFR7-M99smeewxB7uibPz3odTUunpOyYomkfgNfL1wOkeW5Nl8UEtaDYnL-2JhhK0ePdduXsY-4nTl6IF7ALPHqYwr-LDx9qiQsm5qSjqVR22RJ5pcbSDnLg6OoNsqXrEuWUNGLL_W1G_B5M24_1P98mAbtG2XHfsz783QUDbU2z5RrWvmSatPOuPBuaNBDVsyhwjVsXMMnquO-qguazGHaPFUvZzrPqhiR4MWPtUtAF_1_aSE4bjADGcT41CDk49QtJzHeHx8UiXVe7t_6iSNs7GbvDnh1XIHh8sJNqTqysNX8ujIY6kftgGO1mE259eZw38-gmiviGsDp_VDEAySu5yNNDSFuExL2FA4EorzIL9TOGW1dPdBznmXmMgyHoSo8C4q5zu4EF5t22GFkwMmiTGVzYbX0B1ViqdDkguYvcmHbIFRDUxXRjdqTKN1nF_LNam-IDDGmhIK6eelLkNhtT9pW4USA3UfBSXif_oiTFT3IY1QOw-_PJvub3LKZXDcjpZ3mr8E7hojy736XexZUpXd4LToc6xVRDmgkGl68jDsAOZBJ0DOCjpge7I9Q_j56EbhnnNe2YX_DP5mspIJuY7ozPZGw1WfqqT8nwKOVJNowLHNE8FcIEiGb8wo9A-PESUxU05UjsT0OwudqE1vPSBdmgkVdYfH8grK6r7cCVKII5NTTwbj-rBwhfERFbJp1hVghcOzbDHhOYEXjQKcXkyoKQg-Edcv7FewDd4PZ2W42FkEDXXpmT9ylnR2ZA7diV0CZFdzvPIokljCbUWUSXEHueVzJ83n46UMr1k647IA_MZELzbiU1sevAxeSyYWYeKkNtmEwcLZM1a-MLrY4mHg3DJtAunvcbvcYHeH6D43-AUNF4nztvyCxiIFEpa6qJSFCJFuP2Dg=w1919-h918?auditContext=forDisplay" alt="그림1" class="w-full rounded-lg ">
+
+<br> 
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : 스케치 예시</p>
+
+<br>
+
+
+<p class="text-sm">
+💡 Sketch Learning 예시<br><br>
+📍 종이에 그린 그림을 주미 AI의 카메라로 인식하기<br><br>
+
+<strong>● 간단한 실습 예시</strong><br>
+종이에 여러 그림을 그리고 AI 카메라가 이를 실시간으로 인식하도록 구성해 머신러닝의 기본 원리를 체험해 봅니다.<br><br>
+
+<strong>● 데이터 양에 따른 인식률 변화 관찰</strong><br>
+그림 데이터를 점점 더 많이 추가하며, 인식률이 어떻게 향상되는지 직접 경험할 수 있어 이해가 쉽습니다.<br><br>
+
+<strong>● 학습 동기 및 이해도 증진</strong><br>
+이러한 체험 활동은 머신러닝과 자율주행 기술에 대한 흥미를 높이고, 개념을 더 깊이 이해하는 데 도움을 줍니다.<br><br>
+
+</p>
+
+
+
+
+   <img src="https://lh3.googleusercontent.com/fife/ALs6j_HelyPHoUCAdi4HRI86N0kH3-Trugftvqsoj74SKM0RWVYZSM4qzG9FaPfKQnedTz-ZBEMtqDQKcOwhHDRqYPPukwSgOP0CRGe4OMF_73ri-AuJN9Bu4QBMMZuqGILOc4VhH6O1WkBrf47x9E9eY7P4utLiQjIP-hDxSK7Dr4cW4r1i98WJqxstUV6te3WmJ9nTp7gC5zOjfOM--RJRr1gligeCUpFHG3oLvhcqvcgb3FjfSKmJmrSFt-181TWU_quWZfng8kobD2zNViLu7NZKJEARmcz9HdGxciYLVRjP6VCUxWBrUbvKebsPCa1m9hjnWKXYQyNI1NtEVlsQyWzYsbJ89-Y3i8N-6K70-frG3lACIdpwG_rIOCG9fn43gRwqjSmwQVo_yeq1LcdDzH36RC0WVRY64OBxjHZzYydKHhyM8d2Y7CM_sitB0pMILZg2gf3WAvKVYzP7g-hRUVF8czRx5g02ByGh5mxOqstURrmlvS1TOz_56xbtS-auMCOW01m7z-Rdb4r1mXyDreec9sqhnQOCTjRJBUG1Ks4sCtOjGfpMlUt3C06xzy1eVZ0w6QqTySI42DcwSaatOGB28LTG_LH1QqVI7N5SElvWUhZ4sIWoi0jpbqWiJ73hsi2XY1slNfrkFHOL7M-tFLtTHmnJn7E8vePbhVyYo1r8iDGdayQpNVwt-qF6ihtph34clm1fysT3W00jZQ-8tyMv8GUGcipWJYVGZQKT8I--_GBlwSeueNjDTGSrn7BNvdgLeJXsHqLfNkIc1I4lQAh6jTO2MyjevkpGhPTNvza9b34NUZPxTWfkrGxrnEEr5IWWKbxUIW_jRnCBVi9Z1HIKRMOGoBuUJOhCE51XjZWoaJIdBwe7ICsIY_5aIR3vwBamwJUcenk26pDx6Tbl8sImEnjwyBuymfm7rDp0Fmhbz-R7ge33M6D9I1_dkQ_HGIlsRs2ulbnzPJ_lHhWWwNPpmzDxR0rxl7NT4vVqCU2_Dn4ARILmIwG910Hy0ljeHh50-CiKEF2ZMeILOKSc5v0gqPCD7UawgtGkJrr57MHgeWvJ7pO0im6gX1AjiGaRRw-bZDNbGb1yLDEnVvwXfi9NYFCknD8GHf8i6mdWBEkK1lB02IWfn7NyLGucIrUDwjGoMUSe-Vmdt_SHIgfS18ky65bQowTkTe4mG-3NogALz1VXRsZJ-xOnBDmtITXUl7FOhsjq2gDwzXl8vQ_tBtmHUJmZB5mDIN6J0UbsruPRQejuG5OYmYZqF4qhL50Bej2oXL7NOG4pG7w_KSc5PbDDFFuOZJQVcuDYjPUH9dUoK5j9Xu5JkTuaG8BNCwPdyzhgpIfFLLKfKiEpa1Q7770bkFkRQzOX1f3zVOLjh3E1_kKeGON_Tx0AwE8fUWTgvcZY31rsu6dL2P4zwyROvItZDORmakHDWCgCT_T0XxgeEf9L-56T47M4rhNXZBEKakmTHiBGcaCPHAmamB-gXzkdoUJgwrP04jRUnWfT_IhNaKj9Fe4spBqj-v9Jxk6O3HN3kTe1P44NrP6shKa7hLVuQ0NSAbQQ5rSBr1DYyl7el-QA3wT5id4jQjHDSZ2Hrx533Rab1WggTZ2IDR1F6QcVqDclD_zEvCQjV1aBePyuMNj_GKxyKVGbVerpg8s8rTSTg_4PgQLsrw=w1919-h918?auditContext=prefetch" alt="그림1" class="w-full rounded-lg ">
+<br>
+
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : 스케치 인식하기 화면</p>
+<br>
+
+
+<h2 class="text-lg font-bold mb-2"><strong>🟨 주미 AI 스케치 인식하기<br></strong></h2> 
+<p class="text-sm"> 
+<strong>1. 스케치북에 그리기</strong><br> 
+배경이 흰색인 종이 위에 굵은 검정 펜을 이용하여 스케치북에 위 그림과 같이 '집 모양' 그림을 그립니다.<br><br>
+
+<strong>2. 인식 프로그램 실행하기</strong><br>
+- 아래의 파이썬 예제를 다운로드 받아서 프로그램을 실행 시킵니다.<br><br>
+
+<strong>3. 스케치 인식</strong><br>
+- 주미 AI가 정상적으로 연결 되고, 프로그램이 실행 됩니다.<br>
+<strong>- 처음엔 학습 된 모델이 없기 때문에 아래 그림과 같이 Sketch 로 표시 됩니다.</strong><br><br>
+
+</p>
+
+
+<!-- 파이썬 코드 설명&다운로드 버튼 -->
+<div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
+  <div id="output" class=" flex-1 bg-gray-800 text-white p-4 rounded h-30 text-sm"">
+  <p class="font-normal text-white text-sm">
+
+
+<span class="text-red-500"> # 카메라 스트리밍 및 제스처 인식 초기화</span><br>
+&nbsp; &nbsp; zumiAI.camera_stream_start() <br>
+&nbsp; &nbsp; zumiAI.sketch_detector_init() <br>
+&nbsp; &nbsp; zumiAI..sketch_detector_start()<br><br>
+
+<span class="text-red-500"># 사용자가 인식시키고 싶은 스케치 이름</span><br>
+TARGET_SKETCH_NAME = <span class="text-green-300">"my_house"</span><br><br>
+
+ <span class="text-purple-500">print</span>(<span class="text-green-300">f"[INFO] '{TARGET_SKETCH_NAME}' 스케치 인식 대기 중..."</span>)<br>
+<br>
+<span class="text-red-500"># 인식 로직 실행</span><br>
+<span class="text-orange-500">try:</span><br>
+&nbsp; &nbsp; <span class="text-orange-500">    while True:</span><br>
+&nbsp; &nbsp; &nbsp; &nbsp;        <span class="text-orange-500"> if </span>zumiAI.is_sketch_detected(name=TARGET_SKETCH_NAME):<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;             sketch_name, confidence = zumiAI.get_sketch_result(name=TARGET_SKETCH_NAME)<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;             <span class="text-purple-500">print</span>(<span class="text-green-300">f"인식됨! 이름: {sketch_name}, 신뢰도: {confidence:.2f}"</span>)<br>
+
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="text-orange-500">if</span> confidence >= 0.7:<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;                 <span class="text-purple-500">print</span>(<span class="text-green-300">"올바른 그림이 인식되었습니다!"</span>)<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="text-orange-500">            else:</span><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;                 <span class="text-purple-500">print</span>(<span class="text-green-300">"그림이 인식되었지만 신뢰도가 낮습니다. "</span>)<br>
+&nbsp; &nbsp; &nbsp; &nbsp; <span class="text-orange-500">        else:</span><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;             <span class="text-purple-500">print</span>(<span class="text-green-300">" 스케치 인식 대기 중..."</span>)<br>
+        
+
+
+
+</p>
+  </div>
+
+<a href="https://drive.google.com/file/d/1k1TbBA0wNOgUa1zfp8i7bmuAJp8oWNIv/view?usp=sharing" download="example.py" id="run-code-btn"
+   class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto inline-flex flex-col justify-center items-center text-center min-h-[64px]">
+ <button id="run-code-btn" class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto">
+  파이썬 코드 <br> 다운로드
+</button>
+</a>
+  </div>
+
+<br>
+
+
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : 스케치 데이터 인식하기</p>
+
+<br>
+<h2 class="text-lg font-bold mb-2">4️⃣ 스케치 학습 시키기 (머신러닝 원리 실습) </h2>
+
+<p class="text-sm"> 
+앞서 사용한 프로그램은 스케치 위에 그림이 있는지 없는지 판단하는 기능을 가지고 있었습니다.
+이제 본격적으로, 집 모양의 그림을 학습시키고 이를 ‘house’라고 인식할 수 있도록, 아래 설명을 읽고 프로그램을 다운로드 받아 실행해보겠습니다.
+</p>
+<br>
+
+
+
+
+<h2 class="text-lg font-bold mb-2"><strong>🟪 주미 AI 스케치 학습시키기<br></strong></h2> 
+
+
+   <img src="https://lh3.googleusercontent.com/fife/ALs6j_FyHs2I4LrjB325k-IE3HtXhGDw0mB7tePnijouSq3XiEMMBjzF5fOuJYTsyWgX-aWmTHW8pSRZadOJmxjzPTnmhVPoXRc7Eamvr3z2oHpEbhUg3RFP7RvSY1dZaLCE8_enmaxEACW1vURGv5kafplmy9I1GwbUAJVR3YoFeHp_N0rHwv7o5mnq7Y7FyIa9wqQmKdCxk1GWK4iLrMVW4iK3WtUTmu8A8Y1Jv-dROlFQnGA_jy54AiQGe9Pz0UPo_PPsJej0lWJWPSe9wdMun1i9WhQICOOt4QrLUxKzpTo8GTfwGFcuG_zJKmROIsJbAmCQYqKvC-K8rYy2jnKsF7pZ03-TxOqcoS4Ywvjt9hX05TwFn8CpdyVgoj-G62fFdCl7d1l4j3_PNrU-6UWnB1M6oMRZxLz42PQMFnuGbTdWE6HUHlo9ucNGuY3x6Pp5lwWMl10IpRbYiIHeuiyuQRq6C6m4ByfCvwQylXXuPXuCvH3QeQLFBsQT1MjRiPZAfwcGGKX8kP8mCxsoMKatSukypNyYukYC5eOmAKaIgsZxht4IP3ApFi72EY4yy9sWb0kU2IeXCJhVOP4h1MLSkMVc6XCdcD7enmLmk6tMajXzl5V23tvYoqCFVqmwhrIy88VIEVDXav-IyJ4ql8OdbIvrude3kq6gQqlLILrJ0vBd69MqujNtjuTWdO3P74Arrggv7wudm2biDmlmsun8NBRaxiJat32fV9uHML1LaJAfCs9VfOzwLixFnoLiJ74R9vJgjCCwwZtxXrcnWsS5KT9BvHkVdoYUz0ELRoHCyD6flY0M-5Y8xJQPQBPT6sJiV97hL0jRfEsf81S1d_rxbeCxi5pwjkJjILu2DMYr_2dQP3nAGZro_FMVgUKnAWDYxPAa5X9Pl1kW4LUwDxR5LtJqk5y8_pzrJTL_AxbHU2xpgdfu8KrN2Nh3e0Z06jqrYhC6NR_ocKmP3yh5oFmHyoDX1_zU0Qps7ikwSSDFO_CbMIAiDvqWJuysScVgov90YkA2vAa4hoyzUgg882_R4SJbnEFcL2xbD13vBL_wvePUuVGtNJm5AHmMeTJAI2OJF0RNx0uNwVx2dnGut9aCJ0dQDtkM-tJzQ-edHjLRqqS-rbnQBwzslqcJuMWq3NOxrZNZC2CvU4h7V_QTGm0B4iyX2VKzJtfQp5xZAdDBah-h5GJDjEBHCz-8wJXqNASFKNKLAe6XdjphFY3dTDHlqdkwSdPEs0AADXAdh7n510uZuM0Va9pZBPVhm7vEP4IC3tNsARxqbrgG-biwH9_Kq17lJ4iyr7maPpstxhrGbmZyK8rxY3z2SwxIezPBHNUP0fCGRGVNFK93gJjmCGlodmg_H7tTTKMuSGtZ1XiIZieo1C8i6-QaBsy_byRjDJEEHo5NNI2dv8Mfw-ov1wOC2rMIie09OuXgYteuy8SHVxbPPT6rL6D7qcb56YI5vMzHZJj1iEUxab4opm5NrJJKawc1F4KlbL3XTN16cTrTa3xlfSMmdP_o66C4QTOASUPeesWS0_3z-9AvMQdk-XNcmE-y6VZYWbMBNWs11yVzLPzHpr-Jjo16kAMBldP8dfdYsm6A34R1Uues-9QKpIKrB_zlqnI4fbdEwwrBttk8fgN98vxargG8svonWa1irPMJwhCuEMQJZHhR=w1919-h918?auditContext=prefetch" alt="그림1" class="w-full rounded-lg ">
+<br>
+
+
+
+
+
+
+<p class="text-sm"> 
+<strong>1. 스케치북에 집 그림을 그려봅니다.</strong><br> 
+위의 이미지를 참고하여 집 그림을 그려 봅니다.  <br><br>
+
+<strong>2. 스케치 데이터 학습 시키기 (=사진 찍기) (키보드 : r키)</strong><br>
+- 프로그램이 실행 되면 위의 그림 처럼 집 그림을 보이게 두고 키보드의 r 키를 누릅니다. <br>
+- 그림이 유사하고, 많이 촬영 할 수록 인식률이 올라갑니다. <br>
+
+<br>
+
+<strong>3. 종료 및 저장하기 (키보드 : e키)</strong><br>
+- 여러장의 스케치 데이터를 촬영하였다면 e를 눌러 학습을 종료 합니다.<br>
+- 학습이 종료되면 바로 인식 프로그램이 켜지므로, 그림을 인식 해봅니다.<br>
+<br>
+
+</p>
+
+<!-- 파이썬 코드 설명&다운로드 버튼 -->
+<div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
+  <div id="output" class=" flex-1 bg-gray-800 text-white p-4 rounded h-30 text-sm"">
+  <p class="font-normal text-white text-sm">
+
+
+
+
+<span class="text-red-500"># house 이름으로 스케치 학습 모드 시작</span><br>
+zumiAI.sketch_train(name=<span class="text-green-300">"house"</span>) <br> <br>
+<span class="text-red-500"># 이제 PC 화면을 보면서 'r'키를 눌러 스케치를 학습하고 'e'키로 종료하세요.</span><br>
+<span class="text-purple-500">print</span>(<span class="text-green-300">"'house' 스케치 학습 모드가 종료되었습니다."</span>)<br>
+
+TARGET_SKETCH_NAME = <span class="text-green-300">"house"</span><br>
+
+
+
+ <span class="text-purple-500">print</span>(<span class="text-green-300">f"[INFO] '{TARGET_SKETCH_NAME}' 스케치 인식 대기 중..."</span>)<br>
+
+
+
+
+</p>
+  </div>
+
+<a href="https://drive.google.com/file/d/1vpdGb2oMD40w-gT6ZNDTCmo5B0syYNDu/view?usp=sharing" download="example.py" id="run-code-btn"
+   class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto inline-flex flex-col justify-center items-center text-center min-h-[64px]">
+ <button id="run-code-btn" class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto">
+  파이썬 코드 <br> 다운로드
+</button>
+</a>
+  </div>
+
+
+
+
+
+
+<br>
+
+
+<p class="text-sm"> 
+<strong>4. 다양한 스케치 이미지도 직접 그려보고 학습시켜 봅니다.</strong><br>
+- 집 그림 외에도, 물고기, 모자, 자동차, 공, 음표,나무,하트 등 다양한 모양을 직접 스케치북에 그려보세요.<br>
+- 각 이미지도 같은 방식으로 여러 장 촬영해 학습시키면, 모델이 점점 다양한 객체를 구별하고 인식할 수 있게 됩니다.<br>
+- 이렇게 여러 이미지를 학습해보면, 머신러닝이 어떻게 패턴을 기억하고 분류하는지 더욱 깊이 이해할 수 있습니다.<br><br>
+
+
+
+</p>
+
+
+      <!-- 그림 영역 -->
+
+<a href="https://lh3.googleusercontent.com/fife/ALs6j_HVKDQLqrMuj4b4CD-vgAFKjys0JbzKC9RUR6foX-eyO5_8KcLBoAAlT7xOrFVA0v1LQyJcKN65uywK_THL2uE6kUOqkwRqfx0GILuJOuBoM3j6xBZEpdlVhgqpNO7wvcwrPULlHz5L29ebAAHD3aqxVF9NyScInTAtQO67xLuyB8NURDpJvJeaEesKKkIoVAFQDTkEeUoAUOPYsNUsK4Gzihu1xrvIpF8Ws6GhnX0gsX5L8iCgP94RbunQXJF_TffNiJr760kwO8O7ev7N4xLYKKVbqqrNyS3-sfn8I58GZRa8wGovGqzgWgANV6Vco4KLC7laudmprUh7jOlSNEmToqpcNGV-nBqZ18j-4rcCPU6D2zZqQkAHfcNFXV11CZUpffI-Qa4mzmK3ZoP65xvTGMc07s4pBclt5RibiqoaR9P3-A6oQ2eRR-nNk2SUbdDKr64_b9FT0T1PGpwDeaZzXekNq8LEQ6g37PnjFCeHgYVsPiZnVZ9aUOOi_RAxMs1Q7AdkmLg-X5WGiVVaZQDWohnCFfQU51Glno6EPxNxYZ-YZSovISDSZRX5IBOrhFqxcvdwe0D2g0mK9zSeSrF9XZS2BJd89QCy9g3iCqd0yIZgk19FsVWWJPlj05jd9nIVneg7IO2JanXs1uBd9HvOpqUv3tS72kNnqQfJXzikPEveD7y8CN5Ftjqb01TOD3sSKAKYBkmS3JDJD9W4w0HnCqJzG5aezB0-Gxj8umVbUaDL5ehpNK9LBj1yKdDoDvGelCw2YOwHpucnt1w0jY-yKus-CXpSIHjTj7Opfp4i5g02scSd4EUsErmS-WEMg2MWKmdGC9V_wmP4lOJvtLTaG7xTgKnOBKYU45XsTwu0PC2cu37vxJEW9zSasQTMlLLv7D5D4Xf6brjpgLSEaH1iu4tq3FJfX--qicmjpccG8UoxIYvCV4mVJfiHtvS2skemHKtaIUe0F4BsN7gSL2I7PXNqcEQ5m3CVVcS_u352zrJYqJ8k0XrJan35IcnuxWrDkZnkgJcxz0I5i4tFUDxidlTMWuDt8YOUBjFgRODvWwg97oaAIyeEgshFDMCSPLorcPSycyOGVZ3wLXNYlFmF1mlap1EFggblO6piv907diGVXrQpla_3PsMPNJxlfMHjS9jfcMVKEe5o4aHGnB8aFeuDscIygHNP6PteCILSsbgdGjVuTSpKuBqbI1SURR4k6379YNRPbauKsGBEaF_1TPyPyMb2OqzBP5zPlLq2-4RADg0rf0DRmGThIhlP7qqzHkm7V7RBP4nu7Sh0NW72oKDf_bArIpYZIoiVcy8uvpIGUEuD8fV_bfNMiGUoT10ZqgeWqeIYGBs35H3pqv-zV_x9XLUPg-KABTFvXR3rTB1yNWiTiv1kqvYAcL0ZViV5zV2Lc7mojJaJdStDKMSSETcCMKoiCpSjtbsbHIeXWcF-VNZolTKA_TpI_T1fMVIGayA8wh6fh7THnKxFj8kqY3rkegWl8f42o3cgwPlegmw42Meke59SfNpQaEzo6NZY8PK3pRTMfxcaYpNQwKCQWdqNFxX7uZsw36H9VUpj4MHvIlrbHC8RRbVYjmlb-oPlim7c7owxX64xEOf2dfOGbzmW9vBj1ZZIjd-4PDoQjAjWOpU35G2XlFY4rbu2TCEtOGZ3NbDngQ=w1919-h918?auditContext=forDisplay" alt="그림1" class="w-full rounded-lg ">
+
+   <img src="https://lh3.googleusercontent.com/fife/ALs6j_HVKDQLqrMuj4b4CD-vgAFKjys0JbzKC9RUR6foX-eyO5_8KcLBoAAlT7xOrFVA0v1LQyJcKN65uywK_THL2uE6kUOqkwRqfx0GILuJOuBoM3j6xBZEpdlVhgqpNO7wvcwrPULlHz5L29ebAAHD3aqxVF9NyScInTAtQO67xLuyB8NURDpJvJeaEesKKkIoVAFQDTkEeUoAUOPYsNUsK4Gzihu1xrvIpF8Ws6GhnX0gsX5L8iCgP94RbunQXJF_TffNiJr760kwO8O7ev7N4xLYKKVbqqrNyS3-sfn8I58GZRa8wGovGqzgWgANV6Vco4KLC7laudmprUh7jOlSNEmToqpcNGV-nBqZ18j-4rcCPU6D2zZqQkAHfcNFXV11CZUpffI-Qa4mzmK3ZoP65xvTGMc07s4pBclt5RibiqoaR9P3-A6oQ2eRR-nNk2SUbdDKr64_b9FT0T1PGpwDeaZzXekNq8LEQ6g37PnjFCeHgYVsPiZnVZ9aUOOi_RAxMs1Q7AdkmLg-X5WGiVVaZQDWohnCFfQU51Glno6EPxNxYZ-YZSovISDSZRX5IBOrhFqxcvdwe0D2g0mK9zSeSrF9XZS2BJd89QCy9g3iCqd0yIZgk19FsVWWJPlj05jd9nIVneg7IO2JanXs1uBd9HvOpqUv3tS72kNnqQfJXzikPEveD7y8CN5Ftjqb01TOD3sSKAKYBkmS3JDJD9W4w0HnCqJzG5aezB0-Gxj8umVbUaDL5ehpNK9LBj1yKdDoDvGelCw2YOwHpucnt1w0jY-yKus-CXpSIHjTj7Opfp4i5g02scSd4EUsErmS-WEMg2MWKmdGC9V_wmP4lOJvtLTaG7xTgKnOBKYU45XsTwu0PC2cu37vxJEW9zSasQTMlLLv7D5D4Xf6brjpgLSEaH1iu4tq3FJfX--qicmjpccG8UoxIYvCV4mVJfiHtvS2skemHKtaIUe0F4BsN7gSL2I7PXNqcEQ5m3CVVcS_u352zrJYqJ8k0XrJan35IcnuxWrDkZnkgJcxz0I5i4tFUDxidlTMWuDt8YOUBjFgRODvWwg97oaAIyeEgshFDMCSPLorcPSycyOGVZ3wLXNYlFmF1mlap1EFggblO6piv907diGVXrQpla_3PsMPNJxlfMHjS9jfcMVKEe5o4aHGnB8aFeuDscIygHNP6PteCILSsbgdGjVuTSpKuBqbI1SURR4k6379YNRPbauKsGBEaF_1TPyPyMb2OqzBP5zPlLq2-4RADg0rf0DRmGThIhlP7qqzHkm7V7RBP4nu7Sh0NW72oKDf_bArIpYZIoiVcy8uvpIGUEuD8fV_bfNMiGUoT10ZqgeWqeIYGBs35H3pqv-zV_x9XLUPg-KABTFvXR3rTB1yNWiTiv1kqvYAcL0ZViV5zV2Lc7mojJaJdStDKMSSETcCMKoiCpSjtbsbHIeXWcF-VNZolTKA_TpI_T1fMVIGayA8wh6fh7THnKxFj8kqY3rkegWl8f42o3cgwPlegmw42Meke59SfNpQaEzo6NZY8PK3pRTMfxcaYpNQwKCQWdqNFxX7uZsw36H9VUpj4MHvIlrbHC8RRbVYjmlb-oPlim7c7owxX64xEOf2dfOGbzmW9vBj1ZZIjd-4PDoQjAjWOpU35G2XlFY4rbu2TCEtOGZ3NbDngQ=w1919-h918?auditContext=forDisplay" alt="그림1" class="w-full rounded-lg ">
+</a>
+<br>
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : 다양한 스케치</p>
+<br>
+
+
+
+
+
+
+
+<h2 class="text-lg font-bold mb-2">5️⃣ 스케치 프로그램</h2>
+
+<p class="text-sm"> 
+앞에서 사용한 1. 스케치 학습하기, 2. 스케치 인식하기, 3. 인식된 모델 삭제하기 기능을 하나의 프로그램으로 통합해보겠습니다.
+이를 위해 Python의 GUI 모듈인 tkinter를 활용하여 간단한 사용자 인터페이스를 갖춘 프로그램을 만들어볼 예정이며
+이 프로그램을 통해 학습, 인식, 삭제 기능을 보다 직관적으로 사용할 수 있게 됩니다.
+</p>
+<br>
+
+   <img src="https://lh3.googleusercontent.com/fife/ALs6j_HvhIy1G0iOY7PmVERcuo4eylxRKFxnGWO2w6W0zmFLzRKLerX9_UYF9XBeoJVLyKvap5Xtve_Ci28XrI44if8q-HzYJ64GvE-JhXznjRbwe39kvxIlgpka1DpLXC6TVmAL4s8_mrL_NJM74EiUM-34TTWXaxIaf9_0vkWuUZ_m5XsG9JUtM-QYhyQ16IP3Q0C78WmOaP9AEqDENPvAEy7AqjXQmVMMaQImLNP-a47pDftDIwQJji0DKz92j6bevYQAUmr4lprQDo2LHNmtfBeDEpDKN9r8KO5HzLLTHD5v3oY6fhdRysTQaCJmfk38r7_vVCoQ8JADoXBJYq6ZNLg4SbC2-rz-jjyWEXLBBNcaoACoKHbG3VZip6xpD4DIYLQu9uK7oRvBeSowCFs6j-Lxq-U1hqfiIENEb0A6HYXiV5PN2IkF5WIp-ieHMAVsaiBo7HdEbpK7flYqGjsVvcYzWjSqofRgNEEyWsXH3IcmAh0xF_zvFD1Fobdn3bjexNW7-Bd404zHO7ZIZzu67uNFBgTB-W6EogPJ2SdDl17RMV0qZzB-pSkyM70XxFgmW3-Gf4DomtpDMMz3BmHKqQBYn91OcKRKjPRaaGXuXvJcNhzBHVyozXMyL2yiBN3zQPBrOHgdeW471AFRP6mqqA0EiScLyvV0_AtXMtSgIxsYswgT77rp_X0uvXaSlmgy4A_CAeb3cXhyzKmxM2DBf49Wc_gl4Ty6PlD3KF51u2mktxOVuD9-T8_RUQvFU6egQnbR63foGXYFBQiujup4aLt4QSIj0jDu_qdPDTEYxzg56sYQu3wXvGWkhAtYar7scfFdJ0vYnuRTIF9o5h9YMWLkLv1mUKhI0I4K4dlNLIOvVJZokSzpzdVc2UrDhe1EpHE_SgBLRKnfh33brxrEwCwL0ubWH9xWwV2utp6yaIJL49Dw3iBMWzCUTQN26WsZmBarNRln4VhKWdlH_xwIUO7JvG8AHq-AXUGshvKu6pWL67mrmMlxYw5igg3tHLv-0wxewNh4HNJdEwW-OXum7UysfP1OAOiCL9kjJxVKDBp8n3rQVfIZg7HCR7UbUcDcA6dpud3iQlcL1S_21D6svDOWbYJYaD0t0h9X3iRC6ECdfAfSZKEh3H8HdGzBkE7NLuD6_YsulMTv6yAawMySqNZBYfF23Nya0d62-h3khRX1WkJUQfnIoP884CdhzYqv0oxhfxj9lcamD6a6BEUkYZkIU1CAzZes_KG4Eg0VVjv1tWknBtdS5LHM3Vz_kcjfM-F2jFrGIYKcGRvhc_UD6JO-evtU-JoP2HVfYvtLzLJmt2wlEK-qDdzGACmC1Knd1dUq59iSv2ok_Ll3U9NYAM9chxcDxgoYRCywyFiCpm5IHbRdFN3gmsB-_KY6_91jQ-9jKV70ABILZpl__KmcjGYApdoTrPkwWOyBcfZv2Rnu3OhX1OaUVoWYxUFVZM4QLknnVgFL3aMHkutJ3kaKHLem4tvo7CB62w74eMXZ2Li5-3fZ3ph7y1VTE8s6A3Y9huWF81r_ifvwula9wP1PzCgnMQX4d-3wsG0_qoZAebJh5MkLt9znqzwVxdpRnR8JfH6ttnkEWzsjo4BFX6sKKbvUc2VokII2HzEFbA0QLVrvXEHS9RPwbVFbtMDLk88rPtPtYA18HSlTNw=w1919-h918?auditContext=forDisplay" alt="그림1" class="w-full rounded-lg "><br>
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : 주미 스케치 프로그램</p>
+
+<br>
+
+<p class="text-sm"> 
+위 그림처럼 주미 카메라를 PC에 연결한 뒤, 아래의 프로그램을 다운로드하여 실행하면,tkinter로 제작된 파이썬 프로그램이 실행됩니다.
+이제 스케치에 대하여 학습 시키기, 인식하기, 모델 삭제하기 기능을 직관적으로 사용할 수 있으며, 머신러닝으로 학습 된 데이터를 어떻게 관리 하는지 테스트 해볼 수 있습니다.
+</p>
+<br>
+<h2 class="text-lg font-bold mb-2">📁 주미 스케치 파이썬 프로그램 다운로드</h2>
+<br>
+
+
+
+<!-- 파이썬 코드 설명&다운로드 버튼 -->
+<div class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
+  <div id="output" class=" flex-1 bg-gray-800 text-white p-4 rounded h-30 text-sm"">
+  <p class="font-normal text-white text-sm">
+
+
+  <span class="text-red-500">      # ZumiAI 초기화 및 연결</span><br>
+        self.zumiAI = ZumiAI()<br>
+        self.zumiAI.connect(<span class="text-green-500">"192.168.0.82"</span>)<br><br>
+
+<span class="text-red-500"># 프로그램 시작 시 카메라 스트리밍 시작</span>     <br>
+self.zumiAI.camera_stream_start()    <br><br>
+
+  <span class="text-orange-500">def</span>   <span class="text-blue-500">open_train_window</span>  (self):
+  <span class="text-red-500">   # 1. 스케치 학습 시키기</span><br>
+
+
+  <span class="text-orange-500">def</span>   <span class="text-blue-500">open_detect_window</span> (self):
+  <span class="text-red-500">      # 2. 스케치 인식하기</span><br>
+
+
+  <span class="text-orange-500">def</span>   <span class="text-blue-500">open_delete_window</span> (self):
+  <span class="text-red-500">      # 3. 학습된 모델 삭제하기</span><br>
+
+
+  <span class="text-orange-500">def</span>   <span class="text-blue-500"> exit_program</span> (self):
+  <span class="text-red-500">      # 4. 프로그램 종료하기</span><br>
+
+
+
+</p>
+  </div>
+
+<a href="https://drive.google.com/file/d/1sPhSnhgi5GBgQ_Jtn7rzlzbqeo2g057D/view?usp=sharing" download="example.py" id="run-code-btn"
+   class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto inline-flex flex-col justify-center items-center text-center min-h-[64px]">
+ <button id="run-code-btn" class="bg-green-500 text-white font-bold px-6 py-3 rounded w-full md:w-auto">
+  파이썬 코드 <br> 다운로드
+</button>
+</a>
+  </div>
+
+<br>
+
+<h2 class="text-lg font-bold mb-2">🟦 1. 스케치 학습 시키기</h2>
+
+
+
+   <img src="https://lh3.googleusercontent.com/fife/ALs6j_GLAiSip2BlljJusZ9pkJqYb-Z0m4REgS8y1vddS2J-C_mmJPaqfIgrT4HnX3cs0dOCJfwbI7BDU_gxIgmwXk0cAthJdwf4krKlz1uiq8Ywy0XrePSK3ptsLBS2E0umo7ob0IXcnVibi_-EV40ki2Z-mp29_oVRUPTj9f6kTNnbkEn_TyhJAZ1s83kqUhggdxR0ARvfC61e99bo4YFokUiHhL3LZ-BxVjJRt8B03Vnb7H8cyWxfH1QNNbcD6UMqI__5OKDmV3C12dLQH25n5jNiCD6afvGYweNsKRIrfCoJ_UM4sbSQOop7oXjp9-uAKyomyJ04jFHxiZ4jnz2BRP4aXh8iAU6_xb53EkbTu5d8lV80-dTuGUp1W3Ugebc5A3iPKby8lzRTcIOP7LowzVeJsrLbORoMtxopQX1LbdqS5zK3OzwXPMvkc9uZBE40Yginu2uS6-y_3ZMQ-bLZ8_UPIY7efUFI_vdWGt-UjeCEo_LbFJZFSqAWprrWBNfgMbIj_FMFhikY6MMVIddadDje1fxaJWOcJpxitxuj2M4J5u1SFu5RJkLz0Di3bcXXb-h-ptYuReitcZfJL9_BEKdChUM8hlFAbyct_G2U_4QED1pGdqfJZvpruB2KXnYUnlgoWupNpEmJDY5hGFi_LMfGl_A-mGgs58pXPwbxDFLyTDjeakWjEl0_dOAra2DaHYAFAHuCVQZAkq7yuWB4c07Gjwul3idjpRnjo62otLsU6RpGjtGB48LHWXnrA0M5C2tbq81zfqrVNssUZWsVw42uI56qHO0k4xjYPR2w787UEAC99QU2HfTsAl34E84O5g1FptjB5oiWkDAqbesQPISoajCaf-pbtJNv4Z7HsZj39qCl-JRIfui7QzX6DFSMTuU1gIozWfw5lyS3UYjE76Q9nMgHH7XWd_LAtCxu9KCev_1KhYNzFsLTXYFb1CMx0EcSuqNkLQaTTOyU8cgEtGo2nfngUn41GQP4GJhP0TKeHYi-rZeFZDIqs6GhuitsEFpo791oVUbeggxBgfYIanVRfFa1DLepamMtmJ1lfGNIvNKWJJWwqQnrWBX8o1BfR2WJAkwDzJVfICoPT2y7_hUrHDY4HCcoaXZ8edy5wpGg-aJpVim7-dAwPTxo-wkuXo5EHQ5LbbE0cLF8pOeOTtvzIynRSHVh8oho0OpdtUgg3XdAa-IYeMPTEaj5zbvMiaHbrAaT-gswoQCNq7W33QzCRtsYOyGOOau02_-Hp9nuE62osyVvjgseWnQMbKaQwEfkNi30Z_sRAcpok66gYVl5yD9-ePFOkslbvbEMroOnwIFMPuA9xDuDjunpdlBGO0iZoREXFRWtWVO7QslAEHg_qUg0f4NI6ru_-pz5OXDWtRjCviXMo4uSNBNv212Uhd_XCr5tnPrGWbst2g7PZ71FKArDMdL4GbAcXJ7a-RL0nRwkuL_sSpJqCteFRxL16UCCACFadN7lsqKkbQMCM14Isd09lDDW6SmOMCmRsTPfIZ7SWXyh7HOK-jTMwh9m4w4nac6NbyZSuRuVE_Nj8CR8ESsqLd3ydRqIdmFJnkZ93DPQhGMWk2Oe4S20SP-jBBqtU-VSEx9L4VhsfAHNv4-xcL0S-Cvu1uDTE3zksQc5wgWIl8qMXSyXqrg7FyQvuaJUjckDq5X3=w1919-h918?auditContext=prefetch" alt="그림1" class="w-full rounded-lg ">
+<br>
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : 1. 스케치 학습 시키기</p>
+<br>
+ <p class="text-sm">
+‘1. 스케치 학습 시키기’ 버튼을 누르면, 그림처럼 학습할 스케치의 이름을 입력하라는 창이 나타납니다.<br>
+스케치 이름을 입력한 뒤 ‘학습 시작’을 누르면 잠시 후 프로그램이 실행되고, 주미 AI의 카메라 화면이 표시됩니다.<br>
+이 상태에서 주미의 카메라 화면(ZumiAI stream) 을 클릭하고<br>
+ r 키를 누르면 이미지가 캡처되고, e 키를 누르면 학습이 종료되며 모델이 저장됩니다.<br>
+</p>
+<br>
+   <img src="https://lh3.googleusercontent.com/fife/ALs6j_FFYBlnk9xfxXf6UspHbYxGkposUp-2gng3DsD8HU-75bFSAWBN8ogl3nNIs1RBFyq8-z5Jlorrlhf7kehD7Onh1reeDrDbAqcf23tN562oxCDo4-en3Y005ghzzSZ4kHCSrhu54plGzYdiCOp8t_nVtt0SkSjZhx3V05Wgk7ycSGX9siLnUZzD9oj-HnUm9bwsJAZOa5ayt1yIJWV2Pkf-SBd_j1f91cnCY_pFtZ4zB0HBxpZ7aXCd0vaivETWVZ6Jdii2crI5ckYH0HJyFmqTilJ3h1qhpGls6ujIczS7wEdl6gV6SbhhcrwIXC5PilvN_JijXwwZnTwfrrmx86rxFdK1pnJ15SocRn9ziTp6BcN6u-dEJl3J9a66S4UHEuRofW_Pv6KvzXcwvAlkkAd4LoqYj7huU0m_gKlnsXbhFFtVae_C2ws4Fp0nlhxEVv9wh5oHtFxOinW2mPI8qR9Bhjyj6Ho8_P31uwueQzFzZ7Tms6edBlGNLdg_Wg2j6HduvoNNAwUuDjZMEJwjoIYSP10fgpSfIXUme3purcQUSLTdcL7Eq3M_KRg8BUtEkwNz3sQFXlo9n0tSbVcoL8aezs2JEwH4VtdylZq1Fa_BRBWN8m9vAf8duls1uPN6aSvNLQGw9uhI3O-z39z-APIPaqc4VOCoE9RKVp7r1fvZF_aTUazyn1WRTXl570jFco82dkA92MyzTmSYcPyU-RDjyPZc9CptqChQG89wuPsY-53WlHqlkgh_ZDt5zyvAsLEJHLgaCChD03LemL5qSWLzryCrj50HR8Xo-k_LttnYMsgj6CD1N-qZyxi2DU2mSjwgihZQ-F0RB74sh1kK-4O5DWuTc7fjUYFSHUaSM5NfzeOjU3q1y-h1Bcio5hFVrJRWSOcP4iQMJZziGJV84OzhtKqXb5SbWovI-yYhbV4oroKOFRldOh1sAR-8MiCgNKMt8UWqAxC-b9OuArb-UveZxJnJ-o57xNxQgAUZd9Bi-GZ_Tz1KUWBHwp77mVws8Sr1moHbbtw7jgtSvlCI8sr7Y7kAteTNYHhiMUIgv0F2iqmtIjLwGl0MBXpLFTcj-haY6SDJEGFEO0rWAlOiH7b-4fhQ9iW0_yyJ3JFL7t6WBEBV0BlYhDcR6JWdOiBp5vMWdEA4iN_f3b3fEW8dDQ59rq_wLyvYRN6izr4xrPNBoI9t44hXhRD4XkhoPv-7FQUy3JbiMTwSi35tfiOt_sQw17-IovEs9wB6B4MPU7oeYzZEb7J7S6KqfyKzc1JyLxG8QiJGd3HY05VxKDBp_yW8q98x-J9d9h7S4vVVuN6NKUGPX6T6Ka-OFUEbtC0pD8oG60peW_cVR8QWvPO0wFnDWknIHmMnGMoTMyFHgTm9apDHu2vuAo_Z1Ch3XvAVSdgtYH5StSLHgWkb4eUO5d5moI_E-SxBnY3dzdKjtqCWmwfrdAwqsw-jfezc_99XW9HafsCnWW94FcL0OTXnK6zMpYQQq40zFzPYQ6OlB1l9V087FnFuwCKVTm4t_OtX8IhgAoURsKTW-q9kQ_ZYPA_t0B7m23Pmung99_IAHhUwlM_I8HGM38aX-QEQJcxDwPZhpQgT5h96cwwQluRdyRYe9Woc4v2RpcU7YpyPoOi_PncmQwtUdJ2vbuzPurbGXsVB0NJ2UM7fxA=w1919-h918?auditContext=prefetch" alt="그림1" class="w-full rounded-lg ">
+<br>
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : 스케치 학습 과정</p>
+
+<h2 class="text-lg font-bold mb-2">🟩 2. 스케치 인식하기</h2>
+
+ <p class="text-sm">
+‘2. 스케치 인식하기’ 버튼을 누르면 새로운 창이 뜨고, 여기서 인식 시작을 클릭하면 잠시 후 인식 프로그램이 실행됩니다.<br>
+이 프로그램은 이전에 학습한 모델을 기반으로 스케치를 실시간으로 인식하며, 위 그림처럼 학습된 결과에 따라 화면에 결과가 표시됩니다.<br><br>
+</p>
+
+   <img src="https://lh3.googleusercontent.com/fife/ALs6j_HAg6bxSyPr2uaziDN3dn5YwwcgIZxD3TgXXIS9ZBNzMrUa01KbUIiKX38YTUqt1G9XGtByo9mGx5WVUfeoNBFp8I4n8pcVzRFK_Xm2vS49UV5TxzmMpCYz6vNCNIgBG6kGHfbfkaNYDo2jDkWdEBOU0qedeoN0-znpdC8rVvyCS0DrxV9mWNIKIWdcx9DyMDXzw3jopEXzJtlSccApiKEwxqFWDJDrDr5XXayAUSdHzWgWWuT7YqfdUTMmm8x1sTYPtClXRHNnndZ9-s_UqDAVQoXhdGzbQdu81cvlQ8x8AX-Q9KHc7KKPuwlwBTM94AvLbOEc9U5VJncTGfd8jMSwyuAw_y6uBBu9s25WzZtywzcUz6Tq528pPFFU8duvfzZxw9OqLm9fs2J25hrPv3sJq8vGnu_0PlMhGGHQzg5XJXRCxzin61dymib1SIWDwCVuOljVIr6mwlFCUD8BbnihkLcURQxyD1ldA3OH5gol-flyBqLFues3E7oijJhaidV4P3LOcsYhTaAOhpBbA-jVxHcn2cLs0oqwURsbtWzztCkIRDX35o5cdke_TLeUeETgt4gtFmuZLSExtK-E9IEvyolIdl6XkxtBaCFI_NrSPY1Dmnr-KMi4Q7Qh4egDRp8HwA9pGRs90YfM_XRC6aY-1H0SzN3k1b7DQxGGN2BQLfr6zZOAXqjfvx7dv-PJIqJKEw4uQzkAumSbzFgc8W6b0_AIeGZeIvGaUHqByvFZKrQcOd-QaMVPjioPAe-sIIyAHVKjjmpyw6QpoIrCE-3yOKX0Tx785DDhngwN0vdRfratZOzzB0UxP_Vd2Uzh9MrwsxveEFe2tEiSwJklh1X12Znz2QHRnhKPZKP73gKAxJa9ZTyZ5ydiArV6QD2E0fUqpxB2mT6RqmOB6u-di-EpF-yjiU1O8A7Q0FLGZ8de_Quw21NiYRw6TWsIhPZsbbxbtdFJpHNywQByrgAn0ev9V_eaC8OSX7ALCr4oQZ6Jn1PiyrFMLSWFxGO-tjZgGKDebdndy0RtcPBMHLSlHlTGg0VdOW-2oRTCvbFe4F9HyiM8rYyTQXMWZVLni5u5yrHKgi0HvRnjPZVVJvxlfq61iUaaFBZyqQwD26WX585zSfntRPp9PgEVCGV1IS6is8gNQbdlih4befkvjBfaTGx44P7h1JBJX09c7f9WDZ_nMXJ8rXYPD06E97JK-zb18v8Z6Q3g90iGnm-pIXTEyZmGlNpnItwNzu30UjEMIqIrDHHpfuoZdTcjmd9INVtz6WH8Ac6rbWQYK3AJhfV09A9pMqYosv-iVHQKv_BiWeZBxQBaPHPeGwlLBBYqz1ivljRb6m_ImNESjyRl18Y-VwofAuE5n84cWhe2zxaII_IW3SMi_Py5EcT9ik5F1kHFnwKH64zOtBLEoL3xfRROVOWpuKxSTY9EIIbjPUp5hFt7GYUsweH5gYuc15Wc8OguTdBzYRpcx6V1FNFCgQBJGdFYFCRVyU7QXAe8JvIzW9rIwdtSSRcTzwa66lntscnPiw4GjBE72E0mSjCMQSQSqg7pAprFRYgENL0FXCSsAb97rQZi4PRCyfMoryxzV7YrlYr2clvrf6iLKiJTTTJFl0CTuW2XhSxUlQMsqqk0Hf0fyhNBR3BOlINLdrOdVQMJ2xUJLCpTUQ9aTg=w1919-h918?auditContext=prefetch" alt="그림1" class="w-full rounded-lg "><br>
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : 스케치 학습 과정</p>
+<br>
+ <p class="text-sm">
+예를 들어, ‘house’라는 이미지를 학습했다면, 단순히 'sketch'로 표시되는 것이 아니라 ‘house’로 정확하게 인식됩니다.<br>
+또한, 인식 프로그램이 실행 중일 때는 ‘인식 중지’ 버튼을 눌러 언제든지 인식을 멈출 수 있습니다.<br>
+</p>
+
+<br>
+   <img src="https://lh3.googleusercontent.com/fife/ALs6j_HDdvGAnDC0CcSaI8XEHphA8mC37rqV7uXcTfAM-foDaeua_h4em2M7pU9Kycb-FXvLARdEa7kxWjGDLxz5_Q4lB2-gWi8b4_eiHzvZCA0M4bdorrGxqfSoO7tefceNtVBl_CayGB0SgNiBSSAguxVTV_Bv-K7QgUO0mDoxbi2aFn8FCBnqZCYoZCM6tDQfUi0_7Ctco77p53HpmAffOppKS9x1PytmXA6rkjE7fAiIKI7X2WpvDyghSU9mX6t7zwVdEODLbUcEQTm4RnJacnA-3dFTLWvAXku_oNSTeVv1ZXzs6zDCA38IK1lu4bjcWn3mpFkHD4a7R8B2rhdCjDSE9b6XCX7OBOef1CaI2LP-DIcKWl24HChYtUAyH66fcM7LHCQkxX_7FDBkzEMyc9LaKUymfDdral0Od4sPcozGGOEfjOymwYfCnen-Mh7U-L17sP2292deCIZkjAxRdVVDAR9eV745A8-Dk1tM0tpdNT7RTg2HXdZb3UXYSL5Or_uvBHq4NWDroI6-01PSpIOf9_NAjRphJIXmVwT-BpzusQmaX3Ndo-2wutRyxHTEhYFgY9aBVlGsgsqVjslt-cMuW4wSNGYxnxeFJDZjEvCbXMN_bFpHYy8CtHaOBGED85uhSAzj2fABXdN9NJJxPpgopO7jWfBbzoDeW4s5vOSoYWPcmAFtF549A1l5d1U3peIrYs4bgUMXO2N0i7FpJdcF0COxRD5T_wW8ZDj6nq7SvwoQXP11FkhyEpgV-OuIhartWNQzNuM5cv3i-Z2_qJK_TjvQuJ0VAn7tAfEh31MRl0zW7yR_ZKShffWWd59wGk4WC75xG_qfpa9GNiGBtOetqtBXrB7BM6dTa9oSZmhVJBjSihKoeHuXS7_fYUezLksWYc4I3KreFq2cHPTCh3LKoyfgxdHZkL3aX7ARcPVrLY5Ub_qbOiiVgfg2-3zhr29bR0jdHtAhXZ41F_6kfTQo2zNU9CGkF69WcxRJ-eiTlPxf0Z1bPC6IBHqXlFDVBVx8Igpr2JiCdW5mcnc90IT11y01FO3ZKSIELEdz_byjD5ftpqC_aQckc7nbkujOOIGcbCqLRLN2Hif4G1-s6VYEM2oucrCvlFJ6SPB-lLWtmCiwd85VFPLNZaTMVmu6fp1ciEaQohC9FFeLtCQOVLzrjT_yAok4Q4ktFuuJa19f_R4kO4HUtaw1XxXnOM4t8EQUmNyynSlbkbvWdLKpa6uzVx9TPIrFypBEJOMImrPZe6Asf8fZgOaFhYElLjZG8PkT9-Q7oBwdS_784e-ZMq8O40Y9mJa8axCH_7lGX-e8egv04H7gaZVlfgHE-N85U1fIYKK_MEOZciy0gUOv9vs0isuBWkUu1mAH54mWPAM-2skGNBD15ulPT2-W5tzBr1uiYCRB723Ln4fI-XlMeNGk9DpPh3RtS7lAp0VQ9qcqPLVdT-PepahnQ_flj5kIabCaduzDuWyBEvx3BC_QBOgmqpagqf_6Y61Bqo7PZ3bzd5d5v3ZVMzPnY8HhR5jJTsdLj7356i6_b1fzuvjYjZwPu8iFGxumeuBg6zTD0_wRH-Ft49-hnIldPmnpxQD4MLOKpmEH7iXJNXydaKFyIqItci8VEyaOm8dwXl--Y9X19vTx5xLwz6KwyVfkE4Q4pU2lTlqAWzz3_g=w1919-h918?auditContext=prefetch" alt="그림1" class="w-full rounded-lg "><br>
+
+
+
+
+
+
+<h2 class="text-lg font-bold mb-2">🟥 3. 학습된 모델 삭제하기</h2>
+
+ <p class="text-sm">
+‘3. 학습된 모델 삭제하기’ 버튼을 누르면 새로운 창이 뜨고, 삭제할 스케치의 이름을 입력한 뒤 이름으로 삭제 버튼을 누르면 
+해당 이름을 가진 모델만 삭제 됩니다.<br><br>
+</p>
+
+   <img src="https://lh3.googleusercontent.com/fife/ALs6j_EQxw9LgSZRi_wZv_AyS8OXJQ_HOcAXRa9QWUHv0xZi5gzo1A2FR_fvjv0ipAhn8Ll4EdShQYm80q36CVDyEdwUgM-0DQxGXGApRuj4tSwbOETUiTu4KxrKMLCpgOqIxYrCQ6QE9NrziRkSN7Z1NK8je7GEm6c3ISy50mmJ-7wMVQW3WijZE3ZcUO5YOYjTrLlHfl7cc3-g_yeE1lpvKT2CORG1ifhUyiC-6KHs91FkgmRpZPH6lMOpjdxjiRSyY1tQAePzj91dBQRLuvZt9F-0ir6wzoQH5LD0RSf7eUOYksTfjTDYmbjomR7S0iZBvTYNjtSc_nAf3VWvCUzthUi2Ho29gtDoR2YOTX1b4BdYHtqRroetrZtVZ2J-jOIaNuBWWKp_8CdO9TkdqdveVnx6XbydnImciEKtyKsbicy56g3BDRQSpmlYT2E4JlA_bMQPrVifW87WQMu9vm8ig8balH-DkDmx2UGVAcCmna4Dr_cSc6gaTyvgLFlPokalyKsmhDuzCkQ7xUgJQvCvS-AdtsnRZUzgR_0Yox-5VOa28Vx5UF8r46MR4-XlCJw-braKgf17XBOuBEgonfuX6vHY-YtGgX_YdhZj-WEnq9Q77AcMid4H3WJdTXtQGey7i6yZiklmuFTygz_IXtFtjeuvNG0mQCrCQXevT_UK0tsuW8r3VdJiSKHFax1KEhY_EhVPXhvaagSRdLJYLnkuZr8usNJiGgGCFIeN_jlcJJBfeDSNGeyxM9osdbdYRI8wTWENDrF0_rLPlmFbsvoEgLcA9UWIQlrXI6acOUJXuzdQ33dh4sE9zK0NBdnwd_rs9tQdFU3yjHuIBjgxqb33pvVVr5SiNopeQKILfKSKUAwDJwQDsYET3CUIO8HZhmRn9Z-Cx1vZqBZWamtJlTsDCcr0NUaTQ_1GCmAWkW2Sw7wJ3os5MTZWHFs5mnQ1UuNvQWcnKt-vy_NyRk7S9P4QLduCKlJ31h4KqhYz7oNZ7bzsUs8G-yBcV8JA5572achptI4YmPVEh9dDgamFk7zRq4ZYW__T6NcQZPckpSThkigSTwKbFZgFB_jUV9y8ObcVi4wE2bZDkzezVU2Pq_DvWrzc6TGN03lNW_IObzlwOIBNZiMc26-D3XNbQcZouZw-_XrkRF22vRe0bQgzxy0GHDqaL_X4Ray5Bad_V3sBq1xUOwN_m7pT_Pw6a_xYqquHRIn-rIVvjDogXG56X0SBFGUInbz2oe9VqIOwKjsTIa-YcfU7YwsngVcZuV0GbrKAgzdD-l5jAU1ujbr8_YXIwwdO6b2dEcY9sJQOdnd9Ls4SchBNW2G-Wde2gZe_6JDhSOvIE9DxYkwkumfjnq-UmW9JK8mV0wsrQyvlCMRa8qh2Ngx5XJVMPdgFE7coCvFnZla-yi1Jt_MTwV90n2jR5044QeA0CH_9ATQ4uM00H78DNh3qQ9hbvKqlLpojPADJCnsJ-HiBRQyuMlPxEXHja4qmziodlJC900XLjRA6TJrkV1W_bcnmdKvjQo4Uu8pV-ZsE2hOdSgvQI3G8yfIAqS6aOe5vkFDfm5csmT3DqJVFiHzPFL_Sp_9yCIIELNpzhsly6wcAQmMd-2JXj_0zEUAQxtBeXFbJKsf0r8wyrx16i8Lh_hdTOWbYe5gL7PJA-pGbpTjGl7o57g=w1919-h918?auditContext=prefetch" alt="그림1" class="w-full rounded-lg "><br>
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : 학습 모델 이름으로 삭제</p>
+<br>
+ <p class="text-sm">
+또한 '전체 삭제' 버튼을 누르면, 지금까지 학습 된 모델들을 모두 삭제합니다.<br>
+※ 삭제한 데이터가 캐시 형태로 프로그램에 남아 있을 수 있으므로, 보다 정확한 실행을 위해서는 삭제 후 프로그램을 완전히 종료한 뒤 다시 실행하는 것을 권장합니다.<br>
+</p>
+
+<br>
+   <img src="https://lh3.googleusercontent.com/fife/ALs6j_HtDwrt92BDMizUHMSJsHEosyqQX19bpnh0A-hTxkVZQgc_coSYPgrD5o2O_oOPeBo_CRgTg1R9bYznU7nhre4e57KfAM7L6f8U0BljFZky2Ao_9wLtRKUhlB2IuFZ-1_Gqx4jghMGdOr6hyUFLWt9xMLGA6iGDpXs4uWwBz4Jf0_5HuXavrkXroEX34qKn0b5R2h1be6zswzvbybEvR7DP8M3tdsoU8IDucAq-PRYaBq6mHff_Z-4EBgVVCnrJHqcGI_pT8RWGngivOpE0AEzaWZJ3JUGxfpQ8AuKfC2wP1QUVjDXDH0n9Vp4Yjlnp9dZsnOf3OkLrENTKSxjBUzVvVj4WXD3S9sQaPkmyobDFH1l8sgYv4ZY-KClxbCPJX7rkSLksuc4IltQlCX_SWW9L01OnWC-5h9dktoyEuL7Dm1jdSdLP2qnFEgC4__4ZoTzAc0n9gG0wiT52XEyOhNdeWKFbXCdaBqASg0BnQ0so_WyoZSadJKiR_ic9N9lFKaNNnHNkW8Cja4KgBnAYKJg6luWAgeo1W-gGjlyVmTkLSsJnelR92jx18hRhl2n8E8zqVY2I0oLoFoTLPuHGfXo53y3zmW98pWaBneyelc1nOfhJPakmcid6_spmmn60cTvypkMMbd4RVisUmvYOxiM78x-yrG4mm0pDdJKhoL1tjsO2R5UKWBNERP1sMNCr9P-dAKoGY735SXn49Tvq-3IcaemZxDhgrxhNuOBhy8GL8M4eafHYfNwYK1fOEWxg9KWtDP71PyM4tzLMUTpC_lgEcktbz_yIXXXoQJB46gNHK9in8SFHfaTk9Ld9a6yotOasNRS15jdaWO2U_dya3n9B38RKbn5QP_makX4QYgud9CzMBVeFrNP0QYyns86NDzCkbXSqgqqkvz06tjdvAWL5agza5bz3RwCFPEqmNmce6zB1DtOFq7ywMteYHxiTIO1L2iUWh_HUUPdWwcVXRsuowB-snSO4cqj6POhwgKqHoQUn192IYEFzbbkD1v0gm86Mv6JA-Xi-7Z0g9vYaIR-ON8mIb8K3ffnmewxMT8adLcIewk9LI6L5vbG17VDz-heltppR5d1rRrKkm92L3jefuiq9sQVChI_YGIXl0dxJinp-JECsQxVfsvw0fUs4rOThhbxHQKrRukj2erH-LSc1Msw6zXiveYOS0fmOhEaRZQRbMa2nBboalvgks2zqFKhfs10p1HvNiqrUhvhQJzWT6qTMQHj-2lv-wgOwFXqlAZuxVcU5mbz53REA5INCmdCFEYVPrYbdfG0oXE93EabcpHv_JaeGlokgFR1dvKngcESPCZuOLnuPG8Cu4-xdQAcY-U08wFcSoe9Rds1UfUF3D_R8Ql2rMNrimvFLywsgTl0JOilO8Tg8j8V2gXygxjLnYRdzxSr5sd2qYXzIfZ2EYqdFZsDYO-2sArXI-UEOSd_VyEeZ_w1tZi7aBXwdpYZSpTb0Gb1FM5AuRTb2v_fYKl-iLV47mSja3qrS2Q-lrIW6S_6nYtZXcssUPaGoNXU-fFX6aG2FPwA19z4RI1cfjV8EHL1AgDYrgC_qKQqpPcYj9fcsCDsYJOPm9rdiZs6AVIuJBAR2LNmlaiZRZXGH96lMqaokfKp7VQkt-anzsU9P2zEW2P09QNR4sudI9qg9hhPfMI8y=w1919-h918?auditContext=prefetch" alt="그림1" class="w-full rounded-lg ">
+<br>
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : 전체 삭제</p>
+<br>
+
+
+
+
+
+<h2 class="text-lg font-bold mb-2">🛑 프로그램 실행 시 주의사항</h2>
+ <p class="text-sm">
+● 학습 된 데이터는 스케치 학습 경로에 따라 PC 에 저장 됩니다.<br>
+● 스케치 학습을 위해 카메라를 켜고 끌 때 약간의 준비 시간이 소요 될 수 있습니다.<br>
+● 학습 데이터는 사용자가 임의적으로 커스텀 할 수도 있습니다. <br>
+● 이 기능은 주미 자체의 하드웨어 기능이 아니라, PC 기반 소프트웨어로 처리됩니다. <br>
+</p>
+<br>
+
+
+
+<!-- 흰색 상자-->
+</div>
+
+    </main>
+  </div>
+
+
+
+
+
+  <!-- JS 스크립트 -->
+  <script>
+// 별 반짝반짝
+  const numStars = 80;
+  for (let i = 0; i < numStars; i++) {
+    const star = document.createElement("div");
+    star.className = "star";
+    star.style.top = Math.random() * 90 + "vh";
+    star.style.left = Math.random() * 90 + "vw";
+    const blinkDuration = (Math.random() * 3 + 3).toFixed(2);
+    const moveDuration = (Math.random() * 20 + 30).toFixed(2);
+    star.style.animationDuration = `${blinkDuration}s, ${moveDuration}s`;
+    star.style.setProperty("--dx", (Math.random() * 20 - 10).toFixed(2));
+    star.style.setProperty("--dy", (Math.random() * 20 - 10).toFixed(2));
+    document.body.appendChild(star);
+  }
+
+  // 모바일 메뉴 토글
+  const toggleButton = document.getElementById("menu-toggle");
+  const mobileMenu = document.getElementById("mobile-menu");
+
+  toggleButton.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+  });
+
+  // 모바일 '챕터 보기' 버튼 토글
+  function toggleSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    const isHidden = sidebar.classList.contains("hidden");
+
+    if (isHidden) {
+      sidebar.classList.remove("hidden");
+      overlay.classList.remove("hidden");
+    } else {
+      sidebar.classList.add("hidden");
+      overlay.classList.add("hidden");
+    }
+  }
+
+  // PC용 사이드바 토글
+  function togglePcSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const pcToggleBtn = document.getElementById("pc-toggle-btn");
+    const isCollapsed = sidebar.classList.contains("w-16");
+
+    if (isCollapsed) {
+      sidebar.classList.remove("w-16");
+      sidebar.classList.add("w-64");
+      pcToggleBtn.innerHTML = "-";
+      const items = sidebar.querySelectorAll(".sidebar-item");
+      items.forEach(el => el.classList.remove("hidden"));
+    } else {
+      sidebar.classList.remove("w-64");
+      sidebar.classList.add("w-16");
+      pcToggleBtn.innerHTML = "☰";
+      const items = sidebar.querySelectorAll(".sidebar-item");
+      items.forEach(el => el.classList.add("hidden"));
+    }
+  }
+
+
+  </script>
+
+</body>
+</html>
