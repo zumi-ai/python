@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>12. Teachable Machine 인식</title>
+
+  <!-- ✅ Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    #map {
+      height: 500px;
+      width: 100%;
+      border-radius: 0.5rem;
+    }
+
+  body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #010415, #000C36);
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+    }
+
+  body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; 
+  background-image: url('https://lh3.googleusercontent.com/fife/ALs6j_E782PyIFMYtfVVTWKJmz-NPOAMoNGyICJBadA4s8rszXoBW1pdOjGqEGLaJ6a0MTRkxoIZda-w1eEBdzmu7NpqU9QlaUX2XQY5BKLHSPbORtCE87IE3XMTnbsdNUIM2QDvRB41vYEKbzD3Y6bCsxXuLgblYo45APBATItrnaPs5SkcXeu9aMFuO8Q6kvoPorMCwyAObsM39R5G5_E_Ny4k4oc1IHZfhdJELCCBFT-uuiQtWHXXxmLmcqqCFV36Yub3GZcoAkilshppk0ij1iotqUM9Nk4fNUjg_HSqeXi7yzrZ4gofhiS8xQebPOsnnYHgk3L0SCghkoc6qFYFWAscDbY3J-T3eetqtbXbB6-v3GNFW7xti1pcvNbgLjZtRsaIGJynrnsWED8AUXQRHCk3EmYfxA0gY4wsBe-hWeGJZY9cofd4gEbj7ievulF49GZV7LRbry0cXnDZVSVQYrNcc8oxBM5UvAhNouLXYIJXJ1_XrT67zlzLmaWFvgQQjBnnk2oQX60UerK8qSGRhQ8Mmezkv_cMpiU9M46f8t9rwWVhsknkIxzWOEJEmq9ZT1gDIu8pJuJ3u-S9ZLVvKY8HBMqd09aJxwQfKpdcmEqOn2DjZJ5Ia6EDnV0d-41bYyXz0oZOcs1sDV1vh9Ecz35P12FNqpPjzcYZKRLxGdGyygvDYaACaFqHkqaXrW9pE58AAlqvnBmeyNW8NlG2c52S6Q2lsdbBpAWcXQp0iswofLRMi6Wd-Q1B6UUdMXZhyEAdOtiCngRDzpx8RasWmW-9ZMSqnwvl3B9eB113R5jXh6ZB_0eNjO20SZXZn1XEZP-iD0C0qZgHA_-dVp38zoiT-RutNUwTPiG22-Ff6w_JWic7E1tYgOgMCGWjKDdEbHZW3GB3zXyBrnyH81_8oPGApy1vjOa8_pqZS5jyX9PFbODsrQdPRwq4xTMYsW6OTvG08eM96O2lOThJ5PzHxrOYSpOR-kVKLM7VBUbQHPYq36ECuFUY3kDA7yyMnVm4WWMlU3vS0aguTUUva3CAskP6V8difKwvTNgeKae8dGv44TUtEHGvLjk1eWiBrThOEBpik5XOrt5Y_2d8YnWvbymfdh1QdqeU9o0yxC0tVQBDuGDjkfNVsETEGIK9Sy6ZHBOlQjElWxhelqVv6CaiKM8hKEtfTQoJAgJsgboz_5VGUU3hye0xJY18dQ0bQ23jPDl__tjztKa64n8Hw4BzvKDG_cP0J-1h-m3C9COokR6tTEWSzUyRtK98vafvKmkM8Jw_o9UnoxEN9dbo50aKeD88MUKYso3ijwz-H5DNJHK9wNhgnp2Yn3WkVR_ZtlQpfOcJO3hNmCVOGJDdZ9g3gUBDjQXFg1I_Ww7Wc636ttmFKGDuYeNvyyiwLCmXtbmVhkT29p2M-k4_CQZKh-nDzkUlD-B3oXw4DQr7qr9qXEPX7zFqi0KW521Bynrl2z_NP5nf-AWAun8hnjrpdxoedpcLYra9Qqw-7Qz2gptYkn1FBtRCdTMKEWvYiHlOcruhXC1PSTfyHahNxdVaNkhfDtfnF7LZu0NSlx-JOcMtigLfj8iGGneEDJMB3HlA674Hv6s2MoVnxU5E6x71lqwuC0n2oX5H8BRUx0IiOn40i9TcbEPpzDSwPR8hk3fyLQ0_LiReswY0HUhPAA=w1919-h918');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.5;
+  z-index: -2;
+  animation: flickerOpacity 6s ease-in-out infinite alternate;
+}
+
+
+
+    .star {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #00B0C8;
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: blink linear infinite, move linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes blink {
+  0% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
+  100% { opacity: 0.3; transform: scale(1); }
+}
+
+
+    @keyframes move {
+      0% { transform: translate(0, 0); }
+      50% {
+        transform: translate(
+          calc(var(--dx) * 1vw),
+          calc(var(--dy) * 1vh)
+        );
+      }
+      100% { transform: translate(0, 0); }
+    }
+
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      background-color: transparent;
+      text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff;
+    }
+
+    .neon-text {
+      text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+      animation: neon-blink 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes neon-blink {
+      0% {
+        text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+        opacity: 0.3; 
+      }
+      50% {
+        text-shadow: 0 0 2px rgba(255,255,255,0.5), 0 0 5px rgba(74,144,226,0.5), 0 0 10px rgba(74,144,226,0.5), 0 0 15px rgba(74,144,226,0.5);
+        opacity: 0.6;
+      }
+      100% {
+        text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
+        opacity: 1;
+      }
+    }
+
+@keyframes flickerOpacity {
+ 0% {
+    opacity: 0.4;
+  }
+  30% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.1;
+  }
+}
+
+    .auto-image {
+      width: 600px !important;
+      height: 400px !important;
+      object-fit: contain;
+    }
+
+
+
+
+  </style>
+</head>
+
+<body>
+
+  <header class="w-full flex justify-between items-center px-6 py-4 z-10">
+    <div class="flex items-center"><a href="index.html" class="Logo">
+      <img src="https://lh3.googleusercontent.com/fife/ALs6j_FpAj7oMETlep3fCBHYuZGq6DWoc60B49wnyNHOTMWS4llCaS_Dp1WLetK1BMHmti4aHnoIXtcVTmgJozC5-VcrBMfRf_pmuzJwULdG9kDt6CALW-P5LRQI_XsXKEB9aJKmDaYTl6V1QaFdPJVpK5YNQBhlW2jdI_AuDvDA78CfUZ-unq3YrNsIHtalQg-UUQQ_3xPZT6uK4tsd1fLzGhG0-axfqtU9jKSbt_DqT5C0fbHcHdA3TFXzaC0PIVtdZWE7pevMcpAkE5GGH6e1RZ1Xa3bQVi4p-EefrONX0wqt1oGD9YFE6g6o6wYkUcyMgwmiAqyMLo4jUDkjfr2tQ_RAiu88W1AgAPtCm8VPp8iQqHsxxdJkEg-OM4kWXs6BhcT1HaUk-uyhd6V3u6qeaAugGSjTgzOhJE8_WB-Kg0_EMceh1aUtKxsKF6sL2s9SYoiBPeodHQZ_JOfPgfrJ9saqwzS1c12GHZQPA9214h2jB3B342DTmtnI3Kjke9ZACcerZTGmgs8r-M-KXZfaW3GGrMeGyuNiunkLZPpoaonQfsVmr1bTddKvcd2CIDuynW_IrFk8mGF7QWfEPunNbCRW5giSKO7G24DSsZxBI9z6ZKUTYc2yIVUMe6lvPUn0fiBncb1DvPN5KwQ-wo-085B42dWoe4A608RY0V0Zw7HX5z3nAqlMGoaugV4hlbRr4AM-utqOfrMeX_L1WyndUfUbzdAvb567Wm1lFLvBp68eP4SyQlwKolfA46zTPuSnYdIQZqeyQBz-k7LGf_KYqjdYJgQxs98ug55nA-K9l_S9JERHaBVe8f1WwxzDyLJyrS84EZFy8DeW113a6osXVO-appgYVBiLOwuxAiAMfLiOhHI6vnxaLm0_XnvRl-grtv4-B9wovOeAwWWJ53EYN-OvVwAKIrzORek9zZNaVE7ZdtHbO4fJ5GHKL6pGx8e45NdnMfBaPqLLUZvfY-lHnTfkxlNkauTHtsghHHd1IOtCREO-9sFepHhsZdyonnEyoOdfcDEIUUynaqkB9nJ6LRnTREJ57v2eKtxlRyczJVcMYAePf7iScHkDM8SXFKLbAzfXff9lBiZzqUXzpMW5wTiDb7YhHdCVFQzO48HMtmbHuegn7qYh1DDNbhzzFj1mjuadOJx1k5ifcrOCc-gaAQZTAOYSfddaqn2X1ISnpK326an-GOJ5NROtbwwXmpSApWXVR1S3te51R8E8YdGR4MIl_A3PoawJbN5OGh2BoPrrRuwxESmk5BbUtxjRagSnhCaAkOZ2pHzjL7kyYpCK6zfAgDfRKwFhU6UXddvgKIkcUkH-LgFj4-2IHb4AKILBiHIRcoImi8qHz-KvtxPTQMVUbUf44V1Lwqv6-JemKVzmGy8ZUJPaexdRtfJ1dwrNmm6K1otLVn7TKePyOS6UaD4FSxavVGJMijJNXZBXKA5OzU-ZP9h60Dil3L26hrte0m2ioVhqV_r5dBxmNhchgw8kyaaFomXDRYgj1nW9Ja5YMUOacyTc3Ms0icahuF3vUm25sjH4H8rjWGBUYKXIlM-K-QWrpRDD6HW5m5FzIlt_nNVirFunkfenUXCNEhJVg-khcWOEd7YEvbmk50xjUsAldDIUIsQ6t_qbEvAnM88NBSPLOOLHwCZvVuXbsp_dJAFRmXY0vhmb=w1919-h918?auditContext=prefetch" alt="Logo" class="h-10 rounded-lg shadow-lg">
+    </div></a>
+
+    <button id="menu-toggle" class="text-white text-3xl md:hidden focus:outline-none">☰</button>
+
+    <nav class="hidden md:flex space-x-4">
+      <a href="ai_gallery.html" class="nav-link whitespace-nowrap">AI GALLERY</a>
+      <a href="example.html" class="nav-link whitespace-nowrap">EXAMPLE</a>
+      <a href="https://truedo.github.io/zumi_mini_python_backup/" class="nav-link whitespace-nowrap">LIBRARY</a>
+      <a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=81&display_group=1" class="nav-link whitespace-nowrap">PURCHASE</a>
+    </nav>
+  </header>
+
+   <div id="mobile-menu" class="hidden flex-col items-center text-center bg-[#000C36] w-full py-4 space-y-10 md:hidden z-20">
+    <a href="ai_gallery.html" class="nav-link whitespace-nowrap">AI GALLERY</a><br>
+    <a href="example.html" class="nav-link whitespace-nowrap">EXAMPLE</a><br>
+    <a href="https://truedo.github.io/zumi_mini_python_backup/" class="nav-link whitespace-nowrap">LIBRARY</a><br>
+    <a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=81&display_group=1" class="nav-link whitespace-nowrap">PURCHASE</a>
+  </div>
+
+  <!-- 오버레이 (모바일 전용) -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden" onclick="toggleSidebar()"></div>
+
+
+<div class="flex">
+
+ 
+  <aside id="sidebar"  class="hidden md:flex w-64 bg-[#3B82F6] text-white p-4 rounded-r-xl flex-col space-y-2 transition-all duration-300 fixed md:relative z-40 h-screen md:h-auto top-0 left-0 md:translate-x-0">
+
+<div class="flex justify-between items-center mb-4 md:hidden">
+  <h2 class="text-lg font-bold">챕터 보기</h2>
+  <button onclick="toggleSidebar()" class="text-white text-2xl">✖</button>
+</div>
+
+
+<button id="pc-toggle-btn" onclick="togglePcSidebar()" class="hidden md:block text-white text-2xl mt-4">
+-
+</button>
+
+    <div class="space-y-2 text-sm sidebar-item">
+
+        <a href="ai_gallery_01.html" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">01 ITS 지능형 교통 체계</a>
+        <a href="ai_gallery_02.html" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">02 V2X 차량과 모든 것 </a>
+        <a href="ai_gallery_03.html" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">03 V2G V2D V2N </a>
+        <a href="ai_gallery_04.html" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">04 V2P 보행자 안전 시스템 </a>
+        <a href="ai_gallery_05.html" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">05 V2I 신호등 통신 감지 시스템</a>
+        <a href="ai_gallery_06.html" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">06 V2V 교차로 충돌 방지 시스템</a>
+        <a href="ai_gallery_07.html" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">07 DMS 운전자 상태 인식 시스템</a>
+        <a href="ai_gallery_08.html" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">08 Object Detection 객체 탐지</a>
+       <a href="ai_gallery_09.html" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">09 Sensor Fusion 센서 퓨전</a>     
+        <a href="ai_gallery_10.html" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">10 HAR 인간 활동 인식 시스템</a>
+        <a href="ai_gallery_12.html" class="block bg-[#ffffff] text-[#3B82F6] font-bold px-4 py-2 rounded hover:bg-[#0845A8] hover:text-[#ffffff]">11 Sketch Learning 스케치 학습 </a>
+        <a href="ai_gallery_11.html" class="block bg-[#0845A8] text-[#ffffff] font-bold px-4 py-2 rounded ">12 Teachable Machine 인식</a>
+      </div>
+
+      <!-- 페이지 이동 버튼 -->
+      <div class="flex-1 flex items-end">
+        <a href="#" class="block w-full text-center text-3xl mt-4">↑</a>
+      </div>
+
+
+
+    </aside>
+
+    <!-- 메인 콘텐츠 영역 -->
+   <main class="flex-1 max-w-screen-lg mx-auto p-4 sm:p-6 md:p-8 flex flex-col space-y-4 md:ml-0 md:pl-64">
+
+      <!-- 사이드바 열기 버튼 (모바일 전용) -->
+   <button onclick="toggleSidebar()" class="text-white text-2xl md:hidden mb-4 bg-[#2563EB]/90 px-4 py-2 rounded">
+  챕터 보기
+</button>
+
+
+
+
+
+      <h1 class="text-xl sm:text-2xl md:text-3xl font-bold">12. Teachable Machine 인식</h1>
+
+<!-- 흰색 상자-->
+<div class="bg-white text-black p-6 rounded-lg space-y-4">
+
+      <!-- 그림 영역 -->
+   <img src="https://lh3.googleusercontent.com/fife/ALs6j_EJU7E-RKWsNCyyP0KmNRKC5_12pnK4jMF6FNbib5oKasQpoZPXjitMWl8L_C7x3t7Wj9lz8UZQgg7OZ1iVTH10PP04JEj7TfME9rdX8MzuKvgAnEBdranJQxWYc777-ROa_t9hpKt-ixBmfdyjeSwpN8oQVueleZtDH00Uc1yeavmOjMFW3MRjYXJim31iH706_MQfZBHwJ87SBMkEL3QqAmXtnR8roM-rtiN-awj4pYAbi22JdKgfDM1W-NmSZwIYe_2ju1D4_Q77LFuPzng8-jY3nlHLG4JomjgjzoSijDORouWZYgiGdgix8NeCgIsLpl_IateUuLJFs5AWaP9w1UL1ZxeDZfKyzLaBDuYi7hqpV9uLujoiLep2g2KTONCRZ1T0I_PHMQpwcOSfbnwpQSMRmgr_WlyMdPXryYceARSF5uZZF-wp93OSEDI_lLuchcZmEyd5eh87Vvtk2cRq9o8T90z3EmuS6mZEJM1rxZe0Blb35IlsiNJSRClnA7lx6fSY_95XZURYUmzbPI9cWAhtgom1z7EMjSS8HaGVmDPba0r94jGNDAbtwVikT7eNd7Ho_YQekjpLMc6JAhNxMD8zpyCRxXfDYdH7O1uQ-uD6qAXTyyOnDs5N-GP5aBMbIhU9Rs78-8VXZ65KGXvG9fx-PxhBUf5GDSKmP8tNzA89sW5TCshkuBeTAc4PJwiJnWM-7mt1N6Cum_fpA34Xt5K0oqGgy49stpT0_iTLtjFQgffXnLGZmGwUdb3hpjIDNbYFavQLQ1YrSZd1x3FstKyYpKOfRlAzJtt9-0wxQ-iIVT2rS8IoiEhAaIf0HA1XuXsQTIaNRyEJZNmbmg54yqtTCrkZ9OH6dzOey4mEPxmUAchYRjxZtKWFLiSfasvhw3T6fdZQbDhBegfINL61U3X4SMyKJRs0ZH7gyLdwtOKF-ADDL1LBIhkC-vKBsTNW24Pi4Te2LAwgY6Y3kVO3SnS--q6CtKuWg5ol0eksxRadpsO8qwWZl78IT50kxKFlqXZjpL43kWicknnChVqLjN-rc_nXBW9Wxp6Hd7UFnJYY2QBTgG0VoIpOyANBJc7dsL8ivKKbOqRoXlq23zluQB3KXRdJ85V8blOaqhInW5roZiLSit0pyUBB1xW81c-bO0R8_HZ73GFNrTOKHdhAygaAzIpf211TZFc3ByjJQvCadK-OluRrbkirp4lFOGqWN1D4PquA7Hb7nd9z7clFFsgbuCSFrc3O5umyMm7Iol5k3dakLI9Lln6fpjFv88qtbdRUR_453bT7F0WOIc7aQmMWef8Ihoix11rL9hmzeMs8cbUMABiH8T0VzEUeAZjf1iW5yZXYZRKrpekCdhl5tii3xrsqsPZ8HfRt81YFvjfXzOhVv4H2cZt3w6caEozxy2SCeUYFyjlsUU7rDyQMh1LmGLY2GHqrTvVCU3uD0RMUcW8hZyH_8-uTJlQOCBlNiRz7OzXeNMP6t6Z1RNWMSCDMDrxUSk3ngUiQB8kYswFipVC-5vZmQASa269-l4HFDrAfCbLMfVEh401Az4zdOCZ0MvdTZYuusA1OGG4xmH7S2-S1Ok_KEY5SbZm2KflsQIVI53mea3jIs7jAakwPm8D8rbq8YhmUlw=w1919-h918?auditContext=forDisplay" alt="그림1" class="w-full rounded-lg ">
+
+<p class="text-[12px] text-gray-500 text-center">이미지 참조 : Teachable Machine 인식</p>
+
+      <!-- 설명 -->
+      <div class="bg-white text-black p-4 rounded">
+        <h2 class="text-lg font-bold mb-2">✅ Teachable Machine으로 배우는 딥러닝 인공지능</h2>
+        <p class="text-sm">
+
+스케치 학습(Sketch Learning)은 아이가 반복해서 스케치북에 그림을 그리며, 눈으로 보고, 손으로 따라 그리며 직접적인 반복과 수정 과정이었다면, 티처블 머신 (Teachable Machine 학습)은 아이가 스케치북에 그림을 반복해서 그려보며 그림들의 차이를 스스로 관찰하고 그림 속의 규칙과 패턴을 찾으며 점점 더 정확하게 그리는 과정 입니다.<br><br>  
+
+처음에는 구분이 어렵지만, 여러 번 보고 비교하며 점점 더 뚜렷한 특징을 익히게 됩니다. 인공지능에서 이야기 하는 딥러닝(Deep Learning) 모델도 이와 마찬가지로, 여러 장의 사진을 보고, 데이터를 반복 학습하면서 ‘구분하는 능력’을 키워갑니다. <br><br>
+
+또한, Teachable Machine은 사용자가 이미지, 소리, 포즈 등의 데이터를 직접 입력하고 학습시켜, 인공지능이 스스로 패턴을 인식할 수 있게 만드는 도구입니다. 복잡한 코딩 없이 인공지능의 핵심 개념인 ‘딥러닝’의 원리를 쉽게 체험할 수 있도록 돕습니다.<br><br>
+</p>
+
+<h2 class="text-lg font-bold mb-2">⚪ 딥러닝이란?</h2>
+<p class="text-sm">
+1. 사람의 뇌처럼 여러 층(Layer)의 신경망이 데이터를 분석하고,<br>
+2. 반복 학습을 통해 특징을 스스로 찾으며,<br>
+3. 점점 더 정확하게 ‘구분’하고 ‘판단’하게 되는 인공지능 기술입니다.<br><br>
+</p>
+
+
+<h2 class="text-lg font-bold mb-2">⚙️ Teachable Machine으로 배우는 딥러닝과 인공지능</h2>
+<p class="text-sm">
+Teachable Machine은 복잡한 프로그래밍 없이도 딥러닝 모델을 직접 만들고 실험해볼 수 있는 도구입니다.<br>
+이미지, 소리, 움직임 등 다양한 데이터를 이용해 인공지능이 어떻게 학습하고 인식하는지를 체험할 수 있게 도와줍니다.<br><br>
+
+● 반복 학습을 통해 컴퓨터가 스스로 규칙을 찾는 딥러닝의 핵심 원리를 직관적으로 이해할 수 있습니다.<br><br>
+
+● 입력(데이터)과 출력(분류 결과) 간의 관계를 모델이 스스로 학습한다는 점에서, 인간의 학습과 유사한 구조를 갖고 있다는 것을 경험할 수 있습니다.<br><br>
+
+● 실시간 인식 결과를 확인하며, 인공지능이 어떻게 판단하고 예측하는지를 시각적으로 체험할 수 있습니다.<br><br>
+
+이러한 과정을 통해, 딥러닝이 단순히 많은 데이터를 ‘암기’하는 것이 아니라, 그 속의 패턴을 스스로 분석하고 구분하는 능력을 기른다는 것을 배울 수 있습니다.<br>
+또한, 실제 자율주행, 얼굴 인식, 음성 인식 등 다양한 인공지능 기술의 작동 원리도 자연스럽게 이해할 수 있습니다.<br><br>
+<br><br>
+
+
+<h2 class="text-lg font-bold mb-2">1️⃣  자율주행 자동차에서의 머신러닝 사례</h2>
+<p class="text-sm">
+<strong> 1. 환경 인지와 상황 이해</strong><br>
+- 자율주행차는 복합 센서 데이터를 딥러닝으로 융합해 3D 공간 내의 물체뿐 아니라 도로 환경 전체를 인식합니다.<br>
+- 예를 들어, 포인트 클라우드 데이터를 딥러닝으로 처리해 주변 사물들의 거리, 크기, 움직임을 정확히 판단하고, 도로 상황을 실시간으로 맥락적으로 이해합니다.<br>
+- 이는 단순 객체 인식을 넘어서 도로 위에서 벌어지는 상황 전체를 ‘이해’하는 단계로, 복잡한 교차로나 공사 구간에서 안전 운행에 필수적입니다.<br><br>
+
+<strong> 2. 예측 기반 의사결정 강화</strong><br>
+- 딥러닝은 주변 차량, 보행자, 심지어 날씨 변화까지 고려해 향후 상황을 예측합니다.<br>
+- 예컨대, 교차로에서 갑자기 튀어나오는 보행자를 미리 감지해 긴급 제동을 준비하거나, 앞 차량의 급정거를 예측해 부드럽게 감속합니다.<br>
+- 강화학습과 딥러닝 결합으로 복잡한 교통 상황에서 최적 경로와 행동을 실시간 결정하는 ‘지능형 의사결정 시스템’을 구축합니다.<br><br>
+
+<strong>3. 센서 결함 대응 및 이상 탐지</strong><br>
+- 자율주행차에 장착된 다양한 센서들은 때때로 오작동하거나 외부 환경 요인에 의해 데이터가 왜곡됩니다.<br>
+- 딥러닝은 센서 간 데이터 불일치, 노이즈, 결측치를 자동으로 감지하고 보정하는 역할을 수행합니다.<br>
+- 이를 통해 센서 결함이 운전 판단에 미치는 영향을 최소화하며, 시스템의 신뢰성과 안전성을 극대화합니다.<br><br>
+
+<strong>4. 자연어 및 음성 기반 인터페이스</strong><br>
+- 딥러닝을 활용해 운전자와 차량 간의 자연스러운 소통을 가능하게 합니다.<br>
+- 음성 인식, 명령어 이해, 그리고 대화형 AI로 차량 내 시스템을 제어하거나 운전 상황에 대한 피드백을 주고받습니다.<br>
+- 예를 들어, “다음 신호등에서 우회전해줘” 같은 자연어 명령을 이해하고 실행하거나, 비상 상황에서 음성으로 경고를 발신하는 기능 등이 있습니다.<br><br>
+
+<strong>5. 운전자 상태 모니터링 및 위험 감지</strong><br>
+- 차량 내 카메라와 센서를 이용해 운전자의 졸음, 주의 산만, 피로도 등을 딥러닝으로 실시간 분석합니다.<br>
+- 얼굴 표정, 눈 깜빡임 빈도, 머리 움직임 등을 종합해 운전자의 상태를 파악하고, 위험 상황 발생 시 경고 또는 차량 제어 개입이 가능합니다.<br>
+- 이는 자율주행이 완전 자동화되지 않은 현재 단계에서 매우 중요한 안전 기능입니다.<br><br>
+
+</p>
+
+  <h2 class="text-lg font-bold mb-2">🟩 자율주행자동차 딥러닝 핵심 원리와 적용</h2>
+        
+<p class="text-sm">
+
+<strong>🧠 딥러닝 모델의 ‘공감 능력’ — 멀티모달 학습</strong><br>
+1. 자율주행에서 딥러닝은 단일 이미지나 센서 신호에 의존하지 않고, 카메라, 라이다, 레이더 등 다양한 센서 데이터를 동시에 해석합니다.<br>
+2. 이를 ‘멀티모달 학습’이라 부르며, 서로 다른 센서 데이터를 통합해 더 정확하고 강건한 인식을 구현합니다.<br>
+3. 예를 들어, 안개 낀 날씨에는 라이다와 레이더 신호를 더 중시하고, 맑은 날엔 카메라 영상에 집중하는 식으로 상황별 가중치를 조절합니다.<br>
+4. 이렇게 센서별 장점을 살리고 약점을 보완하는 멀티모달 딥러닝은 자율주행 안전성을 크게 높입니다.<br><br>
+
+<strong>⚡ 실시간 성능을 위한 경량화와 하드웨어 협업</strong><br>
+1. 자율주행차는 초고속 반응이 필수! 대형 딥러닝 모델을 바로 차량 내에서 돌리기 어렵기 때문에, 경량화와 전용 하드웨어 협업이 중요합니다.<br>
+2. 모델 압축, 양자화, 그리고 차량용 AI칩(예: NVIDIA Drive, Tesla FSD 컴퓨터) 최적화 덕분에 복잡한 딥러닝 추론을 실시간에 가깝게 수행할 수 있습니다.<br>
+3. 이 과정에서 ‘하드웨어 친화적 네트워크 구조’를 설계하는 것도 딥러닝 엔지니어의 핵심 역할입니다.<br><br>
+
+<strong>🔄 딥러닝 기반 적응형 인공지능: 변화하는 환경에 맞춘 지능형 대응</strong><br>
+1. 자율주행차 주변 환경은 매우 동적이며, 도로 상황과 날씨가 끊임없이 변합니다.
+2. 딥러닝 모델은 이러한 변화에 능동적으로 적응하기 위해 ‘적응형 딥러닝(Adaptive Deep Learning)’ 기법을 적용합니다.
+3. 예를 들어, 딥러닝 신경망은 눈길, 빗길, 혹은 교통 체증 등 각기 다른 상황에 맞춰 내부 가중치나 활성화 함수를 조정하며, 상황별 최적화된 판단을 내릴 수 있습니다.
+4. 이 과정에서 ‘도메인 적응(Domain Adaptation)’이나 ‘메타러닝(Meta-learning)’ 같은 딥러닝 기술이 활용되어, 새로운 환경에 대한 빠른 적응력을 확보합니다.
+5. 딥러닝 기반 적응형 인공지능은 자율주행차가 변화무쌍한 도로 환경에서 안정적이고 유연한 의사결정을 할 수 있도록 돕는 핵심 기술입니다.<br><br>
+
+<strong>🔍 딥러닝 해석 가능성과 투명성</strong><br>
+1. 자율주행차 딥러닝 모델이 ‘왜’ 그렇게 판단했는지 알기 어려운 블랙박스 문제를 해결하는 것이 중요합니다.
+2. 해석 가능한 AI 기법은 모델 내부의 주요 특징과 결정 근거를 시각화하거나 설명해 줍니다.
+3. 운전자, 개발자, 규제기관 모두가 이해할 수 있도록 투명성을 제공함으로써, 안전성 확보와 법적 책임 소재를 명확히 하는 데 도움을 줍니다.<br><br>
+
+<strong>🛡️ 위험 상황 대비 ‘예측 불확실성 관리’</strong><br>
+1. 딥러닝 판단에는 항상 오차와 불확실성이 존재합니다.
+2. 이를 관리하기 위해 확률적 딥러닝, 베이지안 신경망 등 불확실성 추정 기법을 도입해, ‘이 판단이 얼마나 신뢰할 만한가?’를 정량적으로 평가합니다.
+3. 불확실성이 클 경우 차량은 스스로 주행 속도를 줄이거나, 운전자 개입을 요청하는 안전 메커니즘을 작동시킵니다.<br><br>
+
+</p>
+
+
+
+  <h2 class="text-lg font-bold mb-2">📚 딥러닝의 핵심 작동 단계</h2>
+
+<p class="text-sm">
+딥러닝은 인공신경망을 기반으로 한 인공지능 기술로, 학습(Training)과 추론(Inference)을 포함해 데이터 수집, 검증, 테스트 등 일련의 과정을 통해 작동합니다.  
+사람이 수많은 경험을 바탕으로 점점 더 정교한 판단을 하게 되듯, 딥러닝은 데이터를 단순히 입력받는 것이 아니라, 그 안의 복잡한 패턴과 구조를 스스로 이해하며 점차 ‘판단하는 법’을 배워갑니다. <br><br>
+
+<strong>1. 데이터 수집 및 전처리 (Data Collection & Preprocessing)</strong><br>
+: 다양한 상황에서의 영상, 센서, GPS, 지도 정보 등을 데이터로 수집 하며, 자율주행에선 눈, 비, 야간, 공사 구간 등 여러 조건에서 데이터가 필요하고, 정확한 라벨링도 중요합니다.
+이 전처리 단계에서는 이미지 보정, 정규화, 증강(augmentation) 등을 통해 학습 효율을 높입니다.<br><br>
+
+<strong>2. 학습 (Training)</strong><br>
+: 모델이 주어진 입력(예: 이미지)과 출력(예: 보행자 여부) 간의 관계를 스스로 파악하는 과정입니다. 인공신경망이 오차를 줄이기 위해 수천~수만 번 반복적으로 가중치를 조정하며
+학습에는 GPU/TPU 같은 고성능 연산 자원이 사용됩니다.<br><br>
+
+<strong>3. 검증 (Validation)</strong><br>
+: 학습 중간중간, 모델이 지금 과적합(overfitting)되고 있지는 않은지, 또는 일반화는 잘 되고 있는지를 평가하는 단계입니다. 학습에 사용하지 않은 데이터를 일부 떼어 놓고, 그걸로 학습된 모델을 시험하며
+모델 구조나 학습률 등 하이퍼파라미터를 조정할 때 중요한 피드백 역할을 합니다.<br><br>
+
+<strong>4. 테스트 (Testing)</strong><br>
+: 학습이 완료된 후, 전혀 본 적 없는 데이터로 모델의 최종 성능을 확인하는 단계입니다. 자율주행에서는 이 단계에서야 비로소 모델을 실제 환경에 투입할 수 있을지를 판단하게 되며, 안전을 위해 ‘테스트셋’은 학습/검증과 완전히 분리되어야 합니다.<br><br>
+
+<strong>5. 추론 (Inference)</strong><br>
+:  학습된 모델을 실제 차량에 탑재하여 실시간 입력 데이터를 분석하고 판단하는 단계입니다. 예를 들어, 보행자가 감지되면 정지, 좌회전 차선이 감지되면 방향 조정 하며, 추론 속도는 빠를수록 좋고, 경량화된 모델이 사용되는 경우도 많습니다.<br><br>
+
+</p>
+<br>
+
+
+<h2 class="text-lg font-bold mb-2"><strong>2️⃣  자율주행을 가능하게 하는 딥러닝 구성 요소<br></strong></h2> <p class="text-sm">
+
+<strong>1. 대규모 데이터 기반의 ‘다중 시나리오 학습’</strong><br>
+: 딥러닝은 단순히 객체를 분류하는 것을 넘어서, 수많은 주행 시나리오 자체를 학습합니다.
+예를 들어, “눈 내리는 밤에 보행자가 신호 없이 도로를 건너는 상황”처럼 복합적인 조건을 결합한 데이터를 통해, 정적인 객체 인식이 아닌 동적인 상황 인식과 반응 능력을 갖추게 됩니다.<br>
+- 수집되는 데이터는 이미지, 라이다, IMU(관성 측정 장치), GPS 등 복합 센서 데이터를 포함<br>
+- 딥러닝은 이 데이터를 통해 패턴이 아닌 ‘상황 흐름’을 학습합니다<br><br>
+
+<strong>2. 특화된 신경망 구조의 적용</strong><br>
+: 자율주행에서 사용되는 딥러닝 모델은 단순한 CNN을 넘어, 상황에 따라 서로 다른 신경망이 역할을 분담합니다.<br>
+- CNN(합성곱 신경망) : 이미지 기반 객체 탐지 및 차선 인식<br>
+- RNN / LSTM / GRU : 시간 흐름에 따른 차량/보행자 행동 예측<br>
+- Transformer 기반 구조 : 대규모 센서 정보를 동시에 처리하며 문맥적으로 판단<br>
+- 멀티모달 네트워크 : 이미지, 거리, 속도 등 서로 다른 데이터를 동시에 이해<br><br>
+
+<strong>3. 시맨틱 이해와 행동 예측 중심의 판단 구조</strong><br>
+: 딥러닝은 단지 ‘무엇이 보이는가’가 아니라, ‘무엇을 하려는가’를 파악하는 데 중점을 둡니다.<br>
+- 예를 들어, 도로 가장자리의 사람이 “서 있는 보행자”인지 “곧 건널 사람”인지 구분 가능<br>
+- 차량의 움직임 궤적을 바탕으로 차선 변경 의도나 끼어들기 가능성 예측<br><br>
+
+<strong>4. 실시간 추론 최적화와 모델 경량화</strong><br>
+: 딥러닝 모델은 주행 중 매 프레임마다 수십 가지 상황을 동시에 판단해야 합니다.<br>
+이를 위해 자율주행 시스템은 GPU나 전용 칩(TPU, NPU) 기반으로 동작하며, 모델을 경량화하거나 엣지 환경에서 빠르게 추론 가능한 형태로 최적화합니다.<br>
+- YOLO, EfficientNet, MobileNet 등 실시간 객체 탐지 특화 모델 활용<br>
+- 인식–판단–제어 사이의 딜레이를 최소화하기 위한 연산 병렬화 구조 설계<br><br>
+
+<strong>5. 자가 개선을 위한 딥러닝 순환 구조</strong><br>
+: 딥러닝 기반 자율주행은 단발성 학습이 아닌 ‘순환적 진화 구조’를 갖습니다.<br>
+주행 중 발생하는 새로운 상황을 기록하고, 주기적으로 클라우드 또는 서버로 업로드하여 새로운 학습 데이터로 반영합니다.<br>
+- 예기치 못한 상황(예: 비정형 표지판, 일시적인 공사 구간 등)도 지속적으로 반영<br>
+- OTA(Over-the-Air) 방식으로 모델을 실시간 업데이트하며, 차량 스스로 ‘똑똑해짐’<br><br>
+
+</p>
+
+
+
+
+
+
+
+<h2 class="text-lg font-bold mb-2"><strong>🎯 딥러닝 기반 자율주행의 핵심 가치<br></strong></h2> 
+
+<p class="text-sm"> 
+● 정적인 인식에서 동적인 이해로 : 상황의 흐름까지 고려해 행동을 예측<br>
+● 복잡한 시나리오 대응력 : 다양한 조건을 동시에 고려하는 학습 능력<br>
+● 자동 개선 시스템 : 실제 주행 데이터를 활용해 지속적으로 성능 향상<br>
+● 인간 수준의 유연한 판단 : 단순 규칙 기반 시스템보다 높은 상황 적응력<br>
+● 멀티센서 융합 능력 : 눈·귀·감각에 해당하는 센서 데이터를 하나의 맥락으로 해석<br> </p>
+
+<br>
+
+
+<!-- 흰색 상자-->
+</div>
+
+    </main>
+  </div>
+
+
+
+
+
+  <!-- JS 스크립트 -->
+  <script>
+// 별 반짝반짝
+  const numStars = 80;
+  for (let i = 0; i < numStars; i++) {
+    const star = document.createElement("div");
+    star.className = "star";
+    star.style.top = Math.random() * 90 + "vh";
+    star.style.left = Math.random() * 90 + "vw";
+    const blinkDuration = (Math.random() * 3 + 3).toFixed(2);
+    const moveDuration = (Math.random() * 20 + 30).toFixed(2);
+    star.style.animationDuration = `${blinkDuration}s, ${moveDuration}s`;
+    star.style.setProperty("--dx", (Math.random() * 20 - 10).toFixed(2));
+    star.style.setProperty("--dy", (Math.random() * 20 - 10).toFixed(2));
+    document.body.appendChild(star);
+  }
+
+  // 모바일 메뉴 토글
+  const toggleButton = document.getElementById("menu-toggle");
+  const mobileMenu = document.getElementById("mobile-menu");
+
+  toggleButton.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+  });
+
+  // 모바일 '챕터 보기' 버튼 토글
+  function toggleSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    const isHidden = sidebar.classList.contains("hidden");
+
+    if (isHidden) {
+      sidebar.classList.remove("hidden");
+      overlay.classList.remove("hidden");
+    } else {
+      sidebar.classList.add("hidden");
+      overlay.classList.add("hidden");
+    }
+  }
+
+  // PC용 사이드바 토글
+  function togglePcSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const pcToggleBtn = document.getElementById("pc-toggle-btn");
+    const isCollapsed = sidebar.classList.contains("w-16");
+
+    if (isCollapsed) {
+      sidebar.classList.remove("w-16");
+      sidebar.classList.add("w-64");
+      pcToggleBtn.innerHTML = "-";
+      const items = sidebar.querySelectorAll(".sidebar-item");
+      items.forEach(el => el.classList.remove("hidden"));
+    } else {
+      sidebar.classList.remove("w-64");
+      sidebar.classList.add("w-16");
+      pcToggleBtn.innerHTML = "☰";
+      const items = sidebar.querySelectorAll(".sidebar-item");
+      items.forEach(el => el.classList.add("hidden"));
+    }
+  }
+
+
+  </script>
+
+</body>
+</html>
