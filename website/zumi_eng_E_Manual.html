@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zumi AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; }
+
+    body {
+     margin: 0;
+        font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+        background: linear-gradient(135deg, #f5f7fa, #e4ebf1);
+        color: #333;
+        overflow-x: hidden;
+    }
+
+    /* 헤더 영역 */
+    header {
+      width: 100%;
+      background-color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 6%;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .logo img {
+      height: 36px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    nav a:hover {
+      color: #007bff;
+    }
+
+    .buy-btn {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.3s;
+    }
+
+    .buy-btn:hover {
+      background-color: #005fcc;
+    }
+
+    /* 햄버거 메뉴 */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 4px;
+    }
+
+    .hamburger div {
+      display: flex;
+      width: 24px;
+      height: 3px;
+      background-color: #333;
+      border-radius: 2px;
+    }
+
+/* 모바일 메뉴 전체 박스 */
+.mobile-menu {
+  display: none;                     /* 기본적으로 숨김 (햄버거 클릭 시 표시) */
+  flex-direction: column;
+  align-items: stretch;
+  position: absolute;
+  top: 60px;
+  right: 0;
+  width: 180px;
+  background-color: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  height: auto;                     
+  overflow: visible;                
+  z-index: 999;                    
+}
+
+/* 모바일 메뉴의 모든 항목 기본 스타일 */
+.mobile-menu a,
+.mobile-menu button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  color: #333;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/*  PURCHASE 버튼 (특수 항목) */
+.mobile-menu .buy-btn {
+  background-color: #007bff;
+  color: #fff;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 0;
+}
+
+
+   /* 메인 콘텐츠 */
+.hero {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding: 0;
+}
+
+.hero img {
+  width: 100%;
+  height: 60vh;
+  object-fit: cover;
+  object-position: center 80%; 
+  display: block;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* 텍스트가 이미지 아래에 위치 */
+.hero h2 {
+  margin-top: 20px;
+  font-size: 2rem;
+  line-height: 1.4;
+}
+
+/* 반응형 설정 */
+@media (max-width: 768px) {
+  nav,
+  .buy-btn {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+}
+
+
+  .hero img {
+    height: 40vh; 
+  }
+
+  .hero h2 {
+    font-size: 1.1rem;
+    padding: 0 10px;
+  }
+
+
+    h2 {
+      margin: 40px 0 12px;
+      font-size: 24px;
+    }
+
+    .highlight {
+      font-weight: 700;
+    }
+
+    .content {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+   .features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 28px;
+  max-width: 900px; 
+  margin: 0 auto;  
+  padding: 40px 20px;
+}
+
+.feature {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.feature:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+}
+
+.feature img {
+  width: 100%;
+  border-radius: 12px;
+}
+
+.feature h3 {
+  margin: 16px 0 8px;
+  font-size: 18px;
+}
+
+    }
+
+.video-section {
+  text-align: center;
+  margin: 20px auto 60px; 
+  padding: 10px 0;       
+}
+
+.video-section h2 {
+  font-size: 22px;
+  margin-bottom: 12px;   
+  color: #333;
+}
+
+.video-container {
+  position: relative;
+  width: 30%;            
+  max-width: 480px;        
+  margin: 0 auto;
+  padding-bottom: 16.875%;  /* 16:9 비율 유지 → (30×9/16)=16.875% */
+  height: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 12px;
+}
+
+ /* 2×2 레이아웃 컨테이너 */
+    .container {
+        max-width: 1100px;
+        margin: 40px auto;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+        padding: 0 20px;
+    }
+
+    /* 카드 공통 */
+    .card {
+        display: flex;
+        align-items: center;
+        background: white;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+        text-decoration: none;
+        color: inherit;
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    /* ✅ 카드 등장 애니메이션 (부드럽게 튀어나오는 효과) */
+    .card.visible {
+        opacity: 1;
+        transform: translateY(0);
+        animation: cardPop 0.6s cubic-bezier(0.22, 1.0, 0.36, 1.0);
+    }
+
+    @keyframes cardPop {
+        0% { transform: translateY(40px); opacity: 0; }
+        60% { transform: translateY(-10px); opacity: 1; }
+        100% { transform: translateY(0); }
+    }
+
+    /* ✅ 카드 hover 시 글로우 효과 */
+    .card:hover {
+        transform: translateY(-6px);
+    }
+
+    .beginner:hover { box-shadow: 0 0 20px rgba(155,89,182,0.5); }
+    .intermediate:hover { box-shadow: 0 0 20px rgba(39,174,96,0.5); }
+    .advanced:hover { box-shadow: 0 0 20px rgba(41,128,185,0.5); }
+    .expert:hover { box-shadow: 0 0 20px rgba(44,62,80,0.5); }
+
+    /* 이미지 */
+    .card img {
+        width: 40%;
+        aspect-ratio: 3/4;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+        border-right: 4px solid transparent;
+    }
+
+    .card:hover img {
+        transform: scale(1.05);
+    }
+
+    /* 내용 */
+    .card-content {
+        padding: 25px 25px;
+        flex: 1;
+    }
+
+    .card-content h2 {
+        margin: 0 0 15px;
+        font-size: 1.5rem;
+    }
+
+    .card-content p {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #555;
+        margin-bottom: 20px;
+    }
+
+    /* ✅ 버튼 클릭 시 파동 효과 */
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        color: white;
+        transition: 0.3s;
+        box-shadow: 0 0 10px rgba(100, 100, 255, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0; left: 0;
+        background: rgba(255,255,255,0.4);
+        transform: scale(0);
+        border-radius: inherit;
+        opacity: 0;
+        transition: transform 0.5s, opacity 0.5s;
+    }
+
+    .btn:active::after {
+        transform: scale(2);
+        opacity: 1;
+        transition: 0s;
+    }
+
+    .btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(100, 100, 255, 0.5);
+    }
+
+    /* 단계별 색상 */
+    .beginner img { border-right-color: #9b59b6; }
+    .beginner h2 { color: #9b59b6; }
+    .beginner .btn { background: linear-gradient(135deg, #9b59b6, #b084db); }
+
+    .intermediate img { border-right-color: #27ae60; }
+    .intermediate h2 { color: #27ae60; }
+    .intermediate .btn { background: linear-gradient(135deg, #27ae60, #58d68d); }
+
+    .advanced img { border-right-color: #2980b9; }
+    .advanced h2 { color: #2980b9; }
+    .advanced .btn { background: linear-gradient(135deg, #2980b9, #74b9ff); }
+
+    .expert img { border-right-color: #2c3e50; }
+    .expert h2 { color: #2c3e50; }
+    .expert .btn { background: linear-gradient(135deg, #2c3e50, #34495e); }
+
+    /* 반응형 */
+    @media (max-width: 900px) {
+        .container {
+            grid-template-columns: 1fr;
+        }
+        .card {
+            flex-direction: column;
+            text-align: center;
+        }
+        .card img {
+            width: 100%;
+            border-right: none;
+            border-bottom: 4px solid currentColor;
+        }
+    }
+
+@media (max-width: 768px) {
+  .video-container {
+    width: 90%;
+    padding-bottom: 50%;
+  }
+  .video-section {
+    margin-top: 30px;       /* 모바일에선 살짝 여백 유지 */
+  }
+  .video-section h2 {
+    font-size: 20px;
+  }
+}
+
+
+    /* 푸터 */
+    .footer {
+  background-color: #666666; /* 배경색 변경 */
+  color: #fff;
+  padding: 30px 20px 15px; /* 전체 패딩 축소 */
+  font-family: sans-serif;
+  font-size: 0.85rem; /* 글자 크기 줄임 */
+  line-height: 1.2; /* 세로 간격 줄임 */
+}
+
+.footer-container {
+  display: flex;
+  justify-content: flex-start; /* 좌측 정렬 */
+  align-items: flex-start;
+  gap: 30px; /* 로고와 내용 사이 간격 */
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-logo {
+  width: 120px; /* 크기 축소 */
+  height: auto;
+  margin-bottom: 0;
+}
+
+.footer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px; /* 줄 간격 줄임 */
+}
+
+.footer-info a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.footer-copy {
+  text-align: left; /* 좌측 정렬 */
+  margin-top: 15px;
+  font-size: 0.75rem; /* 크기 축소 */
+  color: #eee;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 15px;
+  }
+  .footer-logo {
+    width: 100px;
+  }
+  .footer-copy {
+    text-align: center;
+  }
+}
+
+
+
+
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <img src="https://lh3.googleusercontent.com/rd-d/ALs6j_FEZ76YJKUYQrdwj6e92QR6fLam4y5rmo8FsmIaawUpH5F-Z0JlxxTPYnQYz2khCsB-Fl111-43tgUAHS4Bc-x7u8ZGNQksa_BArdC_LAD66MU9BG7iRUTfRi7ukd2kMoTURnrc0ClRaXdFzEFTavHO97sFHaDxDgPMNNYlStBTZVUggFPwyiUnXao07xDKddtdzIAkH_tZu52EAwD9bwsEeYNop1RYQWKp4B0aB_AvJ2Xg_3kYa0PJHtQH86HgPuqzXs8YM93XZdhd5bQjp4KwkKa9h1jpoDMdWGfpWE4SiLZPu3BGs9G1W5pM9pZ7nEkfT2uqaHI-X9CxjRfDyBQXfCr2cyjLskR5UG8hzAihAA68F0Xpcr3k5bNhHO_o_FKLQyj67L52NCrZGcCKO_FbOmSzhVvhr7cMMlRg2eQ5PMlOyF5aKYw80GzQqwF9zGLTs9Svh2l_L0zgeCeZPcXhRJHsAWCCBUuEmbeohLxVPaEK9b2X6FnUxoOasi7APTbbxGsgCw--97TahHYpFYXZ5U_atqC_6RWy1lAoOj5L82jLq_d7_U6UyINP4b9ZOg5jjuEMfd4bwBAqUOkVXXS-cuxtpKcXpnEp4bjord_A0tdVgOcXwLhubGlMRIVZ350X2ZxA99o2YXJZBVmmIxdPdH6MTmu7DoTsp2NmXrlgo4f0pZpMc9y9UG4Zr6JjtV1d2-xXy6smEX6VtjxLVuv8mU_r6lJ3XSzIRX9l7DML7bRhpL72f8RCyU7elKjR3fqBA_WxEm5i3TOpquTjMLa6dCFRQfMV5_g0At52rSHljq1raiFBZHNjV5JcJ1EURPaL9TmMhYIScDbwMjdX29IDw1lXRyp1-G7HsKOFW6d4qTTcNPeqM3IzNQ8NiweTbI7BZr6om7K82ZPEV5a-anwwAAqxZJUSaSYQs8MZQMmqkgZuu1PpLWiHuR0hw04gY7i387yHvy0bOTH4UWU5Xudk8vNgMWeWPIkFDri0VDag6C8iwR5NYROz6TO_6n3HAnZfLDLO5w_pjRdy6w55LAmiLBJl47waOcfI7lgq5Mq21um6sSFjoefj9Bnci1xg8f6PxRMxRHum3waTIX5lZCm8bod4JE3kppAQjA7PwTCBYpNQgikl4Q=w1919-h918?auditContext=prefetch" alt="Zumi AI Logo">
+      <nav>
+        <a href="https://zumi.co.kr/ai">Introduction</a>
+        <a href="https://zumi-ai.github.io/python/website/zumi_AI_E-Manual.html">E-Manual</a>
+        <a href="https://www.youtube.com/watch?si=Q4nAAsUgU2JqkfWZ&v=MttYrWzurVs&feature=youtu.be">Videos</a>
+        <a href="https://zumi.co.kr/faq">FAQ</a>
+      </nav>
+    </div>
+<a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=81&display_group=1">
+    <button class="buy-btn">PURCHASE</button></a>
+
+    <div class="hamburger" onclick="toggleMenu()">
+  <div></div><div></div><div></div></div>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="https://zumi.co.kr/ai">Introduction</a>
+  <a href="https://zumi-ai.github.io/python/website/zumi_AI_E-Manual.html">E-Manual</a>
+  <a href="https://www.youtube.com/watch?si=Q4nAAsUgU2JqkfWZ&v=MttYrWzurVs&feature=youtu.be">Videos</a>
+  <a href="https://zumi.co.kr/faq">FAQ</a>
+  <a href="https://roboshop.co.kr">PURCHASE</a>
+
+</div>
+  </header>
+
+
+<section class="video-section">
+  <div class="container">
+
+    <!-- 초급 -->
+    <div class="card beginner">
+        <img src="https://lh3.googleusercontent.com/rd-d/ALs6j_E0zzq1szlVxRwhY1v881Xlc9d0b3D0LuA7AtKwl1DK1QCUjoV7q0ie6aSIt69tvY66TZux0KxQVWaYSKtU76sYI4ePHYZjqBC18Cmwhh_4IVZ9d5tqHIrDWlc91lKm9uhvs_loFxHIGosGqgRPWRZxjYxDPg5BZBZJaqXPT1Xa9xhoN6Fot4ilQq9GcxRKBVXCWE--TyhMp9D_59HcVALasyNLRaKUVtCl8JYMBYQ-Y2Vq5qyxkJhdV7jdWwl1EFxYPGCwi0qQDUb-TeJLTk7FOzScgGhPGGUBrvn_NND1mtEShnB2nui7GSSfFZ-BjKKxpSgvzDNYiGCC5miO78Hv8u3o7-eO0qHXB-ssYLSXVtyJxrI-9VHG32gPD3M5ry5sYb-UaJRUabGNxuMg36fbMZPtrkMOS5U_ibfvL_z4GTgPsAvqJXNjDOQZRElp6CD-iV2ittdSuMXQ21IJnYKAMV057QTonG7I-NnHuyil_Bp6wIqEyBGOYXX29wxo8SFgYD2FRmXeLwcUPCMNYZcZcTHTozNm1NHgj2ehSfQqFvQCoI65QCsdZ53T8fFEbhh9kQUQjGQYsCyOAXHYqEKnDB8Qy1zllxzCuZkQzjJ73RfDS9_xnAiKnAiORuSqDd3fRrZvYuRC6uwLEU08Pv5qXR2llL-zIBe5N0jyTJb4ot-xzjp2ZbIQoN1oigqsCCEOnS0mq2mrxF8RAsY_5qrZ0NRTwtpF2ScC-Wjz1KxvPOvHE3P-iywFemXMaIHEWd31Y9TIubILSR9ITTNDtBgB55fxzqFNpOtSIuIFMouPzVRgV_jhOvnrJDOye8qurR65Qym3kbCC_hUYJ2iYk_oR213YD9FXdr9GuCAFqZHjO5J94TVfs9wYPx973lZJAUMtM4AHPQxpbfcg3GuQ9n1gPdx00quxGMEm2L03pDWZWJ6uBb9VQXWopkVKn5LY9g_NIoggoPi0dElNYg9Ri6O9TajOcNm-7e-VZisJDamr09jEqI6V_0bvzdknSPYRBYGCdPCiQ4EpkOAFUGzQnmaF6sU_JuSUgNFner2dbeEKcBkbfYhFEo0zufkWpfoXLYlQPWDjlALs8YdsmsLJiwhanxsscQRM7epTtDw2G3ZmC4vpCc8zUw=w1919-h918?auditContext=prefetch" alt="카드코딩">
+        <div class="card-content">
+            <h2>Beginner: Unplugged Card Coding</h2>
+            <p>Learn basic logic by combining cards.
+Discover coding principles in a fun, creative way.</p>
+            <a href="https://drive.google.com/file/d/1oa7UMW2R06MfXGZ-TMVObXYuSwWPybwf/view?usp=sharing" class="btn">Start Learning</a>
+        </div>
+    </div>
+
+    <!-- 중급 -->
+    <div class="card intermediate">
+        <img src="https://lh3.googleusercontent.com/rd-d/ALs6j_GJsv9ZkEVCkVijeH1VwRFwfTxLlmSBEZIq9BgJ8W8_RG5rqjYCsjAs3ByqgSBExCTvIWK3US8Ix3WdPqT2OElWOIIH3TMgIMXMdCatV_NcF5ilON_4_vr0MVK5JBFP0Ik6EK_XM-vZIB8zAOOBPi_1zCS1P97huH_Bx4CmBpjeijMsxKENh_WBR5I1dZreQIiCDb3euugEqTl5E3uaQlZMqF-GDuItzkEaxABKwkD4i_58-LDN_0fHWjakfjmP81ioaeMu-4ELc8xxXYystABYM6ou433Lal3qXyGG_KSMD1G4C1PrJsIWKhbHRNwcWwGkdLDD8Xegl2x8zUkWrx7qmIvgLPlvqYn7ksg3E9BShqKfc-61VoH_ahtb04xsJedAsvOdHaEuzDcxlfKgXX0avD7zs_E4-QTCxScvSoGc6wkYakm5IxGkM49uLlbsKQHX_2NluPlbkALrU2_ZH0s9oDkOdL68gX3tZUAxgffIork8y2pj_5ka6r2gSVLAilsjzKXfDCJIPm2Bha_keVeusez__hWCkuK5qnXXROXncYTYlo-JPawdgqpKfhCqCGQlIFuhD99pOh8yYBb8n7HnZCCtIprZEBBBnHUnNh5MlTXBgTDVlsIji9Bj6bKScSLgIBjQkTkfax50z5Dc6pQVH3zOXv5g2yeMwovk8qoY_X9oiUNknn_aCZoKFAeNxj-16RaoWx1NkjaTs3AzMV_qNB6poGpbb-Tu3mP1BmhaQMxwGWjqxoU5APVDdUArAPDBa6Co8EklPWJgk9ggD-k7pRDjo1AYAb7eIGsYNw0RehzqnwUbPxwB4Czuu2XLS8lNu1ImhNUnQ7FPovb21DXjrjb9PRCcZ4W9n59B00IT7BXOkd4aFAJ4xDukhNVQ9jSQ8Sair00c8WkcFyVpMstKpk_k5GdyjN8gE-iLj2cXx2nVkF-KIB078uxsfLJp1UasqQI9LB3OwjKG8S1Pt0umeGy1z39ItMSHvisZmHNRoHIV54Bc6ZNG9EQWeKDvl8XNIy7EWnLeBw2EGaiPwCEEaSfTyIEbljKDrDKEWh59prUKgSb4EXAcfTK-oKIf4upYSKI5gkBkUYU8v6uJMNT8XL0K7g785NWYbV9G-oMEjbkiZBUtrw=w1919-h918?auditContext=prefetch" alt="블록코딩">
+        <div class="card-content">
+            <h2>Intermediate: PC Block Coding (Entry)</h2>
+            <p>Build logical flow using visual blocks.
+Improve problem-solving and understand coding structure.</p>
+            <a href="#" class="btn">Start Learning</a>
+        </div>
+    </div>
+
+    <!-- 상급 -->
+    <div class="card advanced">
+        <img src="https://lh3.googleusercontent.com/rd-d/ALs6j_HA2F8omhKOYQ3qZ36x4gtHnveFvxbroi9E6s0s71c_kXj50q8F9uZNNfWi2i5AAb2qo8Yl6Y8yJ7ALgjZx4lPyuJZG0u-Tq15COpvSiBd0GZnnsexoRIXPGKbh5-eCR1RvrbMBbuKOeC_GZCvtwbRNoLrDtZtS1hrPAt-yq3D2Ypn5OPcnyFoM733IvHmqcAfDWhxcuITwdAkyrpb9oj-A9iF3DPa9Hp8SZZdrSR8TXmV8RsyW05tyXBpWR4cgcBa7LjlV75Yk9xYmlgZX_W_EhNHxML17ik_7BT-xHzScWbL9Whze3w5Jebif_akvj8VT_R-qQrk23yf_dia7CNnXiyutgRN4zHDNjxmHYB9qPbAwBv8JncuxODGsJb3krLB5fEM2alBae49labSM4XWHVtfDrJtZHOL7_fmiX20P5n72R6dQfuqhQxxMHPA0ULVx87RG_XWPPgiItK7nDMPgYhAcSzzFrfP5R2_Mi9AfBBPFL3NOLs9WumySUeFGmSyz92H2KhjOyfrQh72YzgquuQerqk-5BHSqz6T5lawgkglwv-C-eKR4RhiUCwJpLhDxCyLE8nnTVg3lsy1DMGNIkJ4qethZzsGvNmqqk4UEGP4Oe3LAhJ-ZgpU0-oOduTvMY93E5wQm2Adwa00N32Loyb5UQ-cxAjHqEgqYhikJHH2oK4y0b6CEIH_-fvuLkUreMp7Pg3ec3dZTvDm_HwyslKQo0P__h5032tRrNol67yjoPZ1eejtbSrQKNJr0pm-b6mt_J1NjHnftzp4xg3eDekIFjIQRWxJu0LFKq-ylbX0umTm0FCjnSe_VLasX2TZH9UO8Rt2gpoiE-XSn1uTahwY76yYQ74w9rmhKj4zlcmJCnDT2xb0-_w4a3lLP063WypPszbYOhNbsaXvRf-Fhn5sr7h_5RUP0GdWIfSWmGpQe0PzWSe2d1e7VeHZArA18TUEHM3P8YSifR7MsFsf78Tjgt22h7x9sz_YMUbzj4xIWPgWhLFzW8GL9tJNZNz6HMQAw8Rt7y7k1mbpQHW47N2g374HUWbuXqdKY2nJVjw28_ECIshy_zH53MLAg63OEA3a6SYOKocjpcsOemzPq49H3XTs1GC9Z1h63JRmIEg2C3n6Waw=w1919-h918?auditContext=prefetch" alt="파이썬 코딩">
+        <div class="card-content">
+            <h2>Advanced: PC Coding (Python)</h2>
+            <p>Use real code to deepen logical thinking.
+Learn variables, loops, and functions.</p>
+            <a href="https://drive.google.com/file/d/1jkGzKXf2R6LDwf0goTS4E9c86tqYrY_L/view?usp=sharing" class="btn">Start Learning</a>
+        </div>
+    </div>
+
+   <!-- 심화 -->
+<div class="card expert">
+    <img src="https://lh3.googleusercontent.com/rd-d/ALs6j_E4PmUYJ0EkwwlLwx3dJyGB_zTFEgoVnVzz2zJQB6T7OLl2nP83cPiZz8doxjIK-JGkehaKnqqA8hyIL2uR4OEXkzFLZZcF47dduPvijvsqyAH6K38yZTxTH6ZsUFgwRma4Jdue0sj85GKcT91hza62KuKRpzS13sH_COd7f5mbcHFu1lBx86jzLq-ALTqf9E5MAaldTdZV5JQDpCCVYuKNwU5HTRqaLxA0Yky_s4yKpseiPN_TAuFJHTEAa1QzsxwSR_Sf-PjW-3gQ_LM4ktuJqkq0DTNfIbw-Ry79lYpzalz4YWClv1Hl3l--WSMK-4vlxrqpoT5f9LnpZewRqUyMOptqq--MSoYNHMo27-7SA_BleHUuydlRA_JHcwH3hKJGp-0MICwynUGCiTK5x_sWD59xlglQ544j65E7xd_iuWr3sq7_0j51JeLmOtADVWIIcqFR9LZnW7zXIjnBsOktMic3ll5Z22vaY4q6n7kwkaa-96n12WFVPr5tpKbJ3r7XLRHAMzflIlkdvg1E8Ja5aXzXnF8yAiJK32YxmAbpT4dUKVdf8ck_uzd5sFDXA-LSl0EBIzIl_pD-6a3LxMs4wx2xfMUE2gOl4V9a6Gy7Qwi3XXrGHFucYrIrqj0B8Xd4uYIJ7n0CW4c4IMLl-UyiDztSMCTdq7I1UYvRJFepYni9ftwGdTWCjG2youTQtyqEdAIWjGbHgb0Mux9JediMKt2GmnsuqSF1cq1vEBp8afGZndL2w-6FAlL4__WOs2CANDcqgtu62UnJuev_pg72pBXYNJeSblVfusr0HG0atw1zHV9dNQTjcR3ZluF5SLcWNJyATtUwoi86vDt3axUslQ1WZwWM0v7PWjjuDryzAjBwHHwxrSrPE9L4OjuM7YNYtK74HVdYpAEEIwle1GSO1tqIko28wmgGBK9yawV1Dk7KoJ97bNEMslRHBQm2VfEqPaAnP8HAkBdvouCi6tl1kBaX-AGRRbDPtqyp83nZrumLAkL3JpLhB5hBW8mVv9g7b-XeLoGbJSuQIugDJmOmU9a3THZOF9Rc1EkTBhe68YYunY4ik-Ls345rg2iJBut_frnJuQda1rWY6NSfIG69iSO9IGmwt1zuumIEYlQ8Jgi--u8ZPg=w1919-h918?auditContext=prefetch" alt="AI 학습">
+    <div class="card-content">
+        <h2>Expert: AI Self-Driving Car Learning</h2>
+        <p>Explore AI and machine learning.
+Grow through creative, hands-on projects.</p>
+        <a href="https://zumi-ai.github.io/python/website/" target="_blank" class="btn">
+            Go to AI Learning Site
+        </a>
+    </div>
+
+</div>
+</section>
+
+
+
+  <footer class="footer">
+  <div class="footer-container">
+    <img class="footer-logo" src="https://lh3.googleusercontent.com/rd-d/ALs6j_GDkqIcfdT8vTgEzKTKY6XyI-7TkL-l32hDQoyMxqcZsfNgd31Ug21bMMfvFpLZxmkyvvkV5JjvKZYfPquoWKLK37NPnNcbP2Og1ypJrTOsbkBddcDexInYyno7Lza-iwTzFMLzwjheuA_lfDcgaTK7KZGRRPKfjLR-IylQkKl9nFUP1EGDt4NoLUbVVlXiU1uiF2zwzCxIvHaifPAVgy5SmJ2ai9pgXZBX0l-YhhK6mukl8-ZyRKnKqaFGXiN-K-Lb4o-oXa44oDZfvCTRX8cKhamzLQZWxep43gx0B959giQGjCbn4wtFE9gvB5ZUjoOKUK70VZz5l1iAhd3Jj-GPwlUgMCT7_z1emPGaCS0p7vzk7nA1-gU9foy5-6bYEAoIpbIU2dWGGkCrERBzSDC7vDO6WffIlfQT3t6P7GCE40u91ukprm349-sL3_Rj5jZDTWdDc3a5CjnzndwKvUnG015n4u_cMgk4JqQZYn4IgLLAv6y9CBGrB2lwVpynE7UfFpejZRKWEOY5_tXktfV99jlO2uYZ0HJMUTjRFpLcoLFGOtIYVESA58ykS1gmCFNiry9PexuepKESpraQtTavQAQXwtDj03Kcfg_h2ogYysOMaiIa36bXdN9LYq2DtiHQmA95DADbI0Luw7JIqmkpTou5Pdgswfjx2IRTVowpXO-m5jTjKLixMky1E5SYkTMQaG0TRiMeeoyWz4WxotIrgMlEpwUlyGN-AcIyyprTdOzXea4BMk0497poSeSmpIXOZ0F7eM2TlhagUsx6qaLkzG-5qogh1LdX_uh5vF9ITkeOefq-4xUecVZQBNfVex3srgDpPbl8SAfNY5VVqVCoUCWuskPZgfdzo_MgGvfxxaqmaY_lzquq6OttoDfDqOF2101Dq5NaUPTyCBrQrooJGTHJUhlWG44rl9Apbfi2m8eupRIMyG9pj76Fgs-AJuEa9iIDFyaTMfUCYAI71B8Lkh9fAoFjszel42ArkgTAvKwGinbg-o8zIHGgbdcYvD0XJp-wLR3vgjvaApVanzdckR40Kq8NcuXzlcPHaHQ1fzNEbGBd8tu8nFw9SLW1KiwF-XLb4KB01C-1LYT1DQvavY1QHESiRiOlWXCn5HCt22TWP12Wsw=w1919-h918?auditContext=prefetch" alt="로보링크 로고">
+    <div class="footer-info">
+      <p>05602 5F, Sinhwa Building, 83 Samhaksa-ro, Songpa-gu, Seoul 05602, South Korea</p>
+      <p>Tel: 02-554-8862 l Fax: 02-554-8860 <br>E-mail : contact@robolink.co.kr</p>
+      <p> </p>
+    </div>
+  </div>
+</footer>
+
+ <script>
+function toggleMenu() {
+  const menu = document.getElementById('mobileMenu');
+  menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
+}
+
+   //  스크롤 시 카드 등장 애니메이션
+    const cards = document.querySelectorAll('.card');
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.2 });
+
+    cards.forEach(card => observer.observe(card));
+</script>
+
+</body>
+</html>
