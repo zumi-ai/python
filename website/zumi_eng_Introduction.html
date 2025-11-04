@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zumi AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; }
+
+    body {
+     margin: 0;
+        font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+        background: linear-gradient(#FFFFFF, #f5f7fa, #F8F8F8);
+        color: #000;
+        overflow-x: hidden;
+    }
+
+    /* 헤더 영역 */
+    header {
+      width: 100%;
+      background-color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 6%;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .logo img {
+      height: 36px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    nav a:hover {
+      color: #007bff;
+    }
+
+    .buy-btn {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.3s;
+    }
+
+    .buy-btn:hover {
+      background-color: #005fcc;
+    }
+
+    /* 햄버거 메뉴 */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 4px;
+    }
+
+    .hamburger div {
+      display: flex;
+      width: 24px;
+      height: 3px;
+      background-color: #333;
+      border-radius: 2px;
+    }
+
+/* 모바일 메뉴 전체 박스 */
+.mobile-menu {
+  display: none;                     /* 기본적으로 숨김 (햄버거 클릭 시 표시) */
+  flex-direction: column;
+  align-items: stretch;
+  position: absolute;
+  top: 60px;
+  right: 0;
+  width: 180px;
+  background-color: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  height: auto;                     
+  overflow: visible;                
+  z-index: 999;                    
+}
+
+/* 모바일 메뉴의 모든 항목 기본 스타일 */
+.mobile-menu a,
+.mobile-menu button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  color: #333;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/*  PURCHASE 버튼 (특수 항목) */
+.mobile-menu .buy-btn {
+  background-color: #007bff;
+  color: #fff;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 0;
+}
+
+
+   /* 메인 콘텐츠 */
+.hero {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding: 0;
+}
+
+.hero img {
+  width: 100%;
+  height: 60vh;
+  object-fit: cover;
+  object-position: center 80%; 
+  display: block;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* 텍스트가 이미지 아래에 위치 */
+.hero h2 {
+  margin-top: 20px;
+  font-size: 2rem;
+  line-height: 1.4;
+}
+
+/* 반응형 설정 */
+@media (max-width: 768px) {
+  nav,
+  .buy-btn {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+}
+
+
+
+    h2 {
+      margin: 40px 0 12px;
+      font-size: 24px;
+    }
+
+    .highlight {
+      font-weight: 700;
+    }
+
+    .content {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+
+
+    /* 반응형 */
+    @media (max-width: 900px) {
+        .container {
+            grid-template-columns: 1fr;
+        }
+        .card {
+            flex-direction: column;
+            text-align: center;
+        }
+        .card img {
+            width: 100%;
+            border-right: none;
+            border-bottom: 4px solid currentColor;
+        }
+    }
+
+
+
+  
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 15px;
+  }
+  .footer-logo {
+    width: 100px;
+  }
+  .footer-copy {
+    text-align: center;
+  }
+
+}
+
+/* ====== 전체 섹션 ====== */
+
+.zumi-container {
+  width: 40%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ====== 제목 ====== */
+.zumi-title {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 40px;
+  color: #111;
+}
+
+/* 상단 이미지 전체 컨테이너 */
+.zumi-top-images {
+  display: flex;
+  flex-direction: column; /* 위아래 배치 */
+  gap: 20px;
+  margin-bottom: 60px;
+}
+
+/* 상단 메인 이미지 */
+.zumi-main-img img {
+  width: 100%;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+/* 두 개의 이미지를 가로로 나란히 */
+.zumi-sub-imgs {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.zumi-sub-imgs img {
+  width: 48%; /* 두 개가 나란히 반반 차지하도록 */
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* ====== 공통 블록 ====== */
+.zumi-block {
+  margin-bottom: 60px;
+}
+.zumi-block h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #222;
+}
+.zumi-block ul, .zumi-block ol {
+  margin: 0;
+  padding-left: 20px;
+  line-height: 1.8;
+}
+.zumi-block p {
+  color: #555;
+  margin-bottom: 15px;
+}
+
+/* ====== 구성품 이미지 ====== */
+.zumi-kit {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.zumi-kit img {
+  width: 180px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* ====== 제품 크기 ====== */
+.zumi-size {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+.zumi-size img {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* ====== 사양 표 ====== */
+.zumi-spec {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.zumi-spec th, .zumi-spec td {
+  border: 1px solid #ddd;
+  padding: 10px 14px;
+}
+.zumi-spec th {
+  width: 25%;
+  background: #f8f8f8;
+  font-weight: 600;
+  text-align: left;
+}
+
+/* ====== 주미 앱 섹션 ====== */
+.zumi-app {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+.zumi-app img {
+  width: 180px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+.zumi-app h3 {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+
+
+   /* 푸터 */
+    .footer {
+  background-color: #666666; /* 배경색 변경 */
+  color: #fff;
+  padding: 30px 20px 15px; /* 전체 패딩 축소 */
+  font-family: sans-serif;
+  font-size: 0.85rem; /* 글자 크기 줄임 */
+  line-height: 1.2; /* 세로 간격 줄임 */
+}
+
+.footer-container {
+  display: flex;
+  justify-content: flex-start; /* 좌측 정렬 */
+  align-items: flex-start;
+  gap: 30px; /* 로고와 내용 사이 간격 */
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-logo {
+  width: 120px; /* 크기 축소 */
+  height: auto;
+  margin-bottom: 0;
+}
+
+.footer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px; /* 줄 간격 줄임 */
+}
+
+.footer-info a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.footer-copy {
+  text-align: left; /* 좌측 정렬 */
+  margin-top: 15px;
+  font-size: 0.75rem; /* 크기 축소 */
+  color: #eee;
+}
+
+
+
+/* ====== 반응형 ====== */
+@media (max-width: 768px) {
+   .zumi-sub-imgs {
+    flex-direction: column;
+  }
+
+  .zumi-sub-imgs img {
+    width: 100%;
+  }
+}
+  .zumi-title {
+    font-size: 2.0rem;
+  }
+  .zumi-app {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+
+
+
+
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo"><a href="https://zumi-ai.github.io/python/website/zumi_eng_index.html">
+      <img src="https://lh3.googleusercontent.com/rd-d/ALs6j_FEZ76YJKUYQrdwj6e92QR6fLam4y5rmo8FsmIaawUpH5F-Z0JlxxTPYnQYz2khCsB-Fl111-43tgUAHS4Bc-x7u8ZGNQksa_BArdC_LAD66MU9BG7iRUTfRi7ukd2kMoTURnrc0ClRaXdFzEFTavHO97sFHaDxDgPMNNYlStBTZVUggFPwyiUnXao07xDKddtdzIAkH_tZu52EAwD9bwsEeYNop1RYQWKp4B0aB_AvJ2Xg_3kYa0PJHtQH86HgPuqzXs8YM93XZdhd5bQjp4KwkKa9h1jpoDMdWGfpWE4SiLZPu3BGs9G1W5pM9pZ7nEkfT2uqaHI-X9CxjRfDyBQXfCr2cyjLskR5UG8hzAihAA68F0Xpcr3k5bNhHO_o_FKLQyj67L52NCrZGcCKO_FbOmSzhVvhr7cMMlRg2eQ5PMlOyF5aKYw80GzQqwF9zGLTs9Svh2l_L0zgeCeZPcXhRJHsAWCCBUuEmbeohLxVPaEK9b2X6FnUxoOasi7APTbbxGsgCw--97TahHYpFYXZ5U_atqC_6RWy1lAoOj5L82jLq_d7_U6UyINP4b9ZOg5jjuEMfd4bwBAqUOkVXXS-cuxtpKcXpnEp4bjord_A0tdVgOcXwLhubGlMRIVZ350X2ZxA99o2YXJZBVmmIxdPdH6MTmu7DoTsp2NmXrlgo4f0pZpMc9y9UG4Zr6JjtV1d2-xXy6smEX6VtjxLVuv8mU_r6lJ3XSzIRX9l7DML7bRhpL72f8RCyU7elKjR3fqBA_WxEm5i3TOpquTjMLa6dCFRQfMV5_g0At52rSHljq1raiFBZHNjV5JcJ1EURPaL9TmMhYIScDbwMjdX29IDw1lXRyp1-G7HsKOFW6d4qTTcNPeqM3IzNQ8NiweTbI7BZr6om7K82ZPEV5a-anwwAAqxZJUSaSYQs8MZQMmqkgZuu1PpLWiHuR0hw04gY7i387yHvy0bOTH4UWU5Xudk8vNgMWeWPIkFDri0VDag6C8iwR5NYROz6TO_6n3HAnZfLDLO5w_pjRdy6w55LAmiLBJl47waOcfI7lgq5Mq21um6sSFjoefj9Bnci1xg8f6PxRMxRHum3waTIX5lZCm8bod4JE3kppAQjA7PwTCBYpNQgikl4Q=w1919-h918?auditContext=prefetch" alt="Zumi AI Logo"></a>
+      <nav>
+        <a href="https://zumi.co.kr/ai">Introduction</a>
+        <a href="https://zumi-ai.github.io/python/website/zumi_eng_E_Manual.html">E-Manual</a>
+        <a href="https://www.youtube.com/watch?si=Q4nAAsUgU2JqkfWZ&v=MttYrWzurVs&feature=youtu.be">Videos</a>
+        <a href="https://zumi.co.kr/faq">FAQ</a>
+      </nav>
+    </div>
+<a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=81&display_group=1">
+    <button class="buy-btn">PURCHASE</button></a>
+
+    <div class="hamburger" onclick="toggleMenu()">
+  <div></div><div></div><div></div></div>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="https://zumi.co.kr/ai">Introduction</a>
+  <a href="https://zumi-ai.github.io/python/website/zumi_eng_E_Manual.html">E-Manual</a>
+  <a href="https://www.youtube.com/watch?si=Q4nAAsUgU2JqkfWZ&v=MttYrWzurVs&feature=youtu.be">Videos</a>
+  <a href="https://zumi.co.kr/faq">FAQ</a>
+  <a href="https://roboshop.co.kr">PURCHASE</a>
+
+</div>
+  </header>
+
+
+<section class="video-section">
+  
+
+
+
+<div class="zumi-section">
+  <section class="zumi-container">
+    <!-- 제목 -->
+<h2 class="zumi-title" style="line-height: 1.1;">
+  <span style="color: gray; font-size: 0.6em;">인공지능 자율주행 자동차</span>
+  <span style="display: block; font-size: 2.1em; font-weight: bold;">주미 AI</span>
+</h2>
+
+    <!-- 상단 이미지 -->
+    <div class="zumi-top-images">
+ 
+     <div class="zumi-main-img">
+        <img src="https://lh3.googleusercontent.com/rd-d/ALs6j_EAhx9jb9nYBI3jvMUV5v9hTjAmiQtAYnhQjLdLej2DHgn1Au9pQe1rrgNvIENf0PfinDSHJBctcvIkqS9X01CMvoBseb3ZnuCJ3VHEAJ4i0VKTC8xn0QpnmFROERV6tnZmSIhxwPM62qTszuNwfmD9nk8qEuVnVe6Pi7RK-g6uSzmz7EgrlsPHIefZE5BPBelAI_W_Ismw7_6Lg15tuaB_e-AWkxMpGrAVOTOgUKqlujKAs8vAKiArVRmxH-xEu3PFZLzxGlHKPK1EsjHN6C8DXhjgHl69FjdkiacWkSN19cAneCT04MJnSyKuEugWdhGhAi0dIQIS3yLxFhLA7SyIWbGHl4zv5O5reOUm6FjOoFzOdfbgu91Xzx2GjSF9FZhKa19prwlSpUueNayNndDQnXSmPAV69Aip5woA56L0A8TZaaVf87Do2QDnbqRsHG7SJiCdhEK3NGZ3ZhrO4AVdanfcuz8b8NQfd8DOWCfRl1ZLpvNP9OO9qZpmEE8Z21hq_srZ0l964wsfdT9E6Y8PBcW5VEvKCMZGyYM1WnlCDrKtVGcyVe_dj7YAasqpTxPhdDUydA14gqlFgMwsGpx0ZKTvbH8oYf-r8Wz2PIywBKxyYAf2C7XVC5qpa3St4LqMXJCuwb0JNut-JEUjuCSbQi4VovqZf8H3rRgTK6E-vogHzcDkjyJbDbYamrDnPGB1CD3Etqazf681I09xxUX0qcovjxHw4X9Bjmj10U4K5xiPbI1SuiDCMkzj5NNGUzhETj7P_9-p2nl9Cp2rScb2WKAg4Bef6_5UIDc0s2JhcaEvjf2nZXiE_P_kZHHH7dhugQ-x4ZNcNxvG50eYQQXQ8kmGvGc7Fj6y2AbNojqbK1L4irnp8QGwy_lC91tE5a-Ztj7KWKXToiaIHtPCYPz7DWWl8n1YIjVusnfztzafgbrDiwVybSQpDHlRhE7TJvHpRne8EgL-Bvtw3c9hF35r9En_khlDh7A0daf2y-9mVxFbpbkD-tIGYfclDhNowY-_luFC2wl6RijKVKj3DNM4bOpyESHygMPmQksKUUAudNH3FAltcyAZHKfEe__5DPYbXvsYX4mwPI9yEA-D8H2SSNNuC1eX-9LLZBRDKXSLsuH8hDi_6A=w1919-h918?auditContext=prefetch" alt="학생이 주미 AI를 사용하는 모습">
+      </div>
+
+
+      <div class="zumi-sub-imgs">
+        <img src="https://lh3.googleusercontent.com/rd-d/ALs6j_HEQMY4MV_LvmfBZFnTSRtMoKn4X8tT44bFoXJVMJ6G9gZRZebVIFBI321-n8tHNtpFjOqX7PagrAq25Nyse8_7DopQxTXqlndbSRonQUlXnZTv3ovgAAYmcfkF30bpZbS-ZIEsPeCRppsuIJsWkOYo0eHqzUQNF0RDW1-GA6RMiCLY3KYaSnh0TEEGiukAcV6l515ST4_22Dgy9svaiLtxmWCFCZSOnffvxBliAu1vfu4P7MuANWpSw2PpoORU4snTYxFvAd3PYXz2jMVl0XXPmQ7ocZ59BYRmFOm3Gvob0VABnHyuDq6XFGDKD7SyE61ZXGdRKBOcAE73CWfB24o8Qawr9Vb8Icwabz8Yn3kWiRy_EFa773Hp_xcFt3f5YIIlobe1uS5ClIX5J8dNixRzVGx9UdmWi5eZOoVH5eOKcxY6vb6lkaJ1y4cp547fzgdhYEUcTUlUVnZ4mqSgeBvFCbcsU2McoKnZ4sQxIsgpuMvNEsF6vnctX9cbyWRg4eidxcHnQMr9z_N5SLw6Qx4ncxrO9PM3KcR0IDd1lEO0ddrEosTGi62QUbtPCEgS-jj9XdcT99Vqxr--0Oof_jmayrgZZChNRcGB60rsrfqkPF3yK-3IJtsbvdZamjI5PMeKxIcMsxbG_EsMi1UIxYlKUO0paYYw-5DDdwNPWh-UIRa7cegUrLdCMOSSp3Tg5brJZ2SqMyMRKfey-I3UBgcHYZjVmj7tpYUXoN_m3cqJKnUPQQ09WjxieGLqVhpkvMuSk1mrxqBCU4GyB4wco-P2iIJpDmx8c-7PbSo79EFDV__kakn-K-03v1fQ1N0S1zICOUrqQp_sVDfB-oL1rT91jDwNDIoqZVKXLXK_QJ0T2CreL2SnMjWjVgfe4jkrThKc0pAnUu2tZQSNwUYTI0HV9pLOLTjo50CmJ1snD9Ymi2x-uI5uHfGQ3txdA2IWtmA-fID5r0khVn5RIOO0135T1mkIzpn_NUNhaeUgjWA0z6MfDTXNIQBDvKFYb_1pk0N5f2cwE8pt8b4zz2vHSkn0_R6QTfTfNkk7rjJCYO0-8QRoNucL3xjywM8NVb-UtAhw-7VD5Mx1bSz49pYjLesA7w_DExlBbc-6HK9BVYrLrHUTrbKlAg=w1919-h918?auditContext=prefetch" alt="주미 AI 전면 이미지">
+        
+<img src="https://lh3.googleusercontent.com/rd-d/ALs6j_ESe_aNP753bfn6767Pni9bEu2OP-NX7QgLSREyDaw1QKoZ3QTWvGhtxAFEPY8-9u0o8-zAOd5ELtTaf2zowHv336SsjxSjOKDVRRaKatNHG2BF_i2yZAel3DTt-oSQgPIvz9tDbgsyDnSg_LhZG69M9dvp126TkDKoA2Kqi_Ue7gT8Mw75AYizKx8o358KN3rYC7GDbFHwu36hVi7IoHPjT_N5vnb09wu5rs_IF8F9Ui_TfsxkKwbtr01EH0IxF0z_B_7V6Rkq6LVZ8KwIcKd4TSTeoAJ1HZcqqP4wqwtih5k0Hf3hvB_Kr7lzfWGtDYjqXlUEbrh_C_txItx8QM03Ibh4P6taACN2PFISSmjJ54QT5ksqpy3U2SbS2e6f7VZuP-iMRcSxlI3ObNzvppYsCcTi1ON9QcIXhHLKv23etLhUAtLr7glIQLC1givlM9IP_2gnTIYI8PRhOw4iqtTqMirMCSGhM6x_w_NxBIhe0bxchd37U0JHy4SdiEdSB3DbsBhB-KxRUzbxWDIrq1WybQLyGHQkHfs6Rh37IrIAVZSLu2mpRl1MGQaUoCO8DzRlsR_oCvsHyCPX5lQkdplf4TUy3NVQzQ81PzhlYOH80mRa8cIvNRJPI7kpIf3tc5XfsRD3XiV08iaYLfuD-cu81IXFtnUDX-Mw6L1yhY-xCGUNeG27-Bk7ox-17STxpx-q0S4rDD0LPfYXf1DL011h33YQZ5SNqAVAdnR8op0EPH9NMwDKzQQ_Qrz8hw05m9RAutHJOZTC-v0WECeJ7gBA5DTB6LmJb9D4z9CjsuqY1aAO_X2R8iyzXSF-ZV7es-raqBtOtM8N230jEr6wfR5pt0t8rYLZHVGP9SMPKQ52FXtgsXF6QJsAhianyndMfJ7e2E2RpSLVah6SOc3nf4Fib7KAAXZcIIZxqdG5SkvPJFCB6f9WSWvDUZWWywypniy5ccz5zcmvmxjPE9lglXMf8oVFeu4-cbRUPcXcoEOPHl1vs1o820M6lwLBIsfsRFt5-CPcLs4QpTZtu67Gd7VxpmZHTY72IaknQQbYaIEl4zVnwdO2vPw83ry40UnYUjTlHptvioXP0HlmXSb5UYcOeBAqcgr903bMvw1MnAcLpkOiRMLH=w1919-h918?auditContext=prefetch" alt="주미 AI 주행 예시">
+      </div>
+
+    </div>
+
+    <!-- 추천 대상 -->
+    <div class="zumi-block">
+      <h3>이런 분들께 추천합니다!</h3>
+      <ul>
+        <li>인공지능과 코딩을 한 번에 배우고 싶은 학습자</li>
+        <li>카메라 기반 자율주행의 원리를 이해하고 싶은 학생</li>
+        <li>AI, 자율주행, IoT 등을 융합한 교육 커리큘럼을 찾는 교사</li>
+        <li>학교, 메이커스페이스, AI 융합교실에서 활용 가능한 장비를 찾는 교육자</li>
+      </ul>
+    </div>
+
+    <!-- 제품 특징 -->
+    <div class="zumi-block">
+      <h3>제품 특징</h3>
+      <ol>
+        <li>AI 자율주행 차량으로 체험형 인공지능 교육</li>
+        <li>카메라 영상 인식 + 센서 기반 주행 기능 탑재</li>
+        <li>코딩으로 제어 가능한 교육용 로봇 플랫폼</li>
+        <li>OpenCV, TensorFlow 등과 연동 가능</li>
+        <li>전용 주미 AI 앱으로 무선 제어 및 학습 가능</li>
+      </ol>
+    </div>
+
+    <!-- 구성품 -->
+    <div class="zumi-block">
+      <h3>키트 구성품</h3>
+      <p>주미 AI 본체, USB 케이블, 주행 매트(선택), 카메라, 가이드북, 학습 카드</p>
+      <div class="zumi-kit">
+
+
+<div style="text-align: center;">
+  <img src="https://lh3.googleusercontent.com/rd-d/ALs6j_F0KEkKFbsd3hpwJbnDuwqzQjnTDALf3IWig6FM0QQ6l167IMoIuUNliTQgxotm7CjWf9-TIw5VQpxM-LysbYx5YTslPN2mXY-AJ7rBDSSUOVMZkkdYX43hThVaPfu6tPGx6SrxFLypr2tNwyLvpahoEjGu8wDXSt4lTwnTVOz4-D3CwYaE3hg00zH-V2d0w2vm3BW0RbQOXEfdYBMUioP9_wrk1lMesKP0NIVt8toK8EdJMg6wc38YFsDisKPb1tnoV1AX1LETbll8NvqEgy0j0Oe3xoi4jq_JeSebWPK38WByfheWHJV-8JgUP9UqvqErFrkguTgiIBxeKrLllweI2uCYwhXqDJg7pwaOEkyQHG_XBSzaj66n1KYTvWWadwmWHVdOJa5TBkBNn4nqOp2mexruLMQS3CfcSIuOgBp1Dx84lcM4i578o-Y175YGfnu7oyKXniC-i5LJ1BCzazsjw6PVDVliaIEanefq3LVpd7Rr_CCFvqlt9SX5Xiy0Csx6Z9MCnQd5q7OgbeU8KZ_H7_MMN9Y6Hy4wfeobCwFICoI8xCUZLh3Hh8eu3b9wA0XEif_0UHzuikr7a8WY5UzwH0iNobeeTO8dNUT8QuJb1xzaGUI_zmXlEQ4pNJDVBKbrTklf-tWLR9Sq4uTGuDUZ17ChR0cVN0NcsqckJTrJPG9FumLVQ5ZdhZD52XqZUCm9G4_j8DUd7lhf-pTtyxHIwd7bEiBO8fojUEeNHHScJ18F5G2G5MHXjIgQg7XRAL11fRx39GJV40-RwZn7KgudiBwZbbJ0onkgVhylL-0LMe133JyDh3cOcR8O5zq7lkUW8PT5LJWOeKkvMCi4sG0lNgW-RIOIU_3o6VSSZTFPfzysbb4OyU8QQZrYH8s1hEFfi3JtBaapbiWvCRC-e9BjyU43duP_1lR9FEHZUYZ6R1pmHiqO1mkUTrXcPkUDZJYqh0IU93VFf9jhRNNvpLGYqBuLT_b5zAV5OLXZ59OTvbeszE5I3fq5C5dZxZPvRAeev66-yZDMei_SPLN46zijXj0FS17BkDBcTsBno0ZTGzw54EahCVFs38EmwJgAtyfhBLl2HhlHzzQDYZ4fX2SqmdiO8QB_0Q2Mbecx_pHRXwCMGbt8=w1919-h918?auditContext=prefetch" alt="주행 매트" style="max-width: 100%; height: auto;">
+  <br>
+  <button style="background-color: #28489B; color: white; border: none; padding: 5px 20px; margin-top: 5px; border-radius: 30px; cursor: pointer;">
+    ZUMI AI
+  </button>
+</div>
+
+
+
+
+
+
+
+      </div>
+    </div>
+
+    <!-- 제품 크기 -->
+    <div class="zumi-block">
+      <h3>제품 크기</h3>
+      <div class="zumi-size">
+        <img src="zumi_front_size.png" alt="전면 크기">
+        <img src="zumi_side_size.png" alt="측면 크기">
+      </div>
+    </div>
+
+    <!-- 사양 -->
+    <div class="zumi-block">
+      <h3>하드웨어 사양</h3>
+      <table class="zumi-spec">
+        <tbody>
+          <tr><th>프로세서</th><td>Raspberry Pi Zero W</td></tr>
+          <tr><th>카메라</th><td>5MP 고화질 카메라</td></tr>
+          <tr><th>센서</th><td>IMU, 적외선, 라인 트래킹 센서</td></tr>
+          <tr><th>통신</th><td>Wi-Fi / Bluetooth</td></tr>
+          <tr><th>전원</th><td>리튬이온 배터리 (충전식)</td></tr>
+          <tr><th>무게</th><td>약 160g</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 주미 AI 앱 -->
+    <div class="zumi-app">
+      <img src="zumi_app.jpg" alt="주미 AI 앱 이미지">
+      <div>
+        <h3>주미 AI 앱</h3>
+        <p>PC와 모바일에서 모두 사용 가능하며,<br>주행 제어 및 영상 인식 학습을 지원합니다.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+
+
+
+
+</section>
+
+
+
+    <footer class="footer">
+  <div class="footer-container">
+    <img class="footer-logo" src="https://lh3.googleusercontent.com/rd-d/ALs6j_GDkqIcfdT8vTgEzKTKY6XyI-7TkL-l32hDQoyMxqcZsfNgd31Ug21bMMfvFpLZxmkyvvkV5JjvKZYfPquoWKLK37NPnNcbP2Og1ypJrTOsbkBddcDexInYyno7Lza-iwTzFMLzwjheuA_lfDcgaTK7KZGRRPKfjLR-IylQkKl9nFUP1EGDt4NoLUbVVlXiU1uiF2zwzCxIvHaifPAVgy5SmJ2ai9pgXZBX0l-YhhK6mukl8-ZyRKnKqaFGXiN-K-Lb4o-oXa44oDZfvCTRX8cKhamzLQZWxep43gx0B959giQGjCbn4wtFE9gvB5ZUjoOKUK70VZz5l1iAhd3Jj-GPwlUgMCT7_z1emPGaCS0p7vzk7nA1-gU9foy5-6bYEAoIpbIU2dWGGkCrERBzSDC7vDO6WffIlfQT3t6P7GCE40u91ukprm349-sL3_Rj5jZDTWdDc3a5CjnzndwKvUnG015n4u_cMgk4JqQZYn4IgLLAv6y9CBGrB2lwVpynE7UfFpejZRKWEOY5_tXktfV99jlO2uYZ0HJMUTjRFpLcoLFGOtIYVESA58ykS1gmCFNiry9PexuepKESpraQtTavQAQXwtDj03Kcfg_h2ogYysOMaiIa36bXdN9LYq2DtiHQmA95DADbI0Luw7JIqmkpTou5Pdgswfjx2IRTVowpXO-m5jTjKLixMky1E5SYkTMQaG0TRiMeeoyWz4WxotIrgMlEpwUlyGN-AcIyyprTdOzXea4BMk0497poSeSmpIXOZ0F7eM2TlhagUsx6qaLkzG-5qogh1LdX_uh5vF9ITkeOefq-4xUecVZQBNfVex3srgDpPbl8SAfNY5VVqVCoUCWuskPZgfdzo_MgGvfxxaqmaY_lzquq6OttoDfDqOF2101Dq5NaUPTyCBrQrooJGTHJUhlWG44rl9Apbfi2m8eupRIMyG9pj76Fgs-AJuEa9iIDFyaTMfUCYAI71B8Lkh9fAoFjszel42ArkgTAvKwGinbg-o8zIHGgbdcYvD0XJp-wLR3vgjvaApVanzdckR40Kq8NcuXzlcPHaHQ1fzNEbGBd8tu8nFw9SLW1KiwF-XLb4KB01C-1LYT1DQvavY1QHESiRiOlWXCn5HCt22TWP12Wsw=w1919-h918?auditContext=prefetch" alt="로보링크 로고">
+    <div class="footer-info">
+      <p>05602 5F, Sinhwa Building, 83 Samhaksa-ro, Songpa-gu, Seoul 05602, South Korea</p>
+      <p>Tel: 02-554-8862 l Fax: 02-554-8860 <br>E-mail : contact@robolink.co.kr</p>
+      <p> </p>
+    </div>
+  </div>
+</footer>
+
+ <script>
+function toggleMenu() {
+  const menu = document.getElementById('mobileMenu');
+  menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
+}
+
+   
+</script>
+
+</body>
+</html>
