@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Zumi AI</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-  <style>
+ <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; }
 
     body {
@@ -72,6 +72,34 @@
       background-color: #005fcc;
     }
 
+/* 모바일 메뉴 안에서도 색상 유지 */
+.mobile-menu .circle-btn {
+  background-color: #007bff !important;
+  color: #fff !important;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px auto;
+  transition: none;
+}
+
+.mobile-menu .circle-btn:active {
+  background-color: #007bff !important;
+}
+
+/* 서클/구매 버튼 CSS */
+.header-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+  position: relative;
+  right: 40px; 
+}
+
     /* 햄버거 메뉴 */
     .hamburger {
       display: none;
@@ -127,6 +155,76 @@
   font-weight: 600;
   text-align: center;
   border-radius: 0;
+}
+
+/* PURCHASE 버튼 스타일 */
+.mobile-menu .buy-btn {
+  display: inline-block;
+  background-color: #007bff; 
+  color: #fff;              
+  padding: 4px 8px;       
+  border-radius: 30px;     
+  font-weight: 100;
+  text-decoration: none;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin: 5px;      
+}
+
+
+
+
+.buy-btn2 {
+  display: block;            
+  margin: 0 auto;           
+  background-color: #007bff;
+  color: #fff;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.buy-btn2:hover {
+  background-color: #0056b3; /* 조금 어두운 파란색으로 */
+}
+
+
+
+/* 원형 버튼 */
+.circle-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  color: #000000;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.3s;
+  -webkit-tap-highlight-color: transparent;
+}
+.circle-btn:hover {
+  background-color: #ffffff;
+  color: #888888;
+}
+
+.circle-btn:active {
+  background-color: #ffffff; /* 터치 시 색상 유지 */
+  color: #000000;
+  transform: scale(0.97); /* 눌림 효과 */
 }
 
 
@@ -209,6 +307,9 @@
   
 /* 모바일 반응형 */
 @media (max-width: 768px) {
+
+
+
   .footer-container {
     flex-direction: column;
     align-items: center;
@@ -398,6 +499,20 @@
 
 /* ====== 반응형 ====== */
 @media (max-width: 768px) {
+  nav {
+display: none;
+}
+
+.buy-btn2 {
+display: none;
+}
+
+
+  .circle-btn {
+    display: none;
+  }
+
+
    .zumi-sub-imgs {
     flex-direction: column;
   }
@@ -511,18 +626,30 @@
         <a href="https://zumi.co.kr/faq">FAQ</a>
       </nav>
     </div>
-<a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=81&display_group=1">
-    <button class="buy-btn">PURCHASE</button></a>
+
+<div class="header-buttons">
+  <a href="https://zumi.co.kr/" class="circle-btn" title="go to zumi.co.kr (Korea site)">KOR</a>
+  <a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=1&display_group=3" class="buy-btn2">
+    PURCHASE
+  </a>
+</div>
+
 
     <div class="hamburger" onclick="toggleMenu()">
   <div></div><div></div><div></div></div>
 
+
+
+
 <div class="mobile-menu" id="mobileMenu">
-  <a href="https://zumi.co.kr/ai">Introduction</a>
+  <a href="https://zumi-ai.github.io/python/website/zumi_eng_Introduction.html">Introduction</a>
   <a href="https://zumi-ai.github.io/python/website/zumi_eng_E_Manual.html">E-Manual</a>
   <a href="https://www.youtube.com/watch?si=Q4nAAsUgU2JqkfWZ&v=MttYrWzurVs&feature=youtu.be">Videos</a>
   <a href="https://zumi.co.kr/faq">FAQ</a>
-  <a href="https://roboshop.co.kr">PURCHASE</a>
+
+
+  <a href="https://zumi.co.kr/" class="circle-btn" title="Info">KOR</a>
+  <a href="https://roboshop.co.kr" class="buy-btn">PURCHASE</a>
 
 </div>
   </header>
@@ -659,12 +786,13 @@
       </div>
     </div>
 
-    <!-- 사양 -->
+  <!-- 사양 -->
 <div class="zumi-block">
   <h3>Hardware Specifications</h3>
+
   <div style="display: flex; gap: 40px;"> <!-- 두 표를 가로로 배치 -->
     
-    <!-- 왼쪽 표 -->
+      <!-- 왼쪽 표 -->
     <table class="zumi-spec" style="flex: 1;">
       <tbody>
         <tr><th>Product Name</th><td>Zumi AI</td></tr>
