@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Zumi AI</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; }
 
@@ -72,6 +73,34 @@
       background-color: #005fcc;
     }
 
+/* 모바일 메뉴 안에서도 색상 유지 */
+.mobile-menu .circle-btn {
+  background-color: #007bff !important;
+  color: #fff !important;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px auto;
+  transition: none;
+}
+
+.mobile-menu .circle-btn:active {
+  background-color: #007bff !important;
+}
+
+/* 서클/구매 버튼 CSS */
+.header-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+  position: relative;
+  right: 40px; 
+}
+
     /* 햄버거 메뉴 */
     .hamburger {
       display: none;
@@ -90,7 +119,7 @@
 
 /* 모바일 메뉴 전체 박스 */
 .mobile-menu {
-  display: none;                     /* 기본적으로 숨김 (햄버거 클릭 시 표시) */
+  display: none;                    
   flex-direction: column;
   align-items: stretch;
   position: absolute;
@@ -120,13 +149,41 @@
   text-decoration: none;
 }
 
-/*  PURCHASE 버튼 (특수 항목) */
+/* PURCHASE 버튼 스타일 */
 .mobile-menu .buy-btn {
+  display: inline-block;
+  background-color: #007bff; 
+  color: #fff;              
+  padding: 4px 8px;       
+  border-radius: 30px;     
+  font-weight: 100;
+  text-decoration: none;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin: 5px;      
+}
+
+
+.buy-btn2 {
+  display: block;            
+  margin: 0 auto;           
   background-color: #007bff;
   color: #fff;
-  font-weight: 600;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
   text-align: center;
-  border-radius: 0;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.buy-btn2:hover {
+  background-color: #0056b3; /* 조금 어두운 파란색으로 */
 }
 
 
@@ -137,6 +194,38 @@
   text-align: center;
   padding: 0;
 }
+
+
+/* 원형 버튼 */
+.circle-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  color: #000000;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.3s;
+  -webkit-tap-highlight-color: transparent;
+}
+.circle-btn:hover {
+  background-color: #ffffff;
+  color: #888888;
+}
+
+.circle-btn:active {
+  background-color: #ffffff; /* 터치 시 색상 유지 */
+  color: #000000;
+  transform: scale(0.97); /* 눌림 효과 */
+}
+
+
 
 .hero img {
   width: 100%;
@@ -357,6 +446,7 @@
         overflow: hidden;
     }
 
+
     .btn::after {
         content: "";
         position: absolute;
@@ -415,6 +505,20 @@
     }
 
 @media (max-width: 768px) {
+
+  nav {
+display: none;
+}
+
+
+.buy-btn2 {
+display: none;
+}
+
+  .circle-btn {
+    display: none;
+  }
+
   .video-container {
     width: 90%;
     padding-bottom: 50%;
@@ -499,25 +603,37 @@
   <header>
     <div class="logo"><a href="https://zumi-ai.github.io/python/website/zumi_eng_index.html">
       <img src="https://lh3.googleusercontent.com/rd-d/ALs6j_FEZ76YJKUYQrdwj6e92QR6fLam4y5rmo8FsmIaawUpH5F-Z0JlxxTPYnQYz2khCsB-Fl111-43tgUAHS4Bc-x7u8ZGNQksa_BArdC_LAD66MU9BG7iRUTfRi7ukd2kMoTURnrc0ClRaXdFzEFTavHO97sFHaDxDgPMNNYlStBTZVUggFPwyiUnXao07xDKddtdzIAkH_tZu52EAwD9bwsEeYNop1RYQWKp4B0aB_AvJ2Xg_3kYa0PJHtQH86HgPuqzXs8YM93XZdhd5bQjp4KwkKa9h1jpoDMdWGfpWE4SiLZPu3BGs9G1W5pM9pZ7nEkfT2uqaHI-X9CxjRfDyBQXfCr2cyjLskR5UG8hzAihAA68F0Xpcr3k5bNhHO_o_FKLQyj67L52NCrZGcCKO_FbOmSzhVvhr7cMMlRg2eQ5PMlOyF5aKYw80GzQqwF9zGLTs9Svh2l_L0zgeCeZPcXhRJHsAWCCBUuEmbeohLxVPaEK9b2X6FnUxoOasi7APTbbxGsgCw--97TahHYpFYXZ5U_atqC_6RWy1lAoOj5L82jLq_d7_U6UyINP4b9ZOg5jjuEMfd4bwBAqUOkVXXS-cuxtpKcXpnEp4bjord_A0tdVgOcXwLhubGlMRIVZ350X2ZxA99o2YXJZBVmmIxdPdH6MTmu7DoTsp2NmXrlgo4f0pZpMc9y9UG4Zr6JjtV1d2-xXy6smEX6VtjxLVuv8mU_r6lJ3XSzIRX9l7DML7bRhpL72f8RCyU7elKjR3fqBA_WxEm5i3TOpquTjMLa6dCFRQfMV5_g0At52rSHljq1raiFBZHNjV5JcJ1EURPaL9TmMhYIScDbwMjdX29IDw1lXRyp1-G7HsKOFW6d4qTTcNPeqM3IzNQ8NiweTbI7BZr6om7K82ZPEV5a-anwwAAqxZJUSaSYQs8MZQMmqkgZuu1PpLWiHuR0hw04gY7i387yHvy0bOTH4UWU5Xudk8vNgMWeWPIkFDri0VDag6C8iwR5NYROz6TO_6n3HAnZfLDLO5w_pjRdy6w55LAmiLBJl47waOcfI7lgq5Mq21um6sSFjoefj9Bnci1xg8f6PxRMxRHum3waTIX5lZCm8bod4JE3kppAQjA7PwTCBYpNQgikl4Q=w1919-h918?auditContext=prefetch" alt="Zumi AI Logo"></a>
-      <nav>
+ <nav>
         <a href="https://zumi-ai.github.io/python/website/zumi_eng_Introduction.html">Introduction</a>
-        <a href="https://zumi-ai.github.io/python/website/zumi_AI_E-Manual.html">E-Manual</a>
+        <a href="https://zumi-ai.github.io/python/website/zumi_eng_E_Manual.html">E-Manual</a>
         <a href="https://www.youtube.com/watch?si=Q4nAAsUgU2JqkfWZ&v=MttYrWzurVs&feature=youtu.be">Videos</a>
         <a href="https://zumi.co.kr/faq">FAQ</a>
       </nav>
     </div>
-<a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=81&display_group=1">
-    <button class="buy-btn">PURCHASE</button></a>
+
+<div class="header-buttons">
+  <a href="https://zumi.co.kr/" class="circle-btn" title="go to zumi.co.kr (Korea site)">KOR</a>
+  <a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=1&display_group=3" class="buy-btn2">
+    PURCHASE
+  </a>
+</div>
+
 
     <div class="hamburger" onclick="toggleMenu()">
   <div></div><div></div><div></div></div>
 
+
+
+
 <div class="mobile-menu" id="mobileMenu">
-  <a href="https://zumi.co.kr/ai">Introduction</a>
-  <a href="https://zumi-ai.github.io/python/website/zumi_AI_E-Manual.html">E-Manual</a>
+  <a href="https://zumi-ai.github.io/python/website/zumi_eng_Introduction.html">Introduction</a>
+  <a href="https://zumi-ai.github.io/python/website/zumi_eng_E_Manual.html">E-Manual</a>
   <a href="https://www.youtube.com/watch?si=Q4nAAsUgU2JqkfWZ&v=MttYrWzurVs&feature=youtu.be">Videos</a>
   <a href="https://zumi.co.kr/faq">FAQ</a>
-  <a href="https://roboshop.co.kr">PURCHASE</a>
+
+
+  <a href="https://zumi.co.kr/" class="circle-btn" title="Info">KOR</a>
+  <a href="https://roboshop.co.kr" class="buy-btn">PURCHASE</a>
 
 </div>
   </header>
