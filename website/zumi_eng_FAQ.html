@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zumi AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; }
+
+    body {
+     margin: 0;
+        font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+        background: linear-gradient(135deg, #f5f7fa, #e4ebf1);
+        color: #333;
+        overflow-x: hidden;
+    }
+
+    /* 헤더 영역 */
+    header {
+      width: 100%;
+      background-color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 6%;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .logo img {
+      height: 36px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    nav a:hover {
+      color: #007bff;
+    }
+
+    .buy-btn {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.3s;
+    }
+
+    .buy-btn:hover {
+      background-color: #005fcc;
+    }
+
+/* 모바일 메뉴 안에서도 색상 유지 */
+.mobile-menu .circle-btn {
+  background-color: #007bff !important;
+  color: #fff !important;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px auto;
+  transition: none;
+}
+
+.mobile-menu .circle-btn:active {
+  background-color: #007bff !important;
+}
+
+/* 서클/구매 버튼 CSS */
+.header-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+  position: relative;
+  right: 40px; 
+}
+
+    /* 햄버거 메뉴 */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 4px;
+    }
+
+    .hamburger div {
+      display: flex;
+      width: 24px;
+      height: 3px;
+      background-color: #333;
+      border-radius: 2px;
+    }
+
+/* 모바일 메뉴 전체 박스 */
+.mobile-menu {
+  display: none;                    
+  flex-direction: column;
+  align-items: stretch;
+  position: absolute;
+  top: 60px;
+  right: 0;
+  width: 180px;
+  background-color: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  height: auto;                     
+  overflow: visible;                
+  z-index: 999;                    
+}
+
+/* 모바일 메뉴의 모든 항목 기본 스타일 */
+.mobile-menu a,
+.mobile-menu button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  color: #333;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/* PURCHASE 버튼 스타일 */
+.mobile-menu .buy-btn {
+  display: inline-block;
+  background-color: #007bff; 
+  color: #fff;              
+  padding: 4px 8px;       
+  border-radius: 30px;     
+  font-weight: 100;
+  text-decoration: none;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin: 5px;      
+}
+
+
+.buy-btn2 {
+  display: block;            
+  margin: 0 auto;           
+  background-color: #007bff;
+  color: #fff;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.buy-btn2:hover {
+  background-color: #0056b3; /* 조금 어두운 파란색으로 */
+}
+
+
+   /* 메인 콘텐츠 */
+.hero {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding: 0;
+}
+
+
+/* 원형 버튼 */
+.circle-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  color: #000000;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.3s;
+  -webkit-tap-highlight-color: transparent;
+}
+.circle-btn:hover {
+  background-color: #ffffff;
+  color: #888888;
+}
+
+.circle-btn:active {
+  background-color: #ffffff; /* 터치 시 색상 유지 */
+  color: #000000;
+  transform: scale(0.97); /* 눌림 효과 */
+}
+
+
+
+.hero img {
+  width: 100%;
+  height: 60vh;
+  object-fit: cover;
+  object-position: center 80%; 
+  display: block;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* 텍스트가 이미지 아래에 위치 */
+.hero h2 {
+  margin-top: 20px;
+  font-size: 2rem;
+  line-height: 1.4;
+}
+
+/* 반응형 설정 */
+@media (max-width: 768px) {
+  nav,
+  .buy-btn {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+}
+
+
+  .hero img {
+    height: 40vh; 
+  }
+
+  .hero h2 {
+    font-size: 1.1rem;
+    padding: 0 10px;
+  }
+
+
+    h2 {
+      margin: 40px 0 12px;
+      font-size: 24px;
+    }
+
+    .highlight {
+      font-weight: 700;
+    }
+
+    .content {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+   .features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 28px;
+  max-width: 900px; 
+  margin: 0 auto;  
+  padding: 40px 20px;
+}
+
+.feature {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.feature:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+}
+
+.feature img {
+  width: 100%;
+  border-radius: 12px;
+}
+
+.feature h3 {
+  margin: 16px 0 8px;
+  font-size: 18px;
+}
+
+    }
+
+.video-section {
+  text-align: center;
+  margin: 20px auto 60px; 
+  padding: 10px 0;       
+}
+
+.video-section h2 {
+  font-size: 22px;
+  margin-bottom: 12px;   
+  color: #333;
+}
+
+.video-container {
+  position: relative;
+  width: 30%;            
+  max-width: 480px;        
+  margin: 0 auto;
+  padding-bottom: 16.875%;  /* 16:9 비율 유지 → (30×9/16)=16.875% */
+  height: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 12px;
+}
+
+ /* 2×2 레이아웃 컨테이너 */
+    .container {
+        max-width: 1100px;
+        margin: 40px auto;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+        padding: 0 20px;
+    }
+
+    /* 카드 공통 */
+    .card {
+        display: flex;
+        align-items: center;
+        background: white;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+        text-decoration: none;
+        color: inherit;
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    /* ✅ 카드 등장 애니메이션 (부드럽게 튀어나오는 효과) */
+    .card.visible {
+        opacity: 1;
+        transform: translateY(0);
+        animation: cardPop 0.6s cubic-bezier(0.22, 1.0, 0.36, 1.0);
+    }
+
+    @keyframes cardPop {
+        0% { transform: translateY(40px); opacity: 0; }
+        60% { transform: translateY(-10px); opacity: 1; }
+        100% { transform: translateY(0); }
+    }
+
+    /* ✅ 카드 hover 시 글로우 효과 */
+    .card:hover {
+        transform: translateY(-6px);
+    }
+
+    .beginner:hover { box-shadow: 0 0 20px rgba(155,89,182,0.5); }
+    .intermediate:hover { box-shadow: 0 0 20px rgba(39,174,96,0.5); }
+    .advanced:hover { box-shadow: 0 0 20px rgba(41,128,185,0.5); }
+    .expert:hover { box-shadow: 0 0 20px rgba(44,62,80,0.5); }
+
+    /* 이미지 */
+    .card img {
+        width: 40%;
+        aspect-ratio: 3/4;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+        border-right: 4px solid transparent;
+    }
+
+    .card:hover img {
+        transform: scale(1.05);
+    }
+
+    /* 내용 */
+    .card-content {
+        padding: 25px 25px;
+        flex: 1;
+    }
+
+    .card-content h2 {
+        margin: 0 0 15px;
+        font-size: 1.5rem;
+    }
+
+    .card-content p {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #555;
+        margin-bottom: 20px;
+    }
+
+    /* ✅ 버튼 클릭 시 파동 효과 */
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        color: white;
+        transition: 0.3s;
+        box-shadow: 0 0 10px rgba(100, 100, 255, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+
+    .btn::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0; left: 0;
+        background: rgba(255,255,255,0.4);
+        transform: scale(0);
+        border-radius: inherit;
+        opacity: 0;
+        transition: transform 0.5s, opacity 0.5s;
+    }
+
+    .btn:active::after {
+        transform: scale(2);
+        opacity: 1;
+        transition: 0s;
+    }
+
+    .btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(100, 100, 255, 0.5);
+    }
+
+ 
+    /* ---------------- FAQ SECTION ---------------- */
+    .faq-section {
+      max-width: 800px;
+      margin: 60px auto;
+      padding: 0 20px;
+    }
+
+    .faq-title {
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 40px;
+      color: #222;
+    }
+
+    .faq-item {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      margin-bottom: 12px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .faq-question {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 22px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: #333;
+    }
+
+    .faq-question:hover {
+      background: #f1f5ff;
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      background: #f9fafb;
+      padding: 0 22px;
+      color: #555;
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 300px;
+      padding: 18px 22px;
+    }
+
+    .faq-item.active .faq-question::after {
+      content: "−";
+      font-size: 20px;
+      color: #007bff;
+    }
+
+    .faq-question::after {
+      content: "+";
+      font-size: 20px;
+      color: #007bff;
+      transition: transform 0.3s;
+    }
+
+    /* ---------------- SUBMIT FORM ---------------- */
+    .faq-submit {
+      max-width: 760px;
+      background: #fff;
+      margin: 60px auto;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .faq-submit h3 {
+      margin-bottom: 20px;
+      font-size: 1.4rem;
+      text-align: center;
+      color: #333;
+    }
+
+    .faq-submit input,
+    .faq-submit textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+      font-family: inherit;
+    }
+
+    .faq-submit button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .faq-submit button:hover {
+      background-color: #005fcc;
+    }
+
+
+
+    /* 반응형 */
+    @media (max-width: 900px) {
+        .container {
+            grid-template-columns: 1fr;
+        }
+        .card {
+            flex-direction: column;
+            text-align: center;
+        }
+        .card img {
+            width: 100%;
+            border-right: none;
+            border-bottom: 4px solid currentColor;
+        }
+    }
+
+@media (max-width: 768px) {
+
+  nav {
+display: none;
+}
+
+
+.buy-btn2 {
+display: none;
+}
+
+  .circle-btn {
+    display: none;
+  }
+
+  .video-container {
+    width: 90%;
+    padding-bottom: 50%;
+  }
+  .video-section {
+    margin-top: 30px;       /* 모바일에선 살짝 여백 유지 */
+  }
+  .video-section h2 {
+    font-size: 20px;
+  }
+}
+
+
+    /* 푸터 */
+    .footer {
+  background-color: #666666; /* 배경색 변경 */
+  color: #fff;
+  padding: 30px 20px 15px; /* 전체 패딩 축소 */
+  font-family: sans-serif;
+  font-size: 0.85rem; /* 글자 크기 줄임 */
+  line-height: 1.2; /* 세로 간격 줄임 */
+}
+
+.footer-container {
+  display: flex;
+  justify-content: flex-start; /* 좌측 정렬 */
+  align-items: flex-start;
+  gap: 30px; /* 로고와 내용 사이 간격 */
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-logo {
+  width: 120px; /* 크기 축소 */
+  height: auto;
+  margin-bottom: 0;
+}
+
+.footer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px; /* 줄 간격 줄임 */
+}
+
+.footer-info a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.footer-copy {
+  text-align: left; /* 좌측 정렬 */
+  margin-top: 15px;
+  font-size: 0.75rem; /* 크기 축소 */
+  color: #eee;
+}
+
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 15px;
+  }
+  .footer-logo {
+    width: 100px;
+  }
+  .footer-copy {
+    text-align: center;
+  }
+}
+
+
+
+
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo"><a href="https://zumi-ai.github.io/python/website/zumi_eng_index.html">
+      <img src="https://lh3.googleusercontent.com/rd-d/ALs6j_FEZ76YJKUYQrdwj6e92QR6fLam4y5rmo8FsmIaawUpH5F-Z0JlxxTPYnQYz2khCsB-Fl111-43tgUAHS4Bc-x7u8ZGNQksa_BArdC_LAD66MU9BG7iRUTfRi7ukd2kMoTURnrc0ClRaXdFzEFTavHO97sFHaDxDgPMNNYlStBTZVUggFPwyiUnXao07xDKddtdzIAkH_tZu52EAwD9bwsEeYNop1RYQWKp4B0aB_AvJ2Xg_3kYa0PJHtQH86HgPuqzXs8YM93XZdhd5bQjp4KwkKa9h1jpoDMdWGfpWE4SiLZPu3BGs9G1W5pM9pZ7nEkfT2uqaHI-X9CxjRfDyBQXfCr2cyjLskR5UG8hzAihAA68F0Xpcr3k5bNhHO_o_FKLQyj67L52NCrZGcCKO_FbOmSzhVvhr7cMMlRg2eQ5PMlOyF5aKYw80GzQqwF9zGLTs9Svh2l_L0zgeCeZPcXhRJHsAWCCBUuEmbeohLxVPaEK9b2X6FnUxoOasi7APTbbxGsgCw--97TahHYpFYXZ5U_atqC_6RWy1lAoOj5L82jLq_d7_U6UyINP4b9ZOg5jjuEMfd4bwBAqUOkVXXS-cuxtpKcXpnEp4bjord_A0tdVgOcXwLhubGlMRIVZ350X2ZxA99o2YXJZBVmmIxdPdH6MTmu7DoTsp2NmXrlgo4f0pZpMc9y9UG4Zr6JjtV1d2-xXy6smEX6VtjxLVuv8mU_r6lJ3XSzIRX9l7DML7bRhpL72f8RCyU7elKjR3fqBA_WxEm5i3TOpquTjMLa6dCFRQfMV5_g0At52rSHljq1raiFBZHNjV5JcJ1EURPaL9TmMhYIScDbwMjdX29IDw1lXRyp1-G7HsKOFW6d4qTTcNPeqM3IzNQ8NiweTbI7BZr6om7K82ZPEV5a-anwwAAqxZJUSaSYQs8MZQMmqkgZuu1PpLWiHuR0hw04gY7i387yHvy0bOTH4UWU5Xudk8vNgMWeWPIkFDri0VDag6C8iwR5NYROz6TO_6n3HAnZfLDLO5w_pjRdy6w55LAmiLBJl47waOcfI7lgq5Mq21um6sSFjoefj9Bnci1xg8f6PxRMxRHum3waTIX5lZCm8bod4JE3kppAQjA7PwTCBYpNQgikl4Q=w1919-h918?auditContext=prefetch" alt="Zumi AI Logo"></a>
+ <nav>
+        <a href="https://zumi-ai.github.io/python/website/zumi_eng_Introduction.html">Introduction</a>
+        <a href="https://zumi-ai.github.io/python/website/zumi_eng_E_Manual.html">E-Manual</a>
+        <a href="https://zumi.co.kr/faq">FAQ</a>
+      </nav>
+    </div>
+
+<div class="header-buttons">
+  <a href="https://zumi.co.kr/" class="circle-btn" title="go to zumi.co.kr (Korea site)">KOR</a>
+  <a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=1&display_group=3" class="buy-btn2">
+    PURCHASE
+  </a>
+</div>
+
+
+    <div class="hamburger" onclick="toggleMenu()">
+  <div></div><div></div><div></div></div>
+
+
+
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="https://zumi-ai.github.io/python/website/zumi_eng_Introduction.html">Introduction</a>
+  <a href="https://zumi-ai.github.io/python/website/zumi_eng_E_Manual.html">E-Manual</a>
+  <a href="https://www.youtube.com/watch?si=Q4nAAsUgU2JqkfWZ&v=MttYrWzurVs&feature=youtu.be">Videos</a>
+  <a href="https://zumi.co.kr/faq">FAQ</a>
+
+
+  <a href="https://zumi.co.kr/" class="circle-btn" title="Info">KOR</a>
+  <a href="https://roboshop.co.kr" class="buy-btn">PURCHASE</a>
+
+</div>
+  </header>
+
+
+
+
+
+ <!-- ✅ FAQ Section -->
+  <section class="faq-section">
+    <h2 class="faq-title">Product FAQ</h2>
+
+    <div class="faq-item">
+      <div class="faq-question">Which devices can I use Zumi AI with?</div>
+      <div class="faq-answer">Zumi AI’s unplugged card coding can be used without any additional devices or internet connection. Entry and Python coding are available on PCs running Windows or macOS (firmware version v1.2.3 or higher).</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Where can I download the Entry program?</div>
+      <div class="faq-answer">Please visit https://playentry.org/ws/new
+ and download the latest version of the “Hardware Connection” program.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">How do I charge Zumi AI? Is fast charging supported?</div>
+      <div class="faq-answer">Turn the device switch to “OFF” and connect it using a micro USB cable. Fast charging is not supported, and we recommend using a charger with a maximum output of 5V.</div>
+    </div>
+
+
+    <div class="faq-item">
+      <div class="faq-question">Is the battery sold separately?</div>
+      <div class="faq-answer">The battery is not sold separately.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">What is the target age group for Zumi AI?</div>
+      <div class="faq-answer">Zumi AI is an intermediate-level kit. Unplugged coding is suitable for elementary students, while block coding and Python coding can also be learned by middle school students.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Does Zumi AI require assembly?</div>
+      <div class="faq-answer">Zumi AI comes as a fully assembled product and does not require any additional assembly.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Can I use the camera while driving the robot?</div>
+      <div class="faq-answer">Yes, you can. Download the “Zumi AI” app from the Play Store to control and explore various camera-based functions.</div>
+    </div>
+
+ <div class="faq-item">
+      <div class="faq-question">What is the product warranty policy?</div>
+      <div class="faq-answer">● Main board: 1-year free warranty from the date of purchase<br>
+● Motors, battery, cables: Excluded from warranty as consumables<br>
+● Not covered under warranty: Change of mind, expired warranty period, negligence or misuse, unauthorized disassembly/modification, malfunctions caused by connecting third-party products, etc.<br>
+● Service requests: Use the [Technical Support & Service Request] menu on the Robolink website.
+</div>
+    </div>
+
+
+  </section>
+
+
+ <!-- ✅ FAQ Section -->
+  <section class="faq-section">
+    <h2 class="faq-title">Education & Usage FAQ</h2>
+
+    <div class="faq-item">
+      <div class="faq-question">Are lesson plans available for classroom use?</div>
+      <div class="faq-answer">Yes. On the official Zumi website (zumi.co.kr), select “E-Manual” from the menu to access various educational resources, including curricula, textbooks, and subject-specific examples.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Is there teacher training or a usage workshop available?</div>
+      <div class="faq-answer">*Yes. For groups or institutions, training can be scheduled upon request. (Additional details can be arranged if needed.)</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Which school subjects can Zumi AI be integrated with?</div>
+      <div class="faq-answer">You can check the E-Manual for examples that can be applied in various subjects such as Practical Arts, Ethics, English, Science, Math, Korean, and Social Studies.</div>
+    </div>
+
+
+    <div class="faq-item">
+      <div class="faq-question">Are there competitions or challenge events?</div>
+      <div class="faq-answer">Zumi AI is used in various educational institutions and competitions, and depending on the event regulations, participation in different coding contests is possible.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Is Zumi AI certified or approved by the Ministry of Education?</div>
+      <div class="faq-answer">Zumi AI was developed with the participation of active education experts and features verified curricula used in various public education programs such as “Digital Saessak” and “Neulbom School.”</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Up to what level can Python be learned with Zumi AI?</div>
+      <div class="faq-answer">You can implement a variety of AI functions with Python, from simple driving control to line tracing and camera recognition.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">How do the AI features work?</div>
+      <div class="faq-answer">Zumi AI supports various AI functions such as voice recognition, line tracing, and image classification.</div>
+    </div>
+
+
+
+  </section>
+
+<!-- ✅ FAQ Submission Form -->
+<section class="faq-submit">
+  <h3>Submit a FAQ Inquiry</h3>
+  <p style="text-align:center; font-size:16px; color:#333; margin-top:10px;">
+    For other inquiries, please contact us at 
+    <a href="mailto:contact@robolink.co.kr" style="color:#007bff; text-decoration:none;">
+      contact@robolink.co.kr
+    </a><br>
+    To ensure smooth communication, please include your <strong>name, organization, and a reachable email address</strong> when sending your message for faster and more accurate support.
+  </p>
+</section>
+
+
+<!--
+  ✅ FAQ 제출 폼 (Hide 처리)
+  <section class="faq-submit">
+    <h3>FAQ 질문 제출하기</h3>
+    <form>
+      <input type="text" placeholder="이름" required>
+      <input type="email" placeholder="이메일" required>
+      <textarea rows="5" placeholder="질문 내용을 입력해주세요." required></textarea>
+      <button type="submit">제출하기</button>
+    </form>
+</section>
+-->
+
+
+
+
+
+  <footer class="footer">
+  <div class="footer-container">
+    <img class="footer-logo" src="https://lh3.googleusercontent.com/rd-d/ALs6j_GDkqIcfdT8vTgEzKTKY6XyI-7TkL-l32hDQoyMxqcZsfNgd31Ug21bMMfvFpLZxmkyvvkV5JjvKZYfPquoWKLK37NPnNcbP2Og1ypJrTOsbkBddcDexInYyno7Lza-iwTzFMLzwjheuA_lfDcgaTK7KZGRRPKfjLR-IylQkKl9nFUP1EGDt4NoLUbVVlXiU1uiF2zwzCxIvHaifPAVgy5SmJ2ai9pgXZBX0l-YhhK6mukl8-ZyRKnKqaFGXiN-K-Lb4o-oXa44oDZfvCTRX8cKhamzLQZWxep43gx0B959giQGjCbn4wtFE9gvB5ZUjoOKUK70VZz5l1iAhd3Jj-GPwlUgMCT7_z1emPGaCS0p7vzk7nA1-gU9foy5-6bYEAoIpbIU2dWGGkCrERBzSDC7vDO6WffIlfQT3t6P7GCE40u91ukprm349-sL3_Rj5jZDTWdDc3a5CjnzndwKvUnG015n4u_cMgk4JqQZYn4IgLLAv6y9CBGrB2lwVpynE7UfFpejZRKWEOY5_tXktfV99jlO2uYZ0HJMUTjRFpLcoLFGOtIYVESA58ykS1gmCFNiry9PexuepKESpraQtTavQAQXwtDj03Kcfg_h2ogYysOMaiIa36bXdN9LYq2DtiHQmA95DADbI0Luw7JIqmkpTou5Pdgswfjx2IRTVowpXO-m5jTjKLixMky1E5SYkTMQaG0TRiMeeoyWz4WxotIrgMlEpwUlyGN-AcIyyprTdOzXea4BMk0497poSeSmpIXOZ0F7eM2TlhagUsx6qaLkzG-5qogh1LdX_uh5vF9ITkeOefq-4xUecVZQBNfVex3srgDpPbl8SAfNY5VVqVCoUCWuskPZgfdzo_MgGvfxxaqmaY_lzquq6OttoDfDqOF2101Dq5NaUPTyCBrQrooJGTHJUhlWG44rl9Apbfi2m8eupRIMyG9pj76Fgs-AJuEa9iIDFyaTMfUCYAI71B8Lkh9fAoFjszel42ArkgTAvKwGinbg-o8zIHGgbdcYvD0XJp-wLR3vgjvaApVanzdckR40Kq8NcuXzlcPHaHQ1fzNEbGBd8tu8nFw9SLW1KiwF-XLb4KB01C-1LYT1DQvavY1QHESiRiOlWXCn5HCt22TWP12Wsw=w1919-h918?auditContext=prefetch" alt="로보링크 로고">
+    <div class="footer-info">
+      <p>05602 5F, Sinhwa Building, 83 Samhaksa-ro, Songpa-gu, Seoul 05602, South Korea</p>
+      <p>Tel: 02-554-8862 l Fax: 02-554-8860 <br>E-mail : contact@robolink.co.kr</p>
+      <p> </p>
+    </div>
+  </div>
+</footer>
+
+ <script>
+function toggleMenu() {
+  const menu = document.getElementById('mobileMenu');
+  menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
+}
+
+document.querySelectorAll('.faq-question').forEach(q => {
+      q.addEventListener('click', () => {
+        const parent = q.parentElement;
+        parent.classList.toggle('active');
+      });
+    });
+ 
+
+</script>
+
+</body>
+</html>
