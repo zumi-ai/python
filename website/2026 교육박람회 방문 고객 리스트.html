@@ -143,7 +143,7 @@ function hideAll(){
 // ===== CSV =====
 function exportCSV(){
   const d = JSON.parse(localStorage.getItem('expoVisitors2026') || '{}');
-  let csv = '방문일,이름,소속,연락처,후속조치,담당자,미팅내용\n';
+  let csv = '방문일,이름,소속,연락처/E-Mail,후속조치,담당자,미팅내용\n';
 
   Object.keys(d).forEach(day=>{
     d[day].forEach(r=>{
@@ -174,4 +174,5 @@ window.onload = loadData;
 </div>
 </body>
 </html>
+
 
