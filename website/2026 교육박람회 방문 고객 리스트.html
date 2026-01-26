@@ -164,24 +164,6 @@ async function showAll(){
 
   const d = snap.data();
 
-  Object.keys(d).forEach(day=>{
-    d[day].forEach(r=>{
-      tb.innerHTML += `
-        <tr>
-          <td><b>${day.toUpperCase()}</b></td>
-          <td>${r.name||''}</td>
-          <td>${r.org||''}</td>
-          <td>${r.contact||''}</td>
-          <td class="status-${r.status}">${r.status||''}</td>
-          <td>${r.manager||''}</td>
-          <td>${r.meeting||''}</td>
-        </tr>`;
-    });
-  });
-
-  document.getElementById('days').style.display='none';
-  document.getElementById('all-view').style.display='block';
-}
 
 
   Object.keys(d).forEach(day=>{
