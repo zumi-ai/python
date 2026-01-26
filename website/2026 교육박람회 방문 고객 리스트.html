@@ -31,6 +31,41 @@
     .status-미팅예정{color:#FD51C4;font-weight:600}
     .status-구매완료{color:#5cb8b8;font-weight:600}
   </style>
+
+
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+  import {
+    getFirestore,
+    doc,
+    setDoc,
+    getDoc
+  } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCapV2_ITZm1xRKh41wfCuZkIrj19SYCsk",
+    authDomain: "educational-fair-db.firebaseapp.com",
+    projectId: "educational-fair-db",
+    storageBucket: "educational-fair-db.firebasestorage.app",
+    messagingSenderId: "507920024338",
+    appId: "1:507920024338:web:5530b31fe0d1ce5a35e9cb"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // 기존 JS에서 쓰기 위해 window에 연결
+  window.db = db;
+  window.doc = doc;
+  window.setDoc = setDoc;
+  window.getDoc = getDoc;
+</script>
+
+
+
+
+
 </head>
 <body>
 <div class="container">
@@ -48,7 +83,7 @@
 const managers = ['담당자','조차장','허차장','이수석','이팀장','원과장','이주임'];
 
 // ===== 저장 / 로드 =====
-function saveData(){
+async function saveData(){
   const data = {};
   ['day1','day2','day3'].forEach(day=>{
     data[day] = [];
@@ -64,15 +99,22 @@ function saveData(){
       });
     });
   });
-  localStorage.setItem('expoVisitors2026', JSON.stringify(data));
+
+  const ref = window.doc(window.db, "expo2026", "visitors");
+  await window.setDoc(ref, data);
 }
 
-function loadData(){
-  const d = JSON.parse(localStorage.getItem('expoVisitors2026') || '{}');
+async function loadData(){
+  const ref = window.doc(window.db, "expo2026", "visitors");
+  const snap = await window.getDoc(ref);
+  if (!snap.exists()) return;
+
+  const d = snap.data();
   ['day1','day2','day3'].forEach(day=>{
     (d[day] || []).forEach(r=>addRow(day, r));
   });
 }
+
 
 // ===== 행 추가 =====
 function addRow(tbodyId, row = {}){
@@ -112,10 +154,35 @@ function updateStatus(select){
 }
 
 // ===== 전체 보기 =====
-function showAll(){
+async function showAll(){
   const tb = document.getElementById('all-table');
   tb.innerHTML = '';
-  const d = JSON.parse(localStorage.getItem('expoVisitors2026') || '{}');
+
+  const ref = window.doc(window.db, "expo2026", "visitors");
+  const snap = await window.getDoc(ref);
+  if (!snap.exists()) return;
+
+  const d = snap.data();
+
+  Object.keys(d).forEach(day=>{
+    d[day].forEach(r=>{
+      tb.innerHTML += `
+        <tr>
+          <td><b>${day.toUpperCase()}</b></td>
+          <td>${r.name||''}</td>
+          <td>${r.org||''}</td>
+          <td>${r.contact||''}</td>
+          <td class="status-${r.status}">${r.status||''}</td>
+          <td>${r.manager||''}</td>
+          <td>${r.meeting||''}</td>
+        </tr>`;
+    });
+  });
+
+  document.getElementById('days').style.display='none';
+  document.getElementById('all-view').style.display='block';
+}
+
 
   Object.keys(d).forEach(day=>{
     d[day].forEach(r=>{
@@ -141,8 +208,12 @@ function hideAll(){
 }
 
 // ===== CSV =====
-function exportCSV(){
-  const d = JSON.parse(localStorage.getItem('expoVisitors2026') || '{}');
+async function exportCSV(){
+  const ref = window.doc(window.db, "expo2026", "visitors");
+  const snap = await window.getDoc(ref);
+  if (!snap.exists()) return;
+
+  const d = snap.data();
   let csv = '방문일,이름,소속,연락처/E-Mail,후속조치,담당자,미팅내용\n';
 
   Object.keys(d).forEach(day=>{
@@ -174,6 +245,3 @@ window.onload = loadData;
 </div>
 </body>
 </html>
-
-
-
