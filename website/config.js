@@ -70,7 +70,7 @@ const LINKS = {
     CARD_PDF: "https://drive.google.com/file/d/1NNlE183AA2vr-efDsIXp2QmxtSvAjGgL/view?usp=sharing",
     ENTRY_PDF: "https://drive.google.com/file/d/1BiYrTR7YMihNpMPP96E73jc98XCrd9O4/view?usp=sharing",
     PYTHON_PDF: "https://drive.google.com/file/d/1l6KAQv2JOMJeth9Kz1rzLGoCzTT2s9RZ/view?usp=sharing",
-    ENG_MANUAL: "https://zumi-ai.github.io/python/website/zumi_eng_E_Manual.html",
+    ENG_MANUAL: "https://zumi-ai.github.io/python/website/zumi_eng_e_Manual.html",
 
 
     // AI
