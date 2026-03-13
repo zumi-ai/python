@@ -40,6 +40,134 @@
             border: 2px solid #27489b;
             color: #27489b;
         }
+
+
+
+
+
+
+
+        /* 메뉴바 관련 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            /* 원본에 가까운 폰트 */
+            background-color: #fff;
+        }
+
+        /* 2. 헤더 바깥쪽 */
+        header {
+            width: 100%;
+            height: 90px;
+            /* 원본 높이감 반영 */
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            border-bottom: 1px solid #f2f2f2;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+
+        /* 3. 실제 콘텐츠 영역 (너비 제한이 핵심!) */
+        .header-container {
+            width: 100%;
+            max-width: 1100px;
+            /* 양 끝 위치를 유지하는 기준선 */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            /* 콘텐츠를 왼쪽부터 쌓도록 변경 */
+            padding: 0 20px;
+        }
+
+        /* 로고와 메뉴 사이의 간격 */
+        .logo {
+            margin-right: 60px;
+            /* 이 수치를 조절해서 메뉴 전체를 앞뒤로 움직일 수 있습니다 */
+        }
+
+        /* 로고 크기 조정 */
+        .logo img {
+            height: 34px;
+            /* 원본의 슬림한 느낌 */
+            display: block;
+        }
+
+        /* 중앙 메뉴 */
+        nav {
+            display: flex;
+            gap: 40px;
+            /* 메뉴 글자들 사이의 간격 */
+            margin-right: auto;
+            /* 중요! 메뉴 오른쪽 공간을 밀어내어 버튼을 오른쪽 끝으로 보냅니다 */
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-size: 18px;
+            font-weight: 700;
+            /* 원본의 굵은 텍스트 반영 */
+            letter-spacing: -0.5px;
+        }
+
+        nav a:hover {
+            color: #00a0ff;
+        }
+
+        /* 우측 버튼 그룹 (ENG와 구매하기 사이 간격) */
+        .header-right {
+            display: flex;
+            align-items: center;
+            /* ENG와 버튼 사이 간격을 원본처럼 좁힙니다 (기존 30px -> 15px~20px) */
+            gap: 35px;
+            /* 버튼이 너무 왼쪽으로 밀려있지 않게 컨테이너 끝에 딱 붙도록 설정 */
+            justify-content: flex-end;
+        }
+
+        /* ENG 텍스트 스타일 미세 조정 */
+        .lang-link {
+            text-decoration: none;
+            color: #444;
+            font-size: 17px;
+            /* 버튼 글씨와 크기를 맞춰 균형을 잡음 */
+            font-weight: 500;
+        }
+
+        /* 구매하기 버튼 최종 정밀 튜닝 */
+        .buy-btn {
+            background-color: #00a0ff;
+            color: #fff;
+
+            /* 세로 높이를 더 슬림하게, 가로는 원본 비례에 맞게 조정 */
+            padding: 6px 14px;
+
+            /* 폰트 굵기를 600 정도로 조정하여 너무 두껍지도 얇지도 않게 함 */
+            font-size: 13px;
+            font-weight: 400;
+
+            border-radius: 8px;
+            /* 원본의 깔끔한 라운드값 */
+            text-decoration: none;
+            transition: 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+
+        .buy-btn:hover {
+            background-color: #008be0;
+            transform: translateY(-1px);
+            /* 살짝 뜨는 효과 유지 */
+        }
+
+
+
     </style>
 
 
@@ -53,12 +181,29 @@
 <!-- 맨 위 로고 (흰색 배경) -->
 
 <body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <a id="menu_top_site_link"><img id="mainLogo" alt="Zumi AI"></a>
+            </div>
 
+            <nav>
+                <a id="menu_top_introduce_link">제품 소개</a>
+                <a id="menu_top_manual_link">E-매뉴얼</a>
+                <a id="menu_top_faq_link">FAQ</a>
+                <a id="menu_top_news_link">소식</a>
+            </nav>
 
-    <div style="text-align: center; padding: 20px">
+            <div class="header-right">
+                <a id="menu_top_eng_link" class="lang-link">ENG</a>
+                <a id="menu_top_purchase_link" class="buy-btn">구매하기</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- <div style="text-align: center; padding: 20px">
         <img id="mainLogo" width="160" height="40" />
-    </div>
-
+    </div> -->
 
     <div style="background-color: #27489b; text-align: center; padding: 10px; color: white;">
         <h4 style="margin: 0">E-Manual Download</h4>
@@ -329,6 +474,19 @@
     <script>
         // 초기 설정 (로고 등)
         document.getElementById('mainLogo').src = IMAGE_PATHS.LOGO;
+
+
+
+        document.getElementById('menu_top_site_link').href = LINKS.MENU_TOP_SITE;
+        document.getElementById('menu_top_introduce_link').href = LINKS.MENU_TOP_INTRODUCE;
+        document.getElementById('menu_top_manual_link').href = LINKS.MENU_TOP_MANUAL;
+        document.getElementById('menu_top_faq_link').href = LINKS.MENU_TOP_FAQ;
+        document.getElementById('menu_top_news_link').href = LINKS.MENU_TOP_NEWS;
+        document.getElementById('menu_top_eng_link').href = LINKS.MENU_TOP_ENG;
+        document.getElementById('menu_top_purchase_link').href = LINKS.MENU_TOP_PURCHASE;
+
+
+
         document.getElementById('curriculumBookLink').href = LINKS.CURRICULUM_BOOK;
         document.getElementById('curriculumCreativeLink').href = LINKS.CURRICULUM_CREATIVE;
 
