@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>학교 타겟 지도</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<style>
+body {
+  margin: 0;
+  display: flex;
+  height: 100vh;
+  font-family: 'Pretendard', sans-serif;
+}
+
+#map {
+  width: 65%;
+}
+
+/* 사이드바 */
+#sidebar {
+  width: 35%;
+  padding: 20px;
+  background: #f8fafc;
+  overflow-y: auto;
+  border-left: 1px solid #ddd;
+}
+
+/* 필터 버튼 */
+.filter button {
+  margin-right: 5px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  background: #e5e7eb;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* 전체 */
+.filter button:nth-child(1).active {
+  background: #6b7280;
+  color: white;
+}
+
+/* 고등 */
+.filter button:nth-child(2).active {
+  background: #3b82f6;
+  color: white;
+}
+
+/* 중등 */
+.filter button:nth-child(3).active {
+  background: #f59e0b;
+  color: white;
+}
+
+/* 초등 */
+.filter button:nth-child(4).active {
+  background: #10b981;
+  color: white;
+}
+
+/* 리스트 */
+.school {
+  background: white;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+/* ✅ hover 색상 (타입별) */
+.school.high:hover {
+  background: #dbeafe;
+}
+
+.school.middle:hover {
+  background: #fef3c7;
+}
+
+.school.elementary:hover {
+  background: #d1fae5;
+}
+
+.reason {
+  font-size: 13px;
+  font-weight: bold;
+}
+
+/* 타입별 색상 */
+.school.high .reason {
+  color: #3b82f6;   /* 파랑 */
+}
+
+.school.middle .reason {
+  color: #f59e0b;   /* 노랑 */
+}
+
+.school.elementary .reason {
+  color: #10b981;   /* 초록 */
+}
+
+/* 상세 */
+.detail {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+button.back {
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 6px;
+}
+
+/* 지도 라벨 */
+.label {
+  background: rgba(255,255,255,0.9);
+  border: none;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #111;
+}
+</style>
+</head>
+
+<body>
+
+<div id="map"></div>
+
+<div id="sidebar">
+  <h2>주미 AI 타겟 학교 리스트</h2>
+
+  <div class="filter">
+    <button onclick="setFilter('전체')" class="active">전체</button>
+    <button onclick="setFilter('고등학교')">고등학교</button>
+    <button onclick="setFilter('중학교')">중학교</button>
+    <button onclick="setFilter('초등학교')">초등학교</button>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<script>
+
+// 기본 위치
+const defaultView = {
+  lat: 37.5665,
+  lng: 126.9780,
+  zoom: 11
+};
+
+// 지도 생성
+var map = L.map('map').setView([defaultView.lat, defaultView.lng], defaultView.zoom);
+
+// 타일
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; OpenStreetMap & CartoDB'
+}).addTo(map);
+
+// 데이터
+const schools = [
+ {
+    name:"광운인공지능고등학교",
+    type:"고등학교",
+    lat:37.6192, lng:127.0565,
+    reason:"(주미 AI 사용 중) 인공지능컴퓨팅·AI정보콘텐츠과 등 AI 학습 중심",
+    address:"[01890]서울 노원구 광운로1길 24 (월계동,광운인공지능고등학교)",
+    phone:"02-918-7761",
+    email:"since1934@kwangwoon.sen.hs.kr",
+    site:"https://kwangwoon.sen.hs.kr"
+  },
+  {
+    name:"서울로봇고등학교",
+    type:"고등학교",
+    lat:37.4807, lng:127.0841,
+    reason:"로봇설계과/로봇제어과 로봇 제작·센서·제어 중심",
+    address:"[06363]서울 강남구 광평로20길 63(일원동,서울로봇고등학교)",
+    phone:"02-2226-2141",
+    email: " ",
+    site:"https://srobot.sen.hs.kr/index.do"
+  },
+
+  {
+    name:"서울세명컴퓨터고등학교",
+    type:"고등학교",
+    lat:37.6278, lng:126.9235,
+    reason:"모빌리티메이커과 / AI+자율주행 융합 프로젝트에 적합",
+    address:"[03337]서울 은평구 통일로92가길 33 (불광동, 세명컴퓨터고등학교)",
+    phone:"02)354-1323",
+    email: " ",
+    site:"https://smc.sen.hs.kr/"
+  },
+
+ {
+    name:"서울인공지능고등학교",
+    type:"고등학교",
+    lat:37.4916, lng:127.1420,
+    reason:"AI로봇과 / AI·SW 중심 개편",
+    address:"[05771]서울 송파구 양산로 21 (거여동, 서울인공지능고등학교)",
+    phone:"02-6711-0595",
+    email: " ",
+    site:"https://seoulai.sen.hs.kr/"
+  },
+
+ 
+
+
+   {
+    name:"서울공업고등학교",
+    type:"고등학교",
+    lat:37.5407, lng:127.0995,
+    reason:"미래자동차과 / 기계+전자 기반 메카트로닉스",
+    address:"[06955]서울 동작구 대방동1길 46 (대방동, 서울공업고등학교)",
+    phone:"02-450-3800",
+    email: " ",
+    site:"https://seoul-th.sen.hs.kr/"
+  },
+
+  {
+    name:"서울디지텍고등학교",
+    type:"고등학교",
+    lat:37.5390, lng:126.9905,
+    reason:"인공지능 고등학교 선정 / AI 관련 ",
+    address:"[04346]서울 용산구 회나무로12길 27 (이태원동, 서울디지텍고등학교)",
+    phone:"02-798-3641",
+    email: " ",
+    site:"https://sdh.sen.hs.kr/index.do"
+  },
+
+
+  {
+    name:"서울자동차고등학교",
+    type:"고등학교",
+    lat:37.5414, lng:126.9585,
+    reason:"자동차 관련 교육(디자인,진단,튜닝 등)",
+    address:"서울 용산구 백범로45길 15 서울자동차고등학교",
+    phone:"02-717-8304",
+    email: " ",
+    site:"https://seoulauto.sen.hs.kr/"
+  },
+
+ {
+    name:"선린인터넷고등학교",
+    type:"고등학교",
+    lat:37.5427, lng:126.9660,
+    reason:"소프트웨어과,IT경영과/SW개발 중심, 자율주행 알고리즘 강점",
+    address:"[04314]서울 용산구 원효로97길 33-4 (청파동3가, 선린인터넷고등학교)",
+    phone:"02-713-6211",
+    email: " ",
+    site:"https://sunrint.sen.hs.kr/"
+  },
+
+  {
+    name:"수도전기공업고등학교",
+    type:"고등학교",
+    lat:37.4849, lng:127.0644,
+    reason:"전기·전자·제어 강점",
+    address:"[06324] 서울 강남구 개포로 410 수도전기공업고등학교",
+    phone:"02-524-9800",
+    email: " ",
+    site:"https://sudo.sen.hs.kr/"
+  },
+
+
+  {
+    name:"한국디지털미디어고등학교",
+    type:"고등학교",
+    lat:37.3423, lng:126.8309,
+    reason:"e-비즈니스과 / AI+IoT 융합 프로젝트",
+    address:"[15255] 경기도 안산시 단원구 사세충열로 94 한국디지털미디어고등학교",
+    phone:"031-363-7800",
+    email: " ",
+    site:"https://dimigo-h.goeas.kr/dimigo-h/main.do"
+  },
+
+ {
+    name:"인천전자마이스터고등학교",
+    type:"고등학교",
+    lat:37.4739, lng:126.6519,
+    reason:"인공지능전자과,전자제어과/전자·임베디드 시스템",
+    address:"[22100] 인천광역시 미추홀구 석정로 165(도화동) 인천전자마이스터고등학교",
+    phone:"032-764-7021",
+    email: " ",
+    site:"https://intec.icehs.kr/main.do"
+  },
+
+ {
+    name:"경기자동차과학고등학교",
+    type:"고등학교",
+    lat:37.4142, lng:126.8398,
+    reason:"미래자동차분야 협약형 특성화고/ 자동차+IT 융합",
+    address:"[14933] 경기 시흥시 금오로 103 경기자동차과학고등학교",
+    phone:"031-310-9000",
+    email: " ",
+    site:"https://ghas-h.goesh.kr/ghas-h/main.do"
+  },
+ 
+  
+  {
+    name:"대덕소프트웨어마이스터고등학교",
+    type:"고등학교",
+    lat:36.3920, lng:127.3630,
+    reason:"인공지능SW과,임베디드SW과/SW 프로젝트 중심",
+    address:"[34111] 대전광역시 유성구 가정북로 76",
+    phone:"042-866-8800",
+    email: " ",
+    site:"https://dsmhs.djsch.kr/main.do#popupNormal21613"
+  },
+
+
+  {
+    name:"경북기계공업고등학교",
+    type:"고등학교",
+    lat:35.8857, lng:128.6106,
+    reason:"전지전자제어과,정밀기계과/기계·제조 중심",
+    address:"[42748] 대구광역시 달서구 월배로 275",
+    phone:"053-231-8322",
+    email: " ",
+    site:"https://gbgigong.dge.hs.kr/gbgigongh/main.do"
+  },
+
+  {
+    name:"부산기계공업고등학교",
+    type:"고등학교",
+    lat:35.1618, lng:129.1528,
+    reason:"국립 / 로봇 하드웨어 중심",
+    address:"[48088] 부산광역시 해운대구 해운대로 569(우1동)",
+    phone:"051-741-5111",
+    email: " ",
+    site:"http://busanrobot.hs.kr"
+  },
+
+  {
+    name:"부산자동차고등학교",
+    type:"고등학교",
+    lat:35.1632, lng:129.0520,
+    reason:"공립/ 자동차 관련 교육",
+    address:"[49480] 부산광역시 사하구 하신중앙로 3번 나길 16(장림동)",
+    phone:"051-263-4825",
+    email: " ",
+    site:"https://school.busanedu.net/automotive-h/main.do"
+  },
+
+  {
+    name:"울산마이스터고등학교",
+    type:"고등학교",
+    lat:35.5607, lng:129.3781,
+    reason:"미래모빌리티 중심",
+    address:"[44246] 울산광역시 북구 율동6길 7",
+    phone:"052-702-2012",
+    email: " ",
+    site:"https://school.use.go.kr/ulsanmeister-h/M01/"
+  },
+
+ 
+
+
+   // ===== 중학교 =====
+
+  {
+    name:"서울신일중학교",
+    type:"중학교",
+    lat:37.6279, lng:127.0284,
+    reason:"빅데이터·AR 기반 SW 교육 진행",
+    address:"[01133]서울특별시 강북구 솔매로49길 20 (미아동,신일중학교)",
+    phone:"02-944-9850",
+    email: " ",
+    newsletter:"LG CNS ‘코딩 지니어스’ 프로그램 실제 운영 (AR·코딩 교육)",
+    newsletterlink:"https://www.topdaily.kr/articles/25271?utm_source=chatgpt.com",
+    site:"https://shinil.sen.ms.kr/"
+  },
+
+  {
+    name:"서울용산중학교",
+    type:"중학교",
+    lat:37.5460, lng:126.9809,
+    reason:"자율주행 형태 로봇 코딩 실습",
+    address:"[04353]서울 용산구 두텁바위로 74 (용산동2가, 용산중학교)",
+    phone:"070-4000-3800",
+    email: " ",
+    newsletter:"로봇(레고 EV3) 기반 코딩 코딩지니어스 수업 파일럿 진행",
+    newsletterlink:"https://www.fnnews.com/news/201703211905155178?utm_source=chatgpt.com",
+    site:"https://ys.sen.ms.kr/"
+  },
+
+  {
+    name:"서울성재중학교",
+    type:"중학교",
+    lat:37.5695, lng:126.8454,
+    reason:"AI 챗봇 제작, AI 윤리 토론, AI 체험 수업",
+    address:"[07529] 서울 강서구 허준로 36 (가양동, 성제중학교)",
+    phone:"02-2658-9853",
+    email: " ",
+    newsletter:"AI 지니어스 프로그램 시작 학교",
+    newsletterlink:"https://www.ajunews.com/view/20210323083251341?utm_source=chatgpt.com",
+    site:"https://sungjae.sen.ms.kr/"
+  },
+
+  {
+    name:"서울남성중학교",
+    type:"중학교",
+    lat:37.4790, lng:126.9724,
+    reason:"자동차 로봇 코딩 실습",
+    address:"[07022] 서울 동작구 남부순환로 269길 166 (사당동, 남성중학교)",
+    phone:"02-520-7500",
+    email: " ",
+    newsletter:"코딩 지니어스 자동차 로봇 코딩 현장 수업 운영",
+    newsletterlink:"https://www.fnnews.com/news/201712071858188302?utm_source=chatgpt.com",
+    site:"https://namsung.sen.ms.kr/"
+  },
+
+  
+  // ===== 초등학교 =====
+
+  {
+    name:"서울진관초등학교",
+    type:"초등학교",
+    lat:37.6454, lng:126.9290,
+    reason:"교육 협력 경험이 있어 수업 적용 용이",
+    address:"[03303] 서울시 은평구 진관4로 78-16, 서울진관초등학교 미래교실",
+    phone:"02-386-3365",
+    email: " ",
+    site:"https://jingwan.sen.es.kr/"
+  },
+
+  {
+    name:"서울송화초등학교",
+    type:"초등학교",
+    lat:37.5681, lng:126.8180,
+    reason:"체험형 수업 운영 경험으로 적용 가능",
+    address:"[07598] 서울시 강서구 방화대로 34길 2, 서울송화초등학교",
+    phone:"02-2665-7093",
+    email: " ",
+    site:"https://songhwa.sen.es.kr/"
+  },
+
+  {
+    name:"서울동자초등학교",
+    type:"초등학교",
+    lat:37.5350, lng:127.0721,
+    reason:"협업 기반으로 안정적 교구 도입 가능",
+    address:"[05069] 서울특별시 광진구 뚝섬로 561, 서울동자초등학교 5학년 2반",
+    phone:"02-444-1349",
+    email: " ",
+    site:"https://dongja.sen.es.kr/"
+  },
+
+  {
+    name:"서울명신초등학교",
+    type:"초등학교",
+    lat:37.5813, lng:127.0137,
+    reason:"디지털 수업 경험으로 확장 가능",
+    address:"[03093] 서울특별시 종로구 낙산길 250, 서울명신초등학교 6학년 3반",
+    phone:"02-766-1415",
+    email: " ",
+    site:"https://myungshin.sen.es.kr/"
+  },
+
+  {
+    name:"서울가동초등학교",
+    type:"초등학교",
+    lat:37.4972, lng:127.1297,
+    reason:"다양한 학습 활동에 유연하게 적용 가능한 환경",
+    address:"[05820] 서울특별시 송파구 중대로20길 47 서울 가동초등학교 4학년1반",
+    phone:"02-448-5766",
+    email: " ",
+    site:"https://gadong.sen.es.kr/"
+  },
+
+  {
+    name:"경기금신초등학교",
+    type:"초등학교",
+    lat:37.7672, lng:126.7716,
+    reason:"학생 중심 수업 운영에 적합한 교육 여건 보유",
+    address:"[10854] 경기도 파주시 금촌동 금신초교길 10, 금신초등학교 5학년 1반",
+    phone:"031-941-1931",
+    email: " ",
+    site:"https://geumshin-e.goepj.kr/geumshin-e/main.do"
+  },
+
+  {
+    name:"서울삼전초등학교",
+    type:"초등학교",
+    lat:37.5017, lng:127.0932,
+    reason:"지속적 활용이 가능한 환경 보유",
+    address:"[05584] 서울 송파구 백제고분로28길 19 (삼전동, 서울삼전초등학교)",
+    phone:"02-415-8701",
+    email: " ",
+    site:"https://samjeon.sen.es.kr/"
+  },
+
+  {
+    name:"서울등현초등학교",
+    type:"초등학교",
+    lat:37.5614, lng:126.8475,
+    reason:"수업 사례 공유 및 확산 가능",
+    address:"서울특별시 강서구 화곡로65길 124, 서울등현초등학교 교무실",
+    phone:"031-218-4100",
+    email: " ",
+    site:"http://gwanggyo.es.kr"
+  },
+
+  {
+    name:"서울응봉초등학교",
+    type:"초등학교",
+    lat:37.5502, lng:127.0338,
+    reason:"교사 협업 기반으로 확산 기대",
+    address:"[04742]서울 성동구 독서당로62길 28 (응봉동, 응봉초등학교)",
+    phone:"02-2281-0816",
+    email: " ",
+    site:"https://eb.sen.es.kr/"
+  },
+
+  {
+    name:"서울휘경초등학교",
+    type:"초등학교",
+    lat:37.5856, lng:127.0579,
+    reason:"실습형 수업 도입이 가능한 안정적 운영 환경",
+    address:"[02495]서울 동대문구 망우로6길 48, 3학년 1반",
+    phone:"02-2244-4941",
+    email: " ",
+    site:"https://hwykyung.sen.es.kr/"
+  },
+  {
+    name:"창체 중심 수업 운영에 적합",
+    type:"초등학교",
+    lat:37.4720, lng:126.9397,
+    reason:"신도시 디지털 교육 환경",
+    address:"[08839]서울 관악구 신림로 114 (신림동, 서울신성초등학교)",
+    phone:"02-875-7611",
+    email: " ",
+    site:"https://sss.sen.es.kr/"
+  },
+
+];
+
+
+
+
+
+
+
+
+let currentFilter = "전체";
+let markers = [];
+
+// 필터
+function setFilter(type) {
+  currentFilter = type;
+
+  document.querySelectorAll(".filter button").forEach(btn=>{
+    btn.classList.remove("active");
+    if(btn.innerText === type) btn.classList.add("active");
+  });
+
+  // ✅ 빠른 줌 아웃
+  map.flyTo([defaultView.lat, defaultView.lng], defaultView.zoom, {
+    duration: 0.7
+  });
+
+  renderList();
+  renderMarkers();
+}
+
+// 리스트
+function renderList() {
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+
+  schools
+    .filter(s => currentFilter==="전체" || s.type===currentFilter)
+    .forEach(s=>{
+      const div = document.createElement("div");
+
+      // ✅ 타입별 클래스 추가
+      div.className = "school " + (
+        s.type==="고등학교" ? "high" :
+        s.type==="중학교" ? "middle" : "elementary"
+      );
+
+      div.innerHTML = `
+        <b>[${s.type}] ${s.name}</b>
+        <div class="reason">${s.reason}</div>
+      `;
+      div.onclick = ()=>showDetail(s);
+      list.appendChild(div);
+    });
+}
+
+// 상세
+function showDetail(s) {
+  map.flyTo([s.lat, s.lng], 14, { duration: 0.8 });
+
+  document.getElementById("sidebar").innerHTML = `
+    <button class="back" onclick="goBack()">← 뒤로</button>
+
+    <div class="detail">
+      <h2>${s.name}</h2>
+
+      <p><b>구분:</b> ${s.type}</p>
+      <p><b>주소:</b> ${s.address}</p>
+      <p><b>전화:</b> ${s.phone}</p>
+
+     ${s.email ? `<p><b>이메일:</b> ${s.email}</p>` : ""}
+
+
+
+${s.newsletter ? `
+  <p>
+    <b>📰 관련기사:</b>
+    <a href="${s.newsletterlink}" target="_blank"
+       style="
+         color:#2563eb;
+         font-weight:600;
+         text-decoration:none;
+       "
+       onmouseover="this.style.textDecoration='underline'"
+       onmouseout="this.style.textDecoration='none'">
+      ${s.newsletter}
+    </a>
+  </p>
+` : ""}
+
+
+
+
+      <p><b>학교사이트:</b> 
+        <a href="${s.site}" target="_blank">${s.site}</a>
+      </p>
+
+      <div style="
+  margin-top:12px;
+  padding:12px;
+  background:#eef2ff;
+  border-left:4px solid #4f46e5;
+  border-radius:8px;
+">
+  <b>📌 선택 이유</b>
+  <div style="margin-top:6px; font-weight:600; color:#1f2937;">
+    ${s.reason}
+  </div>
+</div>
+
+      <!-- ✅ 사이트 미리보기 영역 -->
+      <div style="margin-top:15px;">
+        <b>📌 학교 사이트 미리보기</b>
+        <div style="
+          margin-top:8px;
+          border:1px solid #ddd;
+          border-radius:10px;
+          overflow:hidden;
+          height:300px;
+        ">
+          <iframe 
+            src="${s.site}"
+            style="width:100%; height:100%; border:none;">
+          </iframe>
+        </div>
+
+        <p style="font-size:12px; color:gray; margin-top:6px;">
+          ※ 일부 사이트는 보안 정책으로 표시되지 않을 수 있습니다.
+        </p>
+      </div>
+
+    </div>
+  `;
+}
+
+
+
+
+// 뒤로
+function goBack() {
+
+  // ✅ 지도 줌 아웃 (기본 위치로)
+  map.flyTo([defaultView.lat, defaultView.lng], defaultView.zoom, {
+    duration: 0.8
+  });
+
+  document.getElementById("sidebar").innerHTML = `
+    <h2>학교 리스트</h2>
+    <div class="filter">
+      <button onclick="setFilter('전체')" class="active">전체</button>
+      <button onclick="setFilter('고등학교')">고등학교</button>
+      <button onclick="setFilter('중학교')">중학교</button>
+      <button onclick="setFilter('초등학교')">초등학교</button>
+    </div>
+    <div id="list"></div>
+  `;
+
+  renderList();
+}
+
+// 마커
+function renderMarkers() {
+  markers.forEach(m => map.removeLayer(m));
+  markers = [];
+
+  schools
+    .filter(s => currentFilter==="전체" || s.type===currentFilter)
+    .forEach(s=>{
+      let color =
+        s.type==="고등학교" ? "blue" :
+        s.type==="중학교" ? "orange" : "green";
+
+      const marker = L.circleMarker([s.lat, s.lng], {
+        radius: 8,
+        color: color,
+        fillOpacity: 0.8
+      }).addTo(map);
+
+      // 라벨
+      marker.bindTooltip(s.name, {
+        permanent: true,
+        direction: 'top',
+        offset: [0, -10],
+        className: 'label'
+      });
+
+      marker.on('click', ()=>showDetail(s));
+
+      markers.push(marker);
+    });
+}
+
+// 초기 실행
+renderList();
+renderMarkers();
+
+</script>
+
+</body>
+</html>
