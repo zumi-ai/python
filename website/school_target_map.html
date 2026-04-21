@@ -2,30 +2,117 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>학교 타겟 지도</title>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <style>
+#sidebar {
+  transition: 0.3s;
+}
+
+#sidebar.closed {
+  transform: translateY(80%);
+}
+
 body {
   margin: 0;
   display: flex;
-  height: 100vh;
+  height: 100dvh; /*  모바일 대응 */
   font-family: 'Pretendard', sans-serif;
 }
 
+/* 기본 (데스크톱) */
 #map {
   width: 65%;
 }
 
-/* 사이드바 */
 #sidebar {
   width: 35%;
   padding: 20px;
   background: #f8fafc;
   overflow-y: auto;
   border-left: 1px solid #ddd;
+}
+
+/*  모바일 대응 */
+ @media (max-width: 768px) {
+  body {
+    flex-direction: column;
+  }
+
+  #map {
+    width: 100%;
+    height: 50%;
+  }
+
+  #sidebar {
+    position: relative;
+    width: 100%;
+    height: 50%;
+    border-left: none;
+    border-top: 1px solid #ddd;
+    border-radius: 0;
+    box-shadow: none;
+    overflow-y: auto;
+    box-sizing: border-box;
+     overflow-x: hidden;
+  }
+.detail {
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+iframe {
+  max-width: 100%;
+}
+  .filter {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;   
+    padding-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .filter button {
+    flex: 0 0 auto;     
+    white-space: nowrap;
+    padding: 8px 14px;
+    border-radius: 999px; 
+    font-size: 13px;
+  }
+
+}
+}
+
+
+  /* 상단 드래그 느낌 바 */
+  #sidebar::before {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 5px;
+    background: #ccc;
+    border-radius: 10px;
+    margin: 8px auto;
+  }
+
+  /* 버튼 작게 */
+  .filter button {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  .school {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .detail {
+    padding: 15px;
+  }
 }
 
 /* 필터 버튼 */
@@ -151,6 +238,11 @@ button.back {
 </div>
 
 <script>
+
+function toggleSidebar() {
+  document.getElementById("sidebar").classList.toggle("closed");
+}
+
 
 // 기본 위치
 const defaultView = {
@@ -570,6 +662,11 @@ function setFilter(type) {
 
   renderList();
   renderMarkers();
+
+setTimeout(() => {
+  map.invalidateSize();
+}, 300);
+
 }
 
 // 리스트
