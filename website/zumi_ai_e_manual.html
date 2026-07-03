@@ -2,23 +2,23 @@
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YPN4S5W89M"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-    gtag('config', 'G-YPN4S5W89M');
+        gtag('config', 'G-YPN4S5W89M');
     </script>
 
     <!-- microsoft clarity -->
     <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "xcbs4sg783");
+        (function (c, l, a, r, i, t, y) {
+            c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+            t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+            y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+        })(window, document, "clarity", "script", "xcbs4sg783");
     </script>
 
-    <title>Zumi AI E-Manual Download</title>
+    <title>Zumi AI E-Manual</title>
     <style>
         /* 추가 자료 컨테이너 공통 스타일 */
         .flex-container {
@@ -187,10 +187,210 @@
 
 
 
+
+
+        .quick-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 10px 14px;
+            border-radius: 10px;
+
+            background: #ffffff;
+            border: 1px solid #d9d9d9;
+
+            color: #333;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+
+            transition: all .15s;
+            cursor: pointer;
+        }
+
+        .quick-btn:hover {
+            border-color: #27489b;
+            background: #f5f8ff;
+            transform: translateY(-1px);
+        }
+
+        .quick-btn span.arrow {
+            color: #888;
+        }
+
+        .hero {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 24px 80px;
+            text-align: center;
+        }
+
+
+        .hero-cta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+        }
+
+
+        .btn-secondary {
+            background: rgb(255, 255, 255);
+            color: var(--text);
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            padding: 16px 36px;
+            border-radius: 100px;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Noto Sans KR', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all .2s;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            border-color: rgba(230, 255, 224, 0.4);
+            color: #681515fd;
+        }
+
+        .scroll-hint {
+            margin-top: 10px;
+            /* bottom: 32px;
+            left: 50%; */
+            /* transform: translateX(-50%); */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: var(--dim);
+            font-size: .72rem;
+            letter-spacing: 2px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(6px);
+            }
+        }
+
+
+        .manual-card button {
+            transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+        }
+
+        .manual-card button:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+            filter: brightness(1.1);
+        }
+
+        .guide-btn {
+            transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+        }
+
+        .guide-btn:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+            filter: brightness(1.1);
+        }
+
+        .shine-btn {
+            --base-transform: translateX(-50%);
+            transform: var(--base-transform);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease, text-shadow 0.2s ease;
+        }
+
+        .shine-btn:hover {
+            transform: var(--base-transform) translateY(-3px) scale(1.03);
+            filter: brightness(1.15);
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+        }
     </style>
 
 
-
+    <!-- lucid icons -->
+    <svg style="display:none" aria-hidden="true">
+        <defs>
+            <g id="icon-base" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                fill="none">
+                <symbol id="icon-signpost" viewBox="0 0 24 24">
+                    <path d="M12 13v8" />
+                    <path d="M12 3v3" />
+                    <path
+                        d="M2.354 10.354a1.207 1.207 0 0 1 0-1.708l2.06-2.06A2 2 0 0 1 5.828 6h12.344a2 2 0 0 1 1.414.586l2.06 2.06a1.207 1.207 0 0 1 0 1.708l-2.06 2.06a2 2 0 0 1-1.414.586H5.828a2 2 0 0 1-1.414-.586z" />
+                </symbol>
+                <symbol id="icon-book" viewBox="0 0 24 24">
+                    <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20" />
+                </symbol>
+                <symbol id="icon-cat" viewBox="0 0 24 24">
+                    <path
+                        d="M12 5c.67 0 1.35.09 2 .26 1.78-2 5.03-2.84 6.42-2.26 1.4.58-.42 7-.42 7 .57 1.07 1 2.24 1 3.44C21 17.9 16.97 21 12 21s-9-3-9-7.56c0-1.25.5-2.4 1-3.44 0 0-1.89-6.42-.5-7 1.39-.58 4.72.23 6.5 2.23A9.04 9.04 0 0 1 12 5Z" />
+                    <path d="M8 14v.5" />
+                    <path d="M16 14v.5" />
+                    <path d="M11.25 16.25h1.5L12 17l-.75-.75Z" />
+                </symbol>
+                <symbol id="icon-bot" viewBox="0 0 24 24">
+                    <path d="M12 8V4H8" />
+                    <rect width="16" height="12" x="4" y="8" rx="2" />
+                    <path d="M2 14h2" />
+                    <path d="M20 14h2" />
+                    <path d="M15 13v2" />
+                    <path d="M9 13v2" />
+                </symbol>
+                <symbol id="icon-speech" viewBox="0 0 24 24">
+                    <path
+                        d="M8.8 20v-4.1l1.9.2a2.3 2.3 0 0 0 2.164-2.1V8.3A5.37 5.37 0 0 0 2 8.25c0 2.8.656 3.054 1 4.55a5.77 5.77 0 0 1 .029 2.758L2 20" />
+                    <path d="M19.8 17.8a7.5 7.5 0 0 0 .003-10.603" />
+                    <path d="M17 15a3.5 3.5 0 0 0-.025-4.975" />
+                </symbol>
+                <symbol id="icon-brain" viewBox="0 0 24 24">
+                    <path d="M12 18V5" />
+                    <path d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4" />
+                    <path d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5" />
+                    <path d="M17.997 5.125a4 4 0 0 1 2.526 5.77" />
+                    <path d="M18 18a4 4 0 0 0 2-7.464" />
+                    <path d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517" />
+                    <path d="M6 18a4 4 0 0 1-2-7.464" />
+                    <path d="M6.003 5.125a4 4 0 0 0-2.526 5.77" />
+                </symbol>
+                <symbol id="icon-map" viewBox="0 0 24 24">
+                    <path
+                        d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" />
+                    <path d="M15 5.764v15" />
+                    <path d="M9 3.236v15" />
+                </symbol>
+                <symbol id="icon-hat-glasses" viewBox="0 0 24 24">
+                    <path d="M14 18a2 2 0 0 0-4 0" />
+                    <path
+                        d="m19 11-2.11-6.657a2 2 0 0 0-2.752-1.148l-1.276.61A2 2 0 0 1 12 4H8.5a2 2 0 0 0-1.925 1.456L5 11" />
+                    <path d="M2 11h20" />
+                    <circle cx="17" cy="18" r="3" />
+                    <circle cx="7" cy="18" r="3" />
+                </symbol>
+                <symbol id="icon-podium" viewBox="0 0 24 24">
+                    <path d="M12 6V2h-1" />
+                    <path
+                        d="M9 15a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1" />
+                    <path d="M9 21V11a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v10" />
+                </symbol>
+            </g>
+        </defs>
+    </svg>
 
 
     <script src="config.js"></script>
@@ -225,18 +425,40 @@
     </div> -->
 
     <div style="background-color: #27489b; text-align: center; padding: 10px; color: white;">
-        <h4 style="margin: 0">E-Manual Download</h4>
+        <h4 style="margin: 0">E-Manual</h4>
     </div>
 
 
+    <!-- 전체맵 -->
+    <div style="scroll-margin-top: 80px; background-color:#e7f7e7; text-align:center; padding:5 10px 40px 10px;">
+        <div
+            style="position: relative; width: 100%; max-width: 800px; margin: 20px auto 20px auto; text-align: center; padding-bottom: 15px; border-bottom: 2px solid #27489b;">
+            <h1 style="font-size: 36px; color: #27489b; font-weight: bold; margin: 0; display: inline-block;">
+                전체 메뉴</h1>
+        </div>
+
+        <h1 style="font-size: 15px; color: #27489b; font-weight: bold; margin-bottom: 10px;">
+            원하는 메뉴를 선택하면 해당 위치로 이동합니다.
+        </h1>
+        <br>
+
+        <div id="quick-menu"
+            style="display:inline-grid; grid-template-columns: 1fr 1fr; gap:12px 40px; text-align:left;"></div>
+
+        <br><br><br>
+        <div class="hero-cta-row">
+            <a href="#product-guide" class="btn-secondary">더 알아보기</a>
+        </div>
+
+        <div class="scroll-hint">
+            <span>SCROLL</span>
+            <span>↓</span>
+        </div>
+    </div>
 
 
-
-
-
-
+    <!-- <div style="position: relative; width: 100%; max-width: 800px; margin: 20px auto 20px auto; text-align: center; padding-bottom: 15px; border-bottom: 2px solid #27489b;"></div> -->
     <!-- 교육 세미나용 페이지
-
     <div style="background-color:rgb(72, 116, 190); text-align:center; padding:5 10px 20px 10px;">
 
         <div style="text-align: center; padding: 0px 10px">
@@ -272,31 +494,46 @@
         </div>
         </div>
     </div>
-
 -->
 
 
 
+    <!--제품 가이드-->
+    <div id="product-guide" style="scroll-margin-top: 80px; background-color:#F3E5F5; text-align:center; padding:10px">
+        <div
+            style="position: relative; width: 100%; max-width: 800px; margin: 0 auto 20px auto; text-align: center; padding-bottom: 15px; border-bottom: 2px solid #4A148C;">
+            <h1 style="font-size:36px; color:#4A148C; font-weight:bold; margin-bottom:0px;">제품 가이드</h1>
+        </div>
+        <h1 style="font-size: 15px; color: #4A148C; font-weight: bold; margin-bottom: 10px;">
+            주미AI 준비부터 실전 사용방법까지, 꼭 필요한 핵심 정보를 확인하세요.
+        </h1>
+
+        <div
+            style="background-color:white; padding:20px; border-radius:10px; max-width:1000px; margin:0 auto; overflow-x: auto;">
+
+            <!-- 본문 컨테이너 기본 -->
+            <div id="basicGuideContainer" style="display: flex; justify-content: center; gap: 0px; flex-wrap: wrap;">
+            </div>
+
+            <!-- 앱 컨테이너 무선 -->
+            <div id="WirelessGuideContainer" style="display: flex; justify-content: center; gap: 0px; flex-wrap: wrap;">
+            </div>
+
+        </div>
+    </div>
 
 
 
 
-
-
-
-
-
-
-
-    <!-- 전용 교재 -->
-    <div style="text-align: center; padding: 0px 10px">
+    <!-- 수업 교재 -->
+    <div id="text-book" style="scroll-margin-top: 80px;text-align:center;padding:0 10px;">
         <div
             style="position: relative; width: 100%; max-width: 800px; margin: 20px auto 20px auto; text-align: center; padding-bottom: 15px; border-bottom: 2px solid #27489b;">
             <h1 style="font-size: 36px; color: #27489b; font-weight: bold; margin: 0; display: inline-block;">
                 수업 교재</h1>
 
-            <a id="curriculumBookLink" target="_blank"
-                style="position: absolute; left: 90%; bottom: 15px; transform: translateX(-50%); text-decoration: none; background-color: #27489b; color: white; padding: 6px 16px; border-radius: 5px; font-size: 13px; font-weight: bold; white-space: nowrap; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);">
+            <a id="curriculumBookLink" target="_blank" class="shine-btn"
+                style="position: absolute; left: 90%; bottom: 15px;  text-decoration: none; background-color: #27489b; color: white; padding: 6px 16px; border-radius: 5px; font-size: 13px; font-weight: bold; white-space: nowrap; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);">
                 커리큘럼 보기 ▼</a>
         </div>
 
@@ -310,45 +547,122 @@
 
 
 
+    <!--스크래치-->
+    <div id="scratch-coding" style="scroll-margin-top: 80px; background-color:#FCA520; text-align:center; padding:10px">
+        <div
+            style="position: relative; width: 100%; max-width: 800px; margin: 0 auto 20px auto; text-align: center; padding-bottom: 15px; border-bottom: 2px solid #ffffff;">
+            <h1 style="font-size:36px; color:#ffffff; font-weight:bold; margin:0;">스크래치</h1>
+        </div>
 
-    <!-- AI 코딩 -->
-    <div style="background-color:#FDF3D3; text-align:center; padding:5 10px 40px 10px;">
+        <h1 style="font-size: 15px; color: #ffffff; font-weight: bold; margin-bottom: 10px;">
+            스크래치를 사용해 AI와 코딩배우기
+        </h1>
+
+        <!-- 전체 레이아웃 -->
+        <div style="display:flex; justify-content:center; align-items:flex-start; gap:20px; flex-wrap:wrap;">
+
+            <!-- 기존 흰색 박스 -->
+            <div style="background-color:white; padding:20px; border-radius:10px; max-width:600px; overflow-x:auto;">
+
+                <iframe width="343" height="190" src="https://www.youtube.com/embed/frxhBY7a6Mo?si=ZXcbz-LS5VdiY1W2"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                </iframe>
+
+                <div id="ScratchGuideContainer" style="display:flex; justify-content:center; gap:0px; flex-wrap:wrap;">
+                </div>
+
+            </div>
+
+            <!-- 오른쪽 작은 박스 -->
+            <div style="
+                    width:220px;
+                    background:white;
+                    border-radius:10px;
+                    padding:15px;
+                    box-sizing:border-box;
+                ">
+                <div id="ScratchExecuteContainer"
+                    style="display:flex; justify-content:center; gap:0px; flex-wrap:wrap;">
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 인공지능 -->
+    <div id="ai-book"
+        style="scroll-margin-top: 80px; background-color:#FDF3D3; text-align:center; padding:5 10px 40px 10px;">
         <div
             style="position: relative; width: 100%; max-width: 800px; margin: 20px auto 20px auto; text-align: center; padding-bottom: 15px; border-bottom: 2px solid #000000;">
             <h1 style="font-size: 36px; color: #000000; font-weight: bold; margin: 0; display: inline-block;">
                 인공지능</h1>
-            <a id="curriculumAILink" target="_blank"
-                style="position: absolute; left: 90%; bottom: 15px; transform: translateX(-50%); text-decoration: none; background-color: #000000; color: white; padding: 6px 16px; border-radius: 5px; font-size: 13px; font-weight: bold; white-space: nowrap; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);">
+            <a id="curriculumAILink" target="_blank" class="shine-btn"
+                style="position: absolute; left: 90%; bottom: 15px; text-decoration: none; background-color: #000000; color: white; padding: 6px 16px; border-radius: 5px; font-size: 13px; font-weight: bold; white-space: nowrap; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);">
                 커리큘럼 보기 ▼</a>
         </div>
 
         <h1 style="font-size: 15px; color: #000000; font-weight: bold; margin-bottom: 10px;">
             미래 모빌리티를 위한 자율주행 인공지능 시스템 구현
         </h1>
+
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/z6O42av8O3c?si=MaPCkOjpNhPaW_dN"
+            title="YouTube video player" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         <div style="background-color: FDF3D3; padding: 5px; border-radius: 10px; max-width: 500px; margin: 0 auto;">
-            <img id="AiCodingImg" width="150" height="200" style="display: block; margin: 0 auto;" />
+            <!-- <img id="AiCodingImg" width="150" height="200" style="display: block; margin: 0 auto;" /> -->
         </div>
 
         <a id="AiGalleryLink" target="_blank">
-            <button
-                style="background-color:#27489B; color:white; padding:8px 16px; border:none; border-radius:40px; cursor:pointer; font-size:14px; margin-top:10px; width:150px; height:40px;">
+            <button class="guide-btn"
+                style=" background-color:#27489B; color:white; padding:8px 16px; border:none; border-radius:40px; cursor:pointer; font-size:14px; margin-top:10px; width:150px; height:40px;">
                 <p style="font-size:18px; color:white; font-weight:bold; margin:1px 0;line-height:1.4;">
-                    바로가기<br>
+                    학습 바로가기<br>
                 </p>
             </button>
         </a>
     </div>
 
 
+    <!-- 바이브 코딩 -->
+    <div id="vibe-coding"
+        style="scroll-margin-top: 80px; background-color:#fae6fa; text-align:center; padding:5 10px 40px 10px;">
+        <div
+            style="position: relative; width: 100%; max-width: 800px; margin: 20px auto 20px auto; text-align: center; padding-bottom: 15px; border-bottom: 2px solid #000000;">
+            <h1 style="font-size: 36px; color: #000000; font-weight: bold; margin: 0; display: inline-block;">
+                바이브 코딩</h1>
+        </div>
+
+        <h1 style="font-size: 15px; color: #000000; font-weight: bold; margin-bottom: 10px;">
+            주미 AI 와 함께하는 바이브코딩
+        </h1>
+
+        <div style="background-color: fae6fa; padding: 5px; border-radius: 10px; max-width: 500px; margin: 0 auto;">
+            <img id="VibeCodingImg" width="150" height="200" style="display: block; margin: 0 auto;" />
+        </div>
+
+        <a id="VibeCodingLink" target="_blank">
+            <button class="guide-btn"
+                style="background-color:#f1c224; color:white; padding:8px 16px; border:none; border-radius:40px; cursor:pointer; font-size:14px; margin-top:10px; width:150px; height:40px;">
+                <p style="font-size:18px; color:white; font-weight:bold; margin:1px 0;line-height:1.4;">
+                    학습 바로가기<br>
+                </p>
+            </button>
+        </a>
+    </div>
 
 
     <!--창의 학습-->
-    <div style="background-color: #27489B; text-align:center; padding:5 10px 40px 10px;">
+    <div id="creative-learning"
+        style="scroll-margin-top: 80px; background-color: #27489B; text-align:center; padding:5 10px 40px 10px;">
         <div
             style="position: relative; width: 100%; max-width: 800px; margin: 0 auto 20px auto; text-align: center; padding-bottom: 15px; border-bottom: 2px solid white;">
             <h1 style="font-size:36px; color:white; font-weight:bold; margin-bottom:0px;">창의 학습</h1>
-            <a id="curriculumCreativeLink" target="_blank"
-                style="position: absolute; left: 90%; bottom: 15px; transform: translateX(-50%); text-decoration: none; background-color: white; color: rgb(0, 0, 0); padding: 6px 16px; border-radius: 5px; font-size: 13px; font-weight: bold; white-space: nowrap; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);">
+            <a id="curriculumCreativeLink" target="_blank" class="shine-btn"
+                style="position: absolute; left: 90%; bottom: 15px; text-decoration: none; background-color: white; color: rgb(0, 0, 0); padding: 6px 16px; border-radius: 5px; font-size: 13px; font-weight: bold; white-space: nowrap; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);">
                 커리큘럼 보기 ▼
             </a>
         </div>
@@ -360,58 +674,12 @@
     </div>
 
 
-
-
-    <!--스크래치-->
-    <div style="background-color:#FCA520; text-align:center; padding:10px">
-        <div
-            style="position: relative; width: 100%; max-width: 800px; margin: 0 auto 20px auto; text-align: center; padding-bottom: 15px; border-bottom: 2px solid #ffffff;">
-            <h1 style="font-size:36px; color:#ffffff; font-weight:bold; margin:0;">스크래치</h1>
-        </div>
-
-        <h1 style="font-size: 15px; color: #ffffff; font-weight: bold; margin-bottom: 10px;">스크래치를 사용해 AI와 코딩배우기</h1>
-        <div
-            style="background-color:white; padding:20px; border-radius:10px; max-width:1000px; margin:0 auto; overflow-x: auto;">
-            <!-- 본문 컨테이너 -->
-            <div id="ScratchGuideContainer" style="display: flex; justify-content: center; gap: 0px; flex-wrap: wrap;">
-            </div>
-        </div>
-    </div>
-
-
-
-
-    <!--제품 가이드-->
-    <div style="background-color:#F3E5F5; text-align:center; padding:10px">
-        <div
-            style="position: relative; width: 100%; max-width: 800px; margin: 0 auto 20px auto; text-align: center; padding-bottom: 15px; border-bottom: 2px solid #4A148C;">
-            <h1 style="font-size:36px; color:#4A148C; font-weight:bold; margin-bottom:0px;">제품 가이드</h1>
-        </div>
-        <h1 style="font-size: 15px; color: #4A148C; font-weight: bold; margin-bottom: 10px;">
-            주미AI 준비부터 실전 사용방법까지, 꼭 필요한 핵심 정보를 확인하세요.
-        </h1>
-
-        <div
-            style="background-color:white; padding:20px; border-radius:10px; max-width:1000px; margin:0 auto; overflow-x: auto;">
-            <!-- 본문 컨테이너 기본 -->
-            <div id="basicGuideContainer" style="display: flex; justify-content: center; gap: 0px; flex-wrap: wrap;">
-            </div>
-            <!-- 본문 컨테이너 무선 -->
-            <div id="WirelessGuideContainer" style="display: flex; justify-content: center; gap: 0px; flex-wrap: wrap;">
-            </div>
-
-        </div>
-    </div>
-
-
-
-
-
     <!-- 맵 -->
-<div style="background-color:#FBF2CD; text-align:center; padding:10px 10px 30px 10px;">
+    <div id="activity-map"
+        style="scroll-margin-top: 80px; background-color:#FBF2CD; text-align:center; padding:10px 10px 30px 10px;">
 
-    <div style="margin-bottom: 10px;">
-        <div style="
+        <div style="margin-bottom: 10px;">
+            <div style="
             position: relative;
             width: 100%;
             max-width: 800px;
@@ -420,57 +688,65 @@
             padding-bottom: 15px;
             border-bottom: 2px solid #000000;
         ">
-            <h1 style="font-size:36px; color:#000000; font-weight:bold; margin:0;">
-                활동 맵
-            </h1>
+                <h1 style="font-size:36px; color:#000000; font-weight:bold; margin:0;">
+                    활동 맵
+                </h1>
+            </div>
+
+            <p style="font-size:15px; color:black; font-weight:bold; margin:4px 0 0 0;">
+                수업용 보조 자료입니다. 맵을 다운로드하여 인쇄할 수 있습니다.<br>
+                규격 : 40 x 60 (cm)
+            </p>
         </div>
 
-        <p style="font-size:15px; color:black; font-weight:bold; margin:4px 0 0 0;">
-            수업용 보조 자료입니다. 맵을 다운로드하여 인쇄할 수 있습니다.<br>
-            규격 : 40 x 60 (cm)
-        </p>
-    </div>
+        <!-- 카드 영역 -->
+        <div style="
+            background-color: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        ">
 
-    <!-- 카드 영역 -->
-    <div style="
-        background-color: #fff;
-        border-radius: 16px;
-        padding: 20px;
-        max-width: 1000px;
-        margin: 0 auto;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    ">
-
-        <div id="mapContainer" style="
+            <div id="mapContainer" style="
             display:grid;
             grid-template-columns: repeat(4, 140px);
             justify-content:center;
             gap:30px;
         "></div>
 
+        </div>
     </div>
-
-</div>
 
 
 
     <!-- 주미 AI 탐정 -->
-    <div style="background-color:#C7A46F; text-align:center; padding:30px 10px 30px;">
+    <div id="experience-example"
+        style="scroll-margin-top: 80px; background-color:#C7A46F; text-align:center; padding:30px 10px 30px;">
 
         <div
             style="position: relative; width: 100%; max-width: 800px; margin: 0 auto 20px auto; text-align: center; padding-bottom: 15px; border-bottom: 2px solid #401412;">
             <h1 style="font-size:36px; color:#401412; font-weight:bold; margin:0; line-height:1.2;">
-                주미 AI 탐정과 사라진 부품 사건
+                <!-- 주미 AI 탐정과 사라진 부품 사건 -->
+                주미 AI 탐정
             </h1>
         </div>
 
         <h1 style="font-size: 15px; color: #401412; font-weight: bold; margin-bottom: 10px;">
-            미션을 수행하며 8가지 단서를 모아 범인을 추리하는 주미 AI 파이썬 예제
+            <주미 AI 탐정과 사라진 부품 사건><br>미션을 수행하며 8가지 단서를 모아 범인을 추리하는 주미 AI 파이썬 예제
         </h1>
 
-        <div style="background-color:black; padding:8px; border-radius:10px; max-width:516px; margin:0 auto;">
+        <!-- <div style="background-color:black; padding:8px; border-radius:10px; max-width:516px; margin:0 auto;">
             <img id="imgDetectiveMain" style="display:block; width:100%; height:auto; border-radius:5px;" />
-        </div>
+
+        </div> -->
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/PHBMgiGqrQ4?si=BgLEqvV0OroTigMD"
+            title="YouTube video player" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+        </iframe>
+
         <!-- 본문 컨테이너 -->
         <div id="detectiveBtnContainer"
             style="margin-top:20px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
@@ -478,12 +754,8 @@
     </div>
 
 
-
-
-
-
     <!-- 광운 -->
-    <div style="background-color:#FDF3D3; text-align:center; padding: 10px">
+    <div id="contest-data" style="scroll-margin-top: 80px; background-color:#FDF3D3; text-align:center; padding: 10px">
 
         <div
             style="position: relative; width: 100%; max-width: 800px; margin: 0 auto 20px auto; text-align: center; padding-bottom: 15px; border-bottom: 2px solid #27489b;">
@@ -491,8 +763,6 @@
                 대회 자료
             </h1>
         </div>
-
-
 
         <h1 style="font-size: 15px; color: #27489b; font-weight: bold; margin-bottom: 10px;">2025 광운 AI 자율주행 경진대회 자료
         </h1>
@@ -505,20 +775,13 @@
         </div>
     </div>
 
-
-
-
-
     <div style="background-color:#27489B; text-align:center; padding:15px;"></div>
-
-
 
 
     <!-- 스크립트 -->
     <script>
         // 초기 설정 (로고 등)
         document.getElementById('mainLogo').src = IMAGE_PATHS.LOGO;
-
 
 
         document.getElementById('menu_top_site_link').href = LINKS.MENU_TOP_SITE;
@@ -530,20 +793,51 @@
         document.getElementById('menu_top_purchase_link').href = LINKS.MENU_TOP_PURCHASE;
 
 
-
         document.getElementById('curriculumBookLink').href = LINKS.CURRICULUM_BOOK;
         document.getElementById('curriculumCreativeLink').href = LINKS.CURRICULUM_CREATIVE;
 
-
-        document.getElementById('AiCodingImg').src = IMAGE_PATHS.AI_CODING;
+        // document.getElementById('AiCodingImg').src = IMAGE_PATHS.AI_CODING;
         document.getElementById('curriculumAILink').href = LINKS.AI_CURRICULUM;
 
         document.getElementById('kwMapImg').src = IMAGE_PATHS.KW_MAP;
 
         document.getElementById('AiGalleryLink').href = LINKS.AI_GALLERY;
 
+        document.getElementById('VibeCodingLink').href = LINKS.VIBE_CODING_LEARNING;
 
-        // 전용 교재 렌더링
+        document.getElementById('VibeCodingImg').src = IMAGE_PATHS.VIBE_CODING_MAIN;
+
+
+
+        // 메뉴 데이터: href, 아이콘 id, 라벨
+        const MENU_ITEMS = [
+            { href: "#product-guide", icon: "icon-signpost", label: "제품 가이드" },
+            { href: "#text-book", icon: "icon-book", label: "수업 교재" },
+            { href: "#scratch-coding", icon: "icon-cat", label: "스크래치" },
+            { href: "#ai-book", icon: "icon-bot", label: "인공지능" },
+            { href: "#vibe-coding", icon: "icon-speech", label: "바이브 코딩" },
+            { href: "#creative-learning", icon: "icon-brain", label: "창의 학습" },
+            { href: "#activity-map", icon: "icon-map", label: "활동 맵" },
+            { href: "#experience-example", icon: "icon-hat-glasses", label: "주미 AI 탐정" },
+            { href: "#contest-data", icon: "icon-podium", label: "대회 자료" },
+        ];
+
+        const menuEl = document.getElementById("quick-menu");
+        menuEl.innerHTML = MENU_ITEMS.map(({ href, icon, label }) => `
+            <a href="${href}" class="quick-btn">
+            <span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-5px; margin-right:6px;">
+                <use href="#${icon}"></use>
+                </svg>
+                ${label}
+            </span>
+            <span class="arrow">→</span>
+            </a>
+        `).join("");
+
+
+
+        // 수업 교재 렌더링
         const manualContainer = document.getElementById('manualContainer');
         // 부모 컨테이너에 flex 스타일 부여
         manualContainer.className = "flex-container";
@@ -553,9 +847,11 @@
             <div class="manual-card" style="width: 160px; text-align: center; margin: 0; vertical-align: top;">
                 <img src="${item.img}" width="150" height="200" style="display: block; margin: 0 auto;" />
                 <a href="${item.url}" target="_blank" style="text-decoration:none;">
-                    <button style="${btnBg}; border:none; border-radius:40px; cursor:pointer; width:150px; height:40px; margin-top:10px; color:white; font-size:18px; font-weight:bold;">
+
+                    <button style="${btnBg}; border:none; border-radius:40px; cursor:pointer; width:150px; height:40px; margin-top:10px; color:white; font-size:18px; font-weight:bold; transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;">
                         ${item.btnText}
                     </button>
+
                 </a>
                 <p style="font-size:16px; font-weight:bold; margin:8px 0 2px;">${item.title}</p>
                 <p style="font-size:14px; margin:2px 0; color:#333;">${item.level}</p>
@@ -564,59 +860,27 @@
         `;
         });
 
-        // 광운 프로젝트 렌더링
+        // 대회 렌더링
         const kwBtnContainer = document.getElementById('kwBtnContainer');
-KW_BUTTONS.forEach(btn => {
-    kwBtnContainer.innerHTML += `
-    <div style="width:140px; text-align:center;">
+        manualContainer.className = "flex-container";
+        KW_BUTTONS.forEach(item => {
+            kwBtnContainer.innerHTML += `
 
-        <a href="${btn.url}" target="_blank"
-           style="
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                background-color:${btn.color};
-                color:white;
-                padding:10px 12px;
-                border-radius:40px;
-                font-size:16px;
-                font-weight:bold;
-                text-decoration:none;
-                box-sizing:border-box;
-           ">
-            ${btn.label}
-        </a>
+                <div class="manual-card" style="width: 140px; text-align: center; margin: 0; vertical-align: top;">
 
-        <p style="font-size:12px; color:black; font-weight:bold; margin-top:8px;">
-            ${btn.sub}
-        </p>
+                <a href="${item.url}" target="_blank" style="text-decoration:none;">
+                    <button style="background-color:${item.color};color:white; border:none; border-radius:40px; cursor:pointer; width:140px; height:40px; margin-top:10px;">
+                        <span style="font-size:18px; font-weight:bold;">${item.btnText} <span>
+                    </button>
+                </a>
 
-    </div>
-    `;
-});
+                <p style="font-size:12px; color:black; font-weight:bold; margin-top:8px;">
+                    ${item.desc}
+                </p>
 
-
-
-
-        // 기본 가이드 렌더링 (BASIC_GUIDE)
-        const basicGuideContainer = document.getElementById('basicGuideContainer');
-        // 부모 컨테이너에 flex 스타일 부여
-        basicGuideContainer.className = "flex-container";
-        BASIC_GUIDE.forEach(item => {
-            basicGuideContainer.innerHTML += `
-        <div style="width:160px; text-align:center; margin-bottom: 20px;">
-            <img src="${item.img}" width="150" height="200" style="display: block; margin: 0 auto;" />
-            <a href="${item.url}" target="_blank" style="text-decoration:none;">
-                <button style="background-color:${item.color}; color:white; border:none; border-radius:40px; cursor:pointer; width:150px; height:40px; margin-top:10px;">
-                    <span style="font-size:18px; font-weight:bold;">${item.btnText}
-                </button>
-            </a>
-            <p style="font-size:16px; font-weight:bold; margin:8px 0 2px;">${item.title}</p>
-            <p style="font-size:11px; color:gray; line-height:1.3; margin:0;">${item.desc}</p>
-        </div>
-    `;
+            </div>
+            `;
         });
-
 
 
         // 스크래치 가이드 렌더링 (SCRATCH_GUIDE)
@@ -625,8 +889,31 @@ KW_BUTTONS.forEach(btn => {
         ScratchGuideContainer.className = "flex-container";
         SCRATCH_GUIDE.forEach(item => {
             ScratchGuideContainer.innerHTML += `
-        <div style="width:160px; text-align:center; margin-bottom: 20px;">
+        <div class="manual-card" style="width:160px; text-align:center; margin-bottom: 0px;">
+
+            <a href="${item.url}" target="_blank" style="text-decoration:none;">
+
+                <button style="background-color:${item.color}; color:white; border:none; border-radius:40px; cursor:pointer; width:150px; height:40px; margin-top:10px;">
+                    <span style="font-size:18px; font-weight:bold;">${item.btnText} <span>
+                </button>
+
+            </a>
+            <p style="font-size:16px; font-weight:bold; margin:8px 0 2px;">${item.title}</p>
+            <p style="font-size:11px; color:gray; line-height:1.3; margin:0;">${item.desc}</p>
+        </div>
+    `;
+        });
+
+
+        // 스크래치 실행 렌더링 (SCRATCH_GUIDE)
+        const ScratchExecuteContainer = document.getElementById('ScratchExecuteContainer');
+        // 부모 컨테이너에 flex 스타일 부여
+        ScratchExecuteContainer.className = "flex-container";
+        SCRATCH_EXECUTE.forEach(item => {
+            ScratchExecuteContainer.innerHTML += `
+        <div class="manual-card" style="width:160px; text-align:center; margin-bottom: 0px;">
             <img src="${item.img}" width="150" height="200" style="display: block; margin: 0 auto;" />
+
             <a href="${item.url}" target="_blank" style="text-decoration:none;">
                 <button style="background-color:${item.color}; color:white; border:none; border-radius:40px; cursor:pointer; width:150px; height:40px; margin-top:10px;">
                     <span style="font-size:18px; font-weight:bold;">${item.btnText}
@@ -638,27 +925,99 @@ KW_BUTTONS.forEach(btn => {
     `;
         });
 
-        // 기본 가이드 렌더링 (WIRELESS_GUIDE)
+
+        // 기본 가이드 렌더링
+        const basicGuideContainer = document.getElementById('basicGuideContainer');
+        // 부모 컨테이너에 flex 스타일 부여
+        basicGuideContainer.className = "flex-container";
+        BASIC_GUIDE.forEach(item => {
+            basicGuideContainer.innerHTML += `
+            <div class="manual-card" style="width:160px; text-align:center; margin-bottom: 20px;">
+                <img src="${item.img}" width="150" height="200" style="display: block; margin: 0 auto;" />
+                <a href="${item.url}" target="_blank" style="text-decoration:none;">
+                    <button style="background-color:${item.color}; color:white; border:none; border-radius:40px; cursor:pointer; width:150px; height:40px; margin-top:10px;">
+                        <span style="font-size:18px; font-weight:bold;">${item.btnText}
+                    </button>
+                </a>
+                <p style="font-size:16px; font-weight:bold; margin:8px 0 2px;">${item.title}</p>
+                <p style="font-size:11px; color:gray; line-height:1.3; margin:0;">${item.desc}</p>
+            </div>
+        `;
+        });
+
+
+        // 추가 가이드 렌더링 (정리 필요)
         const WirelessGuideContainer = document.getElementById('WirelessGuideContainer');
+
         // 부모 컨테이너에 flex 스타일 부여
         WirelessGuideContainer.className = "flex-container";
-        WIRELESS_GUIDE.forEach(item => {
-            WirelessGuideContainer.innerHTML += `
-        <div style="width:160px; text-align:center; margin-bottom: 20px;">
-            <img src="${item.img}" width="150" height="200" style="display: block; margin: 0 auto;" />
-            <a href="${item.url}" target="_blank" style="text-decoration:none;">
-                <button style="background-color:${item.color}; color:white; border:none; border-radius:40px; cursor:pointer; width:150px; height:40px; margin-top:10px;">
-                    <span style="font-size:18px; font-weight:bold;">${item.btnText}
-                </button>
-            </a>
-            <p style="font-size:16px; font-weight:bold; margin:8px 0 2px;">${item.title}</p>
-            <p style="font-size:11px; color:gray; line-height:1.3; margin:0;">${item.desc}</p>
-        </div>
-    `;
-        });
+        WirelessGuideContainer.innerHTML = `
+            <div class="manual-card" style="width:160px; text-align:center; margin-bottom:20px;">
+                <img src="${WIRELESS_GUIDE[0].img}" width="150" height="200" style="display:block; margin:0 auto;" />
+                <a href="${WIRELESS_GUIDE[0].url}" target="_blank" style="text-decoration:none;">
+                    <button style="background-color:${WIRELESS_GUIDE[0].color}; color:white; border:none; border-radius:40px; cursor:pointer; width:150px; height:40px; margin-top:10px;">
+                        <span style="font-size:18px; font-weight:bold;">
+                            ${WIRELESS_GUIDE[0].btnText}
+                        </span>
+                    </button>
+                </a>
+               <a href="${WIRELESS_GUIDE[1].url}" target="_blank" style="text-decoration:none;">
+                    <button style="background-color:${WIRELESS_GUIDE[1].color}; color:white; border:none; border-radius:40px; cursor:pointer; width:150px; height:40px; margin-top:10px;">
+                        <span style="font-size:18px; font-weight:bold;">
+                            ${WIRELESS_GUIDE[1].btnText}
+                        </span>
+                    </button>
+                </a>
+                <p style="font-size:16px; font-weight:bold; margin:8px 0 2px;">
+                    ${WIRELESS_GUIDE[0].title}
+                </p>
+                <p style="font-size:11px; color:gray; line-height:1.3; margin:0;">
+                    ${WIRELESS_GUIDE[0].desc}
+                </p>
+            </div>
 
+            <div class="manual-card" style="width:160px; text-align:center; margin-bottom:20px;">
+                <img src="${WIRELESS_GUIDE[2].img}" width="150" height="200" style="display:block; margin:0 auto;" />
+                <a href="${WIRELESS_GUIDE[2].url}" target="_blank" style="text-decoration:none;">
+                    <button style="background-color:${WIRELESS_GUIDE[2].color}; color:white; border:none; border-radius:40px; cursor:pointer; width:150px; height:40px; margin-top:10px;">
+                        <span style="font-size:18px; font-weight:bold;">
+                            ${WIRELESS_GUIDE[2].btnText}
+                        </span>
+                    </button>
+                </a>
+               <a href="${WIRELESS_GUIDE[3].url}" target="_blank" style="text-decoration:none;">
+                    <button style="background-color:${WIRELESS_GUIDE[3].color}; color:white; border:none; border-radius:40px; cursor:pointer; width:150px; height:40px; margin-top:10px;">
+                        <span style="font-size:18px; font-weight:bold;">
+                            ${WIRELESS_GUIDE[3].btnText}
+                        </span>
+                    </button>
+                </a>
+                <p style="font-size:16px; font-weight:bold; margin:8px 0 2px;">
+                    ${WIRELESS_GUIDE[2].title}
+                </p>
+                <p style="font-size:11px; color:gray; line-height:1.3; margin:0;">
+                    ${WIRELESS_GUIDE[2].desc}
+                </p>
+            </div>
 
+            <div class="manual-card" style="width:160px; text-align:center; margin-bottom:20px;">
+                <img src="${WIRELESS_GUIDE[4].img}" width="150" height="200" style="display:block; margin:0 auto;" />
+                <a href="${WIRELESS_GUIDE[4].url}" target="_blank" style="text-decoration:none;">
+                    <button style="background-color:${WIRELESS_GUIDE[4].color}; color:white; border:none; border-radius:40px; cursor:pointer; width:150px; height:40px; margin-top:10px;">
+                        <span style="font-size:18px; font-weight:bold;">
+                            ${WIRELESS_GUIDE[4].btnText}
+                        </span>
+                    </button>
+                </a>
 
+                <p style="font-size:16px; font-weight:bold; margin:8px 0 2px;">
+                    ${WIRELESS_GUIDE[4].title}
+                </p>
+                <p style="font-size:11px; color:gray; line-height:1.3; margin:0;">
+                    ${WIRELESS_GUIDE[4].desc}
+                </p>
+            </div>
+        `;
 
 
         // 창의 학습 렌더링
@@ -675,137 +1034,123 @@ KW_BUTTONS.forEach(btn => {
             floorDiv.style.marginBottom = "10px";
 
             floorDiv.innerHTML = floorItems.map(item => `
-        <div style="background-color: white; border:1px solid #ddd; border-radius:20px; padding:15px 10px; width:175px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
-            <p style="font-size:12px; font-weight:bold; color:black; line-height:1.4; margin:0 0 10px 0; text-align:center; min-height:34px; display:flex; align-items:center;">
-                ${item.title}
-            </p>
+                <div class="manual-card" style="background-color: white; border:1px solid #ddd; border-radius:20px; padding:15px 10px; width:175px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+                    <p style="font-size:12px; font-weight:bold; color:black; line-height:1.4; margin:0 0 10px 0; text-align:center; min-height:34px; display:flex; align-items:center;">
+                        ${item.title}
+                    </p>
 
-            <img src="${item.img}" style="width:100px; height:100px; border-radius:50%; object-fit: cover;" />
+                    <img src="${item.img}" style="width:100px; height:100px; border-radius:50%; object-fit: cover;" />
 
-            <div style="min-height: 80px; margin-top:10px; text-align:center;">
-                <p style="font-size:12px; color:black; font-weight:bold; margin:0 0 5px 0;">${item.info}</p>
-                <p style="font-size:10px; color:gray; font-weight:bold; margin:0; line-height:1.3;">${item.desc}</p>
-            </div>
+                    <div style="min-height: 80px; margin-top:10px; text-align:center;">
+                        <p style="font-size:12px; color:black; font-weight:bold; margin:0 0 5px 0;">${item.info}</p>
+                        <p style="font-size:10px; color:gray; font-weight:bold; margin:0; line-height:1.3;">${item.desc}</p>
+                    </div>
 
-            <a href="${item.url}" target="_blank" style="text-decoration:none; width:100%;">
-                <button style="background-color:${item.color}; color:white; border:none; border-radius:40px; cursor:pointer; width:100%; height:40px;">
-                    <span style="font-size:18px; font-weight:bold;">다운로드</span>
-                </button>
-            </a>
-        </div>
-    `).join('');
+                    <a href="${item.url}" target="_blank" style="text-decoration:none; width:100%;">
+                        <button style="background-color:${item.color}; color:white; border:none; border-radius:40px; cursor:pointer; width:100%; height:40px;">
+                            <span style="font-size:18px; font-weight:bold;">다운로드</span>
+                        </button>
+                    </a>
+                </div>
+            `).join('');
 
             creativeRoot.appendChild(floorDiv);
         });
 
 
-
-
-
         // MAP 렌더링
-const mapContainer = document.getElementById('mapContainer');
+        const mapContainer = document.getElementById('mapContainer');
 
-function renderMap() {
-    mapContainer.innerHTML = "";
+        function renderMap() {
+            mapContainer.innerHTML = "";
 
-    MAP_LIST.forEach(map => {
+            MAP_LIST.forEach(map => {
 
-        // PDF 카드
-        mapContainer.innerHTML += `
-        <div style="text-align:center;">
-            <p style="font-size:16px; font-weight:bold;">
-                ${map.title}
-            </p>
+                // PDF 카드
+                mapContainer.innerHTML += `
+                <div class="manual-card" style="text-align:center;">
+                    <p style="font-size:16px; font-weight:bold;">
+                        ${map.title}
+                    </p>
 
-            <img src="${map.imgPdf}" width="150" height="100"
-                style="border-radius:5px; display:block; margin:0 auto;" />
+                    <img src="${map.imgPdf}" width="150" height="100"
+                        style="border-radius:5px; display:block; margin:0 auto;" />
 
-            <a href="${map.pdf}" target="_blank">
-                <button style="
-                    background-color:${map.color};
-                    color:white;
-                    border:none;
-                    border-radius:20px;
-                    width:80%;
-                    height:34px;
-                    margin-top:10px;
-                    cursor:pointer;
-                ">
-                    다운로드
-                </button>
-            </a>
-        </div>
-        `;
+                    <a href="${map.pdf}" target="_blank">
+                        <button style="
+                            background-color:${map.color};
+                            color:white;
+                            border:none;
+                            border-radius:20px;
+                            width:80%;
+                            height:34px;
+                            margin-top:10px;
+                            cursor:pointer;
+                            font-size:16px;
+                        ">
+                            다운로드
+                        </button>
+                    </a>
+                </div>
+                `;
 
-        // PPT 카드
-        mapContainer.innerHTML += `
-        <div style="text-align:center;">
-            <p style="font-size:16px; font-weight:bold;">
-                ${map.title} PPT
-            </p>
+                // PPT 카드
+                mapContainer.innerHTML += `
+                <div class="manual-card" style="text-align:center;">
+                    <p style="font-size:16px; font-weight:bold;">
+                        ${map.title} PPT
+                    </p>
 
-            <img src="${map.imgPpt}" width="150" height="100"
-                style="border-radius:5px; display:block; margin:0 auto;" />
+                    <img src="${map.imgPpt}" width="150" height="100"
+                        style="border-radius:5px; display:block; margin:0 auto;" />
 
-            <a href="${map.ppt}" target="_blank">
-                <button style="
-                    background-color:${map.color};
-                    color:white;
-                    border:none;
-                    border-radius:20px;
-                    width:80%;
-                    height:34px;
-                    margin-top:10px;
-                    cursor:pointer;
-                ">
-                    다운로드
-                </button>
-            </a>
-        </div>
-        `;
-    });
-}
+                    <a href="${map.ppt}" target="_blank">
+                        <button style="
+                            background-color:${map.color};
+                            color:white;
+                            border:none;
+                            border-radius:20px;
+                            width:80%;
+                            height:34px;
+                            margin-top:10px;
+                            cursor:pointer;
+                            font-size:16px;
+                        ">
+                            다운로드
+                        </button>
+                    </a>
+                </div>
+                `;
+            });
+        }
 
-// 실행
-renderMap();
-
-
+        // 실행
+        renderMap();
 
         // 탐정 섹션 렌더링
-        document.getElementById('imgDetectiveMain').src = IMAGE_PATHS.DETECTIVE_MAIN;
+        // document.getElementById('imgDetectiveMain').src = IMAGE_PATHS.DETECTIVE_MAIN;
         const detBtnContainer = document.getElementById('detectiveBtnContainer');
-        DETECTIVE_BUTTONS.forEach(btn => {
-           detBtnContainer.innerHTML += `
-<div style="width:130px; text-align:center;">
+        DETECTIVE_BUTTONS.forEach(item => {
+            detBtnContainer.innerHTML += `
+            <div class="manual-card" style="width:160px; text-align:center;">
 
-    <a href="${btn.url}" target="_blank"
-       style="
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            background-color:${btn.color};
-            color:white;
-            padding:10px 12px;
-            border-radius:40px;
-            font-size:16px;
-            font-weight:bold;
-            text-decoration:none;
-            box-sizing:border-box;
-       ">
-        ${btn.label}
-    </a>
+                <a href="${item.url}" target="_blank" style="text-decoration:none;">
+                    <button style="background-color:${item.color};color:white; border:none; border-radius:40px; cursor:pointer; width:140px; height:40px; margin-top:10px;">
+                        <span style="font-size:18px; font-weight:bold;">${item.btnText} <span>
+                    </button>
+                </a>
 
-    <p style="font-size:12px; color:black; font-weight:bold; margin-top:8px;">
-        ${btn.sub}
-    </p>
+                <p style="font-size:12px; color:black; font-weight:bold; margin-top:8px;">
+                    ${item.desc}
+                </p>
 
-</div>
-`;
+            </div>
+            `;
         });
 
-window.onload = function() {
-    renderMap("PDF");
-};
+        window.onload = function () {
+            renderMap("PDF");
+        };
 
     </script>
 </body>

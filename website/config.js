@@ -57,12 +57,12 @@ const IMAGE_PATHS = {
     // 맵
     MAP_CITY: "https://lh3.googleusercontent.com/rd-d/ALs6j_H7GDC99V54Ex6VsgWXHay9XhuypgEwo_NucxjgwnxrldKILmiQiSjHuWwq4t9C5htGHRA47mkW3rZLTiRfjKV4xVwuETPQwfx5tWi6-FE789Tv3wgrMxa4j8wVEb8w_RT7TwDgOxAeEdfheVp-ww_Y7R_sKGUo4ebzqca0JPTB_GnntFlRkJvH6tjVVj4G2HyHUjDVrr6qfV_5E9etRXJRslmLjkKYGyTyMY9wyiR9Fd66jhY2BjZW9DBDYPoj2s9JypIZbN0-LQLQjzm74GSxaNdhAms0-lPvK8yJhDkuq1VkgY4pkcd_ALmgYa8Hz4P2XKYoi2bMCWqs0DImeCOwSQq0PSLkkduQJKVfilQnQ2U7rliVKQtMCiE9NGElc6K6UeuPzc03GvlKXJKni9NFU5wluy2T31QSeAS53MtMlMP6caa987cKAerMR7kluBhndNqmfFBxHSmi0MyENTC9T8UvKhTtsaJhROkp1Q_FZ-MZlabIex40vpIXadI06QKYjZ9tm4dBpYPHOHMImsWCd6qZYYEXZRdavO6RfmvlXiffcl6tqzNUK1fp7TJYku2sHF_LUFFi-abb-5BX_V8uG7o16r84vt3Gddug9npOjQAbig_BOaMOagOzhTvobbB4o4uxXhW1klaiwRWTSEJz9_cpCAEhgVUycEONDe3o5fGTrlCEII2lBf7N6dqPHM-lvIlJnlA8YJPGRvOFhJxny5kbTHvafdsqTJhXx8zBPO6uzeMMB1Xr9VEWMHaZaQJzXNh3RQ9wf_9xLew66XcqWhuh6TkNGhbQzdTAhpQGW7c9E4lf_C6-iOevZ_Hp_SAzUEYKZno2GfzDVB_aYZkSw0a71raKWrOFBkot5OuaraaLj9DPugW9O7NQmokqM1Mk2MwenxIE9RFzVNaNgBmoF4O5UEpQAIPoF89vh-N1p81zprnWYEu3loydnL528ungcasWtDoZ-GYGVqCZ73QQaTSVWOePA5T-SziwxLEIF6rdT3etmxRuCq1I9vwmBd6KGDOzVYwn_7Bv7_PV8xQ5yMMsGqJqCkHHlo5G3zP6kF95oMOuie9QJPynSO2sPXQh492QQiBBdg=w1920-h919?auditContext=prefetch",
 
- MAP_CITY_PPT: "https://lh3.googleusercontent.com/rd-d/ALs6j_GRZbSZHh_I1lqCaDLALrIkDkbjnPDSQPMlo5tRBNRhiL20nQL_dgGa2LTJKItZ6LXvWqCiVekO8-VZbEho3uaosdUozAruiDbSuhvDAflpEMa51Sr0zoS6L7AH5OGT-Y7Q559Nq7ye9z7aRylO-sAk7SbIMonbjuKXQSpK_NTimi9n97CZhyI9AoYrNoyrym7VQ-EgA67-m-32xA1bQ_kA7pewPzb5fVuY52N3dpHJNcNa74T_DA6TRZnA4h3HEEJgJN3Y9q69KAvLE7IDTdq0cphk6kVgceWcjVXEyz-n8cltHcNfhvyIppN3Tn2N4SoZ_188x8MZuSUwQyZp6P0W_RqJuodvO4fGxgvHNYGL-L66TjRLmZcqiLxeUsCV9zpIL-MCqoRDHHM7S-CIZqeAdT9Y2kfND6oWSVUrHiJgKSRIiFIopq1-_Bm5KJYT3Bqg3HvHGmJQ_G8wONHOCovEfDVVeszDlUlYGJdtEiM1XabhvwV2cuYN5Ko4455IRgS4wGkRFhYgDHI-50O-bl68QwLKe2FppgSHxcZhRp_9I_tDWFNxTM_aDNBlVBGfAEvIShfjuOkJRS47SEfVSFxmCR4oMyXICTGtd97bOyPDjxweVBbk37N1zvOwWMaFnb7d2wu4hrPGqmBhmIjiZN25sCqEZbU3NPmlZznWr-95aahZllDh4iedPejtSFK1qiK45xTuU4ByuKtzESnpwjmzH0LkGQRQy6ViOCqzAX_vq0byuBBdjbJP-3NeO9mANCUmV3Kbo9V4D5f5VD3rKVDDl6qRyPGcWTnA-1CQtHniyY29yUTK3pn88-FOgjoQTITrFqT-QjMsQcxcoWArTDNTIg4lhmWEmN3vs-M5CQhxf-TooYyt3rQk5yrJjXnDFaKH4ldAAmullHmNyQBp2hdctb9-6TxBTPVIzoEHsOacbCezNAOrignYbKRtgeJAEey-zZIt7RyKx9Xfi1nQFiFigKx13SmND3d8G2sm_xcPTTdVr5V3-fYfbgx3u_x76FHMJ2Cz1iXWiHbef9j2KEfgtKMinxu62SHaJ4TKI4QZytEpSRmcgGH_QcUMDMFbWpSCohL50hving=w1919-h918?auditContext=prefetch",
+    MAP_CITY_PPT: "https://lh3.googleusercontent.com/rd-d/ALs6j_GRZbSZHh_I1lqCaDLALrIkDkbjnPDSQPMlo5tRBNRhiL20nQL_dgGa2LTJKItZ6LXvWqCiVekO8-VZbEho3uaosdUozAruiDbSuhvDAflpEMa51Sr0zoS6L7AH5OGT-Y7Q559Nq7ye9z7aRylO-sAk7SbIMonbjuKXQSpK_NTimi9n97CZhyI9AoYrNoyrym7VQ-EgA67-m-32xA1bQ_kA7pewPzb5fVuY52N3dpHJNcNa74T_DA6TRZnA4h3HEEJgJN3Y9q69KAvLE7IDTdq0cphk6kVgceWcjVXEyz-n8cltHcNfhvyIppN3Tn2N4SoZ_188x8MZuSUwQyZp6P0W_RqJuodvO4fGxgvHNYGL-L66TjRLmZcqiLxeUsCV9zpIL-MCqoRDHHM7S-CIZqeAdT9Y2kfND6oWSVUrHiJgKSRIiFIopq1-_Bm5KJYT3Bqg3HvHGmJQ_G8wONHOCovEfDVVeszDlUlYGJdtEiM1XabhvwV2cuYN5Ko4455IRgS4wGkRFhYgDHI-50O-bl68QwLKe2FppgSHxcZhRp_9I_tDWFNxTM_aDNBlVBGfAEvIShfjuOkJRS47SEfVSFxmCR4oMyXICTGtd97bOyPDjxweVBbk37N1zvOwWMaFnb7d2wu4hrPGqmBhmIjiZN25sCqEZbU3NPmlZznWr-95aahZllDh4iedPejtSFK1qiK45xTuU4ByuKtzESnpwjmzH0LkGQRQy6ViOCqzAX_vq0byuBBdjbJP-3NeO9mANCUmV3Kbo9V4D5f5VD3rKVDDl6qRyPGcWTnA-1CQtHniyY29yUTK3pn88-FOgjoQTITrFqT-QjMsQcxcoWArTDNTIg4lhmWEmN3vs-M5CQhxf-TooYyt3rQk5yrJjXnDFaKH4ldAAmullHmNyQBp2hdctb9-6TxBTPVIzoEHsOacbCezNAOrignYbKRtgeJAEey-zZIt7RyKx9Xfi1nQFiFigKx13SmND3d8G2sm_xcPTTdVr5V3-fYfbgx3u_x76FHMJ2Cz1iXWiHbef9j2KEfgtKMinxu62SHaJ4TKI4QZytEpSRmcgGH_QcUMDMFbWpSCohL50hving=w1919-h918?auditContext=prefetch",
 
 
     MAP_MAZE: "https://lh3.googleusercontent.com/rd-d/ALs6j_GmNjVANEz0fUCAJtKHPIGlNrKlRo9evQaiTNZOWLyLP_-e8gXCCTuihT6lJnkr5GBUrjTwxhmuqiDVkjGAa_BbNZkoIAf3xXqCZ02NugFA59jEPdz2no1BiGJxvV32oKoxHG9cFQceLTembTJAIjzdB3y1WsKQbobVlg2IczK8C_dL3CuN6CTGWFsdYwP6ALBAajUZ-4SgZntx43GXrAlNPZsDfiblk0sT7v6upNJkjVGnTInzGFOOMOToWnmmGzMUxGHptYGDOELrABsLbWBzoU6tcxhinr1AQ8HnWuYGezDRdUGqHaHq__SICcaPYCu41jeBL2eZK4rM8ZJDWXJ3SDVC39v3p6_VWoynKkChQBFTHHOFBYDQT2HnSqvSfKgQyMAZms_dXKCd0CiM5P_yRaDChwm9G2unY2sUKHIoEX0dxsbsVuTxz7FH8cs3YdEmgQYwy0yd4E15A5I2x8C-RD95rP6y6KpshMFuq4m20gjrrZP4S32nNSOe7TCPRc6PmGV9L9JYdHFy8f6AJXo8LrbCD1U_lYOfa-M2WYhJbRhNadcCfV5XT3uNk2z3f0P-Tm0KDsZCirRNDHLx2osoWm8OyxD_1VNxi4zA8kUWnO92q18oFU4FR--9RLwIdVnPPCPb0doBmdV9zL5kcZLtvD7IQ0pVXzmNluzzqp2snjb2xF38MTqVaHZqiRvA63B9ZHzhQC41dNbRXoLRghSw2UqCqC0pMN3_bSBNp8kPSkxtUfy_KX9tCaIKujZJWfF56Xwfc2Mdw6VVOhY2YP-4_uj6uvH-0OOdvMorPiUf72sbY7YqR8ceq7sG6rsXCLHFRnW_GliJH3-mkquOXfLCoFR7VzscWb4iShC0g0f_dHbCdEaIsZBwkHjyrYD42ZjHnIklyRWDUzXgBpRtEHaVaG8nV27hdkm8kyy8FelLmVzAuN-jnwstmM97mQONv1KQK5KeXbU8PKkkOXVv6wh6M0wdjrnutooZ1w0f4Q37qNpoLQiPkFQQvdaMtEGzCl_zjOK3pJGxeFHxTpij2uZPUAcrUsBriwedCk_j235fqEwXKgKdVvbafg8OBeAGrFaCYM_Gqo7FmA=w2000-h4328?auditContext=forDisplay",
 
- MAP_MAZE_PPT: "https://lh3.googleusercontent.com/rd-d/ALs6j_F-ZxryaO8XGOBRBIkBZj82lhAyTQhVAj-_BiFesJViLkDHBkEOM_ttqA-qaAKM3qpSuYTG8efcXogc2cQ-K7M9VKG3JH6fvkM1t8zRUXMjTkWW61OqFJjcQxAzETCjlP5yqa12jiiYoHdBSZYFa-XgdIoh8RtaFpkpfzVcAdZGCI2dsH2wqPq9b3HJII3gIWQZt6YWhil-4oH9U_GAdJYYdUVahYHj8D9UsUrc5ETCvL-ZBXA1yqIvEMTVGVs9tIJ33vSOgrM8oTrgPZZtVQu3LxTZd-OxNvdTGrI9QadKRj7KuSBWPC9qEKejTG19Lj35cVKtNVPA710lPfXkuaOWYKFCsZqOsrTN7cT2nDR6V4BfGeNSt_NDwYU5i_l4RdqmypHwmWY2910hkR4rFKJnkIy7I0WluCmthQoYuqFoGMzPZ0rnrh7_6MmkliGMnhR2euoCWHHSlF_azM87SvvD6GdBVafb96hu7XuO7B4WvsPLJ5DoLCaj9vQ87DEemNH7WRhAoyvU1FSG4Kj6R9uECZLbSIBYRANxLACp9TdxRTkzwXbAw1OS9oXkDIXgYiSZd87BCs9M8teo1_Wde-wnZFvZiy54BpgqATnK-2bKf3EZszB5hOoD4NtsiFum4b1t8aoCe0Q_pmMhozKj2JVFu5pmfnX8tqiHLqqp5IGBcTDlzbBVurz_iNLdBODLJH2BA6B_JHwZ2jaUetWT__3EgeRvXfqjEeIUM9BsXBO1ZahESKaWPbXWkEWsHSIyMcnpPze0IYUMHwnhPtP-RPBgHu18SFfrGWhaH6YAowG98P78VjU-TXyZ1Lx6xXZSKeta7PqVlY4NF7oIMdGfYNTQAgYO5wBgKKW0ETa97CvqxE7CdkScq29BDHzAjHEQ3x53-XamHl8qTvinTspiPs7S8UvMvFr1slWZYszQ7nw5oF7r6dZz3J7hjrZSBnC09a2nVcY9bXaNtuAoLf4IYGGcXtvELct9PMLWfVTlJpF2NgM1laeunBzc-6Qe8pfNvhcPbKnRY9rZ4DaqEWmoGrBbKSY2uGaH1K5wt6P4LLlectlkUpw_7nrDnGo-yLUJcgTYuNp137nv_Q=w1920-h919?auditContext=prefetch",
+    MAP_MAZE_PPT: "https://lh3.googleusercontent.com/rd-d/ALs6j_F-ZxryaO8XGOBRBIkBZj82lhAyTQhVAj-_BiFesJViLkDHBkEOM_ttqA-qaAKM3qpSuYTG8efcXogc2cQ-K7M9VKG3JH6fvkM1t8zRUXMjTkWW61OqFJjcQxAzETCjlP5yqa12jiiYoHdBSZYFa-XgdIoh8RtaFpkpfzVcAdZGCI2dsH2wqPq9b3HJII3gIWQZt6YWhil-4oH9U_GAdJYYdUVahYHj8D9UsUrc5ETCvL-ZBXA1yqIvEMTVGVs9tIJ33vSOgrM8oTrgPZZtVQu3LxTZd-OxNvdTGrI9QadKRj7KuSBWPC9qEKejTG19Lj35cVKtNVPA710lPfXkuaOWYKFCsZqOsrTN7cT2nDR6V4BfGeNSt_NDwYU5i_l4RdqmypHwmWY2910hkR4rFKJnkIy7I0WluCmthQoYuqFoGMzPZ0rnrh7_6MmkliGMnhR2euoCWHHSlF_azM87SvvD6GdBVafb96hu7XuO7B4WvsPLJ5DoLCaj9vQ87DEemNH7WRhAoyvU1FSG4Kj6R9uECZLbSIBYRANxLACp9TdxRTkzwXbAw1OS9oXkDIXgYiSZd87BCs9M8teo1_Wde-wnZFvZiy54BpgqATnK-2bKf3EZszB5hOoD4NtsiFum4b1t8aoCe0Q_pmMhozKj2JVFu5pmfnX8tqiHLqqp5IGBcTDlzbBVurz_iNLdBODLJH2BA6B_JHwZ2jaUetWT__3EgeRvXfqjEeIUM9BsXBO1ZahESKaWPbXWkEWsHSIyMcnpPze0IYUMHwnhPtP-RPBgHu18SFfrGWhaH6YAowG98P78VjU-TXyZ1Lx6xXZSKeta7PqVlY4NF7oIMdGfYNTQAgYO5wBgKKW0ETa97CvqxE7CdkScq29BDHzAjHEQ3x53-XamHl8qTvinTspiPs7S8UvMvFr1slWZYszQ7nw5oF7r6dZz3J7hjrZSBnC09a2nVcY9bXaNtuAoLf4IYGGcXtvELct9PMLWfVTlJpF2NgM1laeunBzc-6Qe8pfNvhcPbKnRY9rZ4DaqEWmoGrBbKSY2uGaH1K5wt6P4LLlectlkUpw_7nrDnGo-yLUJcgTYuNp137nv_Q=w1920-h919?auditContext=prefetch",
 
 
     MAP_PARKING: "https://lh3.googleusercontent.com/rd-d/ALs6j_G5Sh89iPA3mqbMkat5W4xFma-zyNHfnkYEAPl9ahGhkjzf_9kyudf8IrIReqtNEEeg3AS_jtEYk-iIUVVarK_d-h58XkDvphBh4SJAJUtIkREXSgOaPBBZdMOb3dKOvFwIXW8qVRrFTgmBeOPEksYjC7XAiNZ-ZQ3G2gfc8EMEZcKYRbNR281_R7EbRif8A-B7nDJHNl3A8J6SwlPmMJ_S5QGYsIReXMaFa_YRf5iHLsRi6xgZMaggw1ATraQkLti_7YqsH90WgNcgqsSizE4ljzSHCMdoEDsBCVyia2qqLVgLO71nwDBwDWT59JAbm3Z5mJIPnefevZHrcjakTag6tE9eEH2P_p8l5w2V1dmB02YcC7ELWBtGd9lqGSTwfcc8KXqwjQZFulQ6OBRc1Mxu-7961YiUhS4oyZV3z8eCyB6o-QQQ8EGfoKM6P_VwaXB4QvNSSOFyAO-4WhrtHgOZtd2WpmUndOR9Xs2SpRgKnpvnY3lYJOXlDahOP15KKsTi-DG08gEZnDF_2AccFTGPG_WE31qOeKkv2acY43U9WgP5UgdJKtnNkRjmwoRUP3aRZZjqsF-UGV1ycKi6KSFljP7XC1_iUe4kC1IIfyAT_91qaABtTmhpPR0JaPBYX_NSRg9TZ1WVVchC25WbT26NsMmyQpUeoRMWVgMd5Ukr9JQSz1onDYOLUUMHHOwT07csGHJcY6LBST1tNfHOY_MpPWbyhWSP7IG3XcJwZze4jbPdYqzJjFEAydhXHdYprYE7fODVQq1QDuBer9q2JD9_3QHlTyV2nXO-NfEfQE9e-CnHAGn6oDyR7_bmRmO37KYCkiH2F5COVcT74Zm6PoZkCfCeMa291zOYQHRYarj8qBa483gqAsUZLiUVs7jSeaQE05ptTSCFUUAq6ZPnVbQnjp16h0puZtoLeJ-RYko8E-unOzhjL15KykcNeSpRkWdghSmb0k5QOAZWZpD95IWcUIG22sbI6wfQQm09gWssRTwHwsLF2aeiZEiNsNgbgP7ajrXF9ciBJOvMLmKcR5t7KECMmYCPR3Ekc7D4rOFO8W61lhKaz1JGzdBkpe0tsvR3_usVKnbmfg=w2000-h4328?auditContext=forDisplay",
@@ -73,23 +73,39 @@ const IMAGE_PATHS = {
 
     MAP_FRUIT: "https://lh3.googleusercontent.com/rd-d/ALs6j_GRJb_-IMcw_J4DrOe_L0FrJslbTAtdW3qgeHSUzGUoGP4QWXNfs2CpwrCpeCM5Bhlxg58LQJ6kS4sOUMZgRURdiZJR6Bj2n6jW1dvbgRjqBXeF5emh0fAWTP1qa5deuL7gn_ynoE2G_0lnIpvfwkq5WzJ5JLpJ8rz3RrAUYpjdRn9qi9iXIehZezeDz5jovOrQ3y-w0unvBMYZk2Og2KR4l2L8GcMG_BsuwDBj0GWvP0Qgy0qj_efnNMVDmHuwxYK-OKR8_C96FDSaQfJAlDLeNkWaqmcsaUCd9n5lPuVdAjlJNxe5s3wk3NFQUuEaVuOq0R2FowV0TC4MHcp_u98wgxCDfwMq7jDR9aVCV2wxZkRuicYlIDuE04lHo7ONiEsFBGIk2GhVL53vbIz1LctmCodI9GpFuYiH4HoW3D6KFanMkshEyZjlJE1mOIZ4h8XdgYTv3-q4TCMy4lGtHO_EyqhXCxnKa2AhAXzM8_MFBHbKdQ7HfJrVcwUKauOsL247Zhmemokb3PRtJVTjyRLyP8N-k8nCyPMs8LUUqeDC4zEUJn8oBoME6-stoM5jubcnEbOO5MZ-kzUsk640JfEbTR3yqghKEM7af_rrZefZSTIHUU4XR4ECmdVBCEMiP_EuyvYd7_7EDUZD9lkl1XO5CH9vzGX57dhVYierLfbtOJZPnAouasm55mGW1YsbYWpNd0tavNJtbiN8mJKEwS8UfXY4oSetR7fWI_DmPRX1yA-Lu9H82coPN3JPt38UfRZ1YzLmw9V1hjfsBgEBhzBjpWUjX4vu-yFQlh2iQ910-FcEkj1p7LpEKq6P6XX61RnWDEutL_SDa-nmUOXbxOs4YWMobcL-N2ExeKOU6izQnDbXPJFpkPsf-tZY01Tajq5o49Uy-B5tEOr8Btm2NA3R-aJcF1vSBTXTT_T-EQ4-Wg5tKHDDelqcHXa4yXglTwVW2LuNX6JVoxurzy8rbZZT8XBmy5hQOmlkhfmz2_AzQ4IYv2rystvwg3V_tuRMlGYHJzIGdThXeZ9elNUIhdB4nwXwMNY6uPFXLMF06q3lfSV9aLUk-X8oSyP26MGCeNXMXXThKP7z=w2000-h4328?auditContext=forDisplay",
 
- MAP_FRUIT_PPT: "https://lh3.googleusercontent.com/rd-d/ALs6j_Ff-zkdhcO9DWIWIZHAfhTv2vKV61CChXs4nznlJWa6mUqcv7b22Fo-lw3XiXMgyt9yQEey3ecBIrtB5pZxrYqGLJH5YKQBfWwp5_5XPykMQLFuLA_yZD1KsqZ4Woqkp33R-EfvnxlsR8H1F4coCHEzaYE8giVt8bBqmz0tZF4qB_ltW8GxbPo7plVyW7O7GwzYpuwxWmy29pFevvrCGnczUS3SGn_VC-6XaZPF2yn713j29_E012sNk9jFzYoOJIFerdPSDm1jXEU1L2-rdjYrIfG9hEfpBrN6SuDzA0bE0eI2EmiLeyRBOv_mzwDQlSFnTt4bWNtrqSjPsmzN8MQI9dU_mp83ic8Nx-5UH2Goi5nSSKFDsdp5D0764NEmWqhLXMHdDckvtPX4z8UUBeC9ZAgcC1i0zmQ1f7dqu5apkwZFJmKE58IdonMjohh0JYGEmq4c9NDbyKoelYE0r3R53F7sjOtHbC7pDM4YbO0IhGy5uD0bvmCVPPYidyTARGhfsLualk_e324AFvfOBjrU7JoR53qtQF0ByM7IcSsBijR3PjFNpirufS6SWbP2mDh0vbgZQBWedvv3ZwpYTqeVsFd6-0Aq96Z_3hDDKd1jutKnx9YdIi9ItUy2CKApt-i2YxNC3XP2zb7QS5gB8e2k9ZDFgU56mzkgFxUZVdQC9LJbLQjc9bwrX74oCJgaVUeKueMIzuxEJ-tlc_on5EUeppKfFYJjD7hJbJOElcDzasud3tqabQqntZ0hGkYtMjhyFR25tXXfko_TigsVEbjkflMHNSloq-ehFGi3Rk7TZSvNc6NmRfmXzhy_7uU1cswHv_EkjjmGELYx8XYDe9N3UOTmtbaiRylbNqDNNSloYLOQFJY1EdSIDrAk_h7J-ExnTeMq6-X6pCGM2E1aAPMITRjfYhAuK5IDMZm5fKhuOMIPDErUFLpBSI-ukZX6jxUpd_X1L6WbmEbgW_E6FYT8PGGzqNGf5FW0v3U86VgU4gSZdC_tdHMPBoaPIficP8BC-QyDgEmBcKlpBnPxTLghYI7RCoGcijqRT765EvpOSfb_kTiUfeGR3E9Rt4jpee7xjqrUyJSOqw=w1920-h919?auditContext=prefetch",
+    MAP_FRUIT_PPT: "https://lh3.googleusercontent.com/rd-d/ALs6j_Ff-zkdhcO9DWIWIZHAfhTv2vKV61CChXs4nznlJWa6mUqcv7b22Fo-lw3XiXMgyt9yQEey3ecBIrtB5pZxrYqGLJH5YKQBfWwp5_5XPykMQLFuLA_yZD1KsqZ4Woqkp33R-EfvnxlsR8H1F4coCHEzaYE8giVt8bBqmz0tZF4qB_ltW8GxbPo7plVyW7O7GwzYpuwxWmy29pFevvrCGnczUS3SGn_VC-6XaZPF2yn713j29_E012sNk9jFzYoOJIFerdPSDm1jXEU1L2-rdjYrIfG9hEfpBrN6SuDzA0bE0eI2EmiLeyRBOv_mzwDQlSFnTt4bWNtrqSjPsmzN8MQI9dU_mp83ic8Nx-5UH2Goi5nSSKFDsdp5D0764NEmWqhLXMHdDckvtPX4z8UUBeC9ZAgcC1i0zmQ1f7dqu5apkwZFJmKE58IdonMjohh0JYGEmq4c9NDbyKoelYE0r3R53F7sjOtHbC7pDM4YbO0IhGy5uD0bvmCVPPYidyTARGhfsLualk_e324AFvfOBjrU7JoR53qtQF0ByM7IcSsBijR3PjFNpirufS6SWbP2mDh0vbgZQBWedvv3ZwpYTqeVsFd6-0Aq96Z_3hDDKd1jutKnx9YdIi9ItUy2CKApt-i2YxNC3XP2zb7QS5gB8e2k9ZDFgU56mzkgFxUZVdQC9LJbLQjc9bwrX74oCJgaVUeKueMIzuxEJ-tlc_on5EUeppKfFYJjD7hJbJOElcDzasud3tqabQqntZ0hGkYtMjhyFR25tXXfko_TigsVEbjkflMHNSloq-ehFGi3Rk7TZSvNc6NmRfmXzhy_7uU1cswHv_EkjjmGELYx8XYDe9N3UOTmtbaiRylbNqDNNSloYLOQFJY1EdSIDrAk_h7J-ExnTeMq6-X6pCGM2E1aAPMITRjfYhAuK5IDMZm5fKhuOMIPDErUFLpBSI-ukZX6jxUpd_X1L6WbmEbgW_E6FYT8PGGzqNGf5FW0v3U86VgU4gSZdC_tdHMPBoaPIficP8BC-QyDgEmBcKlpBnPxTLghYI7RCoGcijqRT765EvpOSfb_kTiUfeGR3E9Rt4jpee7xjqrUyJSOqw=w1920-h919?auditContext=prefetch",
 
     MAP_OCEAN: "https://lh3.googleusercontent.com/rd-d/ALs6j_FLusyzeSUrgojdtH3HGDpd1oYKK_aZYFeLmLt01UsCExij_oqmWdKyUYwawYcmsfdy1NzGh9e6RuzWamT8aRB32rxkTApU7vKvmjioYSheCFaD4v6h88lgUHisTGARM5V-g1uGjpXEV1fMCkwDMjBgM3K_nmkye7idEXX9n9dJzUYE9jcrbawCbDBVPfrCfu6qFCbeMR40KMLEsqlZErSN6-y-x188UqRE3lcu053bAKky-q_0c4PBgfgHcxRMXFgu3jr-_le_IuIVZwmWopm_MEsrqr-aUJEN_51zE5uP3k0a_ct4bBRVGuPKMPHtOql4MsNXzsB6ovp-Ed_RNhHav1pVqFT1IxGLD56fwwFPkfO62Ra0GIgcPJAKmoQsAklu8_SyKbH9Xql_gbFu7xXv3RbdxKNwylWFdZw85HFLyhv195bJnL17aNMvAhoT9cwTEVDxT-iadl6w6XVHheB8FNNwGbkUd0r3otSq8mt5vwwmLCJQskCeiTJ5uWcWSRerdFUzJrinaCJM8m_wi-EMViikcXSFcJ7N6Emy_DSiB0vQp3A-Q-mVKjkOgr2qR58S0sECjIFkl3XaEuqKAx-xEKFOzyC4zsLtlaFQPmk2uHsviapc9P23tRISZGaYaObrzEN8SlF7Die5xHT_MYlZUZ15MtODbj7-LYtntbbbVUJm22U1669rpdj9KpVXE5EioTdtsIRM716eAFGT8fiKEl19UbGeIOUDhx9k3CXLBQT7UyWeVXLVfDpzQJfvyO0RTeqNIHd9Dtl53WQ_FbNrgEDKSEcNnwJmhVPZBAZ36dBXYvAYXPnwq-c1Kgnwy8Qs_YAIrIm8tDatLQBlum7NnG4kZ5cl53eb_-9TFl_S3ljxCnKr3pxNo4UrLaQB7K-26OasTokHnaubw189F93OC53CnVlIi-GzFhjU_PJmv4vFeULHoBeMtQ6IZY_UIa1YarHlFaG_qmbSJ8R3a2-KlLatznJ0D3ad-Paw1yXBqj1RssCMnoPBMlo_ZPxqQXGDdDxdQyY42kZaInqhqpNpKW3nqVA694UwSrmo4kfqp68rc9_b3-MOhKP9ZDAIgLh95QMQuC6y0w=w2000-h4328?auditContext=forDisplay",
 
-  MAP_OCEAN_PPT: "https://lh3.googleusercontent.com/rd-d/ALs6j_EbDFU04hyQXqJqtJQZXtPn3shBy0EQPDlgISzZSRDJ6hXySiubJF5j9z5Pf35EI_KMGKH8tzNV6E3wfV8RbSKM0gSHdUdUBa-T9p8m82zwZAVhIYCMXNfDxk8GxS8IkeAvJ5A6dl1aO_euy46IVXfZ8_P90rFP8aLEuhBGCgjJuBBwWMcAJlhDrx21U0nNGALSxmdWROnOLAu6SPnZSY0KNspz-TeAc4DOi7I2N2QIc4-vsNDt6DUpZFZnJ0qFE-IWklraE-vCyMFJ4m0wYCcqOu7oXG22Lqstc4VAWc10sNKmken9yr4PMUllM2sjcjVUrfXjnnn4BbF32CKOiKgs_IZnk_J36SehkWGGA-7GZvEHkXCVGF8hL_HdVp1T3Ewxl2AkAy8HKMkL2bCsITs3w_pWZpCaAeT2WIYeK7LaM-6O333U5y1fe5FjMTeCspEgS_usR9RY34hfhg7PSU3mdKP4JQnqzlftif30hnKwdVSooMTr3RPeSykonOrX9YWvdFylPpHrBDD9AFnB9MwheKMmskQBpLRDqzKii2t-bw61hDP_xGTIYZSL1p2el6fPfuMGIK163Vzc7tTDKYYtQu8mpTVEkDDaG_vPRqaJPAkJffZT6S1kkA1IZMkMr_9nARdnVF9taHzdO-aQ3uAtev7WDyh7tymRR6XX09FN6zDsi6wDSAtqPQl_0R3xOIcfDME8F2HgjtCpcJpjizfYk6iMLQ96r5puFni-dwfJ5_otqHQ6W-WXDoKgC85Ulo-mxhDMu8gP5aMBgPvmQ8OZsXVlkEerx9VmRWg__yOPnivfigYH2loIiZ9kHvNMkMlFr3kcGHPd45dMe_46fEmR-E_LUZ1SQJK34aXFseuSIAcMBPNNRr65XEDkMiSnQz7Gx1Yd8qcsJt0cobpIeWSzCAItHhUzdExrV848E-XAWfJeCbdTqby6yq0LdiO0SNuZ7EGHWLb9BLkuy5AnBDuBStFBaIfPvQ8CTSzvAyx4FDhtj27TyPESXJkkBCFucXgYIsZnxswu3eSjkXyibZZZxh5sfYmHHlgVgfiIS1Ik2g7w8-weT0eg0HrwA3E6RCo2R448iFFV=w1920-h919?auditContext=prefetch",
+    MAP_OCEAN_PPT: "https://lh3.googleusercontent.com/rd-d/ALs6j_EbDFU04hyQXqJqtJQZXtPn3shBy0EQPDlgISzZSRDJ6hXySiubJF5j9z5Pf35EI_KMGKH8tzNV6E3wfV8RbSKM0gSHdUdUBa-T9p8m82zwZAVhIYCMXNfDxk8GxS8IkeAvJ5A6dl1aO_euy46IVXfZ8_P90rFP8aLEuhBGCgjJuBBwWMcAJlhDrx21U0nNGALSxmdWROnOLAu6SPnZSY0KNspz-TeAc4DOi7I2N2QIc4-vsNDt6DUpZFZnJ0qFE-IWklraE-vCyMFJ4m0wYCcqOu7oXG22Lqstc4VAWc10sNKmken9yr4PMUllM2sjcjVUrfXjnnn4BbF32CKOiKgs_IZnk_J36SehkWGGA-7GZvEHkXCVGF8hL_HdVp1T3Ewxl2AkAy8HKMkL2bCsITs3w_pWZpCaAeT2WIYeK7LaM-6O333U5y1fe5FjMTeCspEgS_usR9RY34hfhg7PSU3mdKP4JQnqzlftif30hnKwdVSooMTr3RPeSykonOrX9YWvdFylPpHrBDD9AFnB9MwheKMmskQBpLRDqzKii2t-bw61hDP_xGTIYZSL1p2el6fPfuMGIK163Vzc7tTDKYYtQu8mpTVEkDDaG_vPRqaJPAkJffZT6S1kkA1IZMkMr_9nARdnVF9taHzdO-aQ3uAtev7WDyh7tymRR6XX09FN6zDsi6wDSAtqPQl_0R3xOIcfDME8F2HgjtCpcJpjizfYk6iMLQ96r5puFni-dwfJ5_otqHQ6W-WXDoKgC85Ulo-mxhDMu8gP5aMBgPvmQ8OZsXVlkEerx9VmRWg__yOPnivfigYH2loIiZ9kHvNMkMlFr3kcGHPd45dMe_46fEmR-E_LUZ1SQJK34aXFseuSIAcMBPNNRr65XEDkMiSnQz7Gx1Yd8qcsJt0cobpIeWSzCAItHhUzdExrV848E-XAWfJeCbdTqby6yq0LdiO0SNuZ7EGHWLb9BLkuy5AnBDuBStFBaIfPvQ8CTSzvAyx4FDhtj27TyPESXJkkBCFucXgYIsZnxswu3eSjkXyibZZZxh5sfYmHHlgVgfiIS1Ik2g7w8-weT0eg0HrwA3E6RCo2R448iFFV=w1920-h919?auditContext=prefetch",
 
     MAP_CARROT: "https://lh3.googleusercontent.com/rd-d/ALs6j_GrUscKntFw2GHfVsp5wSCiFrrSFKuqrokXFMq7i1psTdq_z8OTdA6TO7U0bzqKRayeqmlY0M4zDeu0hy_psXfO3EyfXI8saVDRFgSl6n2wQm94Vd0gcH8qRNc65vXgI5ukV8LZDXmFv5vQjnmxR30hZw_hKdqdJJKl5S7rx95p_LSxRdt69uQmwFUakWUaOhFjK9QMRnWDbO0B3IZqHIv624K7rOqVRW2-TeY29zRJyRgiPVuUR1o5VYOmq0kAnRgGCHbsDqkx3DLv8PSisSBAYhqziAkOVjNVb3ouPHc1unE2cBmKrTzTjPcH59WVg61Kxg663ldU2StaqTYSbhpvuwDYr2l4z4_6nYpk1_3KK6eLa0Z_bn3Wri-viGDcVwD-Po1waRv1eTajnpL6s_oz_qB9cMQGtQ2BGlP-Lmuo18mDb3YY87xedcoNKeRWPEeCR-VO8fgpRadUcZJKSmhEWK4FwRfoiFq7PGPHS-9GZxx5_36b1QXi0xsxaa2LciJIjGeAAEkKBazLeihZoFGzUl8u4RyQRz1BvHol6Lf8zGSPf_RWFEiJDLqLsRpyr3hW0UjwsPckBe16V9BVuT8jnKKF-wXAlTDhBcap_MQ2xAQCU59K7qAVqg8Ku_a5UkW_YmCLg0Pt_B6FTxz4nfBY5NbAf4YVvl7h1z3M7Vtbcbfb0t_3EY4I6ObSzXlS0MsHhhFg81FsCJrgssTZVKbe4pFnw6OQMNSGNtFucpsSD3XkpuYAbIf5YVsVtw4nQsWNek7bNhk3FndbU12sGVeVfZfsTB7stw4eyxg5gQHT1ibKKZBWfMpku3MjBhtVoF3151WQgV2VH8-OPCnfcMp7Ynxk-GPp-3sMt_QbVEIDttr0RudnUcC5tP0oWe46rkNhMlV49AaFInTM0QK4hTLOCG--TrxM8bcxZqfCOye_Ch392Pjuw2P4JGE9qLa6TAMNhfG3LYZfY7niDwG1dZclAYtvqUncm5NmERR6mhS97lkAu_0DYtN1lyPrIymO2M2mxz2oxwq7UC4r-F-vNjBK4RQ--Vx4wPyOB7SdSo6pAfa0O6lgnhmV22nlgQtjXs_kpj-ubWPFXg=w2000-h4328?auditContext=forDisplay",
 
     MAP_CARROT_PPT: "https://lh3.googleusercontent.com/rd-d/ALs6j_Hsgexle3pUoMr6dsz_VdLfUjHCOHtFaZby4zsZrVNZcV9vbdxs_2RXS_REVYI3S0kA77d5_JquxJV-zS3kaLlux0Ekt6rGONblMyX6fPBy_2PzU9QkfO2swgfMREE2pRL6YlsVbVo9L0MrDUoKNh_0dil26WoRlYtuT2rJjK74kxsBFcME5qDyF8CaFT3kAijj4nNfPQbveuKlzJiKUWOqHsTwWsQ4sjRynUg8KKpZUB8Ly3bYH19UgyMenPahygLj_Bbwj06KXpe-hnXsVsjHEH6IPMIBlj9hWsoPhU0yw--b9XSyobDDMehCVBT7UpDyyRxAtligXhv_t93qDkQ7EpBpt8p8vKMVfSe8bNm9670hmEIK5hL1i3lxWlAUMaM3dz569mC_e1GM5qVr000CHCgthXg_bbZAepKRoSCOMX_uEa787yeZQVR9c6gyIVErxeYQcAe21-9Am8AUwy2zWaVVpuUMkuHxny3iimsONK6Uxu2OOBWl86SNO-tRcxI09JG1Nox0q5GVFzxmX9MxEGW4gMONnpuBTfDtatBmfMcuN9_v4ABycIamZLyc9T4h4kwMCDB7VJUFejt_ZfPdSMZ03Hh_b6OQpyaBdfhHcJWLn5iV-QXAx80m-8bX4baLqSnPn3MXGdzlNNaTiRF22Npw2T97Ht8o_Dw2XXI3C00gVTprnPH0Txoxh7Ttm-HcUIpJHF81MgBJV9aOGVc06KioFF4RXS6rxohLfY6mAQNpLPNNorT0y8mn8IyOlEK-JN-LS2UsvlznZ40zpTWYJC7JmyVDnd1EFyUFBml9tNOH4uSL4x5uaz_kQIsGQpQGGrvRLFTr3OP7JH9i-cqXOMi82Jm7qu-zBbHsVLFRh86hlt5H9jSlFlVgdt1NbzKAa9becX_WvLE6Y8iVzYofGrh_EvHdemXwH6JA14g4IxGb6gxJGuR0oYz_KTSBCBRRTFw0zgXlQ9EOKRvj4ieYeFqamuw6dmTKBUmOzccBCKSnQ63gIqDELwovhH5As5p_QTxPls-3DDaEEHSXD_noKwnQ4JUcfqoOD5V_7q4l-Pi-rQZvhKwIsM-pZorbUiC9xW4Kkln_zg=w1920-h919?auditContext=prefetch",
 
-MAP_TOUR: "https://lh3.googleusercontent.com/rd-d/ALs6j_GHTxQN8xw4i157lunur91g-5g_aTZzG8H5VEDVV7zqK3yVXiX51AKYUC6k9t_1koOlzL8CtQxfi9fvBsXIAQU4UxKqaQTIYGJTT01plA-2JQ4tcGDfJxKhnfSM6BsuSZXFmtbA6rbL8UFaZWvuyWSGqpEwENBME0G8XaPx6urwAMAbYvOM6I2LMhMjqfNGKisYPRunzqj1yetD9N53hjg3iRRBdV9azw5_sThsk3ByOrFUeBi398104UFtbjFMADXvrwDJ-TFab02srtITTb96MeESt9ztcIbYt8eQkkoHMDqbCKQa9E-hJQ2KK1zJ0f9JKAcviz16Iy2FFKK1XzP1Pkd66x-dHIDDy9JITmRlG-2_aDieJW50nHrh5SHpBXoE_Iknp616m-43WRLBZ29qYrtpRGvWWdowmfTzH_2tJwfplTkMXvYxvmfa5pToZ04EfBrq3YmqhjonqT94K_f-EsvZnyYB9FDCJccP5Y2YVEB8Vu847rsK2VJEfF8u64weQirddLyUBmHompU4dCHJcwudU6k8XyYtdGkJ4_PKnrJ-9H7_7X9X4cEQyqSWNrHNuE2VgFGSqUcinvs7uGIXsC5Rd2Lwgvy1VKSJUid1i8R4YwIujIhkWiIx15mstrHIYFeww5uf1Nn33b8hYOkRpJCA0c5JQ7iLigDsbmJT2I1D_ZhsouLEHsQ6B78yy3QHBSD--H5GROUTBvQ0incUY9l_64-VbQ3bakhdYMbdAV_qZauryf6FO5jcT_2WS-UfPUBZmbJFsT8zfzBBbs7cVgY5aQQbMbu9sr08IWMqgAwfxkJtbShURWIDi2SNmbEiEBAsERyCamD8wzFvnAfPyCdANrMYR2An5AHUA84NVxnlvj8_zkbs8WBPvkqvAFAWnquhzmXCmOVzclmUQNgpRxp6B7F2cFhCq9aQHZb4Rgh4mpnlxnPyQuYTZf558U8lqdnQslag-22lXxiaL_3aDwSsKAEM_vhdXK5E8VSDd1If4l6Dj4kcJbn9G0sO2m-YKsqDCZhgFdA3fDlS-QpIS59bMvgcjX7Y55UATnI2tMgCd6ksbhdSo-6F-JhrUvb_jwhzVAzfxw=w2000-h4328?auditContext=forDisplay",
+    MAP_TOUR: "https://lh3.googleusercontent.com/rd-d/ALs6j_GHTxQN8xw4i157lunur91g-5g_aTZzG8H5VEDVV7zqK3yVXiX51AKYUC6k9t_1koOlzL8CtQxfi9fvBsXIAQU4UxKqaQTIYGJTT01plA-2JQ4tcGDfJxKhnfSM6BsuSZXFmtbA6rbL8UFaZWvuyWSGqpEwENBME0G8XaPx6urwAMAbYvOM6I2LMhMjqfNGKisYPRunzqj1yetD9N53hjg3iRRBdV9azw5_sThsk3ByOrFUeBi398104UFtbjFMADXvrwDJ-TFab02srtITTb96MeESt9ztcIbYt8eQkkoHMDqbCKQa9E-hJQ2KK1zJ0f9JKAcviz16Iy2FFKK1XzP1Pkd66x-dHIDDy9JITmRlG-2_aDieJW50nHrh5SHpBXoE_Iknp616m-43WRLBZ29qYrtpRGvWWdowmfTzH_2tJwfplTkMXvYxvmfa5pToZ04EfBrq3YmqhjonqT94K_f-EsvZnyYB9FDCJccP5Y2YVEB8Vu847rsK2VJEfF8u64weQirddLyUBmHompU4dCHJcwudU6k8XyYtdGkJ4_PKnrJ-9H7_7X9X4cEQyqSWNrHNuE2VgFGSqUcinvs7uGIXsC5Rd2Lwgvy1VKSJUid1i8R4YwIujIhkWiIx15mstrHIYFeww5uf1Nn33b8hYOkRpJCA0c5JQ7iLigDsbmJT2I1D_ZhsouLEHsQ6B78yy3QHBSD--H5GROUTBvQ0incUY9l_64-VbQ3bakhdYMbdAV_qZauryf6FO5jcT_2WS-UfPUBZmbJFsT8zfzBBbs7cVgY5aQQbMbu9sr08IWMqgAwfxkJtbShURWIDi2SNmbEiEBAsERyCamD8wzFvnAfPyCdANrMYR2An5AHUA84NVxnlvj8_zkbs8WBPvkqvAFAWnquhzmXCmOVzclmUQNgpRxp6B7F2cFhCq9aQHZb4Rgh4mpnlxnPyQuYTZf558U8lqdnQslag-22lXxiaL_3aDwSsKAEM_vhdXK5E8VSDd1If4l6Dj4kcJbn9G0sO2m-YKsqDCZhgFdA3fDlS-QpIS59bMvgcjX7Y55UATnI2tMgCd6ksbhdSo-6F-JhrUvb_jwhzVAzfxw=w2000-h4328?auditContext=forDisplay",
 
-MAP_TOUR_PPT: "https://lh3.googleusercontent.com/rd-d/ALs6j_HxUO0lnIVTYvtKxf_ALG4Kbt7RORxy5q8RQy4Zr8gKgEbzPRTLitRu4QPnvKP_L7aMFlGJh3D95PfNKWPzbCCCtlD1Rdwf29I7TPo9g5Fiz5DWZU86PlU-yjRGOWzEYDUUWH_kZ-6hPUUZb0qnIZcEgaMN48d1AxdDUa9v4OZpghi53fqB8CFcEbnLyq2ozOUTlvQlwn4uM_MWQ-DlZs0J6K4L7a9bNrqra2m2RZF_ok7iY8G5RShmakD2w8zyRKJ-fma6ApNiTqowivmj7HT0P_6Kxt9CvG02XIMKQ1Pcx6i7Oav2jnzTTqI2PCJo2agfmZZ3-KxeK8w0cn_O4qobrj6KCxk3cpW1bXwOg8uUpoYZSXZXq539Wtx1w7fPETGW4vmKGzw6UvWontGVBZE5KZSsoyB-K07YR3bEB1wnwXMdwPXKEcwTAEoFDyUNEWPbEZcd708E5aAmTZLWWocgwAriNLkgScV6pUKlMCN66sAzKNJ9B5YB6b3eRxA8JDQslPvvu0exZfieJ-5B5bkjWQcbXqGS9UZCdZidxzXKP9TSvsEYTNOlizVtznXZoF4gMf4VP5dO_sHamCQjzPc_lVKdxD3ikHJvd0rTeggijp5on1pDpnMHHTmjXpnJZc6w936J8wPzNtq7whq_E_bLidYvrEKBwEqNswKkM2Ps0pDiUOmXi09R4kSknNG_tznRtS_Soh2na933rqP0yDQvvx32uZzqVh1fgiJyCrYkUnpkzqsuUpR7ni4XTAts6WiDZpXlOdujF6kO6pPNKU_P3NVjIUGTi5Psxr9FkOAzy_epMRjzASjAj6kZxCxSlvh3dl8_1I_E0HWb-BoJHs_eTRP2O8ZrfUKex21SKJJP-4-fU0gN6PJDODeqDqXKBkEqOhFHcfvcuaB433ptpnUh4qtpqOX3V5phfJysWD0qbUqMWeyvk2iNZ9si_U0oEXlaJXA8O2EDen03rlABsBlUChunPVemgvlh3ky60-BLxx4RYQr-BnwJIEq7LCtzJVY3-J2H_qbIVgTCGP2rY2v47Laf1i3gg4msTZ7o-kUubfVGsD-7yRJU-N5LMJlp9-IxOU0MMmkr=w1920-h919?auditContext=prefetch",
+    MAP_TOUR_PPT: "https://lh3.googleusercontent.com/rd-d/ALs6j_HxUO0lnIVTYvtKxf_ALG4Kbt7RORxy5q8RQy4Zr8gKgEbzPRTLitRu4QPnvKP_L7aMFlGJh3D95PfNKWPzbCCCtlD1Rdwf29I7TPo9g5Fiz5DWZU86PlU-yjRGOWzEYDUUWH_kZ-6hPUUZb0qnIZcEgaMN48d1AxdDUa9v4OZpghi53fqB8CFcEbnLyq2ozOUTlvQlwn4uM_MWQ-DlZs0J6K4L7a9bNrqra2m2RZF_ok7iY8G5RShmakD2w8zyRKJ-fma6ApNiTqowivmj7HT0P_6Kxt9CvG02XIMKQ1Pcx6i7Oav2jnzTTqI2PCJo2agfmZZ3-KxeK8w0cn_O4qobrj6KCxk3cpW1bXwOg8uUpoYZSXZXq539Wtx1w7fPETGW4vmKGzw6UvWontGVBZE5KZSsoyB-K07YR3bEB1wnwXMdwPXKEcwTAEoFDyUNEWPbEZcd708E5aAmTZLWWocgwAriNLkgScV6pUKlMCN66sAzKNJ9B5YB6b3eRxA8JDQslPvvu0exZfieJ-5B5bkjWQcbXqGS9UZCdZidxzXKP9TSvsEYTNOlizVtznXZoF4gMf4VP5dO_sHamCQjzPc_lVKdxD3ikHJvd0rTeggijp5on1pDpnMHHTmjXpnJZc6w936J8wPzNtq7whq_E_bLidYvrEKBwEqNswKkM2Ps0pDiUOmXi09R4kSknNG_tznRtS_Soh2na933rqP0yDQvvx32uZzqVh1fgiJyCrYkUnpkzqsuUpR7ni4XTAts6WiDZpXlOdujF6kO6pPNKU_P3NVjIUGTi5Psxr9FkOAzy_epMRjzASjAj6kZxCxSlvh3dl8_1I_E0HWb-BoJHs_eTRP2O8ZrfUKex21SKJJP-4-fU0gN6PJDODeqDqXKBkEqOhFHcfvcuaB433ptpnUh4qtpqOX3V5phfJysWD0qbUqMWeyvk2iNZ9si_U0oEXlaJXA8O2EDen03rlABsBlUChunPVemgvlh3ky60-BLxx4RYQr-BnwJIEq7LCtzJVY3-J2H_qbIVgTCGP2rY2v47Laf1i3gg4msTZ7o-kUubfVGsD-7yRJU-N5LMJlp9-IxOU0MMmkr=w1920-h919?auditContext=prefetch",
 
-MAP_TREASURE: "https://lh3.googleusercontent.com/rd-d/ALs6j_HJBmkIjpc1xyCtIi8Ws3fb85KWuIuNubUBARUr8PbiFVYSg_ZYiz6jFX5umuIw7jLLe5_MauPwebRuiCABDulZcvn7726Ta_581dG7egbFo19KOS-u7YW3ZVupCQpXaoTcQCi0SlNY4n54lYWtf4_sp774WmFAJNphHDb0IpV8ofQnPGHHr5Ix9GJXJGCbcaKPnM8Cq37XxkuxYim_oeP8FzerrOmCNOnkJFZy8MBraYbI0-20b5Lq9XdsB1UYnY9h2z1ucR15oAsFgBfhh0i-8Gui73sP9A_yFv1dPyZovNCJisE8nH1gmwJVMH0YXeNVF7BvBECts402T1fpiiLtNVwgIteq8M4G9w36NZfcHmvp0oOc0C7N3NmbwTw19CUBtylnTlTqyIPaZivRibx9095CF6RHEzl4jV_mydMws20mOMr53tUGVi-LEhQOc_FdkY-M_XiGAI21puPLoo5V0Ka0gSJwPVBVGMyNNYzJSDStx6gFijYqVadZOaIibq3N0K6v3_gmeoNgOYLBzvanCoXOYgAHhnnbhqJyGBOQBeKxiB1Jv-2udMeooL3xxCR5Y0HpzeaM1kgYoNA10z4APi_DL2QlrCew8SXqTSLy22p806HvlUn_QKoTQKTVic5adCC-pH2UlomEKzemNorLrqhC_ywrCbkH4yyMSJ7FThPDFfTodWvWRRJ7J0-AaSb0wiSHhn_DjiDoGq8FqQ1WSRAnBP78vuf0DTnsfbyo0AS4tSd3uazMPY6_x_XxoV5jTGm_N7m74V0EHrXNoAyGc86uhnFtX7P5FsA_Vdr7my8sqVO2Qtpo8kp-CzjRIVLErUrNFg0_MOKjj_peEgHtr5QWHFWvny5Q4yl5s1c3M6ArKhSNl2Mb_z8wyGbJcm0hYiN7oub7pdhZ1z8iYFDhpXYi72ndbQnjyaC3I4DcC4BZLAFc94z7ycS6AK86Pz1Rvpah_UJP8B1XNtL7LR5_Z2D_quECn92wVG1fGSHqZAko8pw4LfMMOi_V2GlSfIPYOYRxU6Vlvv1TRIQ0AWwCJt0AcaiLdS0wgqn61ZNDicz-XALj4x_gCLgsUfzTL1D4eILAkEu0Ow=w2000-h4328?auditContext=forDisplay",
+    MAP_TREASURE: "https://lh3.googleusercontent.com/rd-d/ALs6j_HJBmkIjpc1xyCtIi8Ws3fb85KWuIuNubUBARUr8PbiFVYSg_ZYiz6jFX5umuIw7jLLe5_MauPwebRuiCABDulZcvn7726Ta_581dG7egbFo19KOS-u7YW3ZVupCQpXaoTcQCi0SlNY4n54lYWtf4_sp774WmFAJNphHDb0IpV8ofQnPGHHr5Ix9GJXJGCbcaKPnM8Cq37XxkuxYim_oeP8FzerrOmCNOnkJFZy8MBraYbI0-20b5Lq9XdsB1UYnY9h2z1ucR15oAsFgBfhh0i-8Gui73sP9A_yFv1dPyZovNCJisE8nH1gmwJVMH0YXeNVF7BvBECts402T1fpiiLtNVwgIteq8M4G9w36NZfcHmvp0oOc0C7N3NmbwTw19CUBtylnTlTqyIPaZivRibx9095CF6RHEzl4jV_mydMws20mOMr53tUGVi-LEhQOc_FdkY-M_XiGAI21puPLoo5V0Ka0gSJwPVBVGMyNNYzJSDStx6gFijYqVadZOaIibq3N0K6v3_gmeoNgOYLBzvanCoXOYgAHhnnbhqJyGBOQBeKxiB1Jv-2udMeooL3xxCR5Y0HpzeaM1kgYoNA10z4APi_DL2QlrCew8SXqTSLy22p806HvlUn_QKoTQKTVic5adCC-pH2UlomEKzemNorLrqhC_ywrCbkH4yyMSJ7FThPDFfTodWvWRRJ7J0-AaSb0wiSHhn_DjiDoGq8FqQ1WSRAnBP78vuf0DTnsfbyo0AS4tSd3uazMPY6_x_XxoV5jTGm_N7m74V0EHrXNoAyGc86uhnFtX7P5FsA_Vdr7my8sqVO2Qtpo8kp-CzjRIVLErUrNFg0_MOKjj_peEgHtr5QWHFWvny5Q4yl5s1c3M6ArKhSNl2Mb_z8wyGbJcm0hYiN7oub7pdhZ1z8iYFDhpXYi72ndbQnjyaC3I4DcC4BZLAFc94z7ycS6AK86Pz1Rvpah_UJP8B1XNtL7LR5_Z2D_quECn92wVG1fGSHqZAko8pw4LfMMOi_V2GlSfIPYOYRxU6Vlvv1TRIQ0AWwCJt0AcaiLdS0wgqn61ZNDicz-XALj4x_gCLgsUfzTL1D4eILAkEu0Ow=w2000-h4328?auditContext=forDisplay",
 
-MAP_TREASURE_PPT: "https://lh3.googleusercontent.com/rd-d/ALs6j_EIIaYd34AAjY6Z5HYI5lvbyy9PhdCoBU19PJ_lKbIYLYhSJdzUk9GcainqPxExiZ7B90-wcDhU0U9zeo2LtDZM2xSKmKOy0uFoLqMzScypm_ASTq5GGio7tdqUK0AkK99fAZ4jEiDD5jAQzdCfrbq27WbdnDwYKEkhbobf37CVxn-ZtMt3-OUUp1dvtEZHMURxrL3_qM7vxwfAt-OToV8cZzRmW_ojsf-UMhyrifyzUeHEB9amzjDZjLj3vo2OazCWBsH_AS57LF6B8SrWMegNov2GFulN6HxMoME6kqZhO4s-u7EjUifH1mjG4V7NWGbRfM63c-cx01n6rQrrcOnOQKTJ9dOSH8Kve758c6WwWcmUBthsmL2C7vU4mM51bU-ImqnvaEGh_bxZ3qmZJLFVkbjUvXV7cj_4sCqrJDgiplENAXgv4Iau2mBIH8Ixjuq6iG6U00y5ZNyxJCAodGRhkXTSnv0aAaJGNOCUILAwBXUh_vtr9aL-WBngMhhDWIW57w2JRopQX5O3KbKIin9q_-7etwDBmyBRCx3qgy8SWZ7KQnHd-dUIVsLpJZInEDU2JZCdrWnc2C8ylUMwhdVGQU843UsPaULuipVAZWIDiByj22Q_ChDPee10aiD6WbsLQQo5HEK1kM6RPNdPJ5s3x85h8Gyha9925t_SK21fyBq3tW_vfzQLh9bNmMmf-ZRJhvOBrg2Gz5GqQpiP7mCybzbQG9WuhBdD513dAgr2MsdVCL28JtuB7J_zJHrfXQLjehHV5ugRrYo2Elr0zzIHipytiDbE9q6Jf7tA2VZDh_pu6YD8ntJHSJhEGMMTzYGuysVukoRwioOb1euDiHcx6KKyXbQJohG1zv-DfAQmBTYFowDFXaW5imfUxMz7M41hDak8-wiOyXcPM24jA-q6ymkCXKzcB4U6JuUuHTqgRsD6BokDf-1xPyIsD5-Hd-RXEf3vAy7MXllWXgLeRkwds-Gb_0woL_yaOrM1WgBsRvJbLRg4fh72Q1Y77BFUyjLBXg6ASB8qk1dBa48pkRmNEzmQj1ocyu4HcWoNj4kQeYlAltBYdBCU9-EANPBcrhNmxMlFObcPBw=w1920-h919?auditContext=prefetch",
+    MAP_TREASURE_PPT: "https://lh3.googleusercontent.com/rd-d/ALs6j_EIIaYd34AAjY6Z5HYI5lvbyy9PhdCoBU19PJ_lKbIYLYhSJdzUk9GcainqPxExiZ7B90-wcDhU0U9zeo2LtDZM2xSKmKOy0uFoLqMzScypm_ASTq5GGio7tdqUK0AkK99fAZ4jEiDD5jAQzdCfrbq27WbdnDwYKEkhbobf37CVxn-ZtMt3-OUUp1dvtEZHMURxrL3_qM7vxwfAt-OToV8cZzRmW_ojsf-UMhyrifyzUeHEB9amzjDZjLj3vo2OazCWBsH_AS57LF6B8SrWMegNov2GFulN6HxMoME6kqZhO4s-u7EjUifH1mjG4V7NWGbRfM63c-cx01n6rQrrcOnOQKTJ9dOSH8Kve758c6WwWcmUBthsmL2C7vU4mM51bU-ImqnvaEGh_bxZ3qmZJLFVkbjUvXV7cj_4sCqrJDgiplENAXgv4Iau2mBIH8Ixjuq6iG6U00y5ZNyxJCAodGRhkXTSnv0aAaJGNOCUILAwBXUh_vtr9aL-WBngMhhDWIW57w2JRopQX5O3KbKIin9q_-7etwDBmyBRCx3qgy8SWZ7KQnHd-dUIVsLpJZInEDU2JZCdrWnc2C8ylUMwhdVGQU843UsPaULuipVAZWIDiByj22Q_ChDPee10aiD6WbsLQQo5HEK1kM6RPNdPJ5s3x85h8Gyha9925t_SK21fyBq3tW_vfzQLh9bNmMmf-ZRJhvOBrg2Gz5GqQpiP7mCybzbQG9WuhBdD513dAgr2MsdVCL28JtuB7J_zJHrfXQLjehHV5ugRrYo2Elr0zzIHipytiDbE9q6Jf7tA2VZDh_pu6YD8ntJHSJhEGMMTzYGuysVukoRwioOb1euDiHcx6KKyXbQJohG1zv-DfAQmBTYFowDFXaW5imfUxMz7M41hDak8-wiOyXcPM24jA-q6ymkCXKzcB4U6JuUuHTqgRsD6BokDf-1xPyIsD5-Hd-RXEf3vAy7MXllWXgLeRkwds-Gb_0woL_yaOrM1WgBsRvJbLRg4fh72Q1Y77BFUyjLBXg6ASB8qk1dBa48pkRmNEzmQj1ocyu4HcWoNj4kQeYlAltBYdBCU9-EANPBcrhNmxMlFObcPBw=w1920-h919?auditContext=prefetch",
+
+
+
+    // VIBE_CODING_MAIN: "https://lh3.googleusercontent.com/rd-d/ALs6j_EiyVfbQBVcb_yQ89eGx9WZNCdu0WlmhtQhnC_whJvPgSiYL2pv-8kFs4yjDFUDoJ3XbuNOLVH8oLIHRbyXhlrjzUoVi-nwMHu9aBz_buU8Icc4JZDyKvh2WiDbyBiEtnEzjvq6Qz5_EA_DPl0hF2GA5iP6O-NhKKOf_UJOEY7aYQUcg3VWSL6eSjbRZOr5wtbdCYIWC99fpf3nYPTDElzxbQNuJKeX1uXpKgpXFXGjOojD-pg9pO4DxdB0BHLVlaEzfk5RfvIG4bT61Hb4yY1qU9630jmg79QTwWDgL2xLEbH5HomXVpGHpp2Pqxvp1Ze7zIvFhRwxuN0IOuKP0kZTBei3OQIEP0QsmCFyjvnHo4Y3fTpYWiu7HZKJFW8362jsraqYwQ3MQCRdoqX1Q-ZQk3NCrEQ_aorR3LXGvgNKkQmS8-16uAq9TnrPD2ony_Wkc_65MZ-RpFPPTGWDUCX-4W9fHUilKpwsL1mvhYpGVv8DwxQma6DeKK2y4aseSV8a8UrSBYoJkIuCMQ-KatFo3UkETQ5S_ZnGZysG7e9MPQ5Z6ruE42VvhxAnIdg8aYoKJyLOOcrLsDHZiawfvOXt307pKtjZYbzM2HkAEKBNl1el3uuDbf2mmZaw4v8rKafyRfBf1Z6YrTh_7Uwk4wEYUFZJZ7qQQFRRT5W24Qgb2R7oDJ0k-LgOYf7vS5rTSoxxGHJahZcIuTD4kjl7YVzkR6ziOAj7OXLvx4qgHfx_4QqNjhykq4uHNWNgd-qmwV1M9KvXFdvxFtnAERc7s8h-YQ-T3Ep5uB4062GBeyq9GRPFrziSxZT-MJEFmb_s2g2IPm-GRmAM3y1GE_hktHR2YEYeWkCsqLkTsB5yx9hsfKgabdq_i3I32or4pWI_IIwSjpAPhzhFcYxpOOnUTgll58edHoKrpRnGdGQ9YUe3WRNjZ3esz6dN0Bdxh0fqBPu8KdkG0epOk6JN4bEJHm09Ep59m-k11sJgup2aJIHxq_eYUrm8R7bNhbv5aPcr9riRSiwDDY8vNHungneBdskeYHgZaJvJlKdCGLkn30LUre_qXhX_qTIrhAQ2aUmquzgOSkfxw5qqf5KqJtTJc3DC9GJw57OC4EoBhnsz_LaPSRHKBDDyyVwiMesKZCI=w1878-h915?auditContext=prefetch",
+
+
+    VIBE_CODING_MAIN: "https://lh3.googleusercontent.com/rd-d/ALs6j_ETxtJhQa9e6ot1IlTMzAZ65bx4g6FVjyYtF32nEMOb4_o8MWP0ts6XIn0P676-xh9Xn28CRnZAj_mcKAW_Clsmdgx9IwJQW_bZGidnm9EONnxcWcebJdjjtQpL_Ni613MUnHSWPSmOpPwKKhfRnm4sNVgc-DCeMT3WPkP33IzgT8zrB1GHyGhDsEb3DsobQNoBXVe6CXOz4G58wpw5UHloH6A6GJyxxa7MfpL-gKZspPfO4_AVcV_HtoQUkyi8SF31ftYYDyD4EKvWx-s25jRIX3VfZWd5lpvSkjbls-ysE6hGaGz2ns4MvIJvEk4tw-vJBqOdiaEcCtG-kowRPaSbVTCnaKdE63v6vs_BaZPtf7WKVfGNZ6NPdz8Df9C5emh6hXejjDcPWywrCCyMfudsltaDDXcwjdancZ5XU3cwQbiLtnHUclQ21FrMtddeKjYpOleql_Wlq6iAaCBcQSyRfqmACONcODoy252egtS48ME9VwTDSGtjHJklJE6o8HSSFX0JM6D1zsLsCjz9zmesiokntEp9T51o0i8Q_Shnvd6WB0w1nxZ111Y-tjhDGd_wzpynNXKQ93lRSk8UeSZR0YGVdiiMtNxg58zNaSarARWB0T2gZi7mZYwCU-l9Hii0qpavs-xt9KZmXZbJ6IEsHsGCAVM9SL7chP7DMuo4dxNV7fh_1ItICTzbKI0vMZvhR_vAS0b7UbMTflFZEN6nScvQGZVEo-V4yZb0TYYWbyoNcda1GRuLyZ2AwmKjbXejefHoaeYTtv7wNAk8l_asrTBaWTbaiHvT4cRWpfWvcgatzituo_Vik7kIdqMZmn_NeMk8u6rbNKT0REib9YrJPJwrQocralsiK5MDJUZ4vK7iHhIou0oJ8Yp5ujRCEkpk-p3wT2UaR_kwxvTW5se-d-xLcR3ulUof7DmmfCXmsUjTk5nDx_Ai_y2qiHnthcAHSeVfWbr_OqpbSWrl15Q35Yuzw0GtUACdEveH2FslZawahUi_rFXjbEb4mxen1nM_xHAaUjNke9LoXDJrluWSwAuyDnFNAHPrJVpKOHmNQn4nDox1PvwPkDAwxtNglauU430KVi_C_Dg3-VjMCLp2NBb9mD1Btl1_KoZhTNMji5rbtPYhWDhPiGpgoLY=w1878-h915?auditContext=prefetch",
+
+
+
+
+    PYTHON_LOGO: "https://lh3.googleusercontent.com/rd-d/ALs6j_FTkUgGyBI5ro9YokQg0wQ8vO9cUWzbZOdt87izXtFWY27gWQeiC8xZkTgiojxRgKeFsj0xQCZB2vOUncrpW4-_kkZKfMxMzyAJUSQvAc3JIKDTL_aeyVPnC-5TFgaO3CGVts7sNgaD1-VQmsbpw20wNtcPRZfj0x3zxNaGDjH6d1eeWsr-Rmus_pJKFAWyCulFSgcN6z826TPwT-wNFaPT2bZXEsRuYLirNggbjMxAUz8z_FDmmyiMzOcQdBzBD43Un8K2Mt_r5tC4bNkZO3Mp5i7_XkBPqzRNJ4Eo-MSP20jDxabJ5F2NI4Dg0t-S1qIi56BfTnhLc1ZtL3fGCeeGyiuu7c_-IMH-YFc_3S05PUx1HXB7N_n_xKHmdJnI_4imG4tkELb9QoOt_eliH9vYIWlJKBSbDwh5APDzBsXftsxo6xy2G8E9kTeTVlgrPz7FjkUL6oUKui_L0XdTCYhsgIBSltsXUhnMqkCXyl9JhXIyXwTdS3uhflBHuEB-bAMRk2e2trk9vUVXU6yWvwWLbRaN1vmF4gYrddTXv7cxpxJ-s0tIHZHpYPtcHsgqX5KmLy-7np1Z5tJXJbr9m5tSph6bouBWrbL3gLtblqVbz9G5Vi-k4OXtm079Xs1O9fsePXMkMYB4xERvWW3xWOe67bHr2uY8oBzTtVBVx7bQtLdTHOCsaHjLcefvDhRIcAngDZtp9gGS8P0m-ho2sx1LhxsOf8lQQpLabxiXZXSI2U_QZCZsEkIPvo3ZrMDogURGTGOER_i6g5WvYYjVL6EIFuCILtAMMdE8-L5WAqEkNJ20aT3eG84iFb6lDvJm0mdo-xxAZhOSmvkGGmEt-wXSL-I40WoqHl_zhLiGu1Vw57dKrncYd2SvTjAhZu2HzfJ-7MNFaQNxOQt_Hy5B6lQVgc1j6BFI_InUWULF7fhjoG5OkKjVUR0uM9OjqUT_u1o_Y1wCft42IUr7YBUcOdP35lU0JupHch-PfQXTULJ_691IRHY1-NIaAbczNZNCfC4b75lfjExguEoFwgb43QNUlOdEL79MxMaoXqg3ttnq4ErVh6X4Y_ufktO6OWRRNMxIBCLvWoTAcYd2XfC_15ak8FzsxmrhrYBKi8kd9iISZlt6t_CyP3NxKrZdc7c=w1878-h915?auditContext=prefetch",
+
+
+
+
 
 
     // 주미 AI 탐정
@@ -127,6 +143,12 @@ const LINKS = {
     KW_PYTHON: "https://www.python.org/ftp/python/3.10.10/python-3.10.10-amd64.exe",
     KW_DRIVER: "https://drive.google.com/file/d/1B5aLILt0dW99R-X6oW5qXx6myvgxHIs3/view?usp=sharing",
 
+    // 바이브 코딩
+    VIBE_CODING_LEARNING: "https://truedo.github.io/zumi_vibe_coding/",
+
+
+
+
     // 추가 자료 1
     EXTRA_MAP_PDF: "https://drive.google.com/file/d/1KPqXCbouMxjn3QH6OKA2qeUfraJIsXUQ/view?usp=sharing",
     EXTRA_CARD_PDF: "https://drive.google.com/file/d/1AJYaWA8TVLiJ9yW-mSrEOZtZrLGkg0pM/view?usp=sharing",
@@ -138,6 +160,10 @@ const LINKS = {
     EXTRA_SCRATCH_PDF: "https://drive.google.com/file/d/1zuBqS9n9V-oahvzzL7q9ElyS4LL647yA/view?usp=sharing",
     EXTRA_TABLET_PDF: "https://drive.google.com/file/d/1LnpJiHlUO7_AWwFsvPY26V5ZXpB_JNJj/view?usp=drive_link",
 
+
+    EXTRA_PYTHON_SITE: "https://truedo.github.io/zumi_mini_python_backup/api.html",
+
+    EXTRA_APP_VIDEO: "https://www.youtube.com/embed/SyhUEe3pDYQ?si=mlNQ0Lb1dFw-dFwN",
 
 
     // 추가 자료 2
@@ -166,21 +192,21 @@ const LINKS = {
     CREATIVE_SOCIETY_PDF: "https://drive.google.com/file/d/1ENuqeoC-8cb3GXisOkoHd7c1Jli95OTa/view?usp=sharing",
     // 맵
     MAP_CITY_PDF: "https://drive.google.com/file/d/1yB_niS4qFNMjbJBSkx-FbhWY9LcsWK64/view?usp=sharing",
- MAP_CITY_PDF_PPT: "https://drive.google.com/file/d/1t6AuC2s2WsKcVE2usZG0fNQbFbmk4xMQ/view?usp=sharing",
+    MAP_CITY_PDF_PPT: "https://drive.google.com/file/d/1t6AuC2s2WsKcVE2usZG0fNQbFbmk4xMQ/view?usp=sharing",
     MAP_MAZE_PDF: "https://drive.google.com/file/d/10C970rjd5yRdkki0HMz8YFLnR0Xua5Xa/view?usp=sharing",
-MAP_MAZE_PDF_PPT: "https://drive.google.com/file/d/1MS73DvYM1g3UmPCZyJy5QwP8ahetbum-/view?usp=sharing",
+    MAP_MAZE_PDF_PPT: "https://drive.google.com/file/d/1MS73DvYM1g3UmPCZyJy5QwP8ahetbum-/view?usp=sharing",
     MAP_PARKING_PDF: "https://drive.google.com/file/d/1xqUsPTg6MUzlmHKKhKWdR6hZomkuCIEO/view?usp=sharing",
-MAP_PARKING_PDF_PPT: "https://drive.google.com/file/d/1rS_tr8uYP5YV9tBPAyMCGwDzu3nh1pFC/view?usp=sharing",
+    MAP_PARKING_PDF_PPT: "https://drive.google.com/file/d/1rS_tr8uYP5YV9tBPAyMCGwDzu3nh1pFC/view?usp=sharing",
     MAP_FRUIT_PDF: "https://drive.google.com/file/d/1GsnHwNn4DT8VV1upHkwmrv23MZkGjo1Q/view?usp=sharing",
-MAP_FRUIT_PDF_PPT: "https://drive.google.com/file/d/1FV9NTikzs4J5_JokFwmlohgNVNUosF-y/view?usp=sharing",
+    MAP_FRUIT_PDF_PPT: "https://drive.google.com/file/d/1FV9NTikzs4J5_JokFwmlohgNVNUosF-y/view?usp=sharing",
     MAP_OCEAN_PDF: "https://drive.google.com/file/d/13dlLazKvsv1i5hen0P2_QRXNBcmDz--3/view?usp=sharing",
-MAP_OCEAN_PDF_PPT: "https://drive.google.com/file/d/1nDY9sFAful4_FMqinrhv3-pkWkiwPRuP/view?usp=sharing",
+    MAP_OCEAN_PDF_PPT: "https://drive.google.com/file/d/1nDY9sFAful4_FMqinrhv3-pkWkiwPRuP/view?usp=sharing",
     MAP_CARROT_PDF: "https://drive.google.com/file/d/1Rkld8i7D5z_yjyCVNx2JtlsMkw8b4xZn/view?usp=sharing",
-MAP_CARROT_PDF_PPT: "https://drive.google.com/file/d/1gSSrPgVSyHT0pR2tRDyskCLlfvCGTlJc/view?usp=sharing",
+    MAP_CARROT_PDF_PPT: "https://drive.google.com/file/d/1gSSrPgVSyHT0pR2tRDyskCLlfvCGTlJc/view?usp=sharing",
     MAP_TOUR_PDF: "https://drive.google.com/file/d/1OeszYmvro4TdFdHcoZaifmgJA6F65omG/view?usp=sharing",
-MAP_TOUR_PDF_PPT: "https://drive.google.com/file/d/1H3V5MMEHwxklXKfXgPL4ngguCRIvJWhx/view?usp=sharing",
-      MAP_TREASURE_PDF: "https://drive.google.com/file/d/1yDVayELHSI_bf45bnAcGTqWBMMOmjHDN/view?usp=sharing",
-MAP_TREASURE_PDF_PPT: "https://drive.google.com/file/d/1_6uhFa_6eHJWRCPYtZzz25E3VCHRHGKe/view?usp=sharing",
+    MAP_TOUR_PDF_PPT: "https://drive.google.com/file/d/1H3V5MMEHwxklXKfXgPL4ngguCRIvJWhx/view?usp=sharing",
+    MAP_TREASURE_PDF: "https://drive.google.com/file/d/1yDVayELHSI_bf45bnAcGTqWBMMOmjHDN/view?usp=sharing",
+    MAP_TREASURE_PDF_PPT: "https://drive.google.com/file/d/1_6uhFa_6eHJWRCPYtZzz25E3VCHRHGKe/view?usp=sharing",
 
 
     // 주미 AI 탐정
@@ -206,7 +232,7 @@ const MANUAL_LIST = [
         title: "엔트리 코딩",
         level: "중급",
         color: "#00B050",
-        desc: "엔트리 코딩 사용 유저를<br>위한 매뉴얼 입니다.",
+        desc: "엔트리 사용 유저를<br>위한 매뉴얼 입니다.",
         btnText: "다운로드"
     },
     {
@@ -215,7 +241,7 @@ const MANUAL_LIST = [
         title: "파이썬 코딩",
         level: "상급",
         color: "#1D92ED",
-        desc: "파이썬 코딩 사용 유저를<br>위한 매뉴얼 입니다.",
+        desc: "파이썬 사용 유저를<br>위한 매뉴얼 입니다.",
         btnText: "다운로드"
     },
     {
@@ -226,8 +252,19 @@ const MANUAL_LIST = [
         color: "linear-gradient(45deg, #727DCC, #00B050, #1E95F1)",
         desc: "글로벌 유저를 위해<br>영어로 제작 된 매뉴얼 입니다",
         btnText: "바로가기",
-        isSpecial: true
-    }
+    },
+
+    // {
+    //     img: IMAGE_PATHS.EXTRA_SCRATCH,
+    //     url: LINKS.EXTRA_SCRATCH_PDF,
+    //     title: "스크래치 코딩",
+    //     level: "중급",
+    //     desc: "스크래치 사용 유저를 위한 매뉴얼 입니다.",
+    //     color: "#F99E0B",
+    //     btnText: "다운로드"
+    // },
+
+
 ];
 
 
@@ -235,19 +272,21 @@ const MANUAL_LIST = [
 
 // 스크래치 가이드 리스트
 const SCRATCH_GUIDE = [
+
     {
-        img: IMAGE_PATHS.EXTRA_SCRATCH2,
-        url: LINKS.EXTRA_SCRATCH2_PDF,
+        img: IMAGE_PATHS.EXTRA_SCRATCH,
+        url: LINKS.EXTRA_SCRATCH_PDF,
         title: "스크래치 교재",
-        desc: "스크래치를 사용한<br>12차시 교재 입니다.",
+        // desc: "스크래치 연결과<br>블록 사용법을 확인하세요.",
+        desc: "스크래치 유저를 위한<br> 12차시 교재 입니다",
         color: "#F99E0B",
         btnText: "다운로드"
     },
     {
-        img: IMAGE_PATHS.EXTRA_SCRATCH,
-        url: LINKS.EXTRA_SCRATCH_PDF,
-        title: "스크래치 가이드",
-        desc: "스크래치 연결과<br>사용법을 확인하세요.",
+        img: IMAGE_PATHS.EXTRA_SCRATCH2,
+        url: LINKS.EXTRA_SCRATCH2_PDF,
+        title: "스크래치 창의 학습",
+        desc: "창의 수업 방식의 <br>12차시 교재 입니다.",
         color: "#F99E0B",
         btnText: "다운로드"
     },
@@ -259,24 +298,33 @@ const SCRATCH_GUIDE = [
         color: "#F99E0B",
         btnText: "다운로드"
     },
+    // {
+    //     img: IMAGE_PATHS.PLUS_SCRATCH,
+    //     url: LINKS.PLUS_SCRATCH_LINK,
+    //     title: "스크래치 실행 (Web)",
+    //     desc: "주미 전용<br>코딩 환경으로 이동합니다.",
+    //     color: "#F99E0B",
+    //     btnText: "실행하기"
+    // }
+];
+
+const SCRATCH_EXECUTE = [
     {
         img: IMAGE_PATHS.PLUS_SCRATCH,
         url: LINKS.PLUS_SCRATCH_LINK,
         title: "스크래치 실행 (Web)",
-        desc: "주미 전용<br>코딩 환경으로 이동합니다.",
+        desc: "주미 스크래치<br>코딩 환경으로 이동합니다.",
         color: "#F99E0B",
         btnText: "실행하기"
     }
 ];
-
-
 
 // 기본 가이드 리스트
 const BASIC_GUIDE = [
     {
         img: IMAGE_PATHS.PLUS_GUIDE,
         url: LINKS.PLUS_GUIDE_PDF,
-        title: "기본 가이드",
+        title: "제품 가이드",
         desc: "주미 AI의 올바른 사용을 위해<br>시작하기전에 꼭 확인하세요",
         color: "#21405D",
         btnText: "다운로드"
@@ -293,10 +341,59 @@ const BASIC_GUIDE = [
         img: IMAGE_PATHS.EXTRA_MAP,
         url: LINKS.EXTRA_MAP_PDF,
         title: "맵 가이드",
-        desc: "공장 맵을 활용한 <br>효과적인 학습 가이드입니다.",
+        desc: "공장 맵을 활용한 <br>효과적인 언플러그드 학습<br> 가이드입니다.",
         color: "#606569",
         btnText: "다운로드"
     },
+
+
+];
+
+
+// 무선 가이드 리스트
+const WIRELESS_GUIDE = [
+    // {
+    //     img: IMAGE_PATHS.EXTRA_FW,
+    //     url: LINKS.EXTRA_FW_PDF,
+    //     title: "펌웨어 업데이트",
+    //     desc: "주미 AI를 최신 버전으로 <br>유지하는 업데이트 방법입니다.",
+    //     color: "#06AA0A",
+    //     btnText: "다운로드"
+    // },
+    {
+        img: IMAGE_PATHS.EXTRA_APP,
+        url: LINKS.EXTRA_APP_PDF,
+        title: "APP 가이드",
+        desc: "모바일 앱 <br>사용을 위한 가이드입니다.",
+        color: "#0475D0",
+        btnText: "가이드"
+    },
+
+    {
+        img: IMAGE_PATHS.EXTRA_APP,
+        url: LINKS.EXTRA_APP_VIDEO,
+        title: "APP 가이드",
+        desc: "모바일 앱 <br>사용을 위한 가이드입니다.",
+        color: "#abc925",
+        btnText: "영상보기"
+    },
+    {
+        img: IMAGE_PATHS.EXTRA_DONGLE,
+        url: LINKS.EXTRA_DONGLE_PDF,
+        title: "동글 페어링",
+        desc: "무선 연결용 동글의 <br>페어링 및 설정 방법<br>(드라이버 설치)입니다.",
+        color: "#0475D0",
+        btnText: "가이드"
+    },
+    {
+        img: IMAGE_PATHS.PLUS_WEB,
+        url: LINKS.PLUS_WEB_LINK,
+        title: "동글 페어링(Web)",
+        desc: "프로그램 설치 없이 <br>웹에서 바로 페어링하기",
+        color: "#F86E6A",
+        btnText: "실행하기"
+    },
+
     {
         img: IMAGE_PATHS.EXTRA_CARD,
         url: LINKS.EXTRA_CARD_PDF,
@@ -305,46 +402,19 @@ const BASIC_GUIDE = [
         color: "#FBD53E",
         btnText: "다운로드"
     },
+
+    // {
+    //     img: IMAGE_PATHS.PYTHON_LOGO,
+    //     url: LINKS.EXTRA_PYTHON_SITE,
+    //     title: "파이썬 API",
+    //     desc: "파이썬의 함수와 클래스,<br>예제를 확인하세요.",
+    //     color: "#4bb98f",
+    //     btnText: "바로가기"
+    // },
 ];
 
 
-// 무선 가이드 리스트
-const WIRELESS_GUIDE = [
-    {
-        img: IMAGE_PATHS.EXTRA_FW,
-        url: LINKS.EXTRA_FW_PDF,
-        title: "펌웨어 업데이트",
-        desc: "주미 AI를 최신 버전으로 <br>유지하는 업데이트 방법입니다.",
-        color: "#06AA0A",
-        btnText: "다운로드"
-    },
-    {
-        img: IMAGE_PATHS.EXTRA_APP,
-        url: LINKS.EXTRA_APP_PDF,
-        title: "APP 연결",
-        desc: "태블릿과 모바일 앱 <br>연결을 위한 설정 가이드입니다.",
-        color: "#0475D0",
-        btnText: "다운로드"
-    },
-    {
-        img: IMAGE_PATHS.EXTRA_DONGLE,
-        url: LINKS.EXTRA_DONGLE_PDF,
-        title: "동글 페어링",
-        desc: "무선 연결용 동글의 <br>페어링 및 설정 방법입니다.",
-        color: "#F86E6A",
-        btnText: "다운로드"
-    },
-    {
-        img: IMAGE_PATHS.PLUS_WEB,
-        url: LINKS.PLUS_WEB_LINK,
-        title: "동글이 페어링(Web)",
-        desc: "프로그램 설치 없이 <br>웹에서 바로 페어링하기",
-        color: "#35aec4",
-        btn: "바로가기",
-        tight: true,
-        btnText: "바로가기"
-    },
-];
+
 
 // 창의 학습
 const CREATIVE_DATA = {
@@ -371,69 +441,69 @@ const CREATIVE_DATA = {
 
 // MAP 리스트
 const MAP_LIST = [
-    { 
+    {
         imgPdf: IMAGE_PATHS.MAP_CITY,
         imgPpt: IMAGE_PATHS.MAP_CITY_PPT,
         pdf: LINKS.MAP_CITY_PDF,
         ppt: LINKS.MAP_CITY_PDF_PPT,
-        title: "1. 도시 길찾기", 
-        color: "#7EBB55" 
+        title: "1. 도시 길찾기",
+        color: "#7EBB55"
     },
-    { 
+    {
         imgPdf: IMAGE_PATHS.MAP_MAZE,
         imgPpt: IMAGE_PATHS.MAP_MAZE_PPT,
         pdf: LINKS.MAP_MAZE_PDF,
         ppt: LINKS.MAP_MAZE_PDF_PPT,
-        title: "2. 미로 탈출", 
-        color: "#329EB8" 
+        title: "2. 미로 탈출",
+        color: "#329EB8"
     },
-    { 
+    {
         imgPdf: IMAGE_PATHS.MAP_PARKING,
         imgPpt: IMAGE_PATHS.MAP_PARKING_PPT,
         pdf: LINKS.MAP_PARKING_PDF,
         ppt: LINKS.MAP_PARKING_PDF_PPT,
-        title: "3. 주차 챌린지", 
-        color: "#65666A" 
+        title: "3. 주차 챌린지",
+        color: "#65666A"
     },
-    { 
+    {
         imgPdf: IMAGE_PATHS.MAP_FRUIT,
         imgPpt: IMAGE_PATHS.MAP_FRUIT_PPT,
         pdf: LINKS.MAP_FRUIT_PDF,
         ppt: LINKS.MAP_FRUIT_PDF_PPT,
-        title: "4. 색상 과일", 
-        color: "#FF8645" 
+        title: "4. 색상 과일",
+        color: "#FF8645"
     },
-    { 
+    {
         imgPdf: IMAGE_PATHS.MAP_OCEAN,
         imgPpt: IMAGE_PATHS.MAP_OCEAN_PPT,
         pdf: LINKS.MAP_OCEAN_PDF,
         ppt: LINKS.MAP_OCEAN_PDF_PPT,
-        title: "5. 바다 친구들", 
-        color: "#1D9AEC" 
+        title: "5. 바다 친구들",
+        color: "#1D9AEC"
     },
-    { 
+    {
         imgPdf: IMAGE_PATHS.MAP_CARROT,
         imgPpt: IMAGE_PATHS.MAP_CARROT_PPT,
         pdf: LINKS.MAP_CARROT_PDF,
         ppt: LINKS.MAP_CARROT_PDF_PPT,
-        title: "6. 당근 상자", 
-        color: "#FFB92D" 
+        title: "6. 당근 상자",
+        color: "#FFB92D"
     },
-    { 
+    {
         imgPdf: IMAGE_PATHS.MAP_TOUR,
         imgPpt: IMAGE_PATHS.MAP_TOUR_PPT,
         pdf: LINKS.MAP_TOUR_PDF,
         ppt: LINKS.MAP_TOUR_PDF_PPT,
-        title: "7. 서울 투어", 
-        color: "#86B4E2" 
+        title: "7. 서울 투어",
+        color: "#86B4E2"
     },
-    { 
+    {
         imgPdf: IMAGE_PATHS.MAP_TREASURE,
         imgPpt: IMAGE_PATHS.MAP_TREASURE_PPT,
         pdf: LINKS.MAP_TREASURE_PDF,
         ppt: LINKS.MAP_TREASURE_PDF_PPT,
-        title: "8. 보물 찾기", 
-        color: "#B6884B" 
+        title: "8. 보물 찾기",
+        color: "#B6884B"
     },
 
 ];
@@ -442,20 +512,20 @@ const MAP_LIST = [
 const DETECTIVE_BUTTONS = [
     {
         url: LINKS.DETECTIVE_PDF,
-        label: "사용 가이드",
-        sub: "사건 개요 및 미션 안내서",
+        btnText: "사용 가이드",
+        desc: "사건 개요 및 미션 안내서",
         color: "#F86E6A"
     },
     {
         url: LINKS.DETECTIVE_EXE,
-        label: "실행 코드",
-        sub: "파이썬 예제",
+        btnText: "실행 코드",
+        desc: "파이썬 예제",
         color: "#0A7CE3"
     },
     {
         url: LINKS.DETECTIVE_IMG,
-        label: "다운로드",
-        sub: "코드 실행을 위한 이미지",
+        btnText: "다운로드",
+        desc: "코드 실행을 위한 이미지",
         color: "#F7CD49"
     }
 ];
@@ -465,20 +535,31 @@ const DETECTIVE_BUTTONS = [
 const KW_BUTTONS = [
     {
         url: LINKS.KW_PDF,
-        label: "다운로드",
-        sub: "규정 및 수업자료 (PDF)",
+        btnText: "다운로드",
+        desc: "규정 및 수업자료 (PDF)",
         color: "#F86E6A"
     },
+
+    {
+        img: IMAGE_PATHS.PYTHON_LOGO,
+
+        url: LINKS.EXTRA_PYTHON_SITE,
+        btnText: "바로가기",
+        desc: "파이썬 API",
+        color: "#4bb98f",
+    },
+
     {
         url: LINKS.KW_PYTHON,
-        label: "다운로드",
-        sub: "파이썬 3.10.10 설치파일",
+        btnText: "다운로드",
+        desc: "파이썬 3.10.10 설치파일",
         color: "#0A7CE3"
     },
     {
         url: LINKS.KW_DRIVER,
-        label: "다운로드",
-        sub: "주미 AI 동글 드라이버",
+        btnText: "다운로드",
+        desc: "주미 AI 동글 드라이버",
         color: "#F7CD49"
     }
 ];
+
