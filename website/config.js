@@ -226,6 +226,16 @@ const MANUAL_LIST = [
         desc: "카드 코딩 사용 유저를<br>위한 매뉴얼 입니다.",
         btnText: "다운로드"
     },
+   {
+         img: IMAGE_PATHS.EXTRA_SCRATCH,
+         url: LINKS.EXTRA_SCRATCH_PDF,
+         title: "스크래치 코딩",
+         level: "기본",
+         desc: "스크래치 사용 유저를 <br> 위한 매뉴얼 입니다.",
+         color: "#F99E0B",
+         btnText: "다운로드"
+     },
+
  
     {
         img: IMAGE_PATHS.ENTRY,
@@ -257,15 +267,6 @@ const MANUAL_LIST = [
         btnText: "바로가기",
     },
 
-   {
-         img: IMAGE_PATHS.EXTRA_SCRATCH,
-         url: LINKS.EXTRA_SCRATCH_PDF,
-         title: "스크래치 코딩",
-         level: "기본",
-         desc: "스크래치 사용 유저를 <br> 위한 매뉴얼 입니다.",
-         color: "#F99E0B",
-         btnText: "다운로드"
-     },
 
 ];
 
@@ -564,4 +565,3 @@ const KW_BUTTONS = [
         color: "#F7CD49"
     }
 ];
-
