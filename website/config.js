@@ -168,7 +168,7 @@ const LINKS = {
 
     // 추가 자료 2
     PLUS_GUIDE_PDF: "https://drive.google.com/file/d/10twxHMEoF9C18O1OTp6s3bT8YWqFPAwl/view?usp=sharing",
-    PLUS_MENU_NOTION: "https://www.notion.so/AI-25b2120267568073b09ec36ca5e2c0d5?source=copy_link",
+    PLUS_MENU_NOTION: "https://truedo.github.io/zumi_AI_menu_guide/index.html",
     PLUS_EXE_DOWN: "https://drive.google.com/file/d/1DJjbaAf0PmS6Rr3cSV2KsM5naYNqqDRK/view",
     PLUS_WEB_LINK: "https://truedo.github.io/zumi_dongle_pairing/",
     PLUS_SCRATCH_LINK: "https://snazzy-raindrop-0e6ae8.netlify.app/",
@@ -236,7 +236,7 @@ const MANUAL_LIST = [
          btnText: "다운로드"
      },
 
- 
+
     {
         img: IMAGE_PATHS.ENTRY,
         url: LINKS.ENTRY_PDF,
