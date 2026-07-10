@@ -69,28 +69,26 @@
             display: block;
         }
 
-/* [^^ XX] 정답용 녹색 숨쉬기 애니메이션 */
-@keyframes glowPulseGreen {
-    0%, 100% { opacity: 1; color: #2ECC71; filter: drop-shadow(0 0 8px rgba(46,204,113,0.8)); }
-    50% { opacity: 0.3; color: #2ECC71; filter: drop-shadow(0 0 1px rgba(46,204,113,0)); }
-}
+        /* 정답용 녹색 숨쉬기 애니메이션 */
+        @keyframes glowPulseGreen {
+            0%, 100% { opacity: 1; color: #2ECC71; filter: drop-shadow(0 0 8px rgba(46,204,113,0.8)); }
+            50% { opacity: 0.3; color: #2ECC71; filter: drop-shadow(0 0 1px rgba(46,204,113,0)); }
+        }
 
-/* [변경] 오답용 빨간색 숨쉬기 애니메이션 */
-@keyframes glowPulseRed {
-    0%, 100% { opacity: 1; color: #E74C3C; filter: drop-shadow(0 0 8px rgba(231,76,60,0.8)); }
-    50% { opacity: 0.3; color: #E74C3C; filter: drop-shadow(0 0 1px rgba(231,76,60,0)); }
-}
+        /* 오답용 빨간색 숨쉬기 애니메이션 */
+        @keyframes glowPulseRed {
+            0%, 100% { opacity: 1; color: #E74C3C; filter: drop-shadow(0 0 8px rgba(231,76,60,0.8)); }
+            50% { opacity: 0.3; color: #E74C3C; filter: drop-shadow(0 0 1px rgba(231,76,60,0)); }
+        }
 
-/* 각각의 상황에 맞는 클래스 정의 */
-.zumi-eyes.glow-green {
-    animation: glowPulseGreen 1.5s infinite ease-in-out;
-}
+        .zumi-eyes.glow-green {
+            animation: glowPulseGreen 1.5s infinite ease-in-out;
+        }
 
-.zumi-eyes.glow-red {
-    animation: glowPulseRed 1.5s infinite ease-in-out;
-}
+        .zumi-eyes.glow-red {
+            animation: glowPulseRed 1.5s infinite ease-in-out;
+        }
 
-        /* [개선] 주미 캐릭터 에어리어 & 다양한 표정 CSS */
         .zumi-avatar {
             width: 120px;
             height: 120px;
@@ -127,7 +125,6 @@
             user-select: none;
         }
 
-        /* 기본 평상시 눈 (도형 디자인) */
         .zumi-eyes.normal::before, .zumi-eyes.normal::after {
             content: '';
             width: 14px;
@@ -142,7 +139,6 @@
             55% { transform: scaleY(0.1); }
         }
 
-        /* 말풍선 */
         .bubble {
             background: #E8F0FE;
             border-radius: 15px;
@@ -168,7 +164,6 @@
             width: 0;
         }
 
-        /* 버튼 스타일 */
         .btn {
             display: block;
             width: 100%;
@@ -233,7 +228,6 @@
             background: #D4E9FF;
         }
 
-        /* 퀴즈 상태 바 */
         .quiz-header {
             display: flex;
             justify-content: space-between;
@@ -266,7 +260,6 @@
             transition: width 0.3s ease;
         }
 
-        /* 해설/피드백 패널 스타일 */
         .explanation-card {
             display: none;
             background: #F8FAFC;
@@ -291,13 +284,12 @@
         .feedback-title.wrong { color: var(--danger); }
 
         .explanation-text {
-    font-size: 1.15rem; 
-    line-height: 1.6;
-    color: #334155;     
-    margin-bottom: 18px;
-}
+            font-size: 1.15rem; 
+            line-height: 1.6;
+            color: #334155;     
+            margin-bottom: 18px;
+        }
 
-        /* [수정] 이미지 바인딩 전용 태그 스타일 */
         .explanation-img-box {
             width: 100%;
             max-height: 180px;
@@ -317,11 +309,9 @@
             object-fit: cover;
         }
 
-        /* 결과 화면 */
         .result-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 15px; }
         .result-score { font-size: 3rem; font-weight: 900; color: var(--primary); margin-bottom: 20px; }
 
-        /* 하단 고정 바로가기 */
         .btn-home-link {
             display: block !important;
             width: 100%;
@@ -356,29 +346,27 @@
             </div>
         </div>
 
-<div id="screen-intro" class="screen active">
-    <div class="bubble">
-        안녕하세요!<br>
-        저는 인공지능 자율주행 자동차<br>
-        <strong>주미 AI (Zumi AI)</strong>라고 합니다! 🚗✨<br><br>
-        인공지능부터 자율주행까지<br>
-        미래 교육의 세계에 대해 알아볼 수 있는<br>
-        <strong>주미 AI 퀴즈</strong>를 풀어보며<br>
-        주미 AI에 대해 알아볼까요?
-    </div>
+        <div id="screen-intro" class="screen active">
+            <div class="bubble">
+                안녕하세요!<br>
+                저는 인공지능 자율주행 자동차<br>
+                <strong>주미 AI (Zumi AI)</strong>라고 합니다! 🚗✨<br><br>
+                저에 대해 얼마나 알고 계신가요?<br>
+                
+            </div>
 
-    <p style="margin-bottom: 20px; color: var(--text-muted); font-weight: 600;">
-        총 20개의 문제 중 랜덤으로 10문제가 출제됩니다.
-    </p>
+            <p style="margin-bottom: 20px; color: var(--text-muted); font-weight: 600;">
+                아래의 버튼을 클릭해보세요!
+            </p>
 
-    <button class="btn btn-center" onclick="startQuiz()">
-        주미 AI 퀴즈 시작하기 🚀
-    </button>
-</div>
+            <button class="btn btn-center" onclick="startQuiz()">
+                주미 AI 퀴즈 시작하기 🚀
+            </button>
+        </div>
 
         <div id="screen-quiz" class="screen">
             <div class="quiz-header">
-                <span class="progress-box" id="quiz-progress">1 / 10</span>
+                <span class="progress-box" id="quiz-progress">1 / 5</span>
                 <div class="score-box">
                     <span class="score-tag correct">정답: <span id="count-correct">0</span></span>
                     <span class="score-tag wrong">오답: <span id="count-wrong">0</span></span>
@@ -409,7 +397,7 @@
 
         <div id="screen-result" class="screen">
             <h2 class="result-title">탐험 완료!</h2>
-            <div class="result-score" id="result-score">0 / 10 점</div>
+            <div class="result-score" id="result-score">0 / 5 점</div>
             <div class="bubble" id="result-comment" style="margin-bottom: 25px;">
                 결과 코멘트 자리
             </div>
@@ -424,202 +412,107 @@
 </div>
 
 <script>
-    // [수정] img 속성에 문제마다 개별 연관 이미지 링크 지정
     const questionBank = [
         { 
-            q: "다음 중 주미 AI가 사용할 수 없는 프로그래밍 환경은?", 
-            a: ["스크래치(Scratch)", "엔트리(Entry)", "파이썬(Python)", "자바스크립트 (JavaScript)"], 
-            c: 3,
-            img: "https://lh3.googleusercontent.com/rd-d/ALs6j_HvY7a5PDWQN0Jtltr3YJKIiEXkZwzbmh5zBOh2JAfqK6cOsTVXiIkixpB4-F2JkwI6-DmozqD_Rfm6KMEcUp9efJkprLWK2FL6I6W0SkeQmaeVp6YD_syas4YuJS7FNWcLXYmw9LFYSCPiWx3uOEKHCmMlbYbSmiGWyNht6Uh0a4Pf5K59l6sUUPMslSsrlyVoiIo0GKyPn1pvMDFTcvLsudOx3PVVdpI3liq903vqc-0rLrummWRZ5d16CGyiqVIFcSY4F2S7ASd7qU8HKBaBeK09tNvp2yr0OwAh5DH2BisUmA37-z_Eac4aTKjjGUIb-ja8-ez5sauRO9L3P_8ua9Xd8jVjWrlxv-O96U1gu_TOy1tk6FV9LiDXPW6uqTI-P96RO9CNGYFU2A8M0_OKZlYRicGilTvexiFt9V9WjghNANu6iZ1839cB8vBKiojBpOwHGsz9Y3Y2mcA3V61GxZXznvmdL-F4Chf6Hfw4GKesIfMY8w2BgWKL-Z_QWNI1U_T7Pb9LpWp--aLz32mxK8RoJE_-omJUtZA0NvYdT3NUEBdfLTyHGbwGI6DZqd2TRlBI93iGwI9RgBf132RkR4019JlXTTPtLwuNtdBmjpC5UeQSnsd6xZOpztgQKDFO-yzDbSsIN426HV2vpLQoI3hN8_YnRdvYmYJKaJP8C5xawQVPaseA1bnv3a63if1ZcSngdNmq-QmK8SurbDYt-2aZ8wNWfPPRWO9jAPiivhMRmdpj9GTd2j51sFMx95salZJ5Gc96ohPcBDOFXVFO3NTCu7Omm4J-OUEdiXm0Cxwe0FHdwMsV4_SpPQYt_uVWbac4-tPxVb7NJNwe8hR26ti7oXGtCPXj5kBLMaAadlu_FSTd8WXBXMix3-AFPbtA7tsHyk1pxvDK6qGYz5vS2AVWDCP3eKPOtDC-Qc_tULWDlhbYFoIHtSN_71tcivrDqK-4kMeAKRjIdewws78c2ktG2-h4mo7p-dqC8zI4hRNBnDC9fyhfOJpLQNHmYKIZ3Qlf7Xa5tS_E8rKMxgV0etLsRdV5NQUTjhqLeE8uQ3JfRPzfviz4WBNXedOouS3mYBRH-xjX9EZIII0e7tQNYWEEPX4gnI06XCyVQ0oMKnLlXaHcr9-n8u31VyUoEgs=w1919-h918?auditContext=prefetch", // 프로그래밍/코드 컨셉
-            exp: "주미 AI를 자바스크립트 같은 언어로 제어 할 수는 없지만, 스크래치, 엔트리, 파이썬 같은 프로그래밍을 지원하여 주미 AI를 제어하고 및 단계별 교육이 가능합니다. "
+            q: "주미 AI를 개발하고 유통하는 로봇 및 인공지능 미래 교육 전문 기업의 이름은?", 
+            a: ["로보링크", "구글", "테슬라", "마이크로소프트"], 
+            c: 0, 
+            img: "https://lh3.googleusercontent.com/rd-d/ALs6j_EUsYj_L86uKbPJXm-tIkhVnq7_T3lW7afPpZo8AqcsP5fa-NNIuipfcLTwz81Dgdh6WgSG-YZI87aIhUWFdUXdcsw0Uj05zEc0zNSjRGJx5Rz-Zn7bPKSK7QNLrixqaSMISakrhbsOHLqxoZ9td5EEptJXzuy9Mc9Y7-58ngTDUhMneEaPiJ8R14Y9AJcCqqTH8xBbuGD6D19eOCB96TAmz_B2gIIdCc3n_OdrdUIl1enUrvGLAbOQpPDqPX8i9owdZdb80ePZ5fVMrlNRtwmm3MfhoQ_GRhhCY_VwIDjokeQ-EdMYhMPLNFeuHUEBF2x5p1wLILYHbMQMdjP5GZdCj_oZzooczDvjFrprBMfFfCVdi8d1m_E0yHtLSEfYDFBw6xSXXtoIMIQq4cQHCjH0RTP17lDAAlEo4Lbb_SXsnX-L8SlncrIT55peRlfwz2Pc1_srP7wX85Q0Wd-Ta30qEUH2_2EPUZK9ut7X5Vy85Bws9YXLLnJs3D3RZ4lCs38agKnTJ6M8PuwxHcWldMAPWgkJO80OJPtv_xujufxnDSCaXOrM67I3iXjHkqgEfCC6vEoENDKAyjpzdzsjKYODV9Ap8AYmP_xmzc-YZ2jVy2FX1VpiGuziBX0VOsgtP-Gi57OZ3BvQlDhSzxVflEpD1AhGbZqTLksIgS5JBjFGWLJZnkFktqiYub-4gA6d_Oxv0Xrd-RtykLpUJSOmFJqmmtOY2XpgSoeB5HZ241Q-sA0oSlpFRIPjFn_rJiSrSq5TZm7AmJwGnLwg6OQGhDDaCzHWdnoLmaHqUQjQLxBrAO2l21qdfmqfJd_GkNf7W9JsZ5s3NLealFI88zIsD5zhNiNCqCY2Cd79nAnza4lrY18uv_EupEI2AnN6XyQvcKitwegpVo4K8qvEWQrckekjIAP_04UZsgusEkFQvkiay06c9lixZ4qH9p3ORAQWQgIG8SnoijTgeFGkg51vHz7mAm6qftWcGhC6-Lj8_XOG5MBtUMH2WfK0eUWzflJ4VuKxD2cakCma2N_IngOVq4POzO8SF45aBK-o6ksnjq0QdbL6RJyqsRQzRbnYyVHffxlZErNW7BbgARnW5rwFnXc1ce_d_SurKR5o3QN07dq2NqO-JxMGNK1eFf2UENHoa8g=w1919-h918?auditContext=prefetch", 
+            exp: "주미 AI는 글로벌 미래 로봇 교육을 선도하는 대한민국 로봇 전문 기업 '로보링크'에서 개발한 인공지능 자율주행 자동차 학습 로봇 교구입니다!" 
         },
-
-
-
-        { 
-            q: "주미 AI 앞쪽에 장착된 카메라로 인식 할 수 없는 것은?", 
-            a: ["사람 또는 물체", "빨간색 녹색 파란색 등의 색상", "물체의 표면 재질", "고양이"], 
-            c: 2,
-            img: "https://lh3.googleusercontent.com/rd-d/ALs6j_GqG3kzUF00XRY-sFzLU3eSyiTydOnqQSjIfUhZV_AthO-3ec2ASLJ3iqzFT8ztneAqpJRvxsKivntoE9ym9h2QhvzNmo-Lxn0OEaKq3emowSiBrksqIBjXbf8CGPY0lp2od01KdXJ7L4TsaS9OuSwACpi_FuRrqmyy3ZYpxjlukVj9LkxN3N-CHOBSCaeJ-JAWHMsW0ic-RfbUnY4-dYG2NpBpcvheKXJQnEu6lAtHp1rA3AFdNNK9vp0qkGuRexa5PBJYln0RYxsB0gb1PE4THEfbyMKRp8TCr1yt3BgaNtwQQvx65bYDFr4YtfCJNlb_ZSh3P7ct-fKV3np7qgfLHd2G_sJpY-P10sFFA7uBx616RFyOFoTb4xmLat9ZFqM91tJiykFjpeb5hJn2aYM0t5rF4hH02JCL0odfVGcZ61C4FRJmJU4X9M0zJ5gHYvOtaGNx3LwI4vOO8YLI91YIksG6JKgSohAei8ThlGBynr4KUOgmafJeA4G1TDklC8lcTSkQ6mz6pCPmtGh2bjUk3SIPLY2P6mLPW7kHo4h6We5-kTnnZNSMLIatHAHlMIU7sXhlt4kchzbigEwGcaMJ9b0nNPl7qlF3OE5-9HrypAbcm2cT8CrZ8EvT8hokvly6KvR2eZtZVnWrzZEKd6vO5v_o4Ar2v2HiIorrQZ8-UK2LnS454zV2QnyFR1lWkVlb7LD_ObV_Jd0vQjMehWpvn3u7NQrE44coxiWX8YXsF_0it4r2o4T5sFnSpAm8APV7pWNScHHa0ZW_Da3gpz7Wzax4ymZjy6ryeVgy_zFMP2Q3yVE3idSe419JxbGgIKz0Bw3JaCW9B5rLOzKoeHDnBK4usqibMzfyZ9Hj9k7J1Gb5DjVyVgYklIx9npLqZ61hXZnaDD8P1KR_FSvFXWHegGzB68_iygb3GEb6WKUuyx9sxkgtDxCEoDy5DtWl5-kmlOdas00v63dL5BeuwNixmZmPC8i-qI2NHxittWR-FLTwz03-7O_RMG6FoR-kcAuhOxUcwrJywkHs4MwGzNMroxHTU3-uwXitgcCWFsMJ461bmu_uGnYaDXsYHCYodAXjqf8dhTBQ9aAc3kuvWtMlASWQnyPWaNOQYqVI6bJbDJrbTY-nfh55OVBRXkyTlQ=w2000-h5296?auditContext=forDisplay", // 카메라 비전·렌즈 컨셉
-            exp: "주미 AI의 카메라가 물체의 미세한 표면 재질까지는 알 수 없지만, 인공지능 비전 기술을 활용하여 사람, 고양이, 사물, 색상, 마커 등을 인식할 수 있습니다."
-        },
-
-
-
         { 
             q: "주미 AI는 어떤 형태의 로봇인가요?", 
             a: ["자율주행 자동차", "드론", "로봇팔", "휴머노이드"], 
             c: 0,
-            img: "https://lh3.googleusercontent.com/rd-d/ALs6j_EjlQi9MMF6E12_gy6dFfG_Gj17gczxfqQhuq_yitfIpeDQm4OM9vDDY2yW03TUZ82psy9zxUiHRzUvtrfEjluNA5fWQsqhmguANDTQ0Eh5InfofabdkkTzowop8wBxfswL2LNi96NI8rQAZul33Qq5g01WVxYb8wYGb0beERpAB6-Jzl5Ma1DpEY2wVesoMOVrgL-eHBkO5IyIIsEuMbsUTbs8PoQRpC9857alLL-sp488Bh-XIoGuEL-5DhK_1frZWVSKP8QSkh9PXGGIn8SLB_bTcOCTNFHjUiSiVUQA1vG2bLNZOjfx0by_cnN6k38njwTAqB2oy0Zu6sMF6Khee-ALZdue5Mc3SOZVavxgS0l1p20VhAw0Aa8j5cb4JnL5WXnP1SFgyAGk8FYawcl0OM9lHcXbdwyle_Yf4oxmZqpoajPRyK4R_0JKZXrsu_bPTKC5koQj4g3PiwkXUy32f1F2jNY7t65AtHp3KLD4yRuLWcFy3P2_5k3hHlWTO5Upt0Xlx7XpCuu2-WrPm8O3rAR-LbHPKmxWvGPGJ-FGLibPvzaXA0XJJ_U715_K1uMYXHGl1SrDwIHHK7XoTFqCnN3PZkPcTVSnrGaqqAjPYpP2dXFPwsuY_lED3YLk38zVz1xEV8L1k5E_8PZ_sOjvHYMr4xLJEQyO2hKCcbgkYu_JI51btsIGMOWmPaVYC_RPC1VdBA4l-OtlS1DiSubUB0snflnHUWyPovJ6UGLu0yPNBJeqG-_8Xgoug2TfsDtjorRAzvEL1BDnc26vOUyfdqRrazVMJiuqixA5ejU_9aLFs2-Cp3plXwSAwuU2jnfIC_T38K52_w7_R5OKNWppKwHC0-Ga8cdMPL0yHqtiPwJxkO2gJCqWESOGVjZxDc0GHZzK-m1znfx80MARO59RxwsqWmofg4PX9ZgMS0Ny4TkDsKMpQKJjeV61AvqRIQ6hx04dWcuWHOHKN9Q9KiIQB4WcRiP-ucki-Nk2XE5igBXDnLW5-QgyWBjVLYkHXRb8VxkCl2xP9HNheUySZDr1-FCrPAxws32q9L4HpR-gSjI_2Se4HCYgwUI2zd81PlqJXT8hl0eOdwFJY2cnjldOAL_8mvhZh_OW004zLorU4EjhryYqEcZfulC7eORQhg=w1507-h862?auditContext=prefetch", // 자동차/자율주행 주행 트랙 컨셉
-            exp: "주미 AI는 단순한 장난감이 아닌 미래교육을 위한 '자율주행 자동차'입니다! 인공지능뿐만 아니라 로봇의 구조와 자율주행에 대한 내용을 직접 제어하면서 학습할 수 있는 로봇 교구입니다."
+            img: "https://lh3.googleusercontent.com/rd-d/ALs6j_EjlQi9MMF6E12_gy6dFfG_Gj17gczxfqQhuq_yitfIpeDQm4OM9vDDY2yW03TUZ82psy9zxUiHRzUvtrfEjluNA5fWQsqhmguANDTQ0Eh5InfofabdkkTzowop8wBxfswL2LNi96NI8rQAZul33Qq5g01WVxYb8wYGb0beERpAB6-Jzl5Ma1DpEY2wVesoMOVrgL-eHBkO5IyIIsEuMbsUTbs8PoQRpC9857alLL-sp488Bh-XIoGuEL-5DhK_1frZWVSKP8QSkh9PXGGIn8SLB_bTcOCTNFHjUiSiVUQA1vG2bLNZOjfx0by_cnN6k38njwTAqB2oy0Zu6sMF6Khee-ALZdue5Mc3SOZVavxgS0l1p20VhAw0Aa8j5cb4JnL5WXnP1SFgyAGk8FYawcl0OM9lHcXbdwyle_Yf4oxmZqpoajPRyK4R_0JKZXrsu_bPTKC5koQj4g3PiwkXUy32f1F2jNY7t65AtHp3KLD4yRuLWcFy3P2_5k3hHlWTO5Upt0Xlx7XpCuu2-WrPm8O3rAR-LbHPKmxWvGPGJ-FGLibPvzaXA0XJJ_U715_K1uMYXHGl1SrDwIHHK7XoTFqCnN3PZkPcTVSnrGaqqAjPYpP2dXFPwsuY_lED3YLk38zVz1xEV8L1k5E_8PZ_sOjvHYMr4xLJEQyO2hKCcbgkYu_JI51btsIGMOWmPaVYC_RPC1VdBA4l-OtlS1DiSubUB0snflnHUWyPovJ6UGLu0yPNBJeqG-_8Xgoug2TfsDtjorRAzvEL1BDnc26vOUyfdqRrazVMJiuqixA5ejU_9aLFs2-Cp3plXwSAwuU2jnfIC_T38K52_w7_R5OKNWppKwHC0-Ga8cdMPL0yHqtiPwJxkO2gJCqWESOGVjZxDc0GHZzK-m1znfx80MARO59RxwsqWmofg4PX9ZgMS0Ny4TkDsKMpQKJjeV61AvqRIQ6hx04dWcuWHOHKN9Q9KiIQB4WcRiP-ucki-Nk2XE5igBXDnLW5-QgyWBjVLYkHXRb8VxkCl2xP9HNheUySZDr1-FCrPAxws32q9L4HpR-gSjI_2Se4HCYgwUI2zd81PlqJXT8hl0eOdwFJY2cnjldOAL_8mvhZh_OW004zLorU4EjhryYqEcZfulC7eORQhg=w1507-h862?auditContext=prefetch",
+            exp: "주미 AI는 미래교육을 위한 '자율주행 자동차'입니다! 인공지능뿐만 아니라 로봇의 구조와 자율주행에 대한 내용을 직접 제어하면서 학습할 수 있는 로봇 교구입니다."
         },
-
-
-
-{
-    q: "주미 AI는 사람과 고양이를 구분할 수 있습니다. 이처럼 카메라를 통해 인식 된 물체를 구분 할 수 있는 가장 큰 이유는 무엇일까요?",
-    a: ["배터리가 충분하기 때문","센서를 통하여 물체를 감지할수 있기 때문에","AI가 카메라 영상을 분석하기 때문","LED가 색을 알려주기 때문"],
-    c: 2,
-    img: "https://lh3.googleusercontent.com/rd-d/ALs6j_G7lFxcHjOv5T78ufwrBWshE28TWuGsaSP3laaTSW5oyqe4rTE-_IM_0ZDo1WeJD5jZhW5eY4EJxZYOW3ItC8U1WjwKerm3INxT2IyY1A-WlOcjSVIZDPBSGHYfkrE-ZruWhzF5r6lNdDHFKhnT3D2gXfVeWnsY4HaW6ECaiM-IqzLwKtSP7rpUllkfBEqTgJTGik8AsQwAZyY06vSN607ziYjwToiiQisC9h_wwzN_zuz_6kE5463_2zu-ie548ehTREYNhhgL9Q0IOKif0Kj-OGWZfMFRHMKxsmiFMbX_yaSNv9hGxgubKU0JYx3TnviDelCLdj8tlOmTuAy6xJDwAUlqa5fbf8seLf5CWcumX05kO-7mUWMfe0N9hT6k6j5D1oBhIzUx-qC2AVU65nG9h7VIX9vv4CANaoRK115aaFJDI4Zy_4H_53Y546Dlh1S7VmZOXtJ9_irpSSR5Bf5e9o53xBf14he6Zv-DJnWLW2WJIUCjdsz8v1allmeYHrLpzO3gWEEQZZw00N0_4ituy97jkkFOK6IwZFPe441Qz_2BR6sFf_MGYgOdnb8pA8sD9ueH-lS42UduWSK9uNZG00djTpM6F37y0EyzYAONrqwLKzhaRyhQNzps7CogQrvjELKsLzQp-XouQPycKccN9kK9PrVBV9ImW8vkO4P2ICP_irbxThoqp-VQzJoz4wknkTxsRgVwVbs0TVaMA-QuhBa9CxQ-xoa5UL-h3kh4-QckXwLfflADbDj_EpVuE9I_eOX1oQUQpnoUmhF0J31RCP5nNHJYcGwxoh15u5eyTMbo4buQLe35l8K5dUKexo08k_7mRZg2JNlDfyHVZdznpS0bVN7O4SZ6856j0Yf6yavfBqj84FB14G5vQ2dMLuXQjfFgweONxXaEkOa55U9NkrwIOAtUt-VH_CyWwKZdzQbEaStRUwVqJweZI0E2JxftskJe9sAyLUj8hQwIYOsdu1XQZwmha4d6T6Ai5I8oRnhIpUXZ0xW0sBmjddz9HpSCTLH4VKOy31SBGMM67AhPVUyD2XJkxSlYqTPLymxuf__6K4jSVh3gbhtVBq0Uvc5hjFBWVIjiZfj_8QdG58r1-Q5MJgGdcuv4WbPgGnnuQTT3h9d2nWhPeT0Fp36i58c=w1507-h862?auditContext=prefetch",
-    exp: "주미 AI는 카메라를 통하여 촬영한 뒤 AI 모델이 이미지를 분석하여 사람과 동물, 다양한 사물을 구분하는 것이 가능합니다."
-},
-        { 
-            q: "자율주행 자동차에서 카메라의 역할로 가장 적절한 것은?", 
-            a: ["차선, 신호, 장애물 등 주변 환경을 인식한다.","주행 속도를 계산하여 모터를 직접 제어한다.","자동차의 위치를 GPS처럼 측정한다.","배터리의 전력을 자동으로 관리한다."],
+        {
+            q: "주미 AI가 2026 대한민국 교육박람회에서 수상한 상은 무엇일까요?",
+            a: [
+                "올해의 신제품상 (New Product of the Year)",
+                "대한민국 디자인 대상 (Korea Design Award)",
+                "대한민국 소프트웨어 대상 (Korea Software Award)",
+                "교육부 장관 표창 (Minister of Education Commendation)"
+            ],
             c: 0,
-            img: "https://lh3.googleusercontent.com/rd-d/ALs6j_E_mhvutis_VkphOKJlnpcXJm52eN8kKLPYMrLI4U3TalaaAmCSCAaKoryTu-zGVqj8mfv-LTEfeHqr4H_RJr0raKmMKYsoaKlP8qpDDHuPPUpve9rsMNJBmNVaIQOR4niqUXOlAgcnVufnYfQXlcEpZeuiHhTSigB8Dugty1rVvVgiGR7IsyN1ZkuE9btF4rMcm0YKdAGAZYX7lYpff5ScApx7RT14YfCpk2qnympLWrjQW61dPvquZ2-lMkpzy_seGDsNqJT4q5G7RyCAqgYuwsavmlOd6FbhDK5a8MHunu3U4yx2kkjn49AqqxIYMw3VUx5FSG0mufC9sooGO1RpFDoBjoVc68k1UvXkebHUCNurRI_tOg69DE03ZdZfMrEGUnrLVqJ-XowBfDR9UVmYGBIcZRoH1WzvyzfNOulxTOHd9itPTvBYH4QxGPvwBZ1eJuRj7CvcPNp4OjWJn_BYkfKBH_jY2F4MI7rBmbmJAFb3l4jcZK7mKLVjcAFq9SPoq_Kzc0xCPntZMTI6uo9dZTBUoaw9u-A7k9urFn_3vXxmGzPycYv4vMS6lmRt-KeAg8cq9pdn66h2npGRmOD6eptlNLHpaqeuQnINTjv0wUr_MqXVvkqCM1jafX3A-n8fgg7NtTKD-mTmCgmcEaW0dbFd-6g332rMtV-pJ8UfGgQU6ZoVo6okDY7DEMfWD4n-inxoPKsjG0Rk-btQAlWMa1sZ1ErKtpaOgKd2Bjm3qZTmC2b35UiN1NkA2HY6yMVdSuiYWrKTMLXvfjvfFDpfY3lGyEyy96UnHR-Hr2SXXIJHmhNi00CSqCnHeziPKJR4DrxsXljUU8XbDkJalrhY7ZOuZvJpLjUwmXHSiOxG9hmXeLEu-EQyhQVUFw9zxg8qTYNomKJ_IC1HoLm3DCaNNb6xbrLRfN7Au6adM8bZ0hTkhOnEMbz9yck55TIoGHO0DG4smqznuJy4WmHgEhAE0kdL-9d25GzWfI0MUK0eZqEmzTC9pKSsmWDM6wmHHyaNk9rp8ujdkqPxTdpzuXzGp9EVg5EecbWARfDyitV01tVeRvgNTki1R74V3XQq2EgeUu6oMHNs6zD12eyjmzi6kngXjN8QSVkU_UMY_FIya-pUx7cGBko1D8Ai5n9LQWw=w1507-h862?auditContext=prefetch", // 미래 자율주행 도로 스캔 컨셉
-            exp: "주미 AI 카메라는 이미지를 분석하여 인식된 이미지 속 도로의 차선, 표지판, 보행자, 장애물 등으로 분석하고 판단 하여 주미 AI에게 핵심 정보를 제공합니다. 주미 AI를 조종해보면 실제 미래 자율주행 자동차와 동일한 인지 알고리즘 원리를 학습할 수 있습니다."
+            img: "https://lh3.googleusercontent.com/rd-d/ALs6j_GX0BI9n780KXD6BCQIOI-qqnEFCYsp-IPR0I9vG3ST6WxuECykAg6jfKCrpbADFI5jq507DVlXeG89lhaPTEctS1EqZfhotzW019ClZ55z8G54yyMnAHAKkhMcEEeONO6PcaS-he-4q1tuDHNNIOz4CZiJMg89qHC_DF_WXFWqx1ciMTrumIz7l0LKFuLToh5ziiwGavOIkX92-yQ-Mw4-QTdWdtWwqdUuhL_VyQDE7KAuniUFKu_70EVzRylVInE9UuY7iobW-M5Dcz8vhtf8R9MsBm2PMRWi3bw3VlgT7ntdA6aToCr6g897W1qYZc2ZI7LWoHOk7uMw0TLEYT3naBLrj0mHhlKAkJYEsi4jeE6L5v15XJqkjTnUaQuvhfOfUIJ_n-6ORj3edf-InD5M8U3hkWh4RsRAOJ0_yJ205mwtr2fvazBoSxwLR2ZrPgbp1QJreHC_D7DqJSyZktgv2nRUGr3i9raxDFzvEELmd4nTtmv_QtWNeJqn8zUz_TX9aOTdwteMz6fdjLQS-6lQkqi_og93XHda-Xy60HGLkE00t-TIpceVfczXV6BVmgs7vBGsr-UdapGf7SJPwuFVW6criy9srYgDy3fEPAjmAxuaFupzU1EcEJoJIaFe9lRrPfwLPyKD227KbARYTGJvm4kWQAFCIxj4CrJJ9M-w2SXcT64Ku_5SB5VQ6B7eDEyJjKwGzzPvyfAHuIKdT69NC13KkhhYUVI6j01s_RZpLbCxcp5dpdrItk52hQaMQmulvVhIMMQSuXqwhZmBIiXHxzAuKtWcXzCllsIgxIpLrKlZCNyVbI-PrwrlFKoYJDoTcdQ45rdkUiJWsGX_CkXJS_lX9eOqlWsJ3Xwx6oaMedg154OZ5YnHOK-YVWzcFkW2c8KL8YjyBfTPeuIYD7BSzcMMxdiExjeEGzPGiAIlmcI5WJ2zarhcz6-o5QP51qed9my-T4Zbzc-dLJsWK4Ki5rxuAmX_vSWivEhbOrH66q9KCIPveJp73z-7KrULR_KkzdnaD6GWjnzMowe6Dba3aPg0PLnXvKIjkNq7LTiWB3rFxdrv_QD4qq0PXPXhgh7k5Pb6MwjfvfQDvhDUIMcXmaX8LCAdVzX4fX4xX9PeQC616t_e7jgs0ai4023GSFU=w1507-h862?auditContext=prefetch",
+            exp: "주미 AI는 2026 대한민국 교육박람회에서 혁신적인 피지컬 AI 교육 솔루션으로 인정받아 '올해의 신제품상(New Product of the Year)'을 수상했습니다."
         },
-     
-        { 
-	q: "주미 AI를 개발하고 유통하는 로봇 및 인공지능 미래 교육 전문 기업의 이름은?", 
-	a: ["로보링크", "구글", "테슬라", "마이크로소프트"], 
-	c: 0, 
-	img: "https://lh3.googleusercontent.com/rd-d/ALs6j_EUsYj_L86uKbPJXm-tIkhVnq7_T3lW7afPpZo8AqcsP5fa-NNIuipfcLTwz81Dgdh6WgSG-YZI87aIhUWFdUXdcsw0Uj05zEc0zNSjRGJx5Rz-Zn7bPKSK7QNLrixqaSMISakrhbsOHLqxoZ9td5EEptJXzuy9Mc9Y7-58ngTDUhMneEaPiJ8R14Y9AJcCqqTH8xBbuGD6D19eOCB96TAmz_B2gIIdCc3n_OdrdUIl1enUrvGLAbOQpPDqPX8i9owdZdb80ePZ5fVMrlNRtwmm3MfhoQ_GRhhCY_VwIDjokeQ-EdMYhMPLNFeuHUEBF2x5p1wLILYHbMQMdjP5GZdCj_oZzooczDvjFrprBMfFfCVdi8d1m_E0yHtLSEfYDFBw6xSXXtoIMIQq4cQHCjH0RTP17lDAAlEo4Lbb_SXsnX-L8SlncrIT55peRlfwz2Pc1_srP7wX85Q0Wd-Ta30qEUH2_2EPUZK9ut7X5Vy85Bws9YXLLnJs3D3RZ4lCs38agKnTJ6M8PuwxHcWldMAPWgkJO80OJPtv_xujufxnDSCaXOrM67I3iXjHkqgEfCC6vEoENDKAyjpzdzsjKYODV9Ap8AYmP_xmzc-YZ2jVy2FX1VpiGuziBX0VOsgtP-Gi57OZ3BvQlDhSzxVflEpD1AhGbZqTLksIgS5JBjFGWLJZnkFktqiYub-4gA6d_Oxv0Xrd-RtykLpUJSOmFJqmmtOY2XpgSoeB5HZ241Q-sA0oSlpFRIPjFn_rJiSrSq5TZm7AmJwGnLwg6OQGhDDaCzHWdnoLmaHqUQjQLxBrAO2l21qdfmqfJd_GkNf7W9JsZ5s3NLealFI88zIsD5zhNiNCqCY2Cd79nAnza4lrY18uv_EupEI2AnN6XyQvcKitwegpVo4K8qvEWQrckekjIAP_04UZsgusEkFQvkiay06c9lixZ4qH9p3ORAQWQgIG8SnoijTgeFGkg51vHz7mAm6qftWcGhC6-Lj8_XOG5MBtUMH2WfK0eUWzflJ4VuKxD2cakCma2N_IngOVq4POzO8SF45aBK-o6ksnjq0QdbL6RJyqsRQzRbnYyVHffxlZErNW7BbgARnW5rwFnXc1ce_d_SurKR5o3QN07dq2NqO-JxMGNK1eFf2UENHoa8g=w1919-h918?auditContext=prefetch", 
-	exp: "주미 AI는 글로벌 미래 로봇 교육을 선도하는 대한민국 로봇 전문 기업 '로보링크'에서 개발한 자랑스러운 인공지능 자율주행 자동차 학습 로봇 교구입니다!" 
-        },
-        { 
-            q: "주미 AI가 바닥의 정해진 검은색 길을 센서로 감지해 따라가는 자율주행 기본 기술을 무엇이라 할까요?", 
-            a: ["객체 추적(Object Tracking)", "라인 트레이싱(Line Tracing)", "거리 측정(Distance Measurement)", "모션 제어(Motion Control)"], 
-            c: 1,
-            img: "https://lh3.googleusercontent.com/rd-d/ALs6j_FhIS_XqXTNqhz4nZ-lnhUWr-fk9jm5Hx0R1ad3Z5ucpI7yherAbh2HJg4WZGnn3gtMVQGiBuXGNVLfdMeuSwjZV3Guq0lfF-mO8v3hSqwhQR_CK1yzX-G6ztrKywXifL2hSS-NT9EP9e6EpJqocI3sdQ6Ju7jhTgojUxF-Dtfb3Jmqb71qOTpGfF4RhuNsTwC6UVs-P_BFE02saq59harlDMyPljj2p1ZQfHQknV-zIYoy_w3KOlRomAp5aXxyf6itbSonefu6t7cHDxtXkDk96AkqqtAUgNB3_R2GNF51B_-Ty1D-tzapKHrzG6_yVZm9Stb61t1X_Sc8uLzWQN0MuCeaofy7kdEhiNbN9fLIkReFHmeXFAW6ryUJyxY7G4d_fQdveF4vzd6qWPjIPPMVekG1WKhK_Yheiyctg0zJica3BDyisFyLgxWwWDSSnOiOzQfZ6bnXeImFAXfVqkHnAs0tER2WTnOSTNuM2wSWxlzCdnnnxNr9dDpWYPmR6MsnaOnKcpvwnr6RqbriccmLBHlV9xurtncXrk1WHylyhQ4lMhKVHB1oV-D8r8qhZDCGrkfClzqX2vpQcK1RWHuO1e8_xaNEL1Hn5QVu-y5of80NJ_4ttgDbs28U1SCYH2VPMPQl-0Ai4aPJSjHeenp9DwkQJkAiJrlugZJdhWtjC6psYoqEmdvsJBEJXzMChKKYpa7xzsSU1m5wAXw5JNXIrBB6niwteObVx_tHAoODXH9sOjevrdKIqqPXBODepOQM00o8mIo9wLQqF0J0OT7_zWke1RA1c28Wob2rVb4NyYzoMViIkfD-Oqg2nttJv5_GVvYALQxqYouTy5wmlj8rALQCrqdgdwUU9Qy3gNhzhftomXwHPEH3uyQ2yyNByX6zwM7im_5Pnt8MpeLsVBY5YjmO162y5a4eoYJty3Z5vBZ9PJ7TRe9ccNJcVWpDx9oSWdGd2d-EUZ3_LXSsrNkuggBuxo1JbZm5WWIyFWiyvh3Fp8hwctpnfU4phyKr2jun3fSaPDDXzfcfOjh7p9C2SDSOa1GALn4j9LoBOlH91Tz7NJaumFKiK3uKymd1YceRjDIlpwgGWCOruoRfTE5LkTa6yZTVzdJStKHXeF8HzJq6EocUi8oe9RK55HlIxkE=w1507-h862?auditContext=prefetch",
-            exp: "주미 AI 하단의 센서를 사용하면 '라인 트레이싱'을 통해 검은 선을 따라서 이동하는 것이 가능하고, 이러한 차선 추종 기술의 원리를 활용해보고 이해하면 자율주행 자동차의 기초 기술을 체험 해볼 수 있습니다."
-        },
-        { 
-            q: "주미 AI 얼굴 전면에 부착되어 표정 변화를 보여주고 현재 작동 상태를 직관적으로 전달해 주는 장치의 이름은 무엇일까요?", 
-            a: ["디스플레이", "스피커 모듈", "버튼 및 스위치", "카메라"], 
+        {
+            q: "주미 AI를 활용하면 참가를 준비할 수 있는 대회로 가장 알맞은 것은 무엇일까요?",
+            a: [
+                "IRC 국제로봇콘테스트",
+                "전국 타자왕 선발대회",
+                "전국 드론 레이싱 월드컵",
+                "국제 게임 개발 해커톤"
+            ],
             c: 0,
-            img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=500&q=80",
-            exp: "주미 AI 전면의 눈이 표시되는 부분은 감정이 풍부한 표정을 디자인할 수 있어, 표정과 메세지 등을 직접 만들어보면서, 사람과 컴퓨터가 상호작용 하는 HCI (Human-Computer Interaction) 에 대해 학습해 볼 수 있습니다."
+            img: "https://lh3.googleusercontent.com/rd-d/ALs6j_EJcFcok3vsELhIooo_SFsZUdpL3Aw8KST-XAMlLrpjDQJOoJiFi55VU_E9_XJGv_t1F12fB_nQfUpndKC5-GgCgCr8SsXMgPzKabG9eMgHAWmgeIZjL2NRO7H5Zw1M3KDJu5R4GiiscJy-jiZQIoMyiF9rAy-GUm-wZiITrnaKI-5iHNjFKEo98ZBtfYGn_cRcnAqU9GHJ2g3uj4oP09y260GTV5N1bJ_bpNCatRYSIB64Xj8aX64UhK98qd-AJZhp7JzSpBgiBjyLPDJ6zVr1rqt08mKLxwWWC94TgFwgk9xP-pyY-ud_vFEgKfTkBU2ZgfL8vPr3feZBeuiiRUijI3-Vef6SzweUQneVJD7JWERLYsjLlSg7nA47t6QuuW9LdvqzQZktEio63CUzrKZg4UUkoQAB5pvG13Pw51O05HdYwS6zXhiHp4WUOsJeXzY2_W1UK24lyP0YSWwvJ7oAYDWmNRvg4mFSaUeNLhyARW0XJGUHkyZzDlIuUIfOlgtrzkS7LKJ51zBQcFUsaX1H4aWBjnuT6OPNLpBFwrPcl0XQreS53rnG_zx9WTiu65VN34Xvqi_wmQ823AnxRVdZEmNjU2dxQqLPh2tbvBf10XtcegrDbIo1xS_njUwhwSM-GHV9gA_0H0YaKIfRDTnb_WUaQ4hKmyW_z42v0zsTmDCvNGBglgjVSdSb0vpxrib7ZASQZrllupZvZ7Cp8jw_eEXvUCTJ0b7W_dodnNYg_gJHsyg_cMGhUY6vCOSSM9CXtP8cbJh2WuuHWqT3QJswmeuYY9VCwJhjyqXb5EToSFfzV2P1g08OAG1Y7IV55S84v20lKKc9LFKOTfxsnN6pylf1lUjYVtRkZP_MaCzFF-evDwv5Gc7fBkFkwKPPkDNNVFa6TF76k5ZDxNJnM8v4pxMALHOyb4oZgFtFmgt3kKa936y1fY0Nhn4n7RGqCaqP2kUliWScGCmmjVIavgVTH_vsQGznQiy_d69UCd2zAxQpuC0WLVfkD3ALtWmFXrNvZWfOZYcglM0HZi8_1HdZA8BtP-lyn8iV1BpLVksZPemmuG34iu7hd_kAGVdlHRmUYsEvDnKX3P1Yabh4h_mAjXTzWr4FWwKIt29BP3kBJandBV2-seNwKjy6i0we4w=w2000-h5296?auditContext=forDisplay",
+            exp: "주미 AI는 IRC(국제로봇콘테스트)의 AI 자율주행 관련 종목으로 참여가 가능한 교육 키트로써, IRC 대회에서는 장관상 같이 다양한 정부 포상이 수여됩니다."
         },
         { 
-            q: "주미 AI가 다양한 표지판 사진 데이터를 수집하고, 이를 활용해 인공지능 학습 모델을 만드는 과정을 무엇이라 할까요?", 
-            a: ["빅데이터 분석", "머신러닝", "데이터 라벨링","컴퓨터비전"], 
-            c: 1,
-            img: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=500&q=80",
-            exp: "주미 AI의 카메라를 통해 직접 촬영하여 다양한 데이터를 수집하고, 머신러닝 기법으로 학습시키면 데이터를 똑똑하게 분류하는 인공지능 이미지 판단 분류기를 유저가 직접 완성할 수 있습니다."
-        },
-      {
-    q: "주미 AI 자율주행 자동차가 주행 중 사람을 발견하고 멈출 수 있는 가장 중요한 이유는 무엇일까요?",
-    a: ["GPS가 자동차의 현재 위치만 알려주기 때문", "센서가 수집한 주변 환경 데이터를 AI가 분석하고 위험 상황을 판단하기 때문",
-    "차량 내부 시스템이 미리 저장된 도로 정보만 따라가기 때문",    "자동차의 속도와 방향을 운전자가 원격으로 조종하기 때문"],
-    c: 1,
-    img: "https://images.unsplash.com/photo-1502877338535-766e1452684a?w=500&q=80",
-    exp: "주미 AI 자율주행 자동차는 카메라와 다양한 센서로 주변 환경을 인식하고, AI가 데이터를 분석해 보행자와 장애물을 판단한 뒤 안전하게 멈추도록 제어할 수 있습니다."
-},
-        { 
-            q: "주미 AI의 전방에 위치한 센서로 앞에 나타난 장애물과의 대략적인 거리를 파악하여 멈추도록 도와주는 센서는?", 
-            a: ["조도 센서", "IR(적외선) 센서", "IMU 센서", "압력 센서"], 
-            c: 1,
-            img: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=500&q=80",
-            exp: "주미 AI의 전방 IR 센서는 보이지 않는 빛을 발사하고 반사되어 오는 속도를 파악해 앞의 물체 또는 벽과의 거리를 계산하며, 이 센서를 활용하여 충돌을 미리 방지하는 조기 경보 센서를 만들어 보고 학습 해볼 수 있습니다."
+            q: "다음 중 주미 AI가 사용할 수 없는 프로그래밍 환경은?", 
+            a: ["스크래치(Scratch)", "엔트리(Entry)", "파이썬(Python)", "자바스크립트 (JavaScript)"], 
+            c: 3,
+            img: "https://lh3.googleusercontent.com/rd-d/ALs6j_HvY7a5PDWQN0Jtltr3YJKIiEXkZwzbmh5zBOh2JAfqK6cOsTVXiIkixpB4-F2JkwI6-DmozqD_Rfm6KMEcUp9efJkprLWK2FL6I6W0SkeQmaeVp6YD_syas4YuJS7FNWcLXYmw9LFYSCPiWx3uOEKHCmMlbYbSmiGWyNht6Uh0a4Pf5K59l6sUUPMslSsrlyVoiIo0GKyPn1pvMDFTcvLsudOx3PVVdpI3liq903vqc-0rLrummWRZ5d16CGyiqVIFcSY4F2S7ASd7qU8HKBaBeK09tNvp2yr0OwAh5DH2BisUmA37-z_Eac4aTKjjGUIb-ja8-ez5sauRO9L3P_8ua9Xd8jVjWrlxv-O96U1gu_TOy1tk6FV9LiDXPW6uqTI-P96RO9CNGYFU2A8M0_OKZlYRicGilTvexiFt9V9WjghNANu6iZ1839cB8vBKiojBpOwHGsz9Y3Y2mcA3V61GxZXznvmdL-F4Chf6Hfw4GKesIfMY8w2BgWKL-Z_QWNI1U_T7Pb9LpWp--aLz32mxK8RoJE_-omJUtZA0NvYdT3NUEBdfLTyHGbwGI6DZqd2TRlBI93iGwI9RgBf132RkR4019JlXTTPtLwuNtdBmjpC5UeQSnsd6xZOpztgQKDFO-yzDbSsIN426HV2vpLQoI3hN8_YnRdvYmYJKaJP8C5xawQVPaseA1bnv3a63if1ZcSngdNmq-QmK8SurbDYt-2aZ8wNWfPPRWO9jAPiivhMRmdpj9GTd2j51sFMx95salZJ5Gc96ohPcBDOFXVFO3NTCu7Omm4J-OUEdiXm0Cxwe0FHdwMsV4_SpPQYt_uVWbac4-tPxVb7NJNwe8hR26ti7oXGtCPXj5kBLMaAadlu_FSTd8WXBXMix3-AFPbtA7tsHyk1pxvDK6qGYz5vS2AVWDCP3eKPOtDC-Qc_tULWDlhbYFoIHtSN_71tcivrDqK-4kMeAKRjIdewws78c2ktG2-h4mo7p-dqC8zI4hRNBnDC9fyhfOJpLQNHmYKIZ3Qlf7Xa5tS_E8rKMxgV0etLsRdV5NQUTjhqLeE8uQ3JfRPzfviz4WBNXedOouS3mYBRH-xjX9EZIII0e7tQNYWEEPX4gnI06XCyVQ0oMKnLlXaHcr9-n8u31VyUoEgs=w1919-h918?auditContext=prefetch",
+            exp: "주미 AI는 스크래치, 엔트리, 파이썬 같은 프로그래밍을 지원하여 주미 AI를 제어하고 및 단계별 교육이 가능합니다. "
         },
         { 
-            q: "ChatGPT 나 재미나이 같은 AI와 달리, 주미 AI처럼 실체를 가지고 지각, 판단, 구동하는 하드웨어 기반 AI를 뜻하는 단어는?", 
+            q: "ChatGPT 나 재미나이 같은 AI와 달리, \"주미 AI\"같은 로봇 AI를 무엇이라고 할까요?",
             a: ["가상 현실 AI", "피지컬 AI", "텍스트 생성 AI", "웹 브라우저 AI"], 
             c: 1,
             img: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=500&q=80",
-            exp: "자율주행 자동차는 주변 환경을 인식하고 스스로 움직이는 피지컬 AI 기술의 대표적인 예시입니다. 주미 AI와 함께 센서, 인공지능, 자동화 기술이 어떻게 연결되어 실제로 제어 해보고 그 움직임을 통하여 피지컬 AI가 어떻게 구현되는지 배워볼 수 있습니다."
+            exp: "피지컬 AI는 스스로 판단하여 움직이는 AI입니다. 주미 AI는 이러한 피지컬 AI를 직접 체험하며 배울 수 있는 교육용 로봇입니다."
         },
-
-{
-  q: "주미 AI는 '바이브 코딩'을 활용하여, 프로젝트를 만들어 볼 수 있습니다. 이 바이브 코딩을 활용한 학습의 장점이 아닌것은 무엇일까요?",
-  a: [
-    "코딩 언어의 문법을 모두 외우지 않아도 사용할 수 있다",
-    "블록코딩을 활용하여 주미 AI 프로젝트를 만들어 볼 수 있다",
-    "컴퓨터에 설치된 파이썬을 활용해서 주미 AI 코드를 만들어 볼 수 있다.",
-    "원하는 기능을 설명하면 AI가 함께 코드를 만들어 주고 이를 수정할 수 있다"      
-],
-  c: 1,
-  img: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=500&q=80",
-  exp: "바이브 코딩은 사용자가 원하는 기능이나 아이디어를 설명하면 AI가 코드를 생성하고 수정하는 과정을 도와주는 방식입니다. 따라서 사용자가 가진 아이디어를 실제 구현하기 위해 코딩에 대해 자세히 모르더라도 주미 AI를 활용한 프로그램을 구현하는 경험을 할 수 있습니다."
-},
-{
-  q: "주미 AI는 프로젝트 수업이 가능합니다. 이러한 자율주행 자동차 프로젝트 수업에서 팀원들이 맵을 만들고 아이디어를 구현하는 가장 중요한 목적은 무엇일까요?",
-  a: [
-    "자율주행 자동차가 정해진 코스를 반복하도록 미리 이동 경로를 저장하기 위해",
-    "실제 상황과 유사한 가상 환경을 설계하고, AI가 주행 과정에서 발생하는 문제를 분석·개선하기 위해",    
-    "자동차의 하드웨어 성능 차이를 비교하고 가장 빠른 모델을 선택하기 위해",
-    "완성된 프로그램을 변경하지 않고 동일한 환경에서 결과를 확인하기 위해"
-  ],
-  c: 1,
-  img: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&q=80",
-  exp: "주미 AI 프로젝트를 통하여 단순히 로봇자동차를 움직이는 것이 아니라, 팀이 목표 상황을 설정하고 맵을 설계한 뒤 AI의 판단과 주행 결과를 분석하며 개선하는 과정을 학습 할 수 있으며, 이를 통해 문제 해결 능력과 AI 활용 능력을 키울 수 있습니다."
-},
-
-{ 
-            q: "다음 중 주미 AI가 현실 주행 상황에서 가장 중요하게 여겨야 할 설계 가치는?", 
-             a: ["주행 시간을 최소화하는 경로 탐색", "도로 상황을 정확하게 인식하고 안전하게 판단하는 능력",
-    "다양한 기능을 최대한 많이 탑재하는 것","연산 속도를 높여 빠르게 반응하는 것"
-  ],
-            c: 1,
-            img: "https://images.unsplash.com/photo-1508962914676-134849a727f0?w=500&q=80",
-            exp: "자율주행에서는 속도나 기능보다 주변 환경을 정확히 인식하고 안전하게 판단하는 것이 가장 중요합니다. 주미 AI도 차선, 신호, 장애물 등을 인식하고 안전을 목표로 주행하는 알고리즘을 중심으로 학습합니다."
+        {
+            q: "주미 AI와 바이브 코딩 설명으로 적절하지 않은 것은?",
+            a: [
+                "AI와 함께 코드를 만들 수 있다.",
+                "코딩에 대해 잘 몰라도 쉽게 해볼 수 있다.",
+                "아이디어가 많을 수록 다양한 프로젝트를 만들어 볼 수 있다.",
+                "코드 수정이 불가능하다."
+            ],
+            c: 3,
+            img: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&q=80",
+            exp: "코딩을 잘 모르더라도, 바이브 코딩을 활용하여 AI에게 원하는 기능을 설명하면 주미 AI를 제어하는 프로그램을 만들 수 있습니다."
         },
-
-{
-  q: "주미 AI의 전원 사용 방식에 대한 설명으로 가장 알맞은 것은 무엇일까요?",
-  a: [
-    "전용 충전기에서만 충전할 수 있고 충전 중에는 사용할 수 없다",
-    "건전지를 교체해야만 사용할 수 있다",
-    "USB-C(Type-C)로 충전할 수 있으며, 충전 중에도 사용할 수 있다",  
-    "무선 충전만 지원하며 케이블 충전은 불가능하다"
-  ],
-  c: 2,
-  img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=500&q=80",
-  exp: "주미 AI는 USB-C(Type-C) 충전을 지원하며, 한 번 충전으로 최대 약 4시간 사용할 수 있습니다. 또한 케이블이 연결 되어 있다면, 충전을 하면서도 사용할 수 있어 수업에 사용하기 적합합니다."
-},
-   
-{
-  q: "주미 AI가 미래 인공지능 교육용 키트로 활용되는 가장 큰 이유는 무엇일까요?",
-  a: [
-    "자율주행, AI 코딩, 로봇 제어를 직접 경험하고 다양한 프로젝트와 대회 활동까지 확장할 수 있기 때문",
-    "완성된 기능만 사용하고 별도의 학습 과정이 필요 없기 때문",
-    "자동차 디자인과 외형을 다양하게 꾸밀 수 있기 때문",
-    "빠른 속도로 움직이는 로봇을 만드는 데 특화되어 있기 때문"
-  ],
-  c: 0,
-  img: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=500&q=80",
-  exp: "주미 AI는 단순한 로봇 장난감이 아니라 AI, 자율주행, 코딩, 로봇 제어를 직접 학습할 수 있는 교육 플랫폼입니다. 프로젝트 수업뿐 아니라 다양한 로봇 대회 준비에도 활용할 수 있습니다."
-},
-{
-  q: "주미 AI를 활용한 교육 활동이 학생들에게 특별한 경험을 제공하는 이유는 무엇일까요?",
-  a: [
-  "학생들이 AI 기술을 활용해 자신의 아이디어를 구현하고, 실제 환경에서 검증하며 결과물을 다양한 프로젝트 활동으로 확장할 수 있기 때문",
-    "AI 기술의 복잡한 원리를 이해하기보다 제공된 기능을 조합해 빠르게 결과물을 완성하는 데 집중할 수 있기 때문",
-    "완성된 AI 모델을 활용해 정해진 과제를 수행하고, 동일한 결과를 반복적으로 확인하는 학습 과정이 가능하기 때문",
-    "로봇이나 자동차와 같은 하드웨어 요소를 중심으로 디자인과 외형 개선 능력을 키우는 데 효과적이기 때문"
-  ],
-  c: 0,
-  img: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&q=80",
-  exp: "주미 AI는 학생들이 아이디어를 직접 설계하고 구현하며, 프로젝트 결과물을 실제 교육 활동과 로봇 경진 분야로 확장할 수 있도록 돕습니다."
-},
-   {
-    q: "주미 AI가 2026 대한민국 교육박람회에서 수상한 상은 무엇일까요?",
-    a: [
-    "올해의 신제품상 (New Product of the Year)",
-    "대한민국 디자인 대상 (Korea Design Award)",
-    "대한민국 소프트웨어 대상 (Korea Software Award)",
-    "교육부 장관 표창 (Minister of Education Commendation)"
-    ],
-    c: 0,
-    img: "https://lh3.googleusercontent.com/rd-d/ALs6j_GX0BI9n780KXD6BCQIOI-qqnEFCYsp-IPR0I9vG3ST6WxuECykAg6jfKCrpbADFI5jq507DVlXeG89lhaPTEctS1EqZfhotzW019ClZ55z8G54yyMnAHAKkhMcEEeONO6PcaS-he-4q1tuDHNNIOz4CZiJMg89qHC_DF_WXFWqx1ciMTrumIz7l0LKFuLToh5ziiwGavOIkX92-yQ-Mw4-QTdWdtWwqdUuhL_VyQDE7KAuniUFKu_70EVzRylVInE9UuY7iobW-M5Dcz8vhtf8R9MsBm2PMRWi3bw3VlgT7ntdA6aToCr6g897W1qYZc2ZI7LWoHOk7uMw0TLEYT3naBLrj0mHhlKAkJYEsi4jeE6L5v15XJqkjTnUaQuvhfOfUIJ_n-6ORj3edf-InD5M8U3hkWh4RsRAOJ0_yJ205mwtr2fvazBoSxwLR2ZrPgbp1QJreHC_D7DqJSyZktgv2nRUGr3i9raxDFzvEELmd4nTtmv_QtWNeJqn8zUz_TX9aOTdwteMz6fdjLQS-6lQkqi_og93XHda-Xy60HGLkE00t-TIpceVfczXV6BVmgs7vBGsr-UdapGf7SJPwuFVW6criy9srYgDy3fEPAjmAxuaFupzU1EcEJoJIaFe9lRrPfwLPyKD227KbARYTGJvm4kWQAFCIxj4CrJJ9M-w2SXcT64Ku_5SB5VQ6B7eDEyJjKwGzzPvyfAHuIKdT69NC13KkhhYUVI6j01s_RZpLbCxcp5dpdrItk52hQaMQmulvVhIMMQSuXqwhZmBIiXHxzAuKtWcXzCllsIgxIpLrKlZCNyVbI-PrwrlFKoYJDoTcdQ45rdkUiJWsGX_CkXJS_lX9eOqlWsJ3Xwx6oaMedg154OZ5YnHOK-YVWzcFkW2c8KL8YjyBfTPeuIYD7BSzcMMxdiExjeEGzPGiAIlmcI5WJ2zarhcz6-o5QP51qed9my-T4Zbzc-dLJsWK4Ki5rxuAmX_vSWivEhbOrH66q9KCIPveJp73z-7KrULR_KkzdnaD6GWjnzMowe6Dba3aPg0PLnXvKIjkNq7LTiWB3rFxdrv_QD4qq0PXPXhgh7k5Pb6MwjfvfQDvhDUIMcXmaX8LCAdVzX4fX4xX9PeQC616t_e7jgs0ai4023GSFU=w1507-h862?auditContext=prefetch",
-    exp: "주미 AI는 2026 대한민국 교육박람회에서 혁신적인 피지컬 AI 교육 솔루션으로 인정받아 '올해의 신제품상(New Product of the Year)'을 수상했습니다."
-},
-
-      {
-    q: "주미 AI를 활용하면 참가를 준비할 수 있는 대회로 가장 알맞은 것은 무엇일까요?",
-    a: [
-        "IRC 국제로봇콘테스트 AI 자율주행 경진대회",
-        "전국 타자왕 선발대회",
-        "전국 드론 레이싱 월드컵",
-        "국제 게임 개발 해커톤"
-    ],
-    c: 0,
-    img: "https://lh3.googleusercontent.com/rd-d/ALs6j_EJcFcok3vsELhIooo_SFsZUdpL3Aw8KST-XAMlLrpjDQJOoJiFi55VU_E9_XJGv_t1F12fB_nQfUpndKC5-GgCgCr8SsXMgPzKabG9eMgHAWmgeIZjL2NRO7H5Zw1M3KDJu5R4GiiscJy-jiZQIoMyiF9rAy-GUm-wZiITrnaKI-5iHNjFKEo98ZBtfYGn_cRcnAqU9GHJ2g3uj4oP09y260GTV5N1bJ_bpNCatRYSIB64Xj8aX64UhK98qd-AJZhp7JzSpBgiBjyLPDJ6zVr1rqt08mKLxwWWC94TgFwgk9xP-pyY-ud_vFEgKfTkBU2ZgfL8vPr3feZBeuiiRUijI3-Vef6SzweUQneVJD7JWERLYsjLlSg7nA47t6QuuW9LdvqzQZktEio63CUzrKZg4UUkoQAB5pvG13Pw51O05HdYwS6zXhiHp4WUOsJeXzY2_W1UK24lyP0YSWwvJ7oAYDWmNRvg4mFSaUeNLhyARW0XJGUHkyZzDlIuUIfOlgtrzkS7LKJ51zBQcFUsaX1H4aWBjnuT6OPNLpBFwrPcl0XQreS53rnG_zx9WTiu65VN34Xvqi_wmQ823AnxRVdZEmNjU2dxQqLPh2tbvBf10XtcegrDbIo1xS_njUwhwSM-GHV9gA_0H0YaKIfRDTnb_WUaQ4hKmyW_z42v0zsTmDCvNGBglgjVSdSb0vpxrib7ZASQZrllupZvZ7Cp8jw_eEXvUCTJ0b7W_dodnNYg_gJHsyg_cMGhUY6vCOSSM9CXtP8cbJh2WuuHWqT3QJswmeuYY9VCwJhjyqXb5EToSFfzV2P1g08OAG1Y7IV55S84v20lKKc9LFKOTfxsnN6pylf1lUjYVtRkZP_MaCzFF-evDwv5Gc7fBkFkwKPPkDNNVFa6TF76k5ZDxNJnM8v4pxMALHOyb4oZgFtFmgt3kKa936y1fY0Nhn4n7RGqCaqP2kUliWScGCmmjVIavgVTH_vsQGznQiy_d69UCd2zAxQpuC0WLVfkD3ALtWmFXrNvZWfOZYcglM0HZi8_1HdZA8BtP-lyn8iV1BpLVksZPemmuG34iu7hd_kAGVdlHRmUYsEvDnKX3P1Yabh4h_mAjXTzWr4FWwKIt29BP3kBJandBV2-seNwKjy6i0we4w=w2000-h5296?auditContext=forDisplay",
-    exp: "주미 AI는 IRC(국제로봇콘테스트)의 AI 자율주행 관련 종목으로 참여가 가능한 교육 키트로써, IRC 대회에서는 장관상 같이 다양한 정부 포상이 수여됩니다."
-}
-
+        {
+            q: "주미 AI를 사용한 프로젝트 수업으로 적절하지 않은 것은?",
+            a: [
+                "미래교실 아이디어를 생각해 볼 수 있다",
+                "주미 AI의 맵을 함께 만들어 볼 수 있다.",
+                "PPT 같은 발표 자료를 함께 만들어 볼 수 있다.",
+                "각 팀별로 발표하며 아이디어를 공유할 수는 없다."
+            ],
+            c: 3,
+            img: "https://images.unsplash.com/photo-1531538606174-0f90ff5dce83?w=500&q=80",
+            exp: "주미 AI는 맵 제작, 프로젝트 구현, 발표(PPT)까지 이어지는 다양한 팀 프로젝트 수업을 진행할 수 있습니다."
+        },
+        {
+            q: "다음 중 주미 AI 와 함께 사용 할 수 있는 기기로 올바르지 않은것은?",
+            a: [
+                "태블릿",
+                "크롬북",
+                "PC · 노트북",
+                "스마트 워치"
+            ],
+            c: 3,
+            img: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&q=80",
+            exp: "주미 AI는 태블릿,크롬북,PC 등의 다양한 기기와 호환되어 수업을 진행할 수 있습니다."
+        },
+        {
+            q: "주미 AI의 전원 사용 방식에 대한 설명으로 가장 알맞은 것은 무엇일까요?",
+            a: [
+                "전용 충전기에서만 충전할 수 있고 충전 중에는 사용할 수 없다",
+                "건전지를 교체해야만 사용할 수 있다",
+                "USB-C(Type-C)로 충전할 수 있으며, 충전 중에도 사용할 수 있다",  
+                "무선 충전만 지원하며 케이블 충전은 불가능하다"
+            ],
+            c: 2,
+            img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=500&q=80",
+            exp: "주미 AI는 USB-C(Type-C) 충전을 지원하며, 한 번 충전으로 최대 약 4시간 사용할 수 있습니다. 또한 케이블이 연결 되어 있다면, 충전을 하면서도 사용할 수 있어 수업에 사용하기 적합합니다."
+        }
     ];
 
     let selectedQuestions = [];
@@ -629,53 +522,54 @@
 
     const zumiEyes = document.getElementById('zumiEyes');
 
- // [수정] 클래스를 갈아 끼우거나 캐릭터 텍스트를 매핑하여 눈이 사라지지 않게 변환하는 핵심 로직
-function changeZumiExpression(mood) {
-    zumiEyes.innerHTML = ''; // 문자형 표정 초기화
-    zumiEyes.className = 'zumi-eyes'; // 기본 눈 클래스 세팅
-    zumiEyes.style.transform = '';   // 스타일 초기화
-    zumiEyes.style.color = '';       // 기본 색상(흰색) 초기화
+    function changeZumiExpression(mood) {
+        zumiEyes.innerHTML = ''; 
+        zumiEyes.className = 'zumi-eyes'; 
+        zumiEyes.style.transform = '';   
+        zumiEyes.style.color = '';       
 
-    if (mood === 'normal') {
-        zumiEyes.classList.add('normal'); // 기본 평상시 네모 눈
-    } else if (mood === 'happy') {
-        zumiEyes.innerText = '^ ^'; // 맞췄을 때 행복한 눈
-        zumiEyes.classList.add('glow-green'); // [수정] 녹색 빛 숨쉬기 적용
-    } else if (mood === 'sad') {
-        zumiEyes.innerText = 'X X'; // 틀렸을 때 X 눈
-        zumiEyes.classList.add('glow-red'); // [수정] 빨간색 빛 숨쉬기 적용
+        if (mood === 'normal') {
+            zumiEyes.classList.add('normal'); 
+        } else if (mood === 'happy') {
+            zumiEyes.innerText = '^ ^'; 
+            zumiEyes.classList.add('glow-green'); 
+        } else if (mood === 'sad') {
+            zumiEyes.innerText = 'X X'; 
+            zumiEyes.classList.add('glow-red'); 
+        }
     }
-}
 
     function switchScreen(fromId, toId) {
         document.getElementById(fromId).classList.remove('active');
         document.getElementById(toId).classList.add('active');
     }
 
-  function startQuiz() {
-    let allQuestions = [...questionBank];
-    allQuestions.sort(() => Math.random() - 0.5);
-    selectedQuestions = allQuestions.slice(0, 10);
-    
-    currentQuestionIndex = 0;
-    correctCount = 0;
-    wrongCount = 0;
-    
-    // [버그 수정] 다시 시작할 때 기존 화면 상태 깔끔하게 리셋
-    document.getElementById('screen-result').classList.remove('active'); // 결과 화면 숨기기
-    document.getElementById('explanation-card').classList.remove('show'); // 이전 피드백 해설 카드 숨기기
-    
-    updateScoreBoard();
-    switchScreen('screen-intro', 'screen-quiz');
-    showQuestion();
-}
+    function startQuiz() {
+        let allQuestions = [...questionBank];
+        allQuestions.sort(() => Math.random() - 0.5);
+        // [수정] 10개 추출에서 5개 추출로 슬라이스 수치 조절
+        selectedQuestions = allQuestions.slice(0, 5);
+        
+        currentQuestionIndex = 0;
+        correctCount = 0;
+        wrongCount = 0;
+        
+        document.getElementById('screen-result').classList.remove('active'); 
+        document.getElementById('explanation-card').classList.remove('show'); 
+        
+        updateScoreBoard();
+        switchScreen('screen-intro', 'screen-quiz');
+        showQuestion();
+    }
 
     function updateScoreBoard() {
         document.getElementById('count-correct').innerText = correctCount;
         document.getElementById('count-wrong').innerText = wrongCount;
-        document.getElementById('quiz-progress').innerText = `${currentQuestionIndex + 1} / 10`;
+        // [수정] 진행도 텍스트의 총 문제 수 분모를 5로 수정
+        document.getElementById('quiz-progress').innerText = `${currentQuestionIndex + 1} / 5`;
         
-        const progressPercent = (currentQuestionIndex / 10) * 100;
+        // [수정] 프로그레스 바 비율 연산 분모를 5로 수정
+        const progressPercent = (currentQuestionIndex / 5) * 100;
         document.getElementById('progress-bar').style.width = `${progressPercent}%`;
     }
 
@@ -714,7 +608,6 @@ function changeZumiExpression(mood) {
             btn.disabled = true;
         }
 
-        // [수정] 랜덤하게 배치된 문제 본연의 고유 이미지 경로(src) 적용
         fbImg.src = currentQ.img;
 
         if (selectedIndex === currentQ.c) {
@@ -723,7 +616,7 @@ function changeZumiExpression(mood) {
             fbTitle.className = "feedback-title correct";
             optionsButtons[selectedIndex].style.background = "#E8F8F5";
             optionsButtons[selectedIndex].style.borderColor = "var(--success)";
-            changeZumiExpression('happy'); // 정답 표정( ^^ ) 호출
+            changeZumiExpression('happy'); 
         } else {
             wrongCount++;
             fbTitle.innerText = `❌ 아쉽습니다. (정답은 ${currentQ.c + 1}번)`;
@@ -733,7 +626,7 @@ function changeZumiExpression(mood) {
             
             optionsButtons[currentQ.c].style.background = "#E8F8F5";
             optionsButtons[currentQ.c].style.borderColor = "var(--success)";
-            changeZumiExpression('sad'); // 오답 표정( X X ) 호출
+            changeZumiExpression('sad'); 
         }
 
         fbText.innerText = currentQ.exp;
@@ -744,70 +637,78 @@ function changeZumiExpression(mood) {
 
     function nextQuestion() {
         currentQuestionIndex++;
-        if (currentQuestionIndex < 10) {
+        // [수정] 10문제에서 5문제 한계치 체크로 조건 수정
+        if (currentQuestionIndex < 5) {
             showQuestion();
         } else {
             showResult();
         }
     }
 
-  function showResult() {
-    switchScreen('screen-quiz', 'screen-result');
-    document.getElementById('progress-bar').style.width = '100%';
-    document.getElementById('result-score').innerText = `${correctCount} / 10 문제 정답`;
-    
-    const resultComment = document.getElementById('result-comment');
-    const resultActions = document.getElementById('result-actions');
-    
-    resultActions.innerHTML = ''; 
+    function showResult() {
+        switchScreen('screen-quiz', 'screen-result');
+        document.getElementById('progress-bar').style.width = '100%';
+        // [수정] 결과 점수 표기 분모 5로 수정
+        document.getElementById('result-score').innerText = `${correctCount} / 5 문제 정답`;
+        
+        const resultComment = document.getElementById('result-comment');
+        const resultActions = document.getElementById('result-actions');
+        
+        resultActions.innerHTML = ''; 
 
-    // 하단 공통 문의처 레이아웃
-  const contactInfo = `
-    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed #A5C2F1; font-size: 1.05rem; color: #475569; line-height: 1.7; text-align: center;">
-        <strong style="font-size: 1.15rem; color: #1E293B;">📞 관련 문의 및 상담</strong><br>
-        기업명: 로보링크(Robolink)<br>
-        연락처: 02-554-8862<br>
-        이메일: contact@robolink.co.kr
-    </div>
-`;
+        const contactInfo = `
+            <div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed #A5C2F1; font-size: 1.05rem; color: #475569; line-height: 1.7; text-align: center;">
+                <strong style="font-size: 1.15rem; color: #1E293B;">📞 관련 문의 및 상담</strong><br>
+                로보링크<br>
+                02-554-8862<br>
+                contact@robolink.co.kr
+            </div>
+        `;
 
-    // 점수별 타겟 멘트 세팅
-    if (correctCount >= 8) {
-        changeZumiExpression('happy');
-        resultComment.innerHTML = `🏆 <b>주미 AI 마스터 등극!</b> 당신은 인공지능과 자율주행 모빌리티 기술에 대해 아주 훌륭한 이해도를 자랑하고 계시는군요!<br><br>AI 자율주행자동차 교구 '주미 AI'와 함께라면 고난도 실습까지 누구나 전문가가 될 수 있습니다. 지금 공식 로보샵에서 나만의 주미를 직접 만나보세요! ${contactInfo}`;
-    } else if (correctCount >= 5) {
-        changeZumiExpression('happy');
-        resultComment.innerHTML = `😎 <b>우수한 센스를 가지셨네요!</b> 주미 AI의 흥미진진한 자율주행자동차 기술과 로봇학습을 아주 재미있게 학습하셨습니다.<br><br>지금 주미 AI를 구매하여 현실 세계를 움직이는 똑똑한 인공지능 코딩을 직접 경험해 보세요! ${contactInfo}`;
-    } else {
-        changeZumiExpression('sad');
-        resultComment.innerHTML = `🥺 <b>주미 AI와 더 친해져 볼까요?</b> 문제를 풀면서 주미 AI의 성능을 알 수 있는 뜻깊은 시간이었습니다.<br><br>비록 점수는 아쉽지만, 주미 AI를 직접 손으로 만지고 조종해보면 미래 핵심 인공지능 원리를 훨씬 쉽고 재미있게 마스터할 수 있습니다! 지금 주미 AI와 함께 새로운 도전을 시작해 보세요! ${contactInfo}`;
+        // [수정] 점수 구간별 대응 로직 변경 (5개 만점 / 3개 이하 / 3개 미만)
+        if (correctCount === 5) {
+            // 5문제 중 5개 다 맞췄을 때
+            changeZumiExpression('happy');
+            resultComment.innerHTML = `🏆 <b> 주미 AI 완벽 마스터!</b>🎉<br>
+5문제를 모두 맞히셨습니다!<br><br>
+주미 AI와 자율주행, AI에 대해 잘 알고 계시네요.<br>
+하지만 직접 주미 AI를 제어한다면, <br>더 다양한 프로젝트에 도전 할 수 있습니다! ${contactInfo}`;
+        } else if (correctCount >= 3) {
+            // 5문제 중 3개 이상 4개 이하일 때 (즉, 3개 이하 조건의 상위 조건 충족)
+            changeZumiExpression('happy');
+            resultComment.innerHTML = `😎 <b>우수한 센스를 가지셨네요!</b> <br> 
+주미 AI와 인공지능 기술의 개념을 잘 이해하고 있습니다.<br>
+하지만, 주미 AI와 함께 더 많은 교육 커리큘럼을 만나보실 수 있습니다! ${contactInfo}`;
+        } else {
+            // 3개 미만(못) 맞췄을 때 (0개~2개)
+            changeZumiExpression('sad');
+            resultComment.innerHTML = `🥺 <b>주미 AI와 더 친해져 볼까요?</b> 
+<br> 주미 AI를 직접 손으로 만지고 조종해보면 <br> 인공지능 원리를 훨씬 쉽고 재미있게 학습 할 수 있습니다! <br> 주미 AI와 함께 새로운 도전을 시작해 보세요! ${contactInfo}`;
+        }
+        
+        const buyBtn = document.createElement('button');
+        buyBtn.className = 'btn btn-center';
+        buyBtn.style.background = 'linear-gradient(to right, #FF416C, #FF4B2B)'; 
+        buyBtn.style.boxShadow = '0 5px 15px rgba(255, 65, 108, 0.3)';
+        buyBtn.innerText = '🛒 주미 AI 구매하러 가기 (로보링크샵) 👉';
+        buyBtn.onclick = () => {
+            window.open('https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=1&display_group=2', '_blank');
+        };
+        resultActions.appendChild(buyBtn);
+
+        const retryBtn = document.createElement('button');
+        retryBtn.className = 'btn';
+        retryBtn.style.textAlign = 'center';
+        retryBtn.style.marginTop = '10px';
+        retryBtn.style.fontWeight = '700';
+        retryBtn.style.borderColor = 'var(--primary)';
+        retryBtn.style.color = 'var(--primary)';
+        retryBtn.innerText = '퀴즈 다시 도전하기 🔄';
+        retryBtn.onclick = () => {
+            startQuiz();
+        };
+        resultActions.appendChild(retryBtn);
     }
-    
-    // [1순위 메인 버튼] 주미 AI 구매 사이트 바로가기 버튼 생성
-    const buyBtn = document.createElement('button');
-    buyBtn.className = 'btn btn-center';
-    buyBtn.style.background = 'linear-gradient(to right, #FF416C, #FF4B2B)'; // 강조용 다홍/오렌지빛 그라데이션
-    buyBtn.style.boxShadow = '0 5px 15px rgba(255, 65, 108, 0.3)';
-    buyBtn.innerText = '🛒 주미 AI 구매하러 가기 (로보링크샵) 👉';
-    buyBtn.onclick = () => {
-        window.open('https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=1&display_group=2', '_blank');
-    };
-    resultActions.appendChild(buyBtn);
-
-    // [2순위 서브 버튼] 인트로 가기 대신 직관적인 재도전 버튼만 남기기
-    const retryBtn = document.createElement('button');
-    retryBtn.className = 'btn';
-    retryBtn.style.textAlign = 'center';
-    retryBtn.style.marginTop = '10px';
-    retryBtn.style.fontWeight = '700';
-    retryBtn.style.borderColor = 'var(--primary)';
-    retryBtn.style.color = 'var(--primary)';
-    retryBtn.innerText = '퀴즈 다시 도전하기 🔄';
-    retryBtn.onclick = () => {
-        startQuiz();
-    };
-    resultActions.appendChild(retryBtn);
-}
 </script>
 </body>
 </html>
