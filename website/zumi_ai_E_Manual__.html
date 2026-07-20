@@ -402,6 +402,94 @@
         }
         .launch-btn-card:hover .btn-launch-action { background: #fff8f5; padding: 0.75rem 1.75rem; }
 
+
+
+/* 🚀 자세히보기 버튼 기본 스타일 (공통) */
+.btn-more {
+    display: none; /* 💡 평소(각 탭 화면)에는 버튼을 보이지 않게 합니다. */
+    padding: 4px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    margin-left: 8px;
+}
+
+/* ⚡ 전체 자료 보기(All) 활성화 모드일 때만 버튼을 나타나게 처리 */
+main.all-active-mode .btn-more {
+    display: inline-flex; /* 💡 전체보기 화면에서만 버튼이 뿅 하고 나타납니다. */
+    align-items: center;
+}
+
+/* 정규 수업 교재: 옅은 보라색 배경 + 보라색 글씨 */
+.btn-purple {
+    background-color: #f5f0ff; /* 매우 옅은 보라색 배경 */
+    color: #7c3aed;            /* --theme-class와 동일한 보라색 글씨 */
+    border: 1px solid #e9d5ff; /* 연한 보라색 테마 선 */
+}
+.btn-purple:hover {
+    background-color: #eedfff; /* 마우스 올렸을 때 살짝 더 진해지는 배경 */
+    border-color: #d8b4fe;
+}
+
+/* (참고) 스크래치: 옅은 노란색 배경 + 갈색/어두운 노란색 글씨 */
+.btn-yellow {
+    background-color: #fefce8; /* 매우 옅은 노란색 배경 */
+    color: #b45309;            /* 가독성을 높인 어두운 노란색/갈색 글씨 */
+    border: 1px solid #fef08a; /* 연한 노란색 테마 선 */
+}
+.btn-yellow:hover {
+    background-color: #fef9c3; /* 마우스 올렸을 때 살짝 더 진해지는 배경 */
+    border-color: #fde047;
+}
+
+/* 제품 가이드: 옅은 회색 배경 + 차분한 짙은 회색 글씨 */
+.btn-gray {
+    background-color: #f3f4f6; /* 매우 옅은 회색 배경 (Tailwind gray-100) */
+    color: #4b5563;            /* 차분한 짙은 회색 글씨 (Tailwind gray-600) */
+    border: 1px solid #e5e7eb; /* 연한 테두리 선 */
+}
+.btn-gray:hover {
+    background-color: #e5e7eb; /* 마우스 올렸을 때 살짝 더 진해지는 배경 */
+    border-color: #d1d5db;
+}
+
+/* 수업용 보조 활동 맵 트랙 - 파란색 (#0284C7) */
+.btn-blue {
+    background-color: #eff6ff; /* 매우 옅은 파란색 */
+    color: #0369a1;            /* 진한 하늘색 */
+    border: 1px solid #bae6fd; /* 연한 파란색 테두리 */
+}
+.btn-blue:hover {
+    background-color: #dbeafe;
+    border-color: #7dd3fc;
+}
+
+
+/* 창의 학습 교재 공간 - 초록색 (#10B981) */
+.btn-green {
+    background-color: #ecfdf5; /* 매우 옅은 초록색 */
+    color: #047857;            /* 진한 에메랄드 */
+    border: 1px solid #a7f3d0; /* 연한 초록색 테두리 */
+}
+.btn-green:hover {
+    background-color: #d1fae5;
+    border-color: #6ee7b7;
+}
+
+
+/* 인공지능 & 자율주행 학습 - 남색 (#183587) */
+.btn-navy {
+    background-color: #eef2ff; /* 매우 옅은 남색 */
+    color: #1e3a8a;            /* 진한 남색 */
+    border: 1px solid #c7d2fe; /* 연한 남색 테두리 */
+}
+.btn-navy:hover {
+    background-color: #e0e7ff;
+    border-color: #a5b4fc;
+}
+
         /* 🚀 탑 버튼 디자인 */
 
        #top-btn {
@@ -740,7 +828,7 @@
 <header>
     <div class="header-container">
         <div class="logo">
-            <a href="https://zumi-ai.github.io/python/website/zumi_ai_E_Manual__.html">
+            <a href="https://zumi-ai.github.io/python/website/zumi_ai_e_manual.html">
                 <img id="img-logo" src="" alt="Zumi AI">
             </a>
         </div>
@@ -749,13 +837,13 @@
 
         <nav class="pc-nav">
             <a href="https://zumi.co.kr/introduce">제품소개</a>
-            <a href="https://zumi-ai.github.io/python/website/zumi_ai_E_Manual__.html">E-매뉴얼</a>
+            <a href="https://zumi-ai.github.io/python/website/zumi_ai_e_manual.html">E-매뉴얼</a>
             <a href="https://zumi.co.kr/faq">FAQ</a>
             <a href="https://zumi.co.kr/news">소식</a>
 
             <a href="https://zumi-ai.github.io/python/website/zumi_AI_Random_quiz_site.html" class="quiz-banner">
                 <span class="material-icons" style="font-size: 1.1rem;">help_outline</span>
-                주미 AI를 아시나요? 10문항 진단 퀴즈풀기!
+                주미 AI를 아시나요? 5문항 퀴즈풀기!
             </a>
 
 
@@ -773,12 +861,12 @@
                 <span class="material-icons">help_outline</span>
                 <div>
                     <strong>주미 AI를 아시나요?</strong><br>
-                    <small>10문항 진단 퀴즈 도전하기</small>
+                    <small>5문항 퀴즈풀기!</small>
                 </div>
             </a>
             <hr>
             <a href="https://zumi.co.kr/introduce">제품소개</a>
-            <a href="https://zumi-ai.github.io/python/website/zumi_ai_E_Manual__.html">E-매뉴얼</a>
+            <a href="https://zumi-ai.github.io/python/website/zumi_ai_e_manual.html">E-매뉴얼</a>
             <a href="https://zumi.co.kr/faq">FAQ</a>
             <a href="https://zumi.co.kr/news">소식</a>
             <hr>
@@ -869,12 +957,17 @@
             </div>
         </div>
 
-        <!-- [분류 1]: 정규 수업 교재 -->
-        <section class="category-block" data-tags="class" style="border-top: 3px solid var(--theme-class);">
-            <div class="category-header">
-                <h2><span class="material-icons" style="color:var(--theme-class);">import_contacts</span> 주미 AI 정규 수업 교재</h2>
-                <p>정규 교육과정에 바로 사용하는 표준 커리큘럼 및 교과서입니다.</p>
-            </div>
+   <!-- [분류 1]: 정규 수업 교재 -->
+<section class="category-block" data-tags="class" style="border-top: 3px solid var(--theme-class);">
+    <div class="category-header">
+        <h2 style="display: inline-flex; align-items: center; gap: 10px; width: 100%;">
+            <span class="material-icons" style="color:var(--theme-class);">import_contacts</span> 
+            주미 AI 정규 수업 교재
+            <!-- 💡 onclick 경로 수정 완료 -->
+            <button class="btn-more btn-purple" onclick="document.querySelector('.chip[data-target=\'class\']').click();">자세히보기</button>
+        </h2>
+        <p>정규 교육과정에 바로 사용하는 표준 커리큘럼 및 교과서입니다.</p>
+    </div>
 
             <div class="curriculum-wide-card type-class">
                 <div class="card-main-text">
@@ -991,9 +1084,13 @@
         </section>
 
         <!-- [분류 2]: 스크래치 전용 존 -->
-        <section class="category-block" data-tags="scratch" style="border-top: 3px solid var(--theme-scratch);">
-            <div class="category-header">
-                <h2><span class="material-icons" style="color:var(--theme-scratch-dark);">extension</span> 스크래치 전용 학습관</h2>
+<section class="category-block" data-tags="scratch" style="border-left: 5px solid var(--theme-scratch-dark);">
+    <div class="category-header">
+        <h2 style="display: inline-flex; align-items: center; flex-wrap: wrap;">
+            <span class="material-icons" style="color:var(--theme-scratch-dark); margin-right: 8px;">extension</span>
+ 스크래치 전용 학습관
+<button class="btn-more btn-yellow" onclick="document.querySelector('.chip[data-target=\'scratch\']').click();">자세히보기</button>
+</h2>
                 <p>스크래치를 사용하여 주미 AI를 제어하는 방법과 블록 코딩을 학습할 수 있는 콘텐츠가 모여 있습니다.</p>
             </div>
             
@@ -1080,12 +1177,17 @@
             </div>
         </section>
 
-        <!-- [분류 3]: 제품 가이드 -->
-        <section class="category-block" data-tags="ready" style="border-top: 3px solid var(--theme-ready);">
-            <div class="category-header">
-                <h2><span class="material-icons" style="color:var(--theme-ready);">settings</span> 제품 가이드</h2>
+       <!-- [분류 3]: 제품 가이드 및 문제해결 -->
+<section class="category-block" data-tags="ready" style="border-left: 5px solid #6b7280 !important;">
+    <div class="category-header">
+        <h2 style="display: inline-flex; align-items: center; flex-wrap: wrap;">
+            <span class="material-icons" style="color:#6b7280; margin-right: 8px;">settings</span>
+제품 가이드
+<button class="btn-more btn-gray" onclick="document.querySelector('.chip[data-target=\'ready\']').click();">자세히보기</button>
+</h2>
                 <p>주미 AI를 처음 사용하시는 분들을 위한 가이드와 기본 설명들을 참조할 수 있는 매뉴얼들 입니다.</p>
             </div>
+
             <div class="grid-layout">
                 <div class="card ts-ready">
                     <div class="card-body-wrapper">
@@ -1213,8 +1315,10 @@
         <section class="category-block" data-tags="maps" style="border-top: 3px solid var(--theme-maps);">
             
 <div class="category-header">
-                <h2><span class="material-icons" style="color:var(--theme-maps);">map</span> 수업용 보조 활동 맵 트랙</h2>
-                <p>주미 AI가 주행하기 위한 인쇄용 맵 (40x60cm) 을 다운로드 받을 수 있고, 관련 학습 안내용 프리젠테이션도 다운로드 받을 수 있습니다..</p>
+                <h2><span class="material-icons" style="color:var(--theme-maps);">map</span> 수업용 보조 활동 맵 트랙
+<button class="btn-more btn-blue" onclick="document.querySelector('.chip[data-target=\'maps\']').click();">자세히보기</button>
+</h2>
+                <p>주미 AI가 주행하기 위한 인쇄용 맵 (40x60cm) 을 다운로드 받을 수 있고, 관련 학습 안내용 프리젠테이션도 다운로드 받을 수 있습니다.</p>
             </div>
             <div class="grid-layout">
                 <div class="card ts-maps">
@@ -1428,21 +1532,23 @@
         <!-- [분류 5]: 창의 학습 교재 -->
         <section class="category-block" data-tags="creative" style="border-top: 3px solid var(--theme-entry);">
             <div class="category-header">
-                <h2><span class="material-icons" style="color:var(--theme-entry);">wb_incandescent</span> 창의 학습 교재 공간</h2>
+                <h2><span class="material-icons" style="color:var(--theme-entry);">wb_incandescent</span> 창의 학습 교재 공간
+<button class="btn-more btn-green" onclick="document.querySelector('.chip[data-target=\'creative\']').click();">자세히보기</button>
+</h2>
                 <p>문제를 발견하고 해결하며 생각을 확장하는 실과 교과 융합(STEAM)용 교재 모음입니다.</p>
             </div>
 
             <div class="curriculum-wide-card type-creative">
                 <div class="card-main-text">
-                    <h3>📢 창의학습 차시 통합 가이드 커리큘럼</h3>
-                    <p class="card-desc">창의학습 전체 12차시의 연계 교육과정 성취기준 및 단원별 지도안 총괄 가이드맵입니다.</p>
+                    <h3>📢 창의학습 차시 커리큘럼</h3>
+                    <p class="card-desc">창의학습 전체 12차시의 연계 교육과정 성취기준 및 단원별 지도안 커리큘럼입니다.</p>
                 </div>
              <a href="https://drive.google.com/file/d/1q94nrHBdVpyB3bZW7OKy11tYMrWmr6nc/view"
    class="btn-wide-download"
    target="_blank"
    rel="noopener noreferrer">
     <span class="material-icons">download</span>
-    통합 가이드 (PDF)
+    창의학습 커리큘럼(PDF)
 </a>
             </div>
 
@@ -1640,7 +1746,9 @@
         <!-- [분류 6]: 인공지능 & 대회 -->
         <section class="category-block" data-tags="ai" style="border-top: 3px solid var(--theme-ai);">
             <div class="category-header">
-                <h2><span class="material-icons" style="color:var(--theme-ai);">psychology</span> 인공지능 & 자율주행 학습</h2>
+                <h2><span class="material-icons" style="color:var(--theme-ai);">psychology</span> 인공지능 & 자율주행 학습
+<button class="btn-more btn-navy" onclick="document.querySelector('.chip[data-target=\'ai\']').click();">자세히보기</button>
+</h2>
                 <p>주미 AI의 카메라 인식, 머신러닝, 딥러닝 알고리즘 및 고급 파이썬 프로젝트 제어 리소스를 학습할 수 있는 공간입니다.</p>
             </div>
 
