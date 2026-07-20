@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>개설문의 | 로보링크</title>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+  :root{
+    --navy: #0A1128;
+    --navy-2: #10193B;
+    --panel: #121B3E;
+    --line: rgba(255,255,255,0.09);
+    --ink: #F3F5FA;
+    --ink-dim: #9AA4C2;
+    --azure: #4C7CF3;
+    --mint: #35D6B6;
+    --amber: #FFB454;
+    --error: #FF6B6B;
+    --radius: 14px;
+    --font-display: 'Pretendard', -apple-system, sans-serif;
+    --font-body: 'Pretendard', -apple-system, sans-serif;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background: var(--navy);
+    color: var(--ink);
+    font-family: var(--font-body);
+    min-height:100vh;
+    position:relative;
+    overflow-x:hidden;
+  }
+
+  /* signature: circuit-grid backdrop */
+  .grid-bg{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 90%);
+  }
+  .node{
+    position:fixed; z-index:0; border-radius:50%;
+    background: var(--mint);
+    box-shadow: 0 0 16px 3px rgba(53,214,182,0.55);
+    animation: pulse 3.2s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ opacity:.35; transform:scale(1); }
+    50%{ opacity:1; transform:scale(1.4); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .node{ animation:none; opacity:.7; }
+  }
+
+  .wrap{
+    position:relative; z-index:1;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 72px 24px 96px;
+  }
+
+  header.top{
+    display:flex; align-items:center;
+    margin-bottom: 48px;
+  }
+  .logo-link{
+    display:inline-flex; align-items:center;
+    text-decoration:none;
+    border-radius:10px;
+    transition: opacity .15s ease;
+  }
+  .logo-link:hover{ opacity:0.85; }
+  .logo-mark{
+    height:44px;
+    display:flex; align-items:center;
+  }
+.logo-mark{
+    height:20px;
+    display:flex;
+    align-items:center;
+}
+
+.logo-mark img{
+    height:100%;
+    width:auto;
+    display:block;
+}
+  @media (max-width: 640px){
+    .logo-mark{ height:24px; }
+  }
+  header.top{ }
+  @media (max-width: 640px){
+    header.top{ margin-bottom: 28px; }
+    .wrap{ padding-top: 40px; }
+  }
+
+  .hero{
+    display:grid;
+    grid-template-columns: 1.1fr 1fr;
+    grid-template-areas:
+      "intro panel"
+      "info   panel";
+    column-gap: 56px;
+    row-gap: 32px;
+    align-items:start;
+  }
+  .hero-intro{ grid-area: intro; }
+  .panel{ grid-area: panel; }
+  .info-list{ grid-area: info; }
+
+  @media (max-width: 860px){
+    .hero{
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "intro"
+        "panel"
+        "info";
+      row-gap: 28px;
+    }
+  }
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:13px; font-weight:600; letter-spacing:0.06em;
+    color: var(--mint); text-transform:uppercase;
+    margin-bottom: 22px;
+  }
+  .eyebrow::before{
+    content:''; width:6px; height:6px; border-radius:50%;
+    background: var(--mint);
+    box-shadow: 0 0 10px 2px rgba(53,214,182,0.7);
+  }
+
+  h1{
+    font-family: var(--font-display);
+    font-size: clamp(34px, 4.4vw, 50px);
+    line-height:1.18;
+    font-weight:800;
+    letter-spacing:-0.02em;
+    margin-bottom: 20px;
+  }
+  h1 .accent{
+    background: linear-gradient(90deg, var(--azure), var(--mint));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+
+  .lead{
+    font-size:16px; line-height:1.75; color: var(--ink-dim);
+    max-width: 46ch;
+    margin-bottom: 36px;
+  }
+
+  @media (max-width:640px){
+
+    .eyebrow{
+        margin-bottom:14px;
+    }
+
+    h1{
+        font-size:28px;
+        line-height:1.4;
+        margin-bottom:14px;
+    }
+
+     h1 .lb{
+        display:none;
+    }
+
+    .lead{
+        font-size:14px;
+        line-height:1.7;
+        margin-bottom:0;
+    }
+
+    .lead br{
+        display:none;
+    }
+}
+
+  .info-list{
+    display:flex; flex-direction:column; gap:18px;
+  }
+  .info-item{
+    display:flex; gap:14px; align-items:flex-start;
+    padding: 16px 18px;
+    background: var(--panel);
+    border:1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .info-icon{
+    width:32px; height:32px; border-radius:9px; flex-shrink:0;
+    background: rgba(76,124,243,0.15);
+    display:flex; align-items:center; justify-content:center;
+    color: var(--azure); font-size:15px; font-weight:700;
+  }
+  .info-item h3{ font-size:14px; font-weight:700; margin-bottom:4px; }
+  .info-item p{ font-size:13px; color: var(--ink-dim); line-height:1.6; }
+
+  /* form panel */
+  .panel{
+    background: var(--panel);
+    border:1px solid var(--line);
+    border-radius: 20px;
+    padding: 36px;
+    position:relative;
+  }
+  .panel::before{
+    content:''; position:absolute; top:0; left:24px; right:24px; height:1px;
+    background: linear-gradient(90deg, transparent, var(--mint), transparent);
+    opacity:0.6;
+  }
+
+  .field{ margin-bottom: 22px; }
+  .field label{
+    display:block; font-size:13px; font-weight:600;
+    color: var(--ink); margin-bottom:8px;
+  }
+  .field .req{ color: var(--mint); margin-left:3px; }
+
+  .field input,
+  .field textarea{
+    width:100%;
+    background: var(--navy-2);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding: 13px 14px;
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size:14px;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .field input::placeholder,
+  .field textarea::placeholder{ color:#5C688F; }
+
+  .field input:focus,
+  .field textarea:focus{
+    outline:none;
+    border-color: var(--azure);
+    box-shadow: 0 0 0 3px rgba(76,124,243,0.22);
+  }
+
+  .field textarea{ resize:vertical; min-height:110px; line-height:1.6; }
+
+  .field .err-msg{
+    display:none;
+    font-size:12px; color: var(--error);
+    margin-top:6px;
+  }
+  .field.invalid input,
+  .field.invalid textarea{ border-color: var(--error); }
+  .field.invalid .err-msg{ display:block; }
+
+  .submit-btn{
+    width:100%;
+    background: linear-gradient(90deg, var(--azure), var(--mint));
+    color:#0A1128;
+    border:none;
+    border-radius:12px;
+    padding:15px 18px;
+    font-family: var(--font-display);
+    font-size:15px;
+    font-weight:800;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+    box-shadow: 0 8px 24px -8px rgba(76,124,243,0.6);
+  }
+  .submit-btn:hover{ transform: translateY(-1px); box-shadow: 0 10px 28px -6px rgba(76,124,243,0.7); }
+  .submit-btn:active{ transform: translateY(0); }
+  .submit-btn:disabled{ opacity:.6; cursor:not-allowed; transform:none; }
+
+  .spinner{
+    width:15px; height:15px; border-radius:50%;
+    border:2px solid rgba(10,17,40,0.35);
+    border-top-color:#0A1128;
+    animation: spin .7s linear infinite;
+    display:none;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .submit-btn.loading .spinner{ display:inline-block; }
+  .submit-btn.loading .btn-text{ opacity:.85; }
+
+  .status-msg{
+    margin-top:16px;
+    padding:13px 14px;
+    border-radius:10px;
+    font-size:13.5px;
+    line-height:1.6;
+    display:none;
+  }
+  .status-msg.show{ display:block; }
+  .status-msg.success{
+    background: rgba(53,214,182,0.12);
+    border:1px solid rgba(53,214,182,0.35);
+    color: var(--mint);
+  }
+  .status-msg.fail{
+    background: rgba(255,107,107,0.12);
+    border:1px solid rgba(255,107,107,0.35);
+    color: var(--error);
+  }
+
+  footer{
+    text-align:center; margin-top:64px;
+    font-size:12.5px; color:#5C688F;
+  }
+
+  /* ---- section: shared header ---- */
+  .section{
+    margin-top: 108px;
+  }
+  .section-head{
+    max-width: 640px;
+    margin: 0 auto 44px;
+    text-align:center;
+  }
+  .section-head h2{
+    font-family: var(--font-display);
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight:800;
+    letter-spacing:-0.01em;
+    margin-bottom:12px;
+  }
+  .section-head p{
+    font-size:14.5px; line-height:1.7; color: var(--ink-dim);
+  }
+
+  /* ---- section: benefits ---- */
+  .benefits-grid{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:18px;
+  }
+  @media (max-width: 900px){
+    .benefits-grid{ grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px){
+    .benefits-grid{ grid-template-columns: 1fr; }
+  }
+  .benefit-card{
+    background: var(--panel);
+    border:1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 26px 22px;
+    position:relative;
+    transition: border-color .15s ease, transform .15s ease;
+  }
+  .benefit-card:hover{
+    border-color: rgba(76,124,243,0.4);
+    transform: translateY(-2px);
+  }
+  .benefit-num{
+    position:absolute; top:20px; right:22px;
+    font-family: var(--font-display);
+    font-size:12px; font-weight:700;
+    color: var(--ink-dim);
+    letter-spacing:0.04em;
+  }
+  .benefit-icon{
+    width:44px; height:44px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px;
+    background: linear-gradient(135deg, rgba(76,124,243,0.18), rgba(53,214,182,0.18));
+    margin-bottom:18px;
+  }
+  .benefit-card h3{
+    font-size:15px; font-weight:700; margin-bottom:8px;
+  }
+  .benefit-card p{
+    font-size:13px; line-height:1.65; color: var(--ink-dim);
+  }
+
+  /* ---- section: steps ---- */
+  .steps-row{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    position:relative;
+  }
+  @media (max-width: 860px){
+    .steps-row{ grid-template-columns: 1fr; gap:16px; }
+  }
+  .step-item{
+    position:relative;
+    padding: 0 18px;
+    text-align:center;
+  }
+  .step-item:not(:last-child)::after{
+    content:'';
+    position:absolute;
+    top:26px; right:-2px;
+    width: calc(100% - 52px);
+    height:1px;
+    background: linear-gradient(90deg, var(--azure), var(--mint));
+    opacity:0.35;
+  }
+  @media (max-width: 860px){
+    .step-item:not(:last-child)::after{ display:none; }
+    .step-item{ text-align:left; padding:0; }
+  }
+  .step-badge{
+    width:52px; height:52px; border-radius:50%;
+    margin: 0 auto 20px;
+    background: var(--navy-2);
+    border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    font-family: var(--font-display);
+    font-weight:800; font-size:17px;
+    color: var(--mint);
+    position:relative; z-index:1;
+  }
+  @media (max-width: 860px){
+    .step-badge{ margin:0; flex-shrink:0; }
+    .step-item{ display:flex; align-items:flex-start; gap:16px; }
+  }
+  .step-item h3{
+    font-size:14.5px; font-weight:700; margin-bottom:8px;
+  }
+  .step-item p{
+    font-size:12.5px; line-height:1.65; color: var(--ink-dim);
+    max-width:220px; margin:0 auto;
+  }
+  @media (max-width: 860px){
+    .step-item p{ margin:0; max-width:none; }
+  }
+
+  .cta-inline{
+    display:flex; justify-content:center; margin-top:44px;
+  }
+  .cta-inline a{
+    display:inline-flex; align-items:center; gap:8px;
+    background: transparent;
+    border:1px solid rgba(76,124,243,0.5);
+    color: var(--ink);
+    font-size:13.5px; font-weight:600;
+    padding:12px 22px;
+    border-radius:10px;
+    text-decoration:none;
+    transition: background .15s ease, border-color .15s ease;
+  }
+  .cta-inline a:hover{
+    background: rgba(76,124,243,0.12);
+    border-color: var(--azure);
+  }
+</style>
+</head>
+<body>
+
+
+<form id="inquiry-form" novalidate>
+
+
+<div class="grid-bg"></div>
+<div class="node" style="top:14%; left:8%;"></div>
+<div class="node" style="top:62%; left:4%; width:4px; height:4px;"></div>
+<div class="node" style="top:28%; right:10%; width:5px; height:5px;"></div>
+<div class="node" style="top:78%; right:6%;"></div>
+
+<div class="wrap">
+
+  <header class="top">
+    <a class="logo-link" href="https://robolink.co.kr" target="_blank" rel="noopener">
+      <div class="logo-mark">
+        <img src="https://lh3.googleusercontent.com/rd-d/ALs6j_Fi_UnD4gvmF1lUR2g6cdh1p7TQ1F2sIl7fVJlJZUSrcwLqItqx9hOMkqTy_uTh0w-KODhjuawb9nvi-KE9LbN-6hCR9m_BDG1BUSAdB33y3oTJCdvIXNNh-ZUGbbnL2bWNfakrNVDOQ0PjEzKKxGpwT_UD6mo71N6aqWNYBPERDxDihRYumrOfA6gV-DIOhmCAbqM3ytemTXjBCNux_uxExCCMBmtrrFUt90Wp5QkZ5ymMIzxtJBQiRiFRqA9bOo8NDjD2Fi07LUQp-Bnj4ncueQTjr6Au8zavm3YCcFLFn0uvt8gSQXW3fXOIYoZ4HWd-8xMk-iHOF-czYaIGLIRpqDfr0HcZSozrfwZ1JwQnzFX7VMwh9XZ0zgl__bOfL4u9E2JKzbUABHYbMHRT4vw1CqG0cpSmz-ux1NKDt3xdWYQuSksoT8ZsQa5YxdULQOV8A3e5WhTiVOq5pfbx8lSp-zA_Dp2EFPQq-_vGCNZxrUjA0nAmle3TiiCt99ZjTW44d0BGoKLlL0f1RCLXpYArj1Gq-EtleE9qpgKigKpUte7xXWikblindEaffjNJaWAO6mulIxePXYkE_vAEOSr9Kw3eL86nBQ7838fP-8BLegD2CYoDpnX1KfXh-Yg1Npza60K97IQbgQXykuVNMm8cgT-dd1sX0tLmL3GuyZz8D98-oA6EzndBsh8aYhbKkaNvqchti_lPUQU_OOqmqQ557uYo-T7GjHSqQ1cDmPApYuppUcQpgjkV8DPeWvkH2LMRvGg1hCFveLQnPS74_guQFrtCjpJnSC8WY0DHu-YTqRUvYuTvORHav18V91WLPewHVIVoOArSMvzFhJthjCHh0Xnm6wCjcNpV2Bx5PtSworYCpjdTbWT2suQNXZ4__In7Od_hZMd7JuKgOk9onG3mM63vEyf4iBEYpKz0oc6gfxg2vjjsus0cF2FhPEwJbHdG8yVcPCdhg1fwIQsbx4hpA6NYMYHW4a6Z_rDzn688pHS3oT-ch0hwyFUe2gMceRMBXCiliNWPlFc2-yA1RkxH5Xe19tiv8AjVUb_hbTcElu0T5BZUKEPsP_mUiBzD6U8rxTcBT70_9aJLwFdklskXBvclfZ4wOsOwjLZ3zluepRHDYq_z7MHaDt6ljq-yNMURt1VISn--FrB3KDc9Lhs6r7oNwVqTKG91=w1919-h918" alt="로보링크" >
+      </div>
+    </a>
+  </header>
+
+  <div class="hero">
+    <div class="hero-intro">
+      <div class="eyebrow">협력점 개설 문의</div>
+      <h1>로보링크와 함께<br class="lb"><span class="accent">새로운 미래 교육</span>을<br class="lb">시작해보세요</h1>
+      <p class="lead">
+        양식을 작성해 주시면 담당자가 확인 후<br class="only-desktop">
+        빠르게 연락드립니다. 개설 절차, 커리큘럼, 운영 지원 등<br>
+        궁금하신 내용을 편하게 남겨 주세요.
+      </p>
+    </div>
+
+    <div class="panel">
+      
+
+        <div class="field" data-field="title">
+          <label for="title">제목<span class="req">*</span></label>
+          <input type="text" id="title" name="title" placeholder="문의 제목을 입력해 주세요">
+          <div class="err-msg">제목을 입력해 주세요.</div>
+        </div>
+
+        <div class="field" data-field="name">
+          <label for="name">작성자<span class="req">*</span></label>
+          <input type="text" id="name" name="name" placeholder="성함을 입력해 주세요">
+          <div class="err-msg">작성자를 입력해 주세요.</div>
+        </div>
+
+        <div class="field" data-field="email">
+          <label for="email">이메일<span class="req">*</span></label>
+          <input type="email" id="email" name="email" placeholder="example@email.com">
+          <div class="err-msg">올바른 이메일 주소를 입력해 주세요.</div>
+        </div>
+
+        <div class="field" data-field="phone">
+          <label for="phone">연락처<span class="req">*</span></label>
+          <input type="tel" id="phone" name="phone" placeholder="010-0000-0000">
+          <div class="err-msg">연락처를 입력해 주세요.</div>
+        </div>
+
+        <div class="field" data-field="message">
+          <label for="message">하고싶은 말씀<span class="req">*</span></label>
+          <textarea id="message" name="message" placeholder="문의하실 내용을 자유롭게 작성해 주세요"></textarea>
+          <div class="err-msg">내용을 입력해 주세요.</div>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submit-btn">
+          <span class="spinner"></span>
+          <span class="btn-text">개설문의 남기기</span>
+        </button>
+
+        <div class="status-msg" id="status-msg"></div>
+      </form>
+    </div>
+
+    <div class="info-list">
+      <div class="info-item">
+        <div class="info-icon">✓</div>
+        <div>
+          <h3>빠른 회신</h3>
+          <p>문의 접수 후 영업일 기준 1~2일 이내 담당자가 연락드립니다.</p>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">@</div>
+        <div>
+          <h3>이메일 문의</h3>
+          <p>contact@robolink.co.kr 로 문의 내용이 바로 전달됩니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="section" id="benefits">
+    <div class="section-head">
+      <h2>협력점에게 제공하는 전면 지원 프로그램</h2>
+      <p>로보링크는 협력점의 성공적인 운영을 위해 교육, 브랜드, 가격, 연계까지 통합 지원합니다.</p>
+    </div>
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <div class="benefit-num">01</div>
+        <div class="benefit-icon">📚</div>
+        <h3>교육 커리큘럼 제공</h3>
+        <p>로보링크의 로봇·AI 교육 커리큘럼과 교육 운영 자료를 제공합니다.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-num">02</div>
+        <div class="benefit-icon">✨</div>
+        <h3>브랜드 활용</h3>
+        <p>로보링크 협력점으로서 브랜드를 활용할 수 있습니다.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-num">03</div>
+        <div class="benefit-icon">💰</div>
+        <h3>협력점 할인 가격 제공</h3>
+        <p>교육 교구를 협력점 전용 가격으로 공급받을 수 있습니다.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-num">04</div>
+        <div class="benefit-icon">🔗</div>
+        <h3>교육 연계 지원</h3>
+        <p>교육 문의 발생 시 협력점과 연계하여 진행할 수 있습니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="steps">
+    <div class="section-head">
+      <h2>협력점 개설은 4가지 간단한 단계</h2>
+      <p>상담 신청부터 교육 운영까지, 로보링크가 함께합니다.</p>
+    </div>
+    <div class="steps-row">
+      <div class="step-item">
+        <div class="step-badge">01</div>
+        <h3>협력점 상담 신청</h3>
+        <p>전화, 이메일 또는 온라인 폼을 통해 상담을 신청합니다.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-badge">02</div>
+        <h3>사업 설명 및 안내</h3>
+        <p>로보링크 담당자가 사업 내용을 상세히 안내해 드립니다.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-badge">03</div>
+        <h3>협력점 계약 진행</h3>
+        <p>합의 후 공식 협력점 계약을 체결합니다.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-badge">04</div>
+        <h3>교육 및 운영 시작</h3>
+        <p>교육 자료와 교구를 전달받고 운영을 시작합니다.</p>
+      </div>
+    </div>
+    <div class="cta-inline">
+      <a href="#inquiry-form">지금 개설문의 남기기 →</a>
+    </div>
+  </section>
+
+  <footer>© 2026 Robolink. All inquiries are sent to contact@robolink.co.kr</footer>
+</div>
+
+<script>
+  // ==========================================================
+  // 이메일 발송: Web3Forms(무료) 사용
+  // 사용 전 반드시 아래 WEB3FORMS_ACCESS_KEY 값을 교체하세요.
+  // 발급 방법은 채팅 답변의 "설정 방법" 안내를 참고하세요.
+  // ==========================================================
+  const WEB3FORMS_ACCESS_KEY = "70497172-7ea1-4db0-ad3d-6d74ae14c399";
+
+  const form = document.getElementById('inquiry-form');
+  const submitBtn = document.getElementById('submit-btn');
+  const statusMsg = document.getElementById('status-msg');
+
+  function setInvalid(fieldName, invalid){
+    const el = form.querySelector(`[data-field="${fieldName}"]`);
+    el.classList.toggle('invalid', invalid);
+  }
+
+  function validate(){
+    let ok = true;
+    const title = form.title.value.trim();
+    const name = form.name.value.trim();
+    const email = form.email.value.trim();
+    const phone = form.phone.value.trim();
+    const message = form.message.value.trim();
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    setInvalid('title', !title); if(!title) ok = false;
+    setInvalid('name', !name); if(!name) ok = false;
+    setInvalid('email', !emailRe.test(email)); if(!emailRe.test(email)) ok = false;
+    setInvalid('phone', !phone); if(!phone) ok = false;
+    setInvalid('message', !message); if(!message) ok = false;
+
+    return ok;
+  }
+
+  form.addEventListener('input', (e) => {
+    const fieldWrap = e.target.closest('.field');
+    if(fieldWrap) fieldWrap.classList.remove('invalid');
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    statusMsg.className = 'status-msg';
+
+    if(!validate()){
+      statusMsg.textContent = '입력하지 않은 항목이 있어요. 다시 확인해 주세요.';
+      statusMsg.classList.add('fail', 'show');
+      return;
+    }
+
+    if(WEB3FORMS_ACCESS_KEY === "YOUR_WEB3FORMS_ACCESS_KEY"){
+      statusMsg.textContent = '이메일 발송 설정이 아직 완료되지 않았습니다. (Access Key 미입력)';
+      statusMsg.classList.add('fail', 'show');
+      return;
+    }
+
+    submitBtn.classList.add('loading');
+    submitBtn.disabled = true;
+
+    const payload = {
+      access_key: WEB3FORMS_ACCESS_KEY,
+      subject: `[로보링크 개설문의] ${form.title.value.trim()}`,
+      from_name: "로보링크 개설문의 폼",
+      제목: form.title.value.trim(),
+      작성자: form.name.value.trim(),
+      이메일: form.email.value.trim(),
+      연락처: form.phone.value.trim(),
+      "하고싶은 말씀": form.message.value.trim(),
+    };
+
+    try{
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const result = await res.json();
+
+      if(result.success){
+        statusMsg.textContent = '문의가 정상적으로 접수되었습니다. 빠르게 연락드리겠습니다!';
+        statusMsg.classList.add('success', 'show');
+        form.reset();
+      } else {
+        statusMsg.textContent = '전송에 실패했습니다. 잠시 후 다시 시도해 주세요.';
+        statusMsg.classList.add('fail', 'show');
+      }
+    } catch(err){
+      statusMsg.textContent = '네트워크 오류로 전송에 실패했습니다. 잠시 후 다시 시도해 주세요.';
+      statusMsg.classList.add('fail', 'show');
+    } finally {
+      submitBtn.classList.remove('loading');
+      submitBtn.disabled = false;
+    }
+  });
+</script>
+
+</body>
+</html>
