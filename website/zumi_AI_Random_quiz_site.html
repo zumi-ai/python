@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zumi AI와 함께하는 인공지능 퀴즈</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <style>
         :root {
             --primary: #4A00E0;
@@ -17,7 +16,6 @@
             --card-bg: #FFFFFF;
             --text: #2C3E50;
             --text-muted: #7F8C8D;
-            --accent-orange: #f97316;
         }
 
         * {
@@ -30,13 +28,11 @@
         body {
             background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
             min-height: 100vh;
-            color: var(--text);
-        }
-
-        .page-content {
             display: flex;
             justify-content: center;
-            padding: 40px 20px;
+            align-items: center;
+            color: var(--text);
+            padding: 20px;
         }
 
         .main-wrapper {
@@ -316,145 +312,31 @@
         .result-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 15px; }
         .result-score { font-size: 3rem; font-weight: 900; color: var(--primary); margin-bottom: 20px; }
 
-        /* ===== 상단 공통 헤더 (E-매뉴얼 페이지와 동일) ===== */
-        header {
-            width: 100%; height: 90px; background-color: #fff;
-            display: flex; justify-content: center; border-bottom: 1px solid #f2f2f2;
-            position: sticky; top: 0; z-index: 1010;
-        }
-        .header-container {
-            width: 100%; max-width: 1100px; display: flex;
-            align-items: center; justify-content: flex-start; padding: 0 20px;
-        }
-        .logo { margin-right: 60px; }
-        .logo img { height: 34px; display: block; }
-        header nav { display: flex; gap: 40px; margin-right: auto; }
-        header nav a { text-decoration: none; color: #333; font-size: 18px; font-weight: 700; letter-spacing: -0.5px; font-family: 'Noto Sans KR', sans-serif; }
-        header nav a:hover { color: #00a0ff; }
-        .header-right { display: flex; align-items: center; gap: 35px; justify-content: flex-end; }
-        .lang-link { text-decoration: none; color: #444; font-size: 17px; font-weight: 500; }
-        .buy-btn {
-            background-color: #00a0ff; color: #fff; padding: 6px 14px;
-            font-size: 13px; font-weight: 400; border-radius: 8px;
-            text-decoration: none; transition: 0.2s ease-in-out; white-space: nowrap;
-        }
-        .buy-btn:hover { background-color: #008be0; transform: translateY(-1px); }
-        .menu-btn { display: none; font-size: 30px; cursor: pointer; }
-
-        .pc-nav { display: flex; align-items: center; }
-        .mobile-nav { display: none; }
-
-        .header-quiz-banner {
-            background: linear-gradient(135deg, var(--accent-orange), #ef4444);
-            color: white; padding: 0.5rem 1rem; border-radius: 20px;
-            text-decoration: none; font-size: 0.85rem; font-weight: 500;
-            display: flex; align-items: center; gap: 0.5rem;
-            box-shadow: 0 4px 6px -1px rgba(249, 115, 22, 0.2);
-            transition: transform 0.2s;
-        }
-        .header-quiz-banner:hover { transform: translateY(-2px); }
-
-        /* 반응형: 모바일 메뉴 */
-        @media (max-width: 768px) {
-            .menu-btn { display: block; }
-            .pc-nav { display: none; }
-            .mobile-nav {
-                position: fixed; top: 90px; left: 16px; right: 16px;
-                background: #fff; border-radius: 18px; padding: 18px;
-                display: none; flex-direction: column; gap: 10px;
-                box-shadow: 0 20px 60px rgba(0,0,0,.15); z-index: 999;
-                max-height: calc(100vh - 110px); overflow-y: auto;
-            }
-            .mobile-nav.open { display: flex; }
-            .mobile-nav a { padding: 14px 18px; border-radius: 10px; font-size: 17px; font-weight: 600; color: #333; text-decoration: none; font-family: 'Noto Sans KR', sans-serif; }
-            .mobile-nav a:hover { background: #f5f7fa; }
-            .header-container { justify-content: space-between; }
-            .logo { margin-right: 0; }
-            .header-right { display: none; }
-            .menu-btn { display: flex; }
-
-            .page-content { padding: 24px 16px; }
-        }
-
-        /* 모바일 메뉴 내 퀴즈 배너 텍스트 색상 흰색으로 유지 */
-        .mobile-nav .header-quiz-banner {
-            color: #ffffff !important;
-        }
-
-        /* 모바일 구매하기 버튼 특별 화려한 테마 */
-        .mobile-nav a.mobile-buy {
-            background: linear-gradient(135deg, #00a0ff 0%, #0066ff 100%);
-            color: #ffffff !important;
-            text-align: center;
-            padding: 14px 18px;
-            margin-top: 5px;
-            border-radius: 12px;
+        .btn-home-link {
+            display: block !important;
+            width: 100%;
+            padding: 16px;
+            background-color: #FFFFFF;
+            color: #4A00E0;
+            text-decoration: none;
+            font-size: 1rem;
             font-weight: 700;
-            font-size: 16px;
-            letter-spacing: -0.3px;
-            box-shadow: 0 4px 15px rgba(0, 102, 255, 0.3);
-            transition: all 0.3s ease;
-            display: block;
+            border-radius: 18px;       
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); 
+            transition: all 0.2s ease;
+            text-align: center;
+            box-sizing: border-box;
         }
-        .mobile-nav a.mobile-buy:active {
-            transform: scale(0.98);
-            box-shadow: 0 2px 8px rgba(0, 102, 255, 0.4);
-            background: linear-gradient(135deg, #008be0 0%, #0052cc 100%);
+
+        .btn-home-link:hover {
+            background-color: #F8F6FF; 
+            transform: translateY(-3px); 
+            box-shadow: 0 12px 30px rgba(142, 45, 226, 0.15);
         }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="header-container">
-        <div class="logo">
-            <a href="https://zumi-ai.github.io/python/website/zumi_ai_e_manual.html">
-                <img id="img-logo" src="" alt="Zumi AI">
-            </a>
-        </div>
-
-        <!-- PC 버젼 상단 메뉴들 (제품소개, E-매뉴얼, FAQ, 소식, 퀴즈 , ENG, 구매하기 -->
-        <nav class="pc-nav">
-            <a href="https://zumi.co.kr/introduce">제품소개</a>
-            <a href="https://zumi-ai.github.io/python/website/zumi_ai_e_manual.html">E-매뉴얼</a>
-            <a href="https://zumi.co.kr/faq">FAQ</a>
-            <a href="https://zumi.co.kr/news">소식</a>
-
-            <a href="https://zumi-ai.github.io/python/website/zumi_AI_Random_quiz_site.html" class="header-quiz-banner">
-                <span class="material-icons" style="font-size: 1.1rem;">help_outline</span>
-                주미 AI를 아시나요? 5문항 진단 퀴즈풀기!
-            </a>
-
-            <div class="header-right">
-                <a href="https://zumi-ai.github.io/python/website/zumi_eng_index.html" class="lang-link">ENG</a>
-                <a href="https://smartstore.naver.com/xxxx" class="buy-btn" target="_blank">구매하기</a>
-            </div>
-        </nav>
-
-        <!-- 모바일 버젼 상단 메뉴들 (제품소개, E-매뉴얼, FAQ, 소식, 퀴즈 , ENG, 구매하기 -->
-        <nav class="mobile-nav">
-            <a href="https://zumi-ai.github.io/python/website/zumi_AI_Random_quiz_site.html" class="header-quiz-banner">
-                <span class="material-icons">help_outline</span>
-                <div>
-                    <strong>주미 AI를 아시나요?</strong><br>
-                    <small>5문항 진단 퀴즈풀기!</small>
-                </div>
-            </a>
-            <hr>
-            <a href="https://zumi.co.kr/introduce">제품소개</a>
-            <a href="https://zumi-ai.github.io/python/website/zumi_ai_e_manual.html">E-매뉴얼</a>
-            <a href="https://zumi.co.kr/faq">FAQ</a>
-            <a href="https://zumi.co.kr/news">소식</a>
-            <hr>
-            <a href="https://zumi-ai.github.io/python/website/zumi_eng_index.html">ENG</a>
-            <a href="https://roboshop.co.kr/product/detail.html?product_no=887&cate_no=1&display_group=3" target="_blank" class="mobile-buy">구매하기</a>
-        </nav>
-
-        <div class="menu-btn">☰</div>
-    </div>
-</header>
-
-<div class="page-content">
 <div class="main-wrapper">
 
     <div class="container">
@@ -521,9 +403,12 @@
             </div>
             <div id="result-actions"></div>
         </div>
-    </div>
+    </div> 
+    
+    <a href="https://zumi.co.kr" target="_blank" class="btn-home-link">
+        로보링크 주미 AI 공식 홈페이지 방문하기 🏠
+    </a>
 
-</div>
 </div>
 
 <script>
@@ -837,23 +722,6 @@
         };
         resultActions.appendChild(retryBtn);
     }
-
-    // 공통 헤더: 로고 이미지 로드 (E-매뉴얼 페이지와 동일한 설정 파일 사용)
-    window.addEventListener('load', () => {
-        if (typeof IMAGE_PATHS !== 'undefined') {
-            document.getElementById('img-logo').src = IMAGE_PATHS.LOGO;
-        }
-    });
-
-    // 공통 헤더: 모바일 메뉴 토글
-    const menuBtn = document.querySelector(".menu-btn");
-    const nav = document.querySelector(".mobile-nav");
-    if (menuBtn) {
-        menuBtn.addEventListener("click", () => {
-            nav.classList.toggle("open");
-        });
-    }
 </script>
-<script src="zumi_ai_e_manual_config.js"></script>
 </body>
-</html>  
+</html>
