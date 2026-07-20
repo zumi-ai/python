@@ -1,6 +1,26 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YPN4S5W89M"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+
+      gtag('config', 'G-YPN4S5W89M');
+  </script>
+
+  <!-- microsoft clarity -->
+  <script type="text/javascript">
+      (function (c, l, a, r, i, t, y) {
+          c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+          t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+          y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+      })(window, document, "clarity", "script", "xcbs4sg783");
+  </script>
+
   <meta charset="UTF-8" />
   <title>7. DMS 운전자 상태 인식 시스템</title>
 
@@ -33,7 +53,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%; 
+  height: 100%;
   background-image: url('https://lh3.googleusercontent.com/fife/ALs6j_E782PyIFMYtfVVTWKJmz-NPOAMoNGyICJBadA4s8rszXoBW1pdOjGqEGLaJ6a0MTRkxoIZda-w1eEBdzmu7NpqU9QlaUX2XQY5BKLHSPbORtCE87IE3XMTnbsdNUIM2QDvRB41vYEKbzD3Y6bCsxXuLgblYo45APBATItrnaPs5SkcXeu9aMFuO8Q6kvoPorMCwyAObsM39R5G5_E_Ny4k4oc1IHZfhdJELCCBFT-uuiQtWHXXxmLmcqqCFV36Yub3GZcoAkilshppk0ij1iotqUM9Nk4fNUjg_HSqeXi7yzrZ4gofhiS8xQebPOsnnYHgk3L0SCghkoc6qFYFWAscDbY3J-T3eetqtbXbB6-v3GNFW7xti1pcvNbgLjZtRsaIGJynrnsWED8AUXQRHCk3EmYfxA0gY4wsBe-hWeGJZY9cofd4gEbj7ievulF49GZV7LRbry0cXnDZVSVQYrNcc8oxBM5UvAhNouLXYIJXJ1_XrT67zlzLmaWFvgQQjBnnk2oQX60UerK8qSGRhQ8Mmezkv_cMpiU9M46f8t9rwWVhsknkIxzWOEJEmq9ZT1gDIu8pJuJ3u-S9ZLVvKY8HBMqd09aJxwQfKpdcmEqOn2DjZJ5Ia6EDnV0d-41bYyXz0oZOcs1sDV1vh9Ecz35P12FNqpPjzcYZKRLxGdGyygvDYaACaFqHkqaXrW9pE58AAlqvnBmeyNW8NlG2c52S6Q2lsdbBpAWcXQp0iswofLRMi6Wd-Q1B6UUdMXZhyEAdOtiCngRDzpx8RasWmW-9ZMSqnwvl3B9eB113R5jXh6ZB_0eNjO20SZXZn1XEZP-iD0C0qZgHA_-dVp38zoiT-RutNUwTPiG22-Ff6w_JWic7E1tYgOgMCGWjKDdEbHZW3GB3zXyBrnyH81_8oPGApy1vjOa8_pqZS5jyX9PFbODsrQdPRwq4xTMYsW6OTvG08eM96O2lOThJ5PzHxrOYSpOR-kVKLM7VBUbQHPYq36ECuFUY3kDA7yyMnVm4WWMlU3vS0aguTUUva3CAskP6V8difKwvTNgeKae8dGv44TUtEHGvLjk1eWiBrThOEBpik5XOrt5Y_2d8YnWvbymfdh1QdqeU9o0yxC0tVQBDuGDjkfNVsETEGIK9Sy6ZHBOlQjElWxhelqVv6CaiKM8hKEtfTQoJAgJsgboz_5VGUU3hye0xJY18dQ0bQ23jPDl__tjztKa64n8Hw4BzvKDG_cP0J-1h-m3C9COokR6tTEWSzUyRtK98vafvKmkM8Jw_o9UnoxEN9dbo50aKeD88MUKYso3ijwz-H5DNJHK9wNhgnp2Yn3WkVR_ZtlQpfOcJO3hNmCVOGJDdZ9g3gUBDjQXFg1I_Ww7Wc636ttmFKGDuYeNvyyiwLCmXtbmVhkT29p2M-k4_CQZKh-nDzkUlD-B3oXw4DQr7qr9qXEPX7zFqi0KW521Bynrl2z_NP5nf-AWAun8hnjrpdxoedpcLYra9Qqw-7Qz2gptYkn1FBtRCdTMKEWvYiHlOcruhXC1PSTfyHahNxdVaNkhfDtfnF7LZu0NSlx-JOcMtigLfj8iGGneEDJMB3HlA674Hv6s2MoVnxU5E6x71lqwuC0n2oX5H8BRUx0IiOn40i9TcbEPpzDSwPR8hk3fyLQ0_LiReswY0HUhPAA=w1919-h918');
   background-size: cover;
   background-position: center;
@@ -95,7 +115,7 @@
     @keyframes neon-blink {
       0% {
         text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
-        opacity: 0.3; 
+        opacity: 0.3;
       }
       50% {
         text-shadow: 0 0 2px rgba(255,255,255,0.5), 0 0 5px rgba(74,144,226,0.5), 0 0 10px rgba(74,144,226,0.5), 0 0 15px rgba(74,144,226,0.5);
@@ -160,7 +180,7 @@
 
 <div class="flex">
 
- 
+
   <aside id="sidebar"  class="hidden md:flex w-64 bg-[#3B82F6] text-white p-4 rounded-r-xl flex-col space-y-2 transition-all duration-300 fixed md:relative z-40 h-screen md:h-auto top-0 left-0 md:translate-x-0">
 
 <div class="flex justify-between items-center mb-4 md:hidden">
@@ -256,13 +276,13 @@
 운전자가 전방을 응시하지 않거나 스마트폰을 응시하는 행동이 감지되면, 시스템은 경고음을 발생시키고 계기판에 시각적 경고를 제공합니다. 딥러닝 기반 안면 및 시선 추적 기술을 활용해 높은 정확도로 주의 상태를 실시간 분석합니다.
  <br><br>
 
-●<strong>음주·약물 운전 탐지 시스템</strong><br> 
+●<strong>음주·약물 운전 탐지 시스템</strong><br>
 AI는 운전자의 안색, 눈동자 움직임, 음성 떨림, 반응 속도 등을 통해 이상 징후를 감지합니다. 감지된 경우, 시동이 제한되거나 관제 시스템에 경고가 전송되어 제3자 개입을 유도할 수 있습니다..<br><br>
 
-●<strong>피로 누적 경고 및 휴식 권유 시스템</strong><br> 
+●<strong>피로 누적 경고 및 휴식 권유 시스템</strong><br>
 장시간 운전 및 잦은 차량 제동 등의 패턴을 분석하여 피로 상태를 예측합니다. 일정 기준을 넘어서면 차량은 "휴식이 필요합니다"라는 메시지를 송출하고, 휴게소 안내 기능이 활성화됩니다. <br><br>
 
-●<strong>감정 기반 운전자 지원 시스템</strong><br> 
+●<strong>감정 기반 운전자 지원 시스템</strong><br>
 AI는 운전자의 표정, 목소리 톤, 호흡 패턴 등을 분석하여 스트레스나 분노 상태를 감지합니다. 이때 차량은 운전 보조 시스템을 보다 부드럽게 조정하거나, 편안한 음악을 추천해 감정 완화를 유도합니다.<br><br>
 
 </p>
@@ -280,7 +300,7 @@ AI는 운전자의 표정, 목소리 톤, 호흡 패턴 등을 분석하여 스�
 
    <h2 class="text-lg font-bold mb-2">👁️‍🗨️ EAR란?</h2>
         <p class="text-sm">EAR(Eye Aspect Ratio)는 눈의 세로 길이 / 가로 길이 비율을 말하며, 눈이 감기면 세로 길이는 작아지고, EAR 값은 작아집니다.즉, 눈이 일정 이상 감긴 상태를 의미하며
-이 값을 너무 낮게 하면 졸음을 감지 할 수 없고, 너무 높이면 자주 졸음으로 잘못 판단합니다. 이렇게 EAR을 사용하여 운전자의 졸음 상태를 확인 할 수 있습니다. 
+이 값을 너무 낮게 하면 졸음을 감지 할 수 없고, 너무 높이면 자주 졸음으로 잘못 판단합니다. 이렇게 EAR을 사용하여 운전자의 졸음 상태를 확인 할 수 있습니다.
 <br><br>
 
 
@@ -324,7 +344,7 @@ EAR_CONSEC_FRAMES = 15<br>
 </button>
 </a>
   </div>
-</p> 
+</p>
 
 <p class="text-[14px] text-gray-500 ">
 * 이 예제는 mediapipe모듈을 사용합니다. mediapipe 모듈이 없다면 pip installmediapipe를 사용하여 설치 해주세요<br>
@@ -380,46 +400,46 @@ EAR_CONSEC_FRAMES = 15<br>
 <h2 class="text-lg font-bold mb-2">4️⃣   DMS 기반 졸음 운전 감지 시스템 시나리오</h2>
         <p class="text-sm">
 
-<strong> 🚘 DMS 기반 졸음 운전 감지 시스템 </strong><br> 
+<strong> 🚘 DMS 기반 졸음 운전 감지 시스템 </strong><br>
 Drowsiness Detection via AI-driven Driver Monitoring = 시선 추적 + 생체 패턴 분석 + AI 경고 판단 시스템 <br><br>
 
   <h2 class="text-lg font-bold mb-2">🔧핵심 기술 </h2>
         <p class="text-sm">
 
-1. 👁️‍🗨️<strong> 시선 추적 및 얼굴 인식 시스템</strong><br> 
-Eye Gaze & Head Pose Monitoring<br> 
-· NIR(근적외선) 카메라 기반 얼굴·눈동자 추적<br> 
-· 깜빡임 빈도, 눈꺼풀 개폐 속도, 고개 각도 추적<br> 
-· 전방 주시 여부 판단 및 비정상 자세 탐지<br><br> 
+1. 👁️‍🗨️<strong> 시선 추적 및 얼굴 인식 시스템</strong><br>
+Eye Gaze & Head Pose Monitoring<br>
+· NIR(근적외선) 카메라 기반 얼굴·눈동자 추적<br>
+· 깜빡임 빈도, 눈꺼풀 개폐 속도, 고개 각도 추적<br>
+· 전방 주시 여부 판단 및 비정상 자세 탐지<br><br>
 
-2. 📡<strong> 생체 반응 분석 센서</strong><br> 
-Bio-signal Monitoring via Seat & Steering Sensors<br> 
-· 운전자의 심박수, 호흡, 땀 분비량 등 측정<br> 
-· 피로 축적 시 생리 신호 패턴 변화 감지<br> 
-· 운전대 및 시트에 탑재된 센서 기반 측정<br><br> 
+2. 📡<strong> 생체 반응 분석 센서</strong><br>
+Bio-signal Monitoring via Seat & Steering Sensors<br>
+· 운전자의 심박수, 호흡, 땀 분비량 등 측정<br>
+· 피로 축적 시 생리 신호 패턴 변화 감지<br>
+· 운전대 및 시트에 탑재된 센서 기반 측정<br><br>
 
-3. 🤖 <strong>졸음 상태 판단 AI</strong><br> 
-AI-based Drowsiness Risk Classifier<br> 
-· 입력된 시선 및 생체 데이터를 딥러닝 모델로 분석<br> 
-· CNN + LSTM 기반 실시간 상태 분류<br> 
-· 졸음 확률이 일정 수치 초과 시, 긴급 경고 시스템 작동<br><br> 
+3. 🤖 <strong>졸음 상태 판단 AI</strong><br>
+AI-based Drowsiness Risk Classifier<br>
+· 입력된 시선 및 생체 데이터를 딥러닝 모델로 분석<br>
+· CNN + LSTM 기반 실시간 상태 분류<br>
+· 졸음 확률이 일정 수치 초과 시, 긴급 경고 시스템 작동<br><br>
 
  <h2 class="text-lg font-bold mb-2">
 💡 예시를 통한 이해</h2>
         <p class="text-sm">
 📍 DMS 시나리오: 졸음 감지 및 정지 <br>
-1. 운전 중인 차량에서, 운전자의 눈 깜빡임이 평소보다 느려집니다.<br> 
-2 시선이 흐트러지며 고개가 아래로 처집니다<br> 
-3. AI는 이 데이터를 실시간 분석하여 졸음 상태로 판단합니다.<br> 
-4. 차량은 다음과 같은 조치를 수행 합니다.<br> 
-5. LED를 켜고 경고음을 울림<br> 
-6. 계기판에 “졸음 감지. 를 표시합니다.<br> 
-7. 졸음 상태를 캡쳐하여 디바이스에 저장 합니다. <br> <br> 
+1. 운전 중인 차량에서, 운전자의 눈 깜빡임이 평소보다 느려집니다.<br>
+2 시선이 흐트러지며 고개가 아래로 처집니다<br>
+3. AI는 이 데이터를 실시간 분석하여 졸음 상태로 판단합니다.<br>
+4. 차량은 다음과 같은 조치를 수행 합니다.<br>
+5. LED를 켜고 경고음을 울림<br>
+6. 계기판에 “졸음 감지. 를 표시합니다.<br>
+7. 졸음 상태를 캡쳐하여 디바이스에 저장 합니다. <br> <br>
 
 
 <h2  id="example_18" class="text-lg font-bold mb-2">5️⃣   DMS 기반 졸음 운전 감지 시스템 </h2>
-     
-        <p class="text-sm">이제 DMS 졸음 시뮬레이터에 주미 연결 코드를 적용하여 아래 프로그램을 실행 해보겠습니다. </p> 
+
+        <p class="text-sm">이제 DMS 졸음 시뮬레이터에 주미 연결 코드를 적용하여 아래 프로그램을 실행 해보겠습니다. </p>
 
 <br>
 
@@ -467,33 +487,33 @@ threading.Thread(target=<span class="text-orange-500">lambda </span>: zumiAI.for
 
 <h2 class="text-lg font-bold mb-2">🟩정상 상태 🟨얼굴 미탐지 🟥졸음 감지!</h2>
     <p class="text-sm">웹캠을 통하여 운전자의 EAR을 감지하고 정상 상태인지, 얼굴을 탐지 할 수 없는 상태인지, 졸음 상태인지를 확인 합니다.
-만약 졸음 상태라면, 주행하던 주미를 정지 시키고 졸음 상태를 캡쳐하여 디바이스(=PC 바탕화면)에 저장 합니다.  
-</p> 
+만약 졸음 상태라면, 주행하던 주미를 정지 시키고 졸음 상태를 캡쳐하여 디바이스(=PC 바탕화면)에 저장 합니다.
+</p>
 <br>
 
 <h2 class="text-lg font-bold mb-2">🟦Zumi 연결됨  ⬜ 주미 AI 연결</h2>
     <p class="text-sm">주미 AI가 정상적으로 연결 되었다면, 파란색으로 표시 해주고, 만약 연결 되지 못했다면 회색 배경으로 표시 됩니다.
-</p> 
+</p>
 <br>
 
 <h2 class="text-lg font-bold mb-2">🟦IP 표시  ⬜ Unconnecter</h2>
     <p class="text-sm">주미 AI가 정상적으로 연결 되었다면, 연결 된 주미 AI의 IP를 표시 해주고, 만약 연결 되지 못했다면 회색 배경으로 Unconnected를 표시 됩니다.
-</p> 
+</p>
 <br>
 
 <h2 class="text-lg font-bold mb-2">🟥강제 졸음 감지</h2>
     <p class="text-sm">웹캠(Webcam)을 통해서 졸음을 실시간으로 감지 하고 있지만, 감지 값이 이상하거나 강제로 주미 AI를 멈춰야 할 때엔, 해당 버튼을 클릭하여 강제로 멈출 수도 있습니다.
-</p> 
+</p>
 <br>
 
 <h2 class="text-lg font-bold mb-2">🟩주행하기</h2>
     <p class="text-sm">해당 버튼을 누르면 주미AI 가 앞으로 1의 속도로 무한히 전진 합니다. 만약 웹캠(Webcam)으로 졸음이 감지 되거나 강제 졸음감지 버튼을 누르면 주행을 멈춥니다.
-</p> 
+</p>
 <br>
 
 <h2 class="text-lg font-bold mb-2">⬛ 참고하기</h2>
     <p class="text-sm">아래 이미지를 인쇄하여, 눈을 뜬 사람 (정상 상태) , 눈을 감은 사람 (졸림 상태) 를 대신하여 사용 할 수 있습니다.
-</p> 
+</p>
 
 <img src="https://lh3.googleusercontent.com/fife/ALs6j_EqkMM3OxHPrnhh7e7Ojmd6yOjasrdO3SoQvK7hC9qHUiKDsbbL_wEbdjCLLpZVuS3t7NKRHkVNVl8z6kMrtsw5DtYRrZv09vV1Dz3vX5uin96Q7bA8Gl_yBmBB-z7w2kfcLaK-Fm5wLuduPbY9ef7LAXu7yOU-cvlPtiHWdaRFiTL7ik7zehZFumuG71-mrZM6R7zQlIZAYgHpOOzR4x8kLOeg9emTqNDiHSNFruhsaCCg6LT5DoXhs6GEIQskoIMSSpVLeDuQD1INrOnOi2bWoeq0zMknLQKMChKOd9outkD3_3GfXTx9kSYhgRmoxcDTHjhfPPkEPfLb8M24us28Utjbd9gGxxk1UNFMqmSMSqfNtTD7v2FIYbzV8fUnOHcdAAqfOxkE4B5lbkWCrkgtypS60AZLO7uJGlHEeaJD9GZVS3Z2fw6dtDFrCqNzqNcHuFv6-6qh2FodFUjXO_KhsMJxSkPAtTH4Y7Gadzo7U2Xurlg3rTwddH7Gw56SwOWhxrVd3XlDWIV4usqopF492AP8v9toKbeqSbMU2p1z9HGHNJheklh_InuwV4Rg0XS6eGvsNx0qSdqV3Yai53dOUDkIthRiWA47EOt5HnceY6tHoF6IX2BYidi3ddGPyO0dHbdmj__Qcn5OaT_NJYX0mmtm0c5UPORrsvAfLjnLe3B7l_6c4Jg8RTFrNw1NPqF5rIPaslFfJtbnbziy4U5_g8n0hO2BSLk7xuMEkb9LK71PTSFPDeLwa8rBhbRVHfdP6of5rrqZzNcBCxciB79LEwpk0v65tHipIAWZFAmhkgN1zTPp1R7tvqEzD5SZ8MNjvb8WXoEuwoFaiADfZcjmc5HKk-e4TBUmU0npG5tCc3M9kyFsk1G8rJ-A_YP9bA5WVHNVGZDEUN0HjHnn6s0IpZ2lC3602I0mIq8L-nNJKq88UVO042ihf_CvC4S8y6enrqTGjGj-s9Vl4LksWEe9K7ivqarlRnsvHi8D7WROB0bzVfVdLzPi5UcSHJeaZ4U3rPDQFrKON6sXawFHJfDsY4sRusIztnoj4KW-fsmXRZaudY9NiGe8v5n8aSVT990Su9ve4aj7QTgzX_kPvIaaqjyrG30qZwE48cQipVz4WbfUbHeJd_Y_X-NPK4Yjw7vI7u_xihzL5X9GxsccJg8CmDvkKzBolK6lR4zd0j5laXt1cg4en-4Qch5HRtscUq1cjc-iNyt5K4hx0CZwn2KPKCcLmDg0ib49lHjEhVK1tpHblUT2WERXWa7Y_X-jmpoQt5I63XmwCPsZB9le7_XwXWVkwasxcKB2fFYTC3TS1VH_1x0uMhpw5xdVeifdHKhyI-WmtTrseahQ5QXD3h_JeQUH5UZN8pkLo0oteaisxYS-p8TlzB9mOUuyfDYmJAoaZe4eml0dnVw7eEDbviv8GMvWm_N-7hCPnLThviQnmOHTil-JPCc0HmAWohhSg9VGPpMSXzQKACWYLMuHdoqvmkjy0qvatu9c_u4L6ZnsvGDuZqUbT6cm2N-dB665z9nrqZh396Ca2at7NaUwwCAzfTAYVE9Ln8-oJ0jtd10SMgZs5Hye1sEBnIzrF5BsV1lTNYqwfFRgFaptyGeTw3w1vkMx7DcdAZi8ymKMQKh00-Hnx5oaXgurVS-8mx2yyUjb2-3PGkluzA=w1919-h918?auditContext=forDisplay" alt="그림5" class="w-full rounded-lg ">
 <br>

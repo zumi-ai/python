@@ -1,6 +1,26 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YPN4S5W89M"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+
+      gtag('config', 'G-YPN4S5W89M');
+  </script>
+
+  <!-- microsoft clarity -->
+  <script type="text/javascript">
+      (function (c, l, a, r, i, t, y) {
+          c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+          t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+          y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+      })(window, document, "clarity", "script", "xcbs4sg783");
+  </script>
+
   <meta charset="UTF-8" />
   <title>5. V2I 신호등 통신 감지 시스템</title>
 
@@ -33,7 +53,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%; 
+  height: 100%;
   background-image: url('https://lh3.googleusercontent.com/fife/ALs6j_E782PyIFMYtfVVTWKJmz-NPOAMoNGyICJBadA4s8rszXoBW1pdOjGqEGLaJ6a0MTRkxoIZda-w1eEBdzmu7NpqU9QlaUX2XQY5BKLHSPbORtCE87IE3XMTnbsdNUIM2QDvRB41vYEKbzD3Y6bCsxXuLgblYo45APBATItrnaPs5SkcXeu9aMFuO8Q6kvoPorMCwyAObsM39R5G5_E_Ny4k4oc1IHZfhdJELCCBFT-uuiQtWHXXxmLmcqqCFV36Yub3GZcoAkilshppk0ij1iotqUM9Nk4fNUjg_HSqeXi7yzrZ4gofhiS8xQebPOsnnYHgk3L0SCghkoc6qFYFWAscDbY3J-T3eetqtbXbB6-v3GNFW7xti1pcvNbgLjZtRsaIGJynrnsWED8AUXQRHCk3EmYfxA0gY4wsBe-hWeGJZY9cofd4gEbj7ievulF49GZV7LRbry0cXnDZVSVQYrNcc8oxBM5UvAhNouLXYIJXJ1_XrT67zlzLmaWFvgQQjBnnk2oQX60UerK8qSGRhQ8Mmezkv_cMpiU9M46f8t9rwWVhsknkIxzWOEJEmq9ZT1gDIu8pJuJ3u-S9ZLVvKY8HBMqd09aJxwQfKpdcmEqOn2DjZJ5Ia6EDnV0d-41bYyXz0oZOcs1sDV1vh9Ecz35P12FNqpPjzcYZKRLxGdGyygvDYaACaFqHkqaXrW9pE58AAlqvnBmeyNW8NlG2c52S6Q2lsdbBpAWcXQp0iswofLRMi6Wd-Q1B6UUdMXZhyEAdOtiCngRDzpx8RasWmW-9ZMSqnwvl3B9eB113R5jXh6ZB_0eNjO20SZXZn1XEZP-iD0C0qZgHA_-dVp38zoiT-RutNUwTPiG22-Ff6w_JWic7E1tYgOgMCGWjKDdEbHZW3GB3zXyBrnyH81_8oPGApy1vjOa8_pqZS5jyX9PFbODsrQdPRwq4xTMYsW6OTvG08eM96O2lOThJ5PzHxrOYSpOR-kVKLM7VBUbQHPYq36ECuFUY3kDA7yyMnVm4WWMlU3vS0aguTUUva3CAskP6V8difKwvTNgeKae8dGv44TUtEHGvLjk1eWiBrThOEBpik5XOrt5Y_2d8YnWvbymfdh1QdqeU9o0yxC0tVQBDuGDjkfNVsETEGIK9Sy6ZHBOlQjElWxhelqVv6CaiKM8hKEtfTQoJAgJsgboz_5VGUU3hye0xJY18dQ0bQ23jPDl__tjztKa64n8Hw4BzvKDG_cP0J-1h-m3C9COokR6tTEWSzUyRtK98vafvKmkM8Jw_o9UnoxEN9dbo50aKeD88MUKYso3ijwz-H5DNJHK9wNhgnp2Yn3WkVR_ZtlQpfOcJO3hNmCVOGJDdZ9g3gUBDjQXFg1I_Ww7Wc636ttmFKGDuYeNvyyiwLCmXtbmVhkT29p2M-k4_CQZKh-nDzkUlD-B3oXw4DQr7qr9qXEPX7zFqi0KW521Bynrl2z_NP5nf-AWAun8hnjrpdxoedpcLYra9Qqw-7Qz2gptYkn1FBtRCdTMKEWvYiHlOcruhXC1PSTfyHahNxdVaNkhfDtfnF7LZu0NSlx-JOcMtigLfj8iGGneEDJMB3HlA674Hv6s2MoVnxU5E6x71lqwuC0n2oX5H8BRUx0IiOn40i9TcbEPpzDSwPR8hk3fyLQ0_LiReswY0HUhPAA=w1919-h918');
   background-size: cover;
   background-position: center;
@@ -43,7 +63,7 @@
 }
 
 
-  
+
 .traffic-container {
   width: 100px;
   margin: 20px auto;
@@ -81,10 +101,10 @@
   background-color: #4d0000;
 }
 .yellow {
-  background-color: #4d3b00; 
+  background-color: #4d3b00;
 }
 .green {
-  background-color: #003300; 
+  background-color: #003300;
 }
 
 
@@ -110,7 +130,7 @@
   background-color: black;
   color: white;
   border: none;
-  border-radius: 8px; 
+  border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s;
 }
@@ -178,7 +198,7 @@
     @keyframes neon-blink {
       0% {
         text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
-        opacity: 0.3; 
+        opacity: 0.3;
       }
       50% {
         text-shadow: 0 0 2px rgba(255,255,255,0.5), 0 0 5px rgba(74,144,226,0.5), 0 0 10px rgba(74,144,226,0.5), 0 0 15px rgba(74,144,226,0.5);
@@ -244,7 +264,7 @@
 
 <div class="flex">
 
- 
+
   <aside id="sidebar"  class="hidden md:flex w-64 bg-[#3B82F6] text-white p-4 rounded-r-xl flex-col space-y-2 transition-all duration-300 fixed md:relative z-40 h-screen md:h-auto top-0 left-0 md:translate-x-0">
 
 <div class="flex justify-between items-center mb-4 md:hidden">
@@ -333,12 +353,12 @@
 - 감지된 정보가 RSU를 통해 접근 차량에 실시간 전송<br>
 - 차량은 자율적으로 정지하거나 제한 속도를 낮춰 보행자 안전을 확보 <br><br>
 
-●<strong>적응형 우회 경로 안내 시스템</strong><br> 
+●<strong>적응형 우회 경로 안내 시스템</strong><br>
 - 도로 인프라에 설치된 센서(공사 감지, 침수, 낙석, 사고 등)가 도로 이상 상태를 실시간 탐지<br>
 - 수집된 정보는 RSU를 통해 차량에 전송<br>
 - 차량 내비게이션 시스템이 이를 바탕으로 최적의 우회 경로를 자동 설정하여 사고 구간을 회피<br><br>
 
-●<strong>긴급차량 접근 경고 및 신호 우선 시스템</strong><br> 
+●<strong>긴급차량 접근 경고 및 신호 우선 시스템</strong><br>
 구급차, 소방차 등 긴급차량이 도로 인프라(RSU)에 우선 통과 요청 신호를 전송<br>
 RSU는 교차로 신호제어기에 명령을 전달하여, 긴급차량 방향의 신호를 즉시 녹색으로 전환<br>
 동시에 일반 차량들에게는 “긴급차량 접근 중” 경고를 전송, 자율 감속 또는 정지 유도<br><br>
@@ -396,7 +416,7 @@ self.anim_frame = 9<br>
 </a>
   </div>
 
-</p> 
+</p>
 
 
 <p class="text-[14px] text-gray-500 ">
@@ -465,7 +485,7 @@ light_color = zumiAI.get_traffic_light_color()<br>
 </a>
   </div>
 
-</p> 
+</p>
 
 
 <br>
@@ -484,7 +504,7 @@ light_color = zumiAI.get_traffic_light_color()<br>
 <h2  id="example_13" class="text-lg font-bold mb-2">3️⃣   V2I 기반 스마트 횡단보도 감지 시스템</h2>
         <p class="text-sm">
 
-<strong> 🚦 스마트 신호등 연동 주행 지원 시스템</strong><br> 
+<strong> 🚦 스마트 신호등 연동 주행 지원 시스템</strong><br>
 Smart Traffic-Light Awareness System via V2I Communication = 신호등 상태 인식 + V2I 통신 + 차량 속도 및 출발 타이밍 제어 시스템 <br><br>
 
 <strong> 스마트 횡단보도 감지 시스템이란? </strong>
@@ -498,23 +518,23 @@ Smart Traffic-Light Awareness System via V2I Communication = 신호등 상태 �
   <h2 class="text-lg font-bold mb-2">🔧핵심 기술 </h2>
         <p class="text-sm">
 
-1. 👁️‍🗨️<strong> 횡단보도 신호 및 보행자 감지 시스템</strong><br> 
-Real-Time Pedestrian & Signal Detection<br> 
+1. 👁️‍🗨️<strong> 횡단보도 신호 및 보행자 감지 시스템</strong><br>
+Real-Time Pedestrian & Signal Detection<br>
 · 신호 제어기가 횡단보도 신호 상태(적색/녹색 및 남은 시간)를 실시간 분석<br>
 · 횡단보도 인근 센서를 통해 보행자, 유모차, 휠체어 등 감지<br>
-· RSU 또는 스마트 신호제어기를 통해 인식 정보 차량에 무선 송신<br><br> 
+· RSU 또는 스마트 신호제어기를 통해 인식 정보 차량에 무선 송신<br><br>
 
-2. 📡<strong> V2I 통신 모듈</strong><br> 
-Vehicle-to-Infrastructure Communication<br> 
-· 차량은 DSRC 또는 C-V2X 통신으로 교차로 및 횡단보도와 직접 연결<br> 
-· 보행자 감지 여부, 신호 전환 타이밍, 교차로 상태 등의 정보를 수신<br> 
-· 주기: 0.1초 ~ 1초 간격의 고속 통신으로 실시간 반응 가능<br><br> 
+2. 📡<strong> V2I 통신 모듈</strong><br>
+Vehicle-to-Infrastructure Communication<br>
+· 차량은 DSRC 또는 C-V2X 통신으로 교차로 및 횡단보도와 직접 연결<br>
+· 보행자 감지 여부, 신호 전환 타이밍, 교차로 상태 등의 정보를 수신<br>
+· 주기: 0.1초 ~ 1초 간격의 고속 통신으로 실시간 반응 가능<br><br>
 
-3. 🤖 <strong>충돌 위험 예측 AI</strong><br> 
-AI-Based Adaptive Speed & Stop Control <br> 
+3. 🤖 <strong>충돌 위험 예측 AI</strong><br>
+AI-Based Adaptive Speed & Stop Control <br>
 · 차량 위치와 속도, 보행자 존재 여부, 신호 상태 등을 종합 분석<br>
 · 보행자 감지 시 자동 감속 또는 정지 준비<br>
-· 정차 또는 출발 타이밍을 예측하여 불필요한 급제동 없이 주행 유지<br> 
+· 정차 또는 출발 타이밍을 예측하여 불필요한 급제동 없이 주행 유지<br>
 · 연비 최적화, 승차감 향상, 보행자 안전 확보<br><br>
 
  <h2 class="text-lg font-bold mb-2">💡 예시를 통한 이해</h2>
@@ -564,7 +584,7 @@ cooldown_time = 10  <span class="text-red-500">## 쿨다운 시간 (초)</span><
 </a>
   </div>
 <br>
-</p> 
+</p>
 
 <h2 class="text-lg font-bold mb-2">5️⃣    RSU (Road Side Unit)란? </h2>
 

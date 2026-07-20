@@ -1,6 +1,26 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YPN4S5W89M"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+
+      gtag('config', 'G-YPN4S5W89M');
+  </script>
+
+  <!-- microsoft clarity -->
+  <script type="text/javascript">
+      (function (c, l, a, r, i, t, y) {
+          c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+          t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+          y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+      })(window, document, "clarity", "script", "xcbs4sg783");
+  </script>
+
   <meta charset="UTF-8" />
   <title>8. Object Detection 객체 탐지</title>
 
@@ -33,7 +53,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%; 
+  height: 100%;
   background-image: url('https://lh3.googleusercontent.com/fife/ALs6j_E782PyIFMYtfVVTWKJmz-NPOAMoNGyICJBadA4s8rszXoBW1pdOjGqEGLaJ6a0MTRkxoIZda-w1eEBdzmu7NpqU9QlaUX2XQY5BKLHSPbORtCE87IE3XMTnbsdNUIM2QDvRB41vYEKbzD3Y6bCsxXuLgblYo45APBATItrnaPs5SkcXeu9aMFuO8Q6kvoPorMCwyAObsM39R5G5_E_Ny4k4oc1IHZfhdJELCCBFT-uuiQtWHXXxmLmcqqCFV36Yub3GZcoAkilshppk0ij1iotqUM9Nk4fNUjg_HSqeXi7yzrZ4gofhiS8xQebPOsnnYHgk3L0SCghkoc6qFYFWAscDbY3J-T3eetqtbXbB6-v3GNFW7xti1pcvNbgLjZtRsaIGJynrnsWED8AUXQRHCk3EmYfxA0gY4wsBe-hWeGJZY9cofd4gEbj7ievulF49GZV7LRbry0cXnDZVSVQYrNcc8oxBM5UvAhNouLXYIJXJ1_XrT67zlzLmaWFvgQQjBnnk2oQX60UerK8qSGRhQ8Mmezkv_cMpiU9M46f8t9rwWVhsknkIxzWOEJEmq9ZT1gDIu8pJuJ3u-S9ZLVvKY8HBMqd09aJxwQfKpdcmEqOn2DjZJ5Ia6EDnV0d-41bYyXz0oZOcs1sDV1vh9Ecz35P12FNqpPjzcYZKRLxGdGyygvDYaACaFqHkqaXrW9pE58AAlqvnBmeyNW8NlG2c52S6Q2lsdbBpAWcXQp0iswofLRMi6Wd-Q1B6UUdMXZhyEAdOtiCngRDzpx8RasWmW-9ZMSqnwvl3B9eB113R5jXh6ZB_0eNjO20SZXZn1XEZP-iD0C0qZgHA_-dVp38zoiT-RutNUwTPiG22-Ff6w_JWic7E1tYgOgMCGWjKDdEbHZW3GB3zXyBrnyH81_8oPGApy1vjOa8_pqZS5jyX9PFbODsrQdPRwq4xTMYsW6OTvG08eM96O2lOThJ5PzHxrOYSpOR-kVKLM7VBUbQHPYq36ECuFUY3kDA7yyMnVm4WWMlU3vS0aguTUUva3CAskP6V8difKwvTNgeKae8dGv44TUtEHGvLjk1eWiBrThOEBpik5XOrt5Y_2d8YnWvbymfdh1QdqeU9o0yxC0tVQBDuGDjkfNVsETEGIK9Sy6ZHBOlQjElWxhelqVv6CaiKM8hKEtfTQoJAgJsgboz_5VGUU3hye0xJY18dQ0bQ23jPDl__tjztKa64n8Hw4BzvKDG_cP0J-1h-m3C9COokR6tTEWSzUyRtK98vafvKmkM8Jw_o9UnoxEN9dbo50aKeD88MUKYso3ijwz-H5DNJHK9wNhgnp2Yn3WkVR_ZtlQpfOcJO3hNmCVOGJDdZ9g3gUBDjQXFg1I_Ww7Wc636ttmFKGDuYeNvyyiwLCmXtbmVhkT29p2M-k4_CQZKh-nDzkUlD-B3oXw4DQr7qr9qXEPX7zFqi0KW521Bynrl2z_NP5nf-AWAun8hnjrpdxoedpcLYra9Qqw-7Qz2gptYkn1FBtRCdTMKEWvYiHlOcruhXC1PSTfyHahNxdVaNkhfDtfnF7LZu0NSlx-JOcMtigLfj8iGGneEDJMB3HlA674Hv6s2MoVnxU5E6x71lqwuC0n2oX5H8BRUx0IiOn40i9TcbEPpzDSwPR8hk3fyLQ0_LiReswY0HUhPAA=w1919-h918');
   background-size: cover;
   background-position: center;
@@ -95,7 +115,7 @@
     @keyframes neon-blink {
       0% {
         text-shadow: 0 0 5px #fff, 0 0 10px #4a90e2, 0 0 20px #4a90e2, 0 0 30px #4a90e2;
-        opacity: 0.3; 
+        opacity: 0.3;
       }
       50% {
         text-shadow: 0 0 2px rgba(255,255,255,0.5), 0 0 5px rgba(74,144,226,0.5), 0 0 10px rgba(74,144,226,0.5), 0 0 15px rgba(74,144,226,0.5);
@@ -162,7 +182,7 @@
      display: flex;
      flex-wrap: wrap;
      gap: 15px;
-     max-height: min(300px, 80vh);  
+     max-height: min(300px, 80vh);
      overflow-y: auto;
      border: 1px solid #eee;
      padding: 10px;
@@ -225,7 +245,7 @@
 
 <div class="flex">
 
- 
+
   <aside id="sidebar"  class="hidden md:flex w-64 bg-[#3B82F6] text-white p-4 rounded-r-xl flex-col space-y-2 transition-all duration-300 fixed md:relative z-40 h-screen md:h-auto top-0 left-0 md:translate-x-0">
 
 <div class="flex justify-between items-center mb-4 md:hidden">
@@ -292,7 +312,7 @@
 <br><br>
 
 <h2 class="text-lg font-bold mb-2">🟩 객체 탐지 기술</h2>
-        
+
 <p class="text-sm">
 <strong>1. Computer Vision (컴퓨터 비전)</strong><br>
 - 가장 넓은 상위 개념으로 카메라로 촬영한 이미지/영상을 이해하고 분석하는 인공지능 분야 전체를 지칭<br>
@@ -312,7 +332,7 @@
 </p>
 
   <h2 class="text-lg font-bold mb-2">⚪ 지각·인지 시스템 (Perception System) 예시</h2>
-        
+
 <p class="text-sm">
 ● 신호등, 횡단보도, 차량, 보행자, 자전거 등 도로 위 객체 인식<br>
 ● 객체의 거리, 방향, 속도 추정<br>
@@ -341,7 +361,7 @@
         <p class="text-sm">
 📍 Object Detection 예시<br><br>
 
-●<strong>보행자 탐지</strong><br> 
+●<strong>보행자 탐지</strong><br>
 도심 주행 중, 차량 전방 RGB 카메라가 거리 앞쪽 이미지를 캡처합니다. 이 이미지를 분석해 "사람" 객체를 감지합니다.이후지각·인지 시스템은 사람의 위치를 기반으로 정지 또는 감속 명령을 제어 시스템에 전달합니다.<br><br>
 
 ● <strong>정지 표지판(Stop Sign) 감지 </strong><br>
@@ -351,10 +371,10 @@
 스마트 주차 시스템에서 카메라가 도로변 주차 공간을 스캔하고 "parking meter"를 감지하여 유료 주차 여부 판단에 활용할 수 있습니다.도시 환경에서는 주차 공간 분석, 주차 유무 인식 등에 사용됩니다.
  <br><br>
 
-●<strong> 자전거 탐지 예시</strong><br> 
+●<strong> 자전거 탐지 예시</strong><br>
 차선 옆을 주행 중인 자전거를 RGB 카메라가 포착하고, Object Detection 모델이 해당 영역을 "bicycle"로 분류합니다.모델은 자전거와 차량 간의 거리와 상대 속도를 함께 고려해,안전 간격 확보 및 차선 변경 판단에 반영됩니다. <br><br>
 
-●<strong>동물 감지 예시 (야간 포함)</strong><br> 
+●<strong>동물 감지 예시 (야간 포함)</strong><br>
 전방의 카메라와 라이다가 도로에 갑작스레 출현하는 고양이나 개와 같은 동물을 감지합니다. 감지된 이 객체를 "animal" 또는 미리 학습된 클래스 중 하나로 인식하고, 감지 위치에 따라 속도 조절 및 경고음을 활성화합니다.<br><br>
 
 </p>
@@ -389,12 +409,12 @@
     감지된 물체(예: 사람, 차량, 신호등 등)는 이름(Label)과 함께 화면상의 위치(Box)가 표시되며, 이 정보는 경로 계획·제동·회피 판단 등에 실시간으로 전달됩니다.<br><br>
 </p>
 
- 
+
 </p>
 
 <h2 class="text-lg font-bold mb-2">2️⃣   주미 AI 기반 Object Detection의 감지 원리</h2>
 
-        <p class="text-sm">주미 AI 는 카메라를 통해 실시간으로 감지하는 물체와 이미 학습 된 모델을 불러와서 비교하여 물체를 감지 합니다.  
+        <p class="text-sm">주미 AI 는 카메라를 통해 실시간으로 감지하는 물체와 이미 학습 된 모델을 불러와서 비교하여 물체를 감지 합니다.
 <br><br>
 
 <img src="https://lh3.googleusercontent.com/fife/ALs6j_HhtmRhRHpwpy7XZI15leskPMDPYhqm-eAdcHSGFZbGevDyextF3B0NGV80l_SdUWFXvESISeaA7uw3T9z-Z8-FSZ9DTDt-1WNcyPAR87i_eT9fsCKIJdVrC2LuEFM0wbWZAJkJePjHDrc34A3j1xzmNXAH2KVSZnwPrnYnj51IJTuaoFpOGotBUgIY1zLUSd5L1yMNZ11XMde2Rb6W8yd6qswZH64vx5JST3j9ospoIs-ivl08bs8gtCC8BL-NYxOQC58h7ebO1srPPPWGHq9J9syDw1LIkXmssWzbvSAm6yC1o3at5SpHGl_Qq32E6ThxFtAWh1ogNdUt4jyDzEOuns3y98xJvCYrcZ1Wgcx-4WuwP6CkCRzrek0IP2w7h6Ie6w2L--nXbUc6RsZgDlNVYcIiGj1WuUf5wIckk8Nnhs1o1IJ2W1ZQxywcgZ8OoRsUUgYa1IADBtXtzx8P30oa88hNva0S_pc1PRZ1qpoW12yZniZEgZPF8zPyE7Y1f2-6v-Yo9Nnu-fvRYCeOzsMQ5D5uM21LCn1wjEKjqF0vXWQU3g-BCy2kabQ2lT31O7cr4WCs30Bxi9lbLsx3fWvMaOwnCA68YuRYRh807EaGjKRRox61UjeY7T8QmVTNduEuqQJv9-Va2q7iyVikFGsSHZsoHH9HZylMxiLn3Lc6iVfH9tToLE_CUJv1T82Gwi6MMGB6sA8FX5rOiBfj7UXv3gWQyZMOojJShb72ZqduXfpe12YwpIMe7pGVNfbU6bRMcgvwY2iVcocIocqAHLZcb_dYnlWxgdCp_yMUkGnZriCbuKd0SUOQpCOgLGwaVAdAjq8Jy4Lkj2si1U8q_SnqHn0-3v54A-IcX427ZVRNxPUwBpWi9RRFWJ3_1XRRIwwhzFB7mci9YieIjFurztHYtzebjJOoPdUQ5tjYJp5uUzUyPdIa7KxJcOah07W04yV34cAM8gRXrLTEqehg1oPyAe6_15_0Hwt9rphOcWSfnAlvWtkCnkHqrrTNKMp1a-IUWxRp4NJVvYwX2Fm6Ot4vuUNSfpg7GC9v1D1z8I96im1PoQjU7YrKUlHLrPwECVZU4uJDK3B70AyyHqc1RCa2kc8_WBQSBslZ2wn35lD2k5NNPZnrS9zkSDRrVIiZkaLY5VcrnyZGCT_WF6lJ357yf5_akdn29p3dk8p5YHnTbVV-WDwpxobqo3jxUsIFdw0vILRau2l_v_N3GLIgDt0WfbRn_uvuOW9mbmASU49ac9-pDu659yDtw2-X_rGTIn2rzlx9OKFWmbaFIT-f9a71A_f6I6dEHTcCS_grCkFXYiD9QjcvohSvsvFw7tI4tYg9iCbGXIttnrC5FQbstEDwPEWpWmfqdBetyh_SGickchZt5c3sgkvlPtPZ8p3C6n_uNktnaaEvq3f75yoh2pDDtqoT3cfezMhEDxotk97-_DEenUjJLLjdQu5XxXjsDnuE1IxezvuDxdh3huPzoDdCC0FLpdJzsuQo_89lLqVVAl6Ld7NaVIClQxVYwmnMN5RhcZxwPfJBUtWwHSmQ3LUgBqbl_9BDuqAuPi3tnr2_IFYnh4QpUJ4ko1N3jsrwotMzIzzqYvvwOMzoWKgMKWZJjy605iu6CyJ-vPGNx_truFNexc7SUknv7Zz2W9mQEbQHKdTC9FxW0g=w1919-h918?auditContext=forDisplay" alt="그림1" class="w-full rounded-lg "><br>
@@ -480,7 +500,7 @@ zumiAI.object_detector_start() <span class="text-red-300"># 물체 인식 시작
 </button>
 </a>
   </div>
-</p> 
+</p>
 
 
 <br>
@@ -685,7 +705,7 @@ zumiAI.object_detector_start() <span class="text-red-300"># 물체 인식 시작
 
  <p class="text-sm">
 자율주행이나 AI 비전 시스템에서 YOLO 모델을 사용할 때,감지할 객체의 종류(클래스)를 지정하는 것이 매우 중요합니다.
-이때 사용되는 주요 명령어는 다음과 같습니다</p><br> 
+이때 사용되는 주요 명령어는 다음과 같습니다</p><br>
 
 <div class="flex items-center bg-gray-100 px-3 py-1 rounded shadow-sm text-sm max-w-3xl">
   <div class="w-3/7 bg-gray-300 text-center py-2 px-2 rounded text-gray-800 font-mono break-all text-m leading-tight">
@@ -696,9 +716,9 @@ zumiAI.object_detector_start() <span class="text-red-300"># 물체 인식 시작
   </div>
 </div>
 
-      <p class="text-sm text-gray-500 "> 
+      <p class="text-sm text-gray-500 ">
 &nbsp;&nbsp;&nbsp;*예시 : zumiAI.object_check_add_obj(<span class="text-green-500">"bicycle"</span>)
-</p> 
+</p>
 
 <br>
 
@@ -711,9 +731,9 @@ zumiAI.object_detector_start() <span class="text-red-300"># 물체 인식 시작
   </div>
 </div>
 
-      <p class="text-sm text-gray-500 "> 
+      <p class="text-sm text-gray-500 ">
 &nbsp;&nbsp;&nbsp;*너무 많은 모델을 추가하면 인식률이 저하 될 수 있습니다.
-</p> 
+</p>
 
 
 <br>
@@ -727,9 +747,9 @@ zumiAI.object_detector_start() <span class="text-red-300"># 물체 인식 시작
   </div>
 </div>
 
-      <p class="text-sm text-gray-500 "> 
+      <p class="text-sm text-gray-500 ">
 &nbsp;&nbsp;&nbsp;*예시 : zumiAI.object_check_del_obj(<span class="text-green-500">"bicycle"</span>)
-</p> 
+</p>
 
 <br>
 
@@ -743,9 +763,9 @@ zumiAI.object_detector_start() <span class="text-red-300"># 물체 인식 시작
   </div>
 </div>
 
-   <p class="text-sm text-gray-500 "> 
+   <p class="text-sm text-gray-500 ">
 &nbsp;&nbsp;&nbsp;*기본으로 등록 되어진 모델도 함께 삭제 됩니다.
-</p> 
+</p>
 
 <br>
 
@@ -764,14 +784,14 @@ YOLO 모델은 여러 객체를 동시에 감지할 수 있지만,감지 대상�
 
 <p class="text-sm">
 ● 감지하고자 하는 필요한 객체만 선택적으로 추가하세요.<br>
-<p class="text-sm text-gray-500 "> 
+<p class="text-sm text-gray-500 ">
 (예: 사람이 중심이라면 "person"만 등록)
 </p>
 <br>
 
 ●사용 도중 필요하지 않은 객체는<br>
     object_check_del_obj(obj_name) 명령어로 제거하는 것이 좋습니다.<br>
-<p class="text-sm text-gray-500 "> 
+<p class="text-sm text-gray-500 ">
     (예: object_check_del_obj("cup") → 컵 감지 제외)
 </p>
 <br>
@@ -782,12 +802,12 @@ YOLO 모델은 여러 객체를 동시에 감지할 수 있지만,감지 대상�
 </p>
 <br>
 <h2  id="example_20" class="text-lg font-bold mb-2">5️⃣   Object Detection 객체 감지 (확장) </h2>
-     
 
-<strong> 🚘 Object Detection 객체 감지 </strong><br> 
+
+<strong> 🚘 Object Detection 객체 감지 </strong><br>
 Object Detection & Object Classification  = 지각 시스템, 인지 시스템 + 객체 탐지 및 분류 <br><br>
 
-        <p class="text-sm">아래 프로그램을 다운로드 받아서, 원하는 객체를 추가하고 감지해보도록 합니다. </p> 
+        <p class="text-sm">아래 프로그램을 다운로드 받아서, 원하는 객체를 추가하고 감지해보도록 합니다. </p>
 
 
 

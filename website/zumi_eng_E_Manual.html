@@ -1,6 +1,26 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YPN4S5W89M"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+
+      gtag('config', 'G-YPN4S5W89M');
+  </script>
+
+  <!-- microsoft clarity -->
+  <script type="text/javascript">
+      (function (c, l, a, r, i, t, y) {
+          c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+          t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+          y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+      })(window, document, "clarity", "script", "xcbs4sg783");
+  </script>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Zumi AI</title>
@@ -98,7 +118,7 @@
   justify-content: flex-end;
   gap: 20px;
   position: relative;
-  right: 40px; 
+  right: 40px;
 }
 
     /* 햄버거 메뉴 */
@@ -119,7 +139,7 @@
 
 /* 모바일 메뉴 전체 박스 */
 .mobile-menu {
-  display: none;                    
+  display: none;
   flex-direction: column;
   align-items: stretch;
   position: absolute;
@@ -129,9 +149,9 @@
   background-color: #fff;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   border-radius: 8px;
-  height: auto;                     
-  overflow: visible;                
-  z-index: 999;                    
+  height: auto;
+  overflow: visible;
+  z-index: 999;
 }
 
 /* 모바일 메뉴의 모든 항목 기본 스타일 */
@@ -152,23 +172,23 @@
 /* PURCHASE 버튼 스타일 */
 .mobile-menu .buy-btn {
   display: inline-block;
-  background-color: #007bff; 
-  color: #fff;              
-  padding: 4px 8px;       
-  border-radius: 30px;     
+  background-color: #007bff;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 30px;
   font-weight: 100;
   text-decoration: none;
   text-align: center;
   border: none;
   cursor: pointer;
   transition: background 0.2s;
-  margin: 5px;      
+  margin: 5px;
 }
 
 
 .buy-btn2 {
-  display: block;            
-  margin: 0 auto;           
+  display: block;
+  margin: 0 auto;
   background-color: #007bff;
   color: #fff;
   padding: 8px 14px;
@@ -231,7 +251,7 @@
   width: 100%;
   height: 60vh;
   object-fit: cover;
-  object-position: center 80%; 
+  object-position: center 80%;
   display: block;
   border-radius: 0;
   box-shadow: none;
@@ -258,7 +278,7 @@
 
 
   .hero img {
-    height: 40vh; 
+    height: 40vh;
   }
 
   .hero h2 {
@@ -288,8 +308,8 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 28px;
-  max-width: 900px; 
-  margin: 0 auto;  
+  max-width: 900px;
+  margin: 0 auto;
   padding: 40px 20px;
 }
 
@@ -321,20 +341,20 @@
 
 .video-section {
   text-align: center;
-  margin: 20px auto 60px; 
-  padding: 10px 0;       
+  margin: 20px auto 60px;
+  padding: 10px 0;
 }
 
 .video-section h2 {
   font-size: 22px;
-  margin-bottom: 12px;   
+  margin-bottom: 12px;
   color: #333;
 }
 
 .video-container {
   position: relative;
-  width: 30%;            
-  max-width: 480px;        
+  width: 30%;
+  max-width: 480px;
   margin: 0 auto;
   padding-bottom: 16.875%;  /* 16:9 비율 유지 → (30×9/16)=16.875% */
   height: 0;
