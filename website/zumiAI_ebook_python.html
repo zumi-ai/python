@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZUMI AI 파이썬 교재 E-Book Viewer</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-bg: #0f172a;
+            --header-bg: #1e293b;
+            --accent-blue: #2563eb;
+            --accent-blue-light: #60a5fa;
+            --accent-blue-dark: #1d4ed8;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            color: #f8fafc;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* Header / Navbar */
+        header {
+            height: 60px;
+            background-color: var(--header-bg);
+            border-bottom: 1px solid #334155;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 10;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #ffffff;
+        }
+
+        .logo-badge {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-light));
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .view-toggle {
+            display: flex;
+            background: #334155;
+            padding: 3px;
+            border-radius: 8px;
+            border: 1px solid #475569;
+        }
+
+        .toggle-btn {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-btn.active {
+            background: var(--accent-blue);
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .page-indicator {
+            background: #334155;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--accent-blue-light);
+            border: 1px solid #475569;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .btn {
+            background: #334155;
+            border: 1px solid #475569;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn:hover {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: #334155 !important;
+            border-color: #475569 !important;
+        }
+
+        /* Main Container */
+        .main-container {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 60px);
+            position: relative;
+        }
+
+        /* Sidebar Navigation */
+        sidebar {
+            width: var(--sidebar-width);
+            background-color: #0f172a;
+            border-right: 1px solid #334155;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+
+        .toc-item {
+            padding: 10px 14px;
+            border-radius: 8px;
+            color: #cbd5e1;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .toc-item:hover, .toc-item.active {
+            background-color: #1e293b;
+            color: var(--accent-blue-light);
+        }
+
+        .toc-item.active {
+            border-left: 3px solid var(--accent-blue-light);
+        }
+
+        /* Book Viewport */
+        .viewport {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            position: relative;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            overflow: hidden;
+        }
+
+        /* Spread View / Single View Container */
+        .book-spread {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 100%;
+            max-height: 100%;
+            gap: 4px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #1e293b;
+            transition: all 0.3s ease;
+        }
+
+        .page-card {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #0f172a;
+            overflow: hidden;
+            height: 80vh;
+            max-height: 850px;
+        }
+
+        .page-card img {
+            width: auto;
+            height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* Placeholder graphic when PNG image is missing */
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            aspect-ratio: 1 / 1.414; /* A4 Ratio */
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 2px dashed #3b82f6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #60a5fa;
+            padding: 20px;
+            text-align: center;
+            gap: 12px;
+        }
+
+        .image-placeholder span {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+
+        /* Floating Nav Buttons */
+        .nav-btn-floating {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: rgba(30, 41, 59, 0.85);
+            border: 1px solid #475569;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 5;
+            backdrop-filter: blur(4px);
+        }
+
+        .nav-btn-floating:hover {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .nav-btn-prev { left: 24px; }
+        .nav-btn-next { right: 24px; }
+
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="logo-area">
+            <span class="logo-badge">ROBOLINK</span>
+            <span>ZUMI AI 파이썬 교재 E-Book</span>
+        </div>
+
+        <div class="nav-controls">
+            <!-- View Mode Switcher -->
+            <div class="view-toggle">
+                <button class="toggle-btn active" id="mode-single" onclick="setViewMode('single')">
+                    <i data-lucide="file"></i> 한 페이지
+                </button>
+                <button class="toggle-btn" id="mode-double" onclick="setViewMode('double')">
+                    <i data-lucide="book-open"></i> 두 페이지
+                </button>
+            </div>
+
+            <!-- Page Nav Controls -->
+            <button class="btn" id="btn-prev-top" onclick="changePage(-1)">
+                <i data-lucide="chevron-left"></i> 이전
+            </button>
+            <span class="page-indicator" id="page-indicator">Page 1 / 10</span>
+            <button class="btn" id="btn-next-top" onclick="changePage(1)">
+                다음 <i data-lucide="chevron-right"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar Navigation -->
+        <sidebar>
+            <div class="sidebar-title">바로가기</div>
+            <div id="sidebar-toc">
+                <!-- Dynamically generated by JS -->
+            </div>
+        </sidebar>
+
+        <!-- Book Viewport -->
+        <div class="viewport">
+            <button class="nav-btn-floating nav-btn-prev" onclick="changePage(-1)">
+                <i data-lucide="arrow-left"></i>
+            </button>
+            <button class="nav-btn-floating nav-btn-next" onclick="changePage(1)">
+                <i data-lucide="arrow-right"></i>
+            </button>
+
+            <!-- Book Spread Display -->
+            <div class="book-spread" id="book-spread">
+                <!-- Left / Single Page Card -->
+                <div class="page-card" id="card-left"></div>
+                <!-- Right Page Card (Used in Double Page View) -->
+                <div class="page-card" id="card-right" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Engine -->
+    <script>
+        // --- configuration & page data ---
+        const totalPages = 210; // 전체 페이지 수 (PNG 파일 개수에 맞춰 수정)
+        
+        // 목차 정보 (원하는 페이지 및 제목 구성)
+
+const tocItems = [
+    { page: 1, title: "메인페이지" },
+    { page: 3, title: "INDEX" },
+    { page: 7, title: "Chapter 1" },
+    { page: 24, title: "Chapter 2" },
+    { page: 41, title: "Chapter 3" },
+    { page: 58, title: "Chapter 4" },
+    { page: 75, title: "Chapter 5" },
+    { page: 92, title: "Chapter 6" },
+    { page: 109, title: "Chapter 7" },
+    { page: 126, title: "Chapter 8" },
+    { page: 143, title: "Chapter 9" },
+    { page: 160, title: "Chapter 10" },
+    { page: 177, title: "Chapter 11" },
+    { page: 194, title: "Chapter 12" }
+];
+
+        // 이미지 파일명 생성 함수 (예: page_1.png, page_2.png ...)
+function getImagePath(pageIndex) {
+    return `./ZUMI AI로 학습하는 파이선/(업데이트)ZUMI AI로 학습하는 파이선_${pageIndex}.png`;
+}
+
+        // --- State Variables ---
+        let currentPage = 1;
+        let isDoubleView = false; // false: 한 페이지, true: 두 페이지
+
+        // --- Render Page Function ---
+        function renderPageCard(container, pageNum) {
+            if (pageNum > totalPages || pageNum < 1) {
+                container.style.display = 'none';
+                return;
+            }
+            container.style.display = 'flex';
+            
+            const imgPath = getImagePath(pageNum);
+            
+            // 이미지 및 로딩 오류 시 대체 대체 플레이스홀더 처리
+            container.innerHTML = `
+                <img src="${imgPath}" alt="Page ${pageNum}" 
+                     onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'image-placeholder\'><i data-lucide=\'image\' style=\'width:36px;height:36px;\'></i><div><strong>page_${pageNum}.png</strong><br>이미지 파일이 없습니다</div><span>${imgPath} 경로에 PNG를 넣어주세요</span></div>'; lucide.createIcons();">
+            `;
+        }
+
+        function updateDisplay() {
+            const cardLeft = document.getElementById('card-left');
+            const cardRight = document.getElementById('card-right');
+
+            if (!isDoubleView) {
+                // 한 페이지 보기 모드
+                cardRight.style.display = 'none';
+                renderPageCard(cardLeft, currentPage);
+                document.getElementById('page-indicator').innerText = `Page ${currentPage} / ${totalPages}`;
+            } else {
+                // 두 페이지 보기 모드 (홀수-짝수 펼침)
+                let leftNum = currentPage;
+                let rightNum = currentPage + 1;
+
+                renderPageCard(cardLeft, leftNum);
+                
+                if (rightNum <= totalPages) {
+                    renderPageCard(cardRight, rightNum);
+                } else {
+                    cardRight.style.display = 'none';
+                }
+
+                if (rightNum <= totalPages) {
+                    document.getElementById('page-indicator').innerText = `Page ${leftNum}-${rightNum} / ${totalPages}`;
+                } else {
+                    document.getElementById('page-indicator').innerText = `Page ${leftNum} / ${totalPages}`;
+                }
+            }
+
+            // Top Nav Button State
+            document.getElementById('btn-prev-top').disabled = (currentPage === 1);
+            document.getElementById('btn-next-top').disabled = (isDoubleView ? currentPage + 1 >= totalPages : currentPage === totalPages);
+
+            // Update Sidebar Highlight & URL Hash Anchor
+            updateSidebarHighlight();
+            window.location.hash = `page-${currentPage}`;
+            
+            // Re-initialize Lucide Icons for dynamic content
+            lucide.createIcons();
+        }
+
+        function setViewMode(mode) {
+            isDoubleView = (mode === 'double');
+            document.getElementById('mode-single').classList.toggle('active', !isDoubleView);
+            document.getElementById('mode-double').classList.toggle('active', isDoubleView);
+            updateDisplay();
+        }
+
+        function changePage(delta) {
+            const step = isDoubleView ? 2 : 1;
+            const newPage = currentPage + (delta * step);
+
+            if (newPage >= 1 && newPage <= totalPages) {
+                currentPage = newPage;
+                updateDisplay();
+            } else if (delta < 0 && currentPage > 1) {
+                currentPage = 1;
+                updateDisplay();
+            }
+        }
+
+        function goToPage(pageNum) {
+            if (pageNum >= 1 && pageNum <= totalPages) {
+                currentPage = pageNum;
+                updateDisplay();
+            }
+        }
+
+        // --- Sidebar TOC Generator ---
+        function initSidebar() {
+            const container = document.getElementById('sidebar-toc');
+            container.innerHTML = tocItems.map(item => `
+                <div class="toc-item" data-page="${item.page}" onclick="goToPage(${item.page})">
+                    <span>${item.title}</span>
+                    <i data-lucide="chevron-right" style="width: 16px;"></i>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function updateSidebarHighlight() {
+            document.querySelectorAll('.toc-item').forEach(item => {
+                const pageNum = parseInt(item.getAttribute('data-page'));
+                if (isDoubleView) {
+                    if (pageNum === currentPage || pageNum === currentPage + 1) {
+                        item.classList.add('active');
+                    } else {
+                        item.classList.remove('active');
+                    }
+                } else {
+                    if (pageNum === currentPage) {
+                        item.classList.add('active');
+                    } else {
+                        item.classList.remove('active');
+                    }
+                }
+            });
+        }
+
+        // Handle URL Hash
+        function handleHashChange() {
+            const hash = window.location.hash;
+            if (hash.startsWith('#page-')) {
+                const pageNum = parseInt(hash.replace('#page-', ''));
+                if (!isNaN(pageNum) && pageNum >= 1 && pageNum <= totalPages) {
+                    currentPage = pageNum;
+                    updateDisplay();
+                }
+            }
+        }
+
+        // Keyboard Arrow Key Navigation
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+                changePage(1);
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                changePage(-1);
+            }
+        });
+
+        window.addEventListener('hashchange', handleHashChange);
+
+        // Initial Setup
+        window.addEventListener('DOMContentLoaded', () => {
+            initSidebar();
+            if (window.location.hash) {
+                handleHashChange();
+            } else {
+                updateDisplay();
+            }
+        });
+    </script>
+</body>
+</html>
