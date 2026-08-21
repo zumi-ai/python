@@ -1,0 +1,2800 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주미 AI 파이썬 코딩</title>
+    <!-- Google Fonts & FontAwesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #f5f6f8;
+            --card-blue: #00a8e8;
+            --card-green: #2ecc71;
+            --card-purple: #9b59b6;
+            --card-orange: #f39c12;
+            --text-dark: #2c3e50;
+            --code-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+
+
+body {
+    background: #f6f5fa;
+    color: var(--text-dark);
+    min-height: 100vh;
+}
+
+/* 메인 콘텐츠 배경에 은은한 그리드 */
+.main-page-body {
+    position: relative;
+    background-color: transparent;
+
+    background-image:
+        linear-gradient(rgba(155, 89, 182, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(155, 89, 182, 0.045) 1px, transparent 1px);
+
+    background-size: 32px 32px;
+}
+
+
+
+
+
+
+        /* ----- 최상단 이전 페이지 이동 탭/바 ----- */
+        .top-nav-bar {
+            background-color: #2f3542;
+            color: #f1f2f6;
+            padding: 8px 20px;
+            font-size: 0.82rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .top-nav-bar a {
+            color: #70a1ff;
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+        }
+
+        .top-nav-bar a:hover {
+            color: #1e90ff;
+            text-decoration: underline;
+        }
+
+        /* ----- 화면 전환 처리 ----- */
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+
+        /* ========================================================= */
+        /* 1. 메인 페이지 전용 스타일                                   */
+        /* ========================================================= */
+        
+        .main-page-body {
+            padding-bottom: 80px;
+        }
+
+        /* 히어로 상단 배너 */
+.hero-banner {
+    background:
+        radial-gradient(circle at 20% 30%, rgba(0, 229, 255, 0.25), transparent 30%),
+        radial-gradient(circle at 80% 20%, rgba(74, 108, 255, 0.28), transparent 30%),
+        radial-gradient(circle at 50% 100%, rgba(0, 140, 255, 0.2), transparent 40%),
+        linear-gradient(135deg, #020b1c, #082b5c, #03152f);
+
+    color: white;
+    text-align: center;
+    padding: 55px 20px 45px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 움직이는 빛 */
+.hero-banner::before {
+    content: "";
+    position: absolute;
+    width: 600px;
+    height: 600px;
+
+    left: -200px;
+    top: -300px;
+
+    background: radial-gradient(
+        circle,
+        rgba(0, 220, 255, 0.25),
+        rgba(0, 220, 255, 0.05) 40%,
+        transparent 70%
+    );
+
+    border-radius: 50%;
+
+    animation: aiGlow 8s ease-in-out infinite alternate;
+    pointer-events: none;
+}
+
+/* AI 네트워크 / 그리드 */
+.hero-banner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background-image:
+        linear-gradient(rgba(0, 200, 255, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 200, 255, 0.08) 1px, transparent 1px);
+
+    background-size: 45px 45px;
+
+    mask-image: linear-gradient(
+        to bottom,
+        transparent,
+        black 25%,
+        black 75%,
+        transparent
+    );
+
+    animation: gridMove 12s linear infinite;
+
+    pointer-events: none;
+}
+
+@keyframes aiGlow {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: translate(350px, 180px) scale(1.4);
+        opacity: 1;
+    }
+}
+
+@keyframes gridMove {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: 45px 45px;
+    }
+}
+
+        .main-badge {
+    background: linear-gradient(
+        135deg,
+        rgba(0, 174, 255, 0.95),
+        rgba(54, 87, 255, 0.95)
+    );
+
+    display: inline-block;
+    padding: 16px 36px;
+    border-radius: 16px;
+
+    box-shadow:
+        0 0 20px rgba(0, 200, 255, 0.35),
+        0 8px 25px rgba(0, 0, 0, 0.3);
+
+    margin-bottom: 18px;
+
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    animation: badgeFloat 3s ease-in-out infinite;
+}
+
+@keyframes badgeFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+        .main-badge h1 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 2.3rem;
+            color: #fbc531;
+            margin-bottom: 4px;
+        }
+
+        .main-badge p {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .hero-banner .description {
+            max-width: 600px;
+            margin: 0 auto 25px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #dcdde1;
+        }
+
+        /* 퀵버튼 영역 */
+        .quick-links {
+            display: flex;
+            justify-content: center;
+            gap: 35px;
+        }
+
+        .quick-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .quick-btn {
+            background-color: #00a8e8;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.6rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            text-decoration: none;
+            transition: transform 0.2s, background 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .quick-item:hover .quick-btn {
+            transform: translateY(-5px);
+        }
+
+        .quick-label {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #dcdde1;
+        }
+
+        /* 커리큘럼 섹션 */
+        .container {
+            max-width: 1100px;
+            margin: 35px auto 0;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.8rem;
+            color: #fbc531;
+            margin-bottom: 8px;
+        }
+
+        .section-desc {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-bottom: 25px;
+        }
+
+        /* 카드 그리드 및 경로 */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .card-grid .lesson-card:not(:last-child)::after {
+            content: "\f054";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            right: -12px;
+            top: 40%;
+            color: #ccc;
+            font-size: 0.8rem;
+            z-index: 2;
+        }
+
+        .dotted-line {
+            width: 100%;
+            height: 30px;
+            border-bottom: 3px dotted #ccc;
+            margin-bottom: 25px;
+        }
+
+        /* 레슨 카드 디자인 */
+        .lesson-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        .card-header {
+            padding: 28px 10px;
+            text-align: center;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-header i {
+            font-size: 2.2rem;
+            background: rgba(255,255,255,0.2);
+            padding: 14px;
+            border-radius: 50%;
+        }
+
+        .card-header span {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 0.82rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .bg-blue { background-color: var(--card-blue); }
+        .bg-green { background-color: var(--card-green); }
+        .bg-purple { background-color: var(--card-purple); }
+        .bg-orange { background-color: var(--card-orange); }
+
+        .card-body {
+            padding: 15px 12px;
+            background-color: #fff;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            line-height: 1.35;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #95a5a6;
+            border-top: 1px solid #f1f2f6;
+            padding-top: 8px;
+        }
+
+        /* ========================================================= */
+        /* 2. 세부 수강 페이지 전용 스타일                             */
+        /* ========================================================= */
+        
+        .detail-top-nav {
+            background-color: #ffffff;
+            padding: 12px 25px;
+            border-bottom: 1px solid #e1e8ed;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            background: #e1e8ed;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 0.85rem;
+            transition: background 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #cbd5e1;
+        }
+
+.detail-hero-banner {
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* =========================================
+   상세 페이지 상단 카테고리별 색상
+   ========================================= */
+
+.detail-hero-banner.bg-blue {
+    background: linear-gradient(
+        135deg,
+        #00a8e8,
+        #0077b6
+    );
+}
+
+.detail-hero-banner.bg-green {
+    background: linear-gradient(
+        135deg,
+        #2ecc71,
+        #20a35a
+    );
+}
+
+.detail-hero-banner.bg-purple {
+    background: linear-gradient(
+        135deg,
+        #9b59b6,
+        #7040a0
+    );
+}
+
+.detail-hero-banner.bg-orange {
+    background: linear-gradient(
+        135deg,
+        #f39c12,
+        #e67e22
+    );
+}
+
+.detail-hero-banner h2 {
+    font-size: 1.6rem;
+    margin-bottom: 6px;
+    color: white;
+}
+
+.detail-hero-banner p {
+    color: rgba(255,255,255,0.9);
+    font-size: 0.9rem;
+}
+
+        .detail-hero-banner .header-icon {
+            width: 65px;
+            height: 65px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .detail-hero-banner h2 {
+            font-size: 1.6rem;
+            margin-bottom: 6px;
+        }
+
+        .detail-hero-banner p {
+            color: #a4b0be;
+            font-size: 0.9rem;
+        }
+
+        .step-container {
+            max-width: 760px;
+            margin: 35px auto 60px;
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .step-wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .step-badge {
+            background-color: #00a8e8;
+            color: white;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 5px 22px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+
+        .step-box {
+            background: white;
+            width: 100%;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            border: 1px solid #e2e8f0;
+        }
+
+        .step-box h3 {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step-box p {
+            font-size: 0.92rem;
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .step-box ul {
+            margin: 10px 0 0 20px;
+            color: #4a5568;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .step-box li {
+            margin-bottom: 4px;
+        }
+
+        .step-img-box {
+            margin: 15px 0;
+            text-align: center;
+        }
+        .step-img-box img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid #edf2f7;
+        }
+
+/* 파이썬 다운로드 버튼 */
+.python-download-btn {
+    background: linear-gradient(135deg, #9b59b6, #7040a0) !important;
+    color: white !important;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    box-shadow: 0 6px 15px rgba(112, 64, 160, 0.3);
+    transition: all 0.25s ease;
+}
+
+.python-download-btn:hover {
+    background: linear-gradient(135deg, #b36bd1, #8e44ad) !important;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 22px rgba(112, 64, 160, 0.4);
+}
+
+        /* --------------------------------------------------------- */
+        /* 파이썬 시각적 하이라이트 에디터 스타일                       */
+        /* --------------------------------------------------------- */
+        .code-editor-container {
+            margin-top: 15px;
+            background-color: var(--code-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        .code-header {
+            background-color: #f4f5f7;
+            padding: 8px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #4a5568;
+            font-size: 0.8rem;
+            font-family: 'Fira Code', monospace;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .copy-btn {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .copy-btn:hover { background-color: #27ae60; }
+        .copy-btn:active { transform: scale(0.96); }
+
+        .code-block-wrapper {
+            position: relative;
+            background-color: var(--code-bg);
+            padding: 15px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .code-display {
+            color: #1a1a1a;
+            white-space: pre;
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Syntax Highlighting Colors (IDLE Light Style) */
+        .py-keyword { color: #ff7700; font-weight: bold; } /* from, import, def, class, if, return 등 (IDLE 주황) */
+        .py-import { color: #008000; } /* 모듈명 */
+        .py-func { color: #8b008b; font-weight: 600; }    /* 함수 호출 (보라) */
+        .py-string { color: #008000; }  /* 문자열 (초록) */
+        .py-number { color: #0000cd; }  /* 숫자 (파랑) */
+        .py-comment { color: #9aa0a6; font-style: italic; } /* 주석 (옅은 회색) */
+
+        /* --------------------------------------------------------- */
+        /* CMD(명령 프롬프트) 전용 터미널 스타일                        */
+        /* --------------------------------------------------------- */
+        .cmd-editor-container {
+            margin-top: 15px;
+            background-color: #0c0c0c;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            border: 1px solid #333;
+        }
+
+        .cmd-header {
+            background-color: #1a1a1a;
+            padding: 8px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #cccccc;
+            font-size: 0.8rem;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .cmd-header .cmd-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cmd-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .cmd-dots span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .cmd-dots span:nth-child(1) { background-color: #ff5f56; }
+        .cmd-dots span:nth-child(2) { background-color: #ffbd2e; }
+        .cmd-dots span:nth-child(3) { background-color: #27c93f; }
+
+        .cmd-block-wrapper {
+            position: relative;
+            background-color: #0c0c0c;
+            padding: 15px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .cmd-display {
+            color: #f1f1f1;
+            white-space: pre;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .cmd-line {
+            display: block;
+        }
+
+        .cmd-prompt {
+            color: #4cd137;
+            font-weight: 700;
+            margin-right: 8px;
+            user-select: none;
+        }
+
+        .complete-btn-area {
+            width: 100%;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .complete-btn {
+            background-color: #ff4757;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.3);
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .complete-btn:hover {
+            background-color: #ff6b81;
+            transform: translateY(-2px);
+        }
+
+        /* 맨 위로 이동 버튼 */
+        .scroll-top-btn {
+            position: fixed;
+            right: 25px;
+            bottom: 25px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #00a8e8, #0077b6);
+            color: white;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(0, 119, 182, 0.4);
+            z-index: 500;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(15px);
+            transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.2s ease;
+        }
+
+        .scroll-top-btn.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .scroll-top-btn:hover {
+            box-shadow: 0 10px 22px rgba(0, 119, 182, 0.55);
+            transform: translateY(-4px);
+        }
+
+        /* ========================================================= */
+        /* 3. 모달 팝업 스타일 (자료실 & 도움말용)             */
+        /* ========================================================= */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: white;
+            width: 90%;
+            max-width: 550px;
+            border-radius: 16px;
+            padding: 25px 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            position: relative;
+            animation: modalFadeIn 0.25s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #f1f2f6;
+            padding-bottom: 15px;
+            margin-bottom: 18px;
+        }
+
+        .modal-header h3 {
+            font-size: 1.25rem;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-close-btn {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            color: #a4b0be;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .modal-close-btn:hover { color: #2f3542; }
+
+        .modal-body {
+            font-size: 0.92rem;
+            line-height: 1.6;
+            color: #4a5568;
+        }
+
+        .modal-body ul {
+            margin: 10px 0 15px 20px;
+        }
+
+        .modal-body li {
+            margin-bottom: 6px;
+        }
+
+        .modal-item-btn {
+            display: inline-block;
+            background: #00a8e8;
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-top: 8px;
+            transition: background 0.2s;
+        }
+
+        .modal-item-btn:hover { background: #008cc2; }
+
+.ai-particles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.ai-particles span {
+    position: absolute;
+
+    width: 5px;
+    height: 5px;
+
+    background: #00e5ff;
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 8px #00e5ff,
+        0 0 18px rgba(0, 229, 255, 0.8);
+
+    animation: particleMove 6s linear infinite;
+}
+
+/* 교재 페이지 이동 버튼 */
+.textbook-page-btn {
+    background-color: #00a8e8 !important;
+    color: white !important;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    box-shadow: none;
+    transition: background-color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.textbook-page-btn:hover {
+    background-color: #008cc2 !important;
+    box-shadow: none;
+    transform: none;
+}
+
+/* --------------------------------------------------------- */
+/* 파이썬 문법 전용 (Syntax) 에디터 스타일 - 다크 퍼플 테마      */
+/* --------------------------------------------------------- */
+.syntax-editor-container {
+    margin-top: 15px;
+    background-color: #241b38;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    border: 1px solid #3d2e5c;
+}
+
+.syntax-header {
+    background-color: #2e2249;
+    padding: 8px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #d9c9f5;
+    font-size: 0.8rem;
+    font-family: 'Fira Code', monospace;
+    border-bottom: 1px solid #3d2e5c;
+}
+
+.syntax-block-wrapper {
+    position: relative;
+    background-color: #241b38;
+    padding: 15px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    overflow-x: auto;
+}
+
+.syntax-display {
+    color: #f1eaff;
+    white-space: pre;
+    font-family: 'Fira Code', monospace;
+}
+
+/* 다크 배경에 맞춘 구문 강조 색상 재정의 (기존 py-* 클래스를 이 블록 안에서만 덮어쓰기) */
+.syntax-block-wrapper .py-keyword { color: #ffb86c; font-weight: bold; }
+.syntax-block-wrapper .py-func    { color: #c792ea; font-weight: 600; }
+.syntax-block-wrapper .py-string  { color: #7ee8a0; }
+.syntax-block-wrapper .py-number  { color: #82aaff; }
+.syntax-block-wrapper .py-comment { color: #8a80a8; font-style: italic; }
+
+/* 각각 다른 위치 */
+.ai-particles span:nth-child(1) {
+    left: 10%;
+    top: 20%;
+    animation-delay: 0s;
+}
+
+.ai-particles span:nth-child(2) {
+    left: 20%;
+    top: 70%;
+    animation-delay: 1s;
+}
+
+.ai-particles span:nth-child(3) {
+    left: 35%;
+    top: 30%;
+    animation-delay: 2s;
+}
+
+.ai-particles span:nth-child(4) {
+    left: 45%;
+    top: 80%;
+    animation-delay: 3s;
+}
+
+.ai-particles span:nth-child(5) {
+    left: 55%;
+    top: 20%;
+    animation-delay: 1.5s;
+}
+
+.ai-particles span:nth-child(6) {
+    left: 65%;
+    top: 65%;
+    animation-delay: 2.5s;
+}
+
+.ai-particles span:nth-child(7) {
+    left: 75%;
+    top: 35%;
+    animation-delay: 4s;
+}
+
+.ai-particles span:nth-child(8) {
+    left: 85%;
+    top: 75%;
+    animation-delay: 3.5s;
+}
+
+.ai-particles span:nth-child(9) {
+    left: 15%;
+    top: 45%;
+    animation-delay: 2s;
+}
+
+.ai-particles span:nth-child(10) {
+    left: 30%;
+    top: 15%;
+    animation-delay: 4.5s;
+}
+
+.ai-particles span:nth-child(11) {
+    left: 70%;
+    top: 15%;
+    animation-delay: 1s;
+}
+
+.ai-particles span:nth-child(12) {
+    left: 90%;
+    top: 50%;
+    animation-delay: 5s;
+}
+
+@keyframes particleMove {
+    0% {
+        transform: translateY(30px) scale(0.5);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    50% {
+        transform: translateY(-30px) scale(1);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translateY(-80px) scale(0.3);
+        opacity: 0;
+    }
+}
+
+        @media (max-width: 900px) {
+            .card-grid { grid-template-columns: repeat(2, 1fr); }
+            .card-grid .lesson-card::after { display: none; }
+        }
+
+
+
+    </style>
+</head>
+<body>
+
+    <!-- 최상단 네비게이션 링크 바 (요청사항 3번) -->
+
+    <div class="top-nav-bar">
+
+        <span><i class="fa-solid fa-robot"></i> Zumi AI Python Platform</span>
+
+        <a href="https://zumi-ai.github.io/python/website/zumi_ai_e_manual.html">
+
+            <i class="fa-solid fa-arrow-left"></i> Zumi e-매뉴얼로 돌아가기
+
+        </a>
+
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- 1. 메인 목록 페이지                                      -->
+    <!-- ========================================================= -->
+    <div id="main-page" class="page active main-page-body">
+<header class="hero-banner">
+
+    <div class="ai-particles">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+  <div class="main-badge">
+    <h1>Zumi AI</h1>
+    <p>Python</p>
+</div>
+
+<p class="description">
+    자율주행 자동차 주미 AI (Zumi AI)와 함께하는 파이썬 프로그래밍 과정!<br>
+    파이썬으로 자율주행 알고리즘을 쉽게 배워보세요.
+</p>
+
+<!-- 퀵버튼 영역 -->
+<div class="quick-links">
+    <div class="quick-item" onclick="openModal('teacher')">
+        <button class="quick-btn">
+            <i class="fa-solid fa-graduation-cap"></i>
+        </button>
+        <div class="quick-label">자료실</div>
+    </div>
+
+<div class="quick-item" onclick="openModal('textbook')">
+    <button class="quick-btn" style="background-color: #00b8d9;">
+        <i class="fa-solid fa-download"></i>
+    </button>
+    <div class="quick-label">교재 다운로드</div>
+</div>
+
+
+    <div class="quick-item" onclick="openModal('help')">
+        <button class="quick-btn" style="background-color: #00d2d3;">
+            <i class="fa-solid fa-circle-question"></i>
+        </button>
+        <div class="quick-label">도움말</div>
+    </div>
+</div>
+        </header>
+
+        <main class="container">
+            <!-- 1단계: Getting Started -->
+            <section>
+                <h2 class="section-title" style="color: #00a8e8;">Getting Started</h2>
+                <p class="section-desc">주미 AI와 파이썬 라이브러리의 기초 연결 및 조작법을 학습합니다.</p>
+                
+                <div class="card-grid">
+                    <div class="lesson-card" onclick="openDetailPage(1)">
+                        <div class="card-header bg-blue"><i class="fa solid fa-car"></i><span>GETTING STARTED</span></div>
+                        <div class="card-body">
+                            <div class="card-title">01. ZUMI AI와의 첫 만남</div>
+                            <div class="card-footer"><span><i class="fa-regular fa-clock"></i> 30-45 분</span></div>
+                        </div>
+                    </div>
+                    <div class="lesson-card" onclick="openDetailPage(2)">
+                        <div class="card-header bg-blue"><i class="fa-solid fa-code"></i><span>GETTING STARTED</span></div>
+                        <div class="card-body">
+                            <div class="card-title">02. 파이썬 환경 설정 & 연결</div>
+                            <div class="card-footer"><span><i class="fa-regular fa-clock"></i> 30-45 분</span></div>
+                        </div>
+                    </div>
+                    <div class="lesson-card" onclick="openDetailPage(3)">
+                        <div class="card-header bg-blue"><i class="fa-solid fa-route"></i><span>GETTING STARTED</span></div>
+                        <div class="card-body">
+                            <div class="card-title">03. 주미 AI 주행 코드 기초</div>
+                            <div class="card-footer"><span><i class="fa-regular fa-clock"></i> 30-45 분</span></div>
+                        </div>
+                    </div>
+                    <div class="lesson-card" onclick="openDetailPage(4)">
+                        <div class="card-header bg-blue"><i class="fa-solid fa-lightbulb"></i><span>GETTING STARTED</span></div>
+                        <div class="card-body">
+                            <div class="card-title">04. 시각적 표현 : LED 제어</div>
+                            <div class="card-footer"><span><i class="fa-regular fa-clock"></i> 30-45 분</span></div>
+                        </div>
+                    </div>
+                    <div class="lesson-card" onclick="openDetailPage(5)">
+                        <div class="card-header bg-blue"><i class="fa-solid fa-display"></i><span>GETTING STARTED</span></div>
+                        <div class="card-body">
+                            <div class="card-title">05. 정보 디스플레이</div>
+                            <div class="card-footer"><span><i class="fa-regular fa-clock"></i> 30-45 분</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dotted-line"></div>
+            </section>
+
+            <!-- 2단계: Junior -->
+            <section>
+                <h2 class="section-title" style="color: #2ecc71;">Junior</h2>
+                <p class="section-desc">적외선 센서, 소리 출력 및 라인 트레이싱 알고리즘을 연습합니다.</p>
+                
+                <div class="card-grid">
+                    <div class="lesson-card" onclick="openDetailPage(6)">
+                        <div class="card-header bg-green"><i class="fa-solid fa-wave-square"></i><span>JUNIOR</span></div>
+                        <div class="card-body">
+                            <div class="card-title">06. IR 적외선 센서 파이썬 코딩</div>
+                            <div class="card-footer"><span><i class="fa-regular fa-clock"></i> 30-45 분</span></div>
+                        </div>
+                    </div>
+                    <div class="lesson-card" onclick="openDetailPage(7)">
+                        <div class="card-header bg-green"><i class="fa-solid fa-music"></i><span>JUNIOR</span></div>
+                        <div class="card-body">
+                            <div class="card-title">07. 주피터 부저 음계 제어</div>
+                            <div class="card-footer"><span><i class="fa-regular fa-clock"></i> 30-45 분</span></div>
+                        </div>
+                    </div>
+                    <div class="lesson-card" onclick="openDetailPage(8)">
+                        <div class="card-header bg-green"><i class="fa-solid fa-road"></i><span>JUNIOR</span></div>
+                        <div class="card-body">
+                            <div class="card-title">08. 라인트레이서 자율주행</div>
+                            <div class="card-footer"><span><i class="fa-regular fa-clock"></i> 30-45 분</span></div>
+                        </div>
+                    </div>
+
+                    <div class="lesson-card" onclick="openDetailPage(9)">
+                        <div class="card-header bg-green"><i class="fa-solid fa-gamepad"></i><span>JUNIOR</span></div>
+                        <div class="card-body">
+                            <div class="card-title">09. 장애물 회피 알고리즘</div>
+                            <div class="card-footer"><span><i class="fa-regular fa-clock"></i> 30-45 분</span></div>
+                        </div>
+                    </div>
+
+                 
+
+                </div>
+                <div class="dotted-line"></div>
+            </section>
+
+            <!-- 3단계: Senior -->
+            <section>
+                <h2 class="section-title" style="color: #9b59b6;">Senior</h2>
+                <p class="section-desc">OpenCV 카메라 제어 및 인공지능 자율주행 알고리즘을 마스터합니다.</p>
+            
+
+                <div class="card-grid">
+
+                 <div class="lesson-card" onclick="openDetailPage(10)">
+                        <div class="card-header bg-purple"><i class="fa-solid fa-trophy"></i><span>JUNIOR</span></div>
+                        <div class="card-body">
+                            <div class="card-title">10. 나만의 자율주행 코스 완주</div>
+                            <div class="card-footer"><span><i class="fa-regular fa-clock"></i> 30-45 분</span></div>
+                        </div>
+                    </div>
+
+
+                    <div class="lesson-card" onclick="openDetailPage(11)">
+                        <div class="card-header bg-purple"><i class="fa-solid fa-camera"></i><span>SENIOR</span></div>
+                        <div class="card-body">
+                            <div class="card-title">11. OpenCV 비전 센서 인식</div>
+                            <div class="card-footer"><span><i class="fa-regular fa-clock"></i> 30-45 분</span></div>
+                        </div>
+                    </div>
+                    <div class="lesson-card" onclick="openDetailPage(12)">
+                        <div class="card-header bg-purple"><i class="fa-solid fa-brain"></i><span>SENIOR</span></div>
+                        <div class="card-body">
+                            <div class="card-title">12. 표지판 인식 및 AI 자율주행</div>
+                            <div class="card-footer"><span><i class="fa-regular fa-clock"></i> 30-45 분</span></div>
+                        </div>
+                    </div>
+                    <div class="lesson-card" onclick="openDetailPage(13)">
+                        <div class="card-header bg-orange"><i class="fa-solid fa-book-bookmark"></i><span>APPENDIX</span></div>
+                        <div class="card-body">
+                            <div class="card-title">부록. 파이썬 라이브러리 레퍼런스</div>
+                            <div class="card-footer"><span><i class="fa-regular fa-clock"></i> 자율 학습</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- 2. 세부 상세 학습 페이지                                  -->
+    <!-- ========================================================= -->
+    <div id="detail-page" class="page">
+        <nav class="detail-top-nav">
+            <button class="back-btn" onclick="showMainPage()">
+                <i class="fa-solid fa-arrow-left"></i> 메인화면으로
+            </button>
+            <span style="font-weight: 700; font-size: 0.85rem; color:#747d8c;">Zumi AI Python Learning</span>
+        </nav>
+
+        <header class="detail-hero-banner">
+            <div class="header-icon bg-blue" id="detail-icon">
+                <i class="fa-solid fa-code"></i>
+            </div>
+            <h2 id="detail-title">차시 제목</h2>
+            <p id="detail-desc">차시 설명</p>
+        </header>
+
+        <main class="step-container" id="steps-container">
+            <!-- 자바스크립트에 의해 차시별 전용 파이썬 코드가 다르게 생성됩니다 -->
+        </main>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- 3. 모달 레이어 (선생님 자료실 & 도움말)                      -->
+    <!-- ========================================================= -->
+    <div id="modal-teacher" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-graduation-cap" style="color:#00a8e8;"></i> 자료실</h3>
+                <button class="modal-close-btn" onclick="closeModal('teacher')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+              
+<p>Zumi AI에서 사용할 수 있는 다양한 파이썬 명령어를 확인해 보세요.</p>
+
+<ul>
+    <li>
+        <strong>명령어 설명 :</strong>
+        Zumi AI의 다양한 기능을 실행하는 파이썬 명령어 안내
+    </li>
+    <li>
+        <strong>사용법 및 예제 :</strong>
+        명령어별 사용 방법과 코드 예제 제공
+    </li>
+    <li>
+        <strong>기능 찾아보기 :</strong>
+        원하는 기능에 맞는 명령어와 함수를 쉽게 확인
+    </li>
+</ul>
+
+<a
+    href="https://truedo.github.io/zumi_mini_python_backup/api.html"
+    class="modal-item-btn"
+    target="_blank"
+>
+    <i class="fa-solid fa-book"></i>
+    : Zumi AI 명령어 사용법 보기
+</a>
+
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- 교재 다운로드 모달 (신규 추가)                              -->
+    <!-- ========================================================= -->
+    <div id="modal-textbook" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-book" style="color:#00b8d9;"></i> 교재 다운로드</h3>
+                <button class="modal-close-btn" onclick="closeModal('textbook')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+
+                <p>주미 AI 파이썬 교재를 PDF 파일, 또는 E-BOOK으로 확인해 보세요.</p>
+
+                <div style="display:flex; flex-direction:row; gap:10px; margin-top:16px;">
+                    <a
+                        href="https://drive.google.com/file/d/1l6KAQv2JOMJeth9Kz1rzLGoCzTT2s9RZ/view?usp=sharing"
+                        class="modal-item-btn"
+                        target="_blank"
+                        style="flex:1; text-align:center; background-color:#00a8e8; margin-top:0; padding:14px 10px;"
+                    >
+                        <i class="fa-solid fa-file-pdf"></i> PDF 파일 다운로드
+                    </a>
+
+                    <a
+                        href="https://zumi-ai.github.io/python/website/zumiAI_ebook_python.html#page-1"
+                        class="modal-item-btn"
+                        target="_blank"
+                        style="flex:1; text-align:center; background-color:#9b59b6; margin-top:0; padding:14px 10px;"
+                    >
+                        <i class="fa-solid fa-book-open"></i> E-BOOK 바로가기
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+ <div id="modal-help" class="modal-overlay">
+    <div class="modal-box">
+
+        <div class="modal-header">
+            <h3>
+                <i class="fa-solid fa-circle-question" style="color:#00d2d3;"></i>
+                주미 AI 파이썬 코딩 도움말
+            </h3>
+
+            <button class="modal-close-btn" onclick="closeModal('help')">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+                  <p style="font-size:0.85rem; color:#666; margin-bottom:10px;">
+                <strong>
+                    문제가 발생했다면 FAQ에서 증상과 해결 방법을 먼저 확인해 보세요.
+                </strong>
+            </p>
+
+        <div class="modal-body">
+
+
+            <p style="font-size:0.85rem; color:#666; margin-bottom:10px;">
+                주미 AI와 Python 연결 방법, Wi-Fi 접속 등 <br>
+                주미 AI에 대하여 궁금한 내용을 쉽고 빠르게 찾아보세요.
+            </p>
+
+      
+            <p style="font-size:0.85rem; color:#666;">
+                주미 AI와 함께 더 쉽고 즐겁게 코딩을 시작할 수 있도록 도와드립니다.
+            </p>
+
+            <a
+                href="https://zumi.co.kr/faq"
+                class="modal-item-btn"
+                target="_blank"
+            >
+                <i class="fa-solid fa-book"></i>
+                FAQ 보기
+            </a>
+
+        </div>
+    </div>
+</div>
+
+<button id="scrollTopBtn" class="scroll-top-btn" aria-label="맨 위로">
+    <i class="fa-solid fa-chevron-up"></i>
+</button>
+
+<!-- ========================================================= -->
+    <!-- 4. 자바스크립트 (차시별 다른 파이썬 코드 및 하이라이터)        -->
+    <!-- ========================================================= -->
+    <script>
+
+
+    // ========================================
+    // 공통 이미지 경로
+    // ========================================
+    const IMAGE_BASE_PATH = "./zumiAI_python_image/";
+
+// ========================================
+// 교재 E-book 페이지 이동 링크
+// ========================================
+const TEXTBOOK_URL = "https://zumi-ai.github.io/python/website/zumiAI_ebook_python.html";
+
+function getTextbookPageUrl(pageNum) {
+    return `${TEXTBOOK_URL}#page-${pageNum}`;
+}
+
+
+    // ========================================
+    // 차시별 데이터
+    // ========================================
+        const lessonsData = {
+        
+1: {
+
+                title: "01. ZUMI AI 와의 첫 만남",
+                desc: "자율주행자동차와 주미 AI에 대해 알아봅니다. ",
+                icon: "fa-display",
+                bgColor: "bg-blue",
+                steps: [
+                    {
+                        page: 9,
+                        title: "자율주행 자동차 : 주미 AI",
+                        content: "자율주행자동차(Autonomous Vehicle)란 운전자의 개입 없이 주변 환경을 인식하고 주행 상황을 판단해 차량을 제어함으로써 스스로 주어진 목적지까지 주행하는 자동차 입니다.",
+
+                        image: "00001.png",
+                
+                    },
+
+                    {
+                        page: 13,
+                        title: "주미 AI 충전 방법",
+                        content: "주미AI 의 우측 충전 부에 C 타입 케이블을 끼우고, 이미지 처럼 충전 하게 되면 주미AI 의 화면 부분에서 충전이 표시 되며 충전 되기 시작 합니다.",
+
+                        image: "00002.png",
+                
+                    },
+
+                    {
+                        page: 15,
+                        title: "주미 AI 명칭 · 전원 켜기",
+                        content: "주미 AI는 어느정도 충전이 되면 하단에 있는 버튼을 활용하여 ON / OFF 할 수 있습니다. 이 방법으로 ON을 하게 되면 사용자와 AI 를 기반으로 한 여러가지 상호 작용을 합니다.",
+
+                        image: "00003.png",
+                
+                    },
+
+                    {
+                        page: 16,
+                        title: "사용자와의 상호작용 (반려모드)",
+                        content: "주미 AI의 스위치를 ON으로 활성화 시키면 주미 AI는 카메라를 통하여 사용자와 상호작용을 합니다. 이 때 각각의 주미 AI 마다 다른 표정을 지으며 다양한 표정 및 행동을 표시하게 되는데, 이 모드를 주미 AI 의 “반려모드” 라고 합니다.",
+
+                        image: "00004.png",
+                
+                    },
+
+                    {
+                        page: 17,
+                        title: "버튼 사용 방법",
+                        content: "반려모드에서 주미 AI의 앞쪽에 있는 버튼을 누르면, 메뉴 모드가 보이고, 파란 버튼 (취소) 를 누르면 다시 반려모드로 돌아옵니다.",
+
+                        image: "00005.png",
+                
+                    },
+                    {
+                        page: 18,
+                        title: "주미 AI - 네이밍 프로젝트",
+                        content: "나의 주미 AI에게 이름을 지어주고, 사용자 이름, 발급일자 등을 기록하여 라이센스 카드를 만들어봅니다.",
+
+                        image: "00006.png",
+                
+                    },
+                    {
+                        page: 18,
+                        title: "주미 AI - 네이밍 프로젝트",
+                        content: "나의 주미 AI에게 이름을 지어주고, 사용자 이름, 발급일자 등을 기록하여 라이센스 카드를 만들어봅니다.",
+
+                        image: "00006.png",
+            
+                
+                    },
+                     {
+                        page: 20,
+                        title: "안전한 사용을 위한 주의사항",
+                        content: "주미 AI는 교구이지만, 로봇이기 때문에 안전을 위하여 몇 가지 주의사항이 필요합니다.",
+                        list: [
+                                "1. 충전 및 배터리 사용 안전: <br> 휴대폰 고속 충전기와 같은 고압 충전기 사용 시 과열되지 않도록 주의하고, 수업 전 배터리 충전 여부를 확인합니다.<br>",
+                                "2. 안전한 사용 환경 확보: <br>로봇이 움직일 수 있는 충분한 공간을 확보하고, 장애물이 없는 평평한 바닥에서 사용하며 이동 중 떨어지지 않도록 주의합니다.<br>",
+                                "3. 분리·파손 및 깨짐 주의: <br>충돌이나 날카롭고 뾰족한 물체로 인해 로봇이 파손되지 않도록 주의하고, 파손으로 생긴 작은 파편을 섭취하거나 파손된 부분에 다치지 않도록 주의합니다.<br>",
+                                "4. 규칙 준수하기: <br>사람을 향해 로봇을 던지거나 벽이나 바닥 등 딱딱한 곳에 의도적으로 충돌시키지 않으며, 로봇이 물에 닿거나 젖지 않도록 주의합니다.<br>",
+                                "5. 오작동·고장 시 대처하기: <br>로봇이 뜻대로 움직이지 않거나 이상하게 작동할 경우 임의로 조작하지 말고, 반드시 손을 들어 선생님의 도움을 요청합니다.<br>",
+                                "6. 정기적인 점검과 청결 및 유지 관리: <br>로봇의 바퀴, 센서, 파손, 깨짐, 분해 여부를 주기적으로 확인하고, 이물질은 닦아내며 파손된 부분은 수리하거나 교체하여 사용합니다.<br>",
+                                "7. 수업 후 정리 및 보관 철저: <br>로봇이 섞이지 않도록 나의 로봇에 표시하고, 동글이(무선 연결 장치), 카드, 충전 케이블 등 사용한 로봇과 부품을 수업 후 빠짐없이 정리하여 정해진 장소에 보관합니다.<br>",
+                        ],
+            
+                
+                    }
+                ]
+  
+},
+
+
+
+2: {
+
+  title: "02. 파이썬 환경 설정 & 연결",
+    desc: "파이썬을 설치하고 주미 AI 라이브러리를 준비한 뒤, 주미 AI와 연결하고 전진 시켜봅니다",
+    icon: "fa-code",
+    bgColor: "bg-blue",
+    steps: [
+        {
+            page: 24,
+            title: "파이썬 최신 버전 설치하기",
+            content: "주미 AI를 제어하기 위해 먼저 컴퓨터에 파이썬을 설치합니다.",
+            button: {
+                text: "파이썬 사이트 바로가기 (다운로드)",
+                link: "https://www.python.org/downloads/"
+             },
+
+            image: "00007.png",
+
+            list: [
+                "파이썬 공식 홈페이지에서 최신 버전의 Python을 다운로드합니다.",
+                "다운로드 받은 파일을 실행합니다.",
+                "설치 화면에서 'Add Python to PATH' 옵션을 체크하고, Install Now를 클릭합니다."
+            ],
+       
+        },
+        {
+            title: "파이썬 설치 확인하기",
+            content: "오른쪽의 [코드복사] 버튼을 눌러 복사합니다.",
+            type: "cmd",
+            code: `python --version`,
+        },
+        {
+            title: "주미 AI 라이브러리 설치하기",
+            content: "CMD를 실행하고 아래 그림처럼 명령을 붙여넣고 엔터를 눌러 실행합니다.",
+            type: "cmd",
+            code: `pip install zumi_ai`,
+            image: "00008.png",
+
+        },
+
+
+       {
+            title: "IDLE 실행하기",
+            content: "검색창에서 IDLE를 찾아서 실행 시킵니다.",
+            image: "00009.png",          
+            list: [
+                            "검색 - IDLE (Python) 을 실행시킵니다.",
+                            "IDLE Shell - File - New File 을 클릭합니다.",
+                            "untitled 파일이 생깁니다."
+                        ],
+            },
+
+
+       {
+            title: "주미 AI 연결하기",
+            content: "PC에 동글을 연결하고, 주미 AI를 켭니다. ",
+            image: "00010.png",          
+            list: [
+                            "동글을 PC에 연결합니다.",
+                            "주미 AI를 파란색 버튼을 눌러진 상태로 전원 스위치를 ON 합니다.",
+                            "카메라가 표시되면 파란 버튼에서 손을 뗍니다.",
+                            "주미 AI에 '연결 됨' 이라고 써있는지 확인 합니다."
+                        ],
+            },
+
+       {
+            page: 39,
+            title: "주미 AI 를 움직이는 코드",
+            content: "코드를 복사하여 IDLE에 붙여넣고 실행을 하여 주미 AI를 움직여봅니다.",
+            list: [
+                "주미 AI의 전원을 켭니다.",
+                "컴퓨터를 주미 AI의 Wi-Fi에 연결합니다.",
+                "아래 코드를 복사합니다."
+            ],
+            code: `from zumi_AI.zumi_AI import *  # zumi_AI 라이브러리를 불러옵니다
+                    zumi = ZumiAI()  # ZumiAI()를 zumi 로 정의합니다
+                    zumi.connect()  # ZumiAI COM PORT를 찾아 연결합니다
+
+                    zumi.send_move_dist(1, 20, 0)  # 1의 속도로 20만큼 전진합니다`
+        },
+
+
+
+       {
+            title: "주미 AI 전진하기",
+            content: "복사된 코드를 붙여넣고, 실행하여, 주미 AI를 전진시킵니다. ",
+            image: "00011.png",          
+            list: [
+                        "복사된 코드를 IDLE에 붙여넣습니다.",
+                        "File - Save 를 눌러 파일을 저장합니다.",                
+                        "Run - Run Module 을 눌러 코드를 실행 시킵니다.",
+                        "주미 AI 가 전진 하는지 확인 합니다."
+                    ],
+        },
+
+
+
+    ]
+},
+3: {
+
+    title: "03. 주미 AI 주행 코드 기초",
+    desc: "파이썬 명령어를 사용하여 주미AI를 움직여 봅니다.",
+    icon: "fa-car",
+    bgColor: "bg-blue",
+    steps: [
+
+
+
+        {
+            page: 41,
+            title: "IDLE 실행하기",
+            image: "00012.png",  
+            content: "IDLE를 실행하고 File - New File 을 클릭한 뒤, 아래의 코드들을 복사하여 Paste(붙여넣기) 합니다.",
+            
+        },
+
+        {
+            
+            page: 49,
+            title: "주미 AI를 앞 · 뒤로 움직이는 명령",
+            content: "주미 AI를 앞 뒤로 움직이는 명령 입니다.",
+            image: "00013.png",  
+            code: `from zumi_AI.zumi_AI import *  # zumi_AI 라이브러리를 불러옵니다
+zumi = ZumiAI()  # ZumiAI()를 zumi 로 정의합니다
+zumi.connect()  # ZumiAI COM PORT를 찾아 연결합니다
+
+#[전진하기] (속도 (1,2,3), 거리(1~255))
+zumi.forward_dist(1, 20)  # 1의 속도로 20의 거리 만큼 전진합니다. 
+
+#[후진하기] (속도 (1,2,3), 거리(1~255))
+zumi.reverse_dist(1, 20) # 1의 속도로 20의 거리 만큼 후진합니다. 
+
+#[움직이기] (속도 (1,2,3), 거리(1~255))
+zumi.send_move_dist(1, 20, 0) # 1의 속도로 20의 거리 만큼 전진합니다. 
+
+#[빠르게 거리만큼 이동하기] (거리(1~255))
+zumi.forward_dist_quick(20) # 빠른 속도로 20의 거리 만큼 전진합니다. 
+zumi.reverse_dist_quick(20) # 빠른 속도로 20의 거리 만큼 후진합니다. 
+`
+        },
+
+ 
+
+             {
+            page: 51,
+            title: "캘리브레이션",
+            content: " 양쪽의 모터를 보정(캘리브레이션) 하는 작업을 시작합니다.",
+             image: "00014.png", 
+             list: [
+                "주미 AI를 그림처럼 뒤집어서 바닥에 둡니다.",
+                "캘리브레이션 코드를 실행합니다.",
+                "캘리브레이션이 되는 동안 영쪽의 바퀴가 회전하면서, 양쪽의 모터 회전을 조절합니다.",
+                "코드가 실행되는 동안 바퀴가 빠르게 회전하기 때문에, 주의합니다.",
+                "캘리브레이션이 완료되면 바퀴 회전을 멈춥니다.",
+                
+            ],
+            code: `from zumi_AI.zumi_AI import *
+zumi = ZumiAI()
+zumi.connect()
+
+zumi.set_calibration_motors() 
+`
+        },
+
+  {
+            page: 52,
+            title: "좌회전·우회전",
+            content: "주미 AI를 왼쪽 또는 오른쪽으로 회전시킵니다.",
+            image: "00015.png",
+            code: `from zumi_AI.zumi_AI import *
+
+zumi = ZumiAI()  # ZumiAI()를 zumi 로 정의합니다
+zumi.connect()  # ZumiAI COM PORT를 찾아 연결합니다
+
+#[각도만큼 좌회전 하기]
+zumi.left_turn(1, 90) #1의 속도로 90도 만큼 좌회전 합니다.
+
+#각도만큼 우회전 하기]
+zumi.right_turn(1, 90) # 1의 속도로 90도 만큼 우회전 합니다.
+
+#[회전하기]
+zumi.send_turn(1, 90, 0) # 각도 만큼 회전하기 명령을 전송합니다.
+
+#[빠르게 거리만큼 회전하기]
+zumi.left_turn_quick(90) # 빠른 속도로 90도 만큼 좌회전 합니다.
+zumi.right_turn_quick(90) # 빠른 속도로 90도 만큼 우회전합니다.
+`
+
+        },  
+
+        {
+            page: 54,
+            title: "반복문",
+            content: "for 문 안에 있는 코드를 4번 반복 (0,1,2,3) 합니다.",
+            type: "syntax",
+            code: `for i in range(0,4) :
+    print(i)`
+
+        },  
+        
+        {
+            title: "반복문을 사용한 예제",
+            content: "아래의 예제를 보고 따라서 코딩 해본 뒤, 반복문을 실행 했을 때 결과를 확인합니다.",
+            code: `for i in range(0,4) :
+    print(i)
+
+for data in ["Z1", "Z2" , "Z3"] :
+    print(data)
+
+number = [1,3,5]
+for i in number :
+    print(i)
+`
+        },  
+
+
+        
+        {
+            page: 55,
+            title: "네모를 그리면서 주행하기",
+            content: "반복문을 활용하여 네모를 그리면서 주행 할 수 있도록 프로그램을 만들어봅니다.",
+             image: "00016.png", 
+             list: [
+                "아래 과정을 4번 반복합니다.",
+                "- 주미 AI를 10만큼 전진합니다.",
+                "- 2초 대기합니다.",
+                "- 주미 AI를 90도 만큼 오른쪽으로 회전 시킵니다.",
+                "- 2초 대기합니다.",
+            ],
+            code: `from zumi_AI.zumi_AI import *
+zumi = ZumiAI()
+zumi.connect()
+
+for i in range(4) : #4번 반복합니다.
+    print(i) #반복 값을 print 로 출력합니다
+    zumi.forward_dist_quick(10) #10만큼 전진 합니다.
+    time.sleep(2) #2초 대기합니다.
+    zumi.right_turn_quick(90) #90만큼 우회전 합니다.
+    time.sleep(2) #2초 대기합니다.
+    `
+        },
+
+        {
+            title: "목적지 까지 이동하기",
+            content: "한 칸의 거리가 10이라고 생각하고, 목적지 까지 이동하도록 코딩 해봅니다.",
+             image: "00017.png", 
+            code: `from zumi_AI.zumi_AI import *
+zumi = ZumiAI()
+zumi.connect()
+
+for i in range(2) :
+    zumi.forward_dist_quick(10)
+    time.sleep(2)
+    zumi.right_turn_quick(90)
+    time.sleep(2)
+    zumi.forward_dist_quick(10)
+    time.sleep(2)
+
+zumi.left_turn_quick(90)
+time.sleep(2)
+zumi.forward_dist_quick(10)
+time.sleep(2)
+zumi.stop()
+    `
+    
+        },
+
+        {
+            page: 56,
+            title: "도형을 그리며 주행하기",
+            content: "삼각형, 오각형을 그리며 주행하도록 프로그래밍 해봅니다.",
+             image: "00018.png", 
+            code: `from zumi_AI.zumi_AI import *
+zumi = ZumiAI()
+zumi.connect()
+
+#삼각형 그리며 주행하기
+for i in range(3) :
+    zumi.forward_dist_quick(20)
+    time.sleep(2)
+    zumi.left_turn_quick(120)
+    time.sleep(2)
+
+#오각형 그리며 주행하기
+for i in range(5) :
+    zumi.forward_dist_quick(20)
+    time.sleep(2)
+    zumi.left_turn_quick(72)
+    time.sleep(2)
+
+zumi.stop()
+
+    `
+    
+        },
+
+    ]
+               
+            },
+            4: {
+                title: "04. 시각적 표현 : LED 제어",
+                desc: "주미 AI의 LED를 제어하는 파이썬 코드를 알아봅니다.",
+                icon: "fa-lightbulb",
+                bgColor: "bg-blue",
+                steps: [
+
+                     {
+            
+            page: 58,
+            title: "LED의 역할과 시각 정보의 중요성",
+            content: "사용자에게 알림을 주기 위해 혹은 타인에게 차량의 상태를 알리기 위해서 자동차의 신호 및 표시등을 주로 사용 합니다.",
+            image: "00019.png",  
+        },
+   
+
+        {
+            
+            page: 63,
+            title: "디지털 색 표현 방식 (RGB)",
+            content: "RGB는 빛의 3원색을 기준으로 표현하는 색상으로 모든 색이 켜지면 흰색으로 표현되는 방식 이며 주미 AI는 이 방식을 사용 합니다.",
+            image: "00020.png",  
+            list: [
+                "빨강(Red) + 초록(Green) = 옐로우 (Yellow)",
+                "빨강(Red) + 파랑(Blue) = 마젠타 (Magenta)",
+                "초록(Green) + 파랑(Blue) = 시안 (Cyan)",
+                "빨강(Red) + 초록(Green) + 파랑(Blue) = 화이트 (White)"
+            ],
+
+            
+        },
+
+        
+        {
+            page: 65,
+            title: "LED 색상 변경하기",
+            content: "LED를 흰색(R10,G10,B10)으로 변경합니다",
+             list: [
+            "빨강 밝기 = 0~10",
+            "초록 밝기 = 0~10",
+            "파랑 밝기 = 0~10"
+            ],
+            image: "00021.png", 
+            code: `from zumi_AI.zumi_AI import *
+zumi = ZumiAI()
+zumi.connect()
+
+zumi.led_control(10,0,0)
+time.sleep(2)
+zumi.led_control(0,10,0)
+time.sleep(2)
+zumi.led_control(0,0,10)
+time.sleep(2)
+zumi.led_control(0,0,0)
+time.sleep(2)
+
+zumi.stop()
+    `
+    
+        },
+        
+
+
+                {
+            page: 66,
+            title: "LED 변경 (빨간색 -녹색 -파란색-노랑-청록-보라-흰색-끄기)",
+            content: "아래의 그림처럼 순서대로 LED가 바뀌는 코드를 반복문을 포함하여 작성 해봅니다.",
+            image: "00022.png", 
+            code: `from zumi_AI.zumi_AI import *
+zumi = ZumiAI()
+zumi.connect()
+
+led_colors = [
+    (10, 0, 0),   # 빨강
+    (0, 10, 0),   # 초록
+    (0, 0, 10),   # 파랑
+    (10, 10, 0),  # 노랑
+    (0, 10, 10),  # 청록
+    (10, 0, 10),  # 보라
+    (10, 10, 10), # 흰색
+    (0, 0, 0) ]    # 끄기
+
+for color in led_colors:
+    zumi.led_control(*color)
+    time.sleep(1)
+    `
+    
+        },
+
+             {
+            page: 68,
+            title: "LED 동작 애니메이션 (1)",
+            content: "10초 동안 LED를 무지개 색상으로 변화하고 LED 끄기",
+
+            code: `from zumi_AI.zumi_AI import *
+zumi = ZumiAI()
+zumi.connect()
+
+zumi.led_control(10,10,10)
+time.sleep(1)
+zumi.led_pattern(6, 0.5)
+
+time.sleep(10)
+zumi.led_control(0,0,0)
+    `
+    
+        },
+
+                  {
+            title: "LED 동작 애니메이션 (2)",
+            content: "비상등 연출하기-빨간색 LED를 0.1초 단위로 깜빡이게 해봅니다.",
+
+            code: `from zumi_AI.zumi_AI import *
+zumi = ZumiAI()
+zumi.connect()
+
+zumi.led_control(10,0,0)
+time.sleep(1)
+zumi.led_pattern(1, 0.1)
+time.sleep(5)
+zumi.led_control(0,0,0)
+
+zumi.stop()
+    `
+    
+        },
+
+            {
+            page: 69,
+            title: "조건문을 사용한 예제",
+            content: "아래의 예제를 보고 따라서 코딩 해본 뒤, 조건문을 실행 했을 때 결과를 확인합니다.",
+            type: "syntax",
+            list: [
+                "만약 10 이상이라면 “10 이상입니다＂를 표시하고 그렇지 않으면 9 이하입니다를 표시 합니다.",
+            ],
+            code: `a = 10
+if a >= 10:
+    print("10 이상 입니다")
+elif a <= 9:
+    print("9 이하 입니다")`
+            },  
+
+
+            {
+            
+            title: "조건문을 사용한 예제",
+            content: "아래의 예제를 보고 따라서 코딩 해본 뒤, 조건문을 실행 했을 때 결과를 확인합니다.",
+            type: "syntax",
+            code: `_input = input("숫자를 입력하세요: ")
+
+if _input.isdigit():
+    a = int(_input)
+    if a >= 10:
+        print("10 이상 입니다")
+    elif a <= 9:
+        print("9 이하 입니다")
+else:
+    print("숫자가 아닙니다")
+
+`
+            },  
+
+                  {
+            page: 70,
+            title: "입력한 색상에 따라 LED를 바꾸는 예제",
+            content: "‘red’를 입력하면 빨간색으로 LED를 바꾸고 ‘blue’를 입력하면 파란색으로 LED를 바꾸는 예제 입니다.",
+            code: `from zumi_AI.zumi_AI import *
+zumi = ZumiAI()
+zumi.connect()
+
+color = input("색상 입력 : ")
+
+#red를 입력 했을 때 LED를 빨강 으로 변경 한 뒤 2초 대기합니다.
+if color == "red":
+    zumi.led_control(10,0,0)
+    time.sleep(2)
+
+#blue를 입력 했을 때 LED를 파랑 으로 변경 한 뒤 2초 대기합니다.
+elif color == "blue":
+    zumi.led_control(0,0,10)
+    time.sleep(2)
+
+#red 또는 blue 를 입력하지 않았다면 “알 수 없는 색입니다“ 를 출력합니다.
+else:
+    print("알 수 없는 색입니다")
+
+`
+            }, 
+
+
+                 {
+            title: "반복문(while / break)을 사용한 예제",
+            content: "비밀번호인 12를 입력하면 프로그램 반복을 멈추고 종료하는 프로그램 입니다.",
+            type: "syntax",
+            list: [
+                "만약 10 이상이라면 “10 이상입니다＂를 표시하고 그렇지 않으면 9 이하입니다를 표시 합니다.",
+            ],
+            code: `while True:
+    a = input("비밀번호 :")
+    if a == "12" :
+        print ("정답입니다")
+        break #반복종료
+    else :
+        print("틀렸습니다")
+
+`
+            },  
+
+
+             {
+            page: 71,
+            title: "배터리 값을 불러오는 예제",
+            content: "현재 배터리 값을 불러오는 예제입니다.",
+            code: `from zumi_AI.zumi_AI import *
+zumi = ZumiAI()
+zumi.connect()
+
+battery = zumi.get_battery()
+print(battery)
+`
+            }, 
+
+            {
+            title: "배터리에 따라 LED를 바꾸는 예제",
+            content: "배터리가 40% 이하면 빨간색으로 LED를 깜빡이게 바꾸고, 배터리가 41%~60%면 노란색으로 LED를 바꾸며, 61% 이상이면 녹색으로 바꾸는 예제 입니다.",
+            image: "00023.png", 
+            code: `from zumi_AI.zumi_AI import *
+zumi = ZumiAI()
+zumi.connect()
+
+battery = zumi.get_battery()
+print("현재 배터리: ", battery, "%")
+
+if battery <= 40:
+    print("배터리가 40% 이하입니다. LED를 빨간색으로 깜빡입니다.")
+    zumi.led_control(10, 0, 0)
+    time.sleep(1)
+    zumi.led_pattern(1, 0.2)
+
+elif 41 <= battery <= 60:
+    print("배터리가 41~60% 입니다. LED를 노란색으로 설정합니다.")
+    zumi.led_control(10, 10, 0)    
+else:
+    print("배터리가 61% 이상입니다. LED를 녹색으로 설정합니다.")
+    zumi.led_control(0, 0, 10) 
+
+`
+            }, 
+              {
+            page: 72,
+            title: "키보드 입력받기",
+            content: "키보드를 입력받는 라이브러리를 설치합니다.",
+            type: "cmd",
+             list: [
+                "1. 명령 프롬포트(cmd) 를 실행합니다.",
+                "2. pip install keyboard를 입력합니다.",
+                "3. keyboard 라이브러리가 설치 됩니다.",
+            ],
+            code: `pip install keyboard`
+            },  
+
+              {
+            
+            title: "키보드 값 받아오기",
+            content: "아래의 예제를 보고 따라서 코딩 해본 뒤, 조건문을 실행 했을 때 결과를 확인합니다.",
+            type: "syntax",
+            code: `import keyboard
+
+if keyboard.is_pressed('q'):
+    print("q키를 눌렀습니다.")
+`
+            },  
+
+               {
+            title: "키브드의 입력 값에 따라 LED 색상을 바꾸는 예제",
+            content: "키보드의 Q 키를 누르면 LED를 빨간색으로, 키보드의 W를 누르면 LED를 파란색으로 바꾸며 E를 누르면 프로그램을 종료 하는 예제를 만들어봅니다.",
+            code: `from zumi_AI.zumi_AI import *
+import keyboard
+zumi = ZumiAI()
+zumi.connect()
+
+print("q: 빨간색, w: 파란색, e: 종료")
+
+while True:
+    if keyboard.is_pressed('q'):
+        zumi.led_control(10, 0, 0) 
+        print("빨간색으로 변경")
+        time.sleep(0.3)  
+        
+    elif keyboard.is_pressed('w'):
+        zumi.led_control(0, 0, 10)  
+        print("파란색으로 변경")
+        time.sleep(0.3)
+        
+    elif keyboard.is_pressed('e'):
+        print("프로그램을 종료합니다.")
+        break
+
+
+`
+            }, 
+
+                {
+            page: 73,
+            title: "LED 제어 시스템",
+            content: "키보드를 누르면 해당 색상이 켜지는 프로그램을 만들어봅니다. / 예) Q(ㅂ) 키를 누르면 빨간색 LED가 켜집니다.",
+            image: "00024.png",
+            code: `from zumi_AI.zumi_AI import *
+import keyboard
+zumi = ZumiAI()
+zumi.connect()
+
+print("q: 빨간색, w: 파란색, z: 흰색, x: OFF 및 종료")
+
+while True:
+    if keyboard.is_pressed('q'):
+        zumi.led_control(10, 0, 0) 
+        print("빨간색으로 변경")
+        time.sleep(0.3)  
+        
+    elif keyboard.is_pressed('w'):
+        zumi.led_control(0, 0, 10)  
+        print("파란색으로 변경")
+        time.sleep(0.3)
+    
+    elif keyboard.is_pressed('z'):
+        zumi.led_control(10, 10, 10)  
+        print("흰색으로 변경")
+        time.sleep(0.3)
+        
+    elif keyboard.is_pressed('x'):
+        zumi.led_control(0, 0, 0)  
+        print("프로그램을 종료합니다.")
+        break
+
+`
+            }, 
+
+
+                ]
+            },
+5: {
+                title: "OLED의 특징 및 레이어 구조 이해",
+                desc: "자이로 센서를 사용하여 정밀하게 90도, 180도 회전하는 코드입니다.",
+                icon: "fa-route",
+                bgColor: "bg-blue",
+                steps: [
+                     {
+            
+            page: 75,
+            title: "주미 AI를 앞 · 뒤로 움직이는 명령",
+            content: "주미AI의 화면이 디스플레이 이며, 표정을 표현 하거나 카메라를 표시 하기도 하는 등 사용자에게 여러 정보를 주는 역할을 합니다.",
+            image: "00025.png",  
+        },
+
+                  {
+            
+            title: "화면 모드 전환 및 활용",
+            content: "디스플레이 레이어의 ‘카메라’와 ‘표정or문자’의 화면을 켜고, 전환하는 방법에 대해 알아보겠습니다.  예제를 활용하여 키보드의 1,2 버튼을 눌러 화면 모드를 전환 해보도록 하겠습니다",
+            code: `from zumi_AI.zumi_AI import *
+zumi = ZumiAI()
+zumi.connect()
+
+#화면전환 = (1:카메라 2:표정)
+
+print("화면 모드 1 입니다.")
+zumi.change_screen(1)
+time.sleep(4)
+
+
+print("화면 모드 2입니다.")
+zumi.change_screen(2)
+time.sleep(4)`
+        },
+
+                  {
+            
+            title: "키보드를 활용한 화면 전환 예제",
+            content: "아래의 예제를 보고 따라서 코딩 해본 뒤, 키보드를 눌러 화면 전환을 확인합니다.",
+            image: "00026.png", 
+            code: `from zumi_AI.zumi_AI import *
+import keyboard
+zumi = ZumiAI()
+zumi.connect()
+
+print("1(카메라) , 2(표정), ESC(종료)")
+
+while True:
+    if keyboard.is_pressed('1'):
+       print("화면 모드 1 (카메라) 입니다.")
+       zumi.change_screen(1)
+
+    elif keyboard.is_pressed('2'):
+         print("화면 모드 2 (표정) 입니다.")
+         zumi.change_screen(2)
+
+    elif keyboard.is_pressed('esc'):
+        zumi.led_control(0,0,0)
+        print("종료합니다.")
+        break
+`
+        },
+
+        
+                  {
+            page: 81,
+            title: "표정 변화 프로그래밍 - 4초 마다 표정이 변하는 예제",
+            content: "화면 모드가 2 (표정) 일 때 주미 AI는 다양한 표정을 변화 시킬 수 있습니다. 예제를 확인하여 주미 AI의 표정을 변화 시켜 보도록 하겠습니다.",
+            image: "00027.png", 
+            code: `from zumi_AI.zumi_AI import *
+zumi = ZumiAI()
+zumi.connect()
+
+for i in range(15):  
+    print(f"{i}번째 감정으로 변경합니다.") 
+    zumi.change_emotion(i)  
+    time.sleep(4) `
+        },
+
+   {
+            page: 83,
+            title: "사용자가 원하는 표정을 출력하는 예제",
+            content: "Input()은 사용자로부터 값을 입력받는 코드 입니다.이 코드를 활용하여 숫자를 입력 받아서 주미 AI의 표정을 바꾸는 예제를 따라서 코딩 해보고 실행 해봅니다.",
+
+            code: `from zumi_AI.zumi_AI import *
+zumi = ZumiAI()
+zumi.connect()
+
+while True:
+    print("종료하려면 '종료' 입력")
+    user_input = input("몇 번 감정을 표시하겠습니까? (0~15): ")
+    
+    if user_input == "종료":
+        print("프로그램을 종료합니다.")
+        break
+
+    if user_input.isdigit():
+        emotion = int(user_input)
+        if 0 <= emotion <= 15:
+            print(f"{emotion}번 감정을 표시합니다.")
+            zumi.change_emotion(emotion)
+        else:
+            print("0부터 15 사이의 숫자를 입력해주세요.")
+    else:
+        print("숫자 또는 '종료'만 입력해주세요.")
+`
+        },
+
+         {
+            page: 84,
+            title: "텍스트 표시 및 편집",
+            content: "텍스트는 카메라나 표정 보다도 더 상위 층(Layer)에 위치 합니다. 따라서 메시지를 표시하면 사용자가 볼 수 있으며, 이를 활용하여 다양한 상태 및 정보를 알려 줄 수 있습니다. 이번에는 텍스트를 표시하는 방법을 알아봅니다.",
+            image: "00028.png",
+            code: `from zumi_AI.zumi_AI import *
+import keyboard
+zumi = ZumiAI()
+zumi.connect()
+
+print("1(문자표시) , 2(삭제), ESC(종료)")
+
+while True:
+    if keyboard.is_pressed('1'):
+       print("Hello, zumi")
+       # Hello zumi ! 를 디스플레이에 표시합니다.
+       zumi.display_text("Hello, zumi")
+
+    elif keyboard.is_pressed('2'):
+         print("삭제합니다")
+         # 입력된 문자를 삭제 합니다.
+         zumi.display_text_clear()
+
+    elif keyboard.is_pressed('esc'):
+         print("종료합니다") 
+         break
+`
+        },
+
+    {
+            page: 85,
+            title: "버튼을 누를 때 마다 화면에 숫자를 표시 해주는 프로그램 ",
+            content: "텍스트는 카메라나 표정 보다도 더 상위 층(Layer)에 위치 합니다. 따라서 메시지를 표시하면 사용자가 볼 수 있으며, 이를 활용하여 다양한 상태 및 정보를 알려 줄 수 있습니다. 이번에는 텍스트를 표시하는 방법을 알아봅니다.",
+            image: "00029.png",
+            list: [
+    "1. text += str(counter)는 counter의 숫자를 문자열로 바꿔서 text에 추가합니다.",
+    "2. counter += 1은 다음에 붙일 숫자를 1 증가시킵니다.",
+    "3. 처음에는 counter = 2이므로 text = \"1\"입니다.",
+    "4. 1번째 q를 누르면 text = \"12\"가 되고, counter = 3이 됩니다.",
+    "5. 2번째 q를 누르면 text = \"123\"이 되고, counter = 4가 됩니다.",
+    "6. 3번째 q를 누르면 text = \"1234\"가 되고, counter = 5가 됩니다.",
+],
+            code: `from zumi_AI.zumi_AI import *
+import keyboard
+zumi = ZumiAI()
+zumi.connect()
+
+zumi.change_screen(2)
+time.sleep(0.3) 
+zumi.change_emotion(0)
+
+text = "1"
+zumi.display_text(text)  # 처음에 '1' 출력
+
+counter = 2  # 다음에 추가될 숫자
+print("q 키를 누를 때마다 숫자가 추가됩니다. 종료 : ESC")
+
+while True:
+    if keyboard.is_pressed('esc'):
+        print("프로그램을 종료합니다.")
+        break
+
+    if keyboard.is_pressed('q'):
+        text += str(counter)
+        zumi.display_text(text)  # 현재 전체 문자열 출력
+        print(f"현재 출력: {text}")
+        counter += 1
+        time.sleep(0.3) 
+`
+        },
+
+          {
+            page: 86,
+            title: "Q 버튼을 누르면 현재 배터리 값을 화면에 표시하는 예제",
+            content: "아래의 예제를 보고 따라서 코딩하고 실행 해봅니다.",
+            image: "00029.png",
+            list: [
+    "1. battery_str = f\"배터리:{battery:.2f}%\"에서 {battery:.2f}는 배터리 값을 소수점 둘째 자리까지 표시합니다.",
+    "2. battery = zumi.get_battery()는 현재 배터리 값을 가져옵니다.",
+    "3. battery_str = f\"배터리: {int(battery)}%\"에서 int(battery)는 배터리 값을 정수로 변환합니다.",
+    "4. print(battery_str)는 배터리 값을 화면에 출력합니다.",
+    "5. 만약 86.00%가 아닌 86%로 표시하고 싶다면 int(battery)를 사용합니다.",
+],
+            code: `from zumi_AI.zumi_AI import *
+import keyboard
+zumi = ZumiAI()
+zumi.connect()
+
+print("q 키: 배터리 값 출력 / w 키: 화면 지우기 / esc 키: 종료")
+
+while True:
+    if keyboard.is_pressed('esc'):
+        print("프로그램을 종료합니다.")
+        break
+
+    if keyboard.is_pressed('q'):
+        battery = zumi.get_battery()
+        battery_str = f"배터리:{battery:.2f}%% "
+        zumi.display_text(battery_str)
+        print(f"출력됨 → {battery_str}")
+        time.sleep(0.3)
+
+    if keyboard.is_pressed('w'):
+        zumi.display_text_clear()
+        print("화면이 지워졌습니다.")
+        time.sleep(0.3)
+`
+        },
+
+
+
+                ]
+            },
+
+
+
+            6: {
+                title: "06. IR 적외선 센서 파이썬 코딩",
+                desc: "주미 전면/후면 적외선 센서 수치를 측정하여 장애물을 감지합니다.",
+                icon: "fa-wave-square",
+                bgColor: "bg-green",
+                steps: [
+                    {
+                        title: "IR 센서 값 읽기",
+                        content: "get_ir_sensor()를 사용해 감지된 센서 값을 출력합니다.",
+                        code: `from zumi_AI.zumi_AI import *\n\nzumi = ZumiAI()\nzumi.connect()\n\nir_front = zumi.get_ir_sensor("front")\nprint(f"전면 IR 센서 수치 : {ir_front}")`
+                    }
+                ]
+            },
+            7: {
+                title: "07. 주피터 부저 음계 제어",
+                desc: "주미 내부 부저 스피커로 도레미 음계를 연주하는 파이썬 코드입니다.",
+                icon: "fa-music",
+                bgColor: "bg-green",
+                steps: [
+                    {
+                        title: "소리 연주 연동 코드",
+                        content: "play_note() 함수로 도, 레, 미 음계를 출력합니다.",
+                        code: `from zumi_AI.zumi_AI import *\n\nzumi = ZumiAI()\nzumi.connect()\n\n# C4(도), D4(레), E4(미) 음계 0.5초 연주\nzumi.play_note("C4", 0.5)\nzumi.play_note("D4", 0.5)\nzumi.play_note("E4", 0.5)`
+                    }
+                ]
+            },
+            8: {
+                title: "08. 라인트레이서 자율주행",
+                desc: "하부 IR 센서를 활용해 검은색 라인을 따라 이동하는 알고리즘입니다.",
+                icon: "fa-road",
+                bgColor: "bg-green",
+                steps: [
+                    {
+                        title: "라인 추적 자율주행 코드",
+                        content: "line_follower() 함수로 자율주행을 시작합니다.",
+                        code: `from zumi_AI.zumi_AI import *\n\nzumi = ZumiAI()\nzumi.connect()\n\n# 10초 동안 검은 라인 추적 주행\nzumi.line_follower(duration=10)`
+                    }
+                ]
+            },
+            9: {
+                title: "09. 장애물 회피 알고리즘",
+                desc: "장애물이 감지되면 멈추거나 우회하는 판단 코드를 작성합니다.",
+                icon: "fa-gamepad",
+                bgColor: "bg-green",
+                steps: [
+                    {
+                        title: "조건문(if) 장애물 판단 코드",
+                        content: "IR 센서 수치가 일정값 미만일 때 우회하도록 코딩합니다.",
+                        code: `from zumi_AI.zumi_AI import *\n\nzumi = ZumiAI()\nzumi.connect()\n\nif zumi.get_ir_sensor("front") < 50:\n    print("장애물 감지! 멈춤 및 우회")\n    zumi.stop()\n    zumi.turn_right(90)`
+                    }
+                ]
+            },
+            10: {
+                title: "10. 나만의 자율주행 코스 완주",
+                desc: "주행, 회전, 장애물 회피 기능을 조합하여 코스를 통과합니다.",
+                icon: "fa-trophy",
+                bgColor: "bg-green",
+                steps: [
+                    {
+                        title: "통합 코스 자율주행 알고리즘",
+                        content: "여러 함수를 통합하여 미션을 수행하는 파이썬 전용 스크립트입니다.",
+                        code: `from zumi_AI.zumi_AI import *\n\nzumi = ZumiAI()\nzumi.connect()\n\n# 1. 출발 전진\nzumi.send_move_dist(1, 30, 0)\n# 2. 우회전\nzumi.turn_right(90)\n# 3. 라인 트레이싱 5초\nzumi.line_follower(5)`
+                    }
+                ]
+            },
+            11: {
+                title: "11. OpenCV 비전 센서 인식",
+                desc: "주미 카메라 영상을 실시간으로 불러오고 처리하는 비전 코딩입니다.",
+                icon: "fa-camera",
+                bgColor: "bg-purple",
+                steps: [
+                    {
+                        title: "OpenCV 비전 스트리밍",
+                        content: "camera 모듈을 가져와 프레임을 캡처하고 화면에 표시합니다.",
+                        code: `from zumi_AI.zumi_AI import *\nimport cv2\n\nzumi = ZumiAI()\nzumi.connect()\n\nimage = zumi.get_camera_frame()\ncv2.imwrite("zumi_view.jpg", image)`
+                    }
+                ]
+            },
+            12: {
+                title: "12. 표지판 인식 및 AI 자율주행",
+                desc: "정지 표지판이나 화살표를 인공지능 모델로 구분하여 제어합니다.",
+                icon: "fa-brain",
+                bgColor: "bg-purple",
+                steps: [
+                    {
+                        title: "AI 표지판 분류기 구동 코드",
+                        content: "학습된 인공지능 모델을 이용해 표지판을 인식합니다.",
+                        code: `from zumi_AI.zumi_AI import *\n\nzumi = ZumiAI()\nzumi.connect()\n\nsign = zumi.predict_traffic_sign()\nif sign == "STOP":\n    zumi.stop()\n    zumi.show_emotion("STOP")`
+                    }
+                ]
+            },
+            13: {
+                title: "부록. 파이썬 라이브러리 레퍼런스",
+                desc: "zumi_AI 모듈의 모든 함수와 클래스 설명서입니다.",
+                icon: "fa-book-bookmark",
+                bgColor: "bg-orange",
+                steps: [
+                    {
+                        title: "주요 함수 레퍼런스 가이드",
+                        content: "주요 제어 메서드 모음 예시입니다.",
+                        code: `# 기본 라이브러리 참조\nzumi.send_move_dist(direction, distance, angle)\nzumi.turn_left(angle)\nzumi.draw_text(message)\nzumi.get_ir_sensor(sensor_name)`
+                    }
+                ]
+            }
+        };
+
+        // 파이썬 구문 강조 (Syntax Highlighter) 함수
+function highlightPythonCode(codeStr) {
+    const lines = codeStr.split('\n');
+    return lines.map(highlightLine).join('\n');
+}
+
+function highlightLine(line) {
+    let escaped = line
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+
+    // '#' 위치를 기준으로 코드 부분과 주석 부분을 먼저 분리
+    const hashIndex = escaped.indexOf('#');
+    let codePart = escaped;
+    let commentPart = '';
+    if (hashIndex !== -1) {
+        codePart = escaped.slice(0, hashIndex);
+        commentPart = escaped.slice(hashIndex);
+    }
+
+    // 이제부터는 codePart(주석 제외 부분)에만 하이라이팅 적용
+    codePart = codePart.replace(/(["'])(.*?)\1/g, '<span class="py-string">$1$2$1</span>');
+
+    const keywords = ['from','import','def','if','else','elif','for','in','while','return','as'];
+    keywords.forEach(kw => {
+        const reg = new RegExp(`\\b(${kw})\\b`, 'g');
+        codePart = codePart.replace(reg, '<span class="py-keyword">$1</span>');
+    });
+
+    codePart = codePart.replace(/\b(\d+)\b/g, '<span class="py-number">$1</span>');
+
+    const funcs = ['connect', 'send_move_dist', 'draw_text', 'show_emotion', 'led_on', 'led_off', 'turn_left', 'turn_right', 'get_ir_sensor', 'play_note', 'line_follower', 'stop', 'get_camera_frame', 'predict_traffic_sign', 'print', 'sleep'];
+    funcs.forEach(fn => {
+        const reg = new RegExp(`\\b(${fn})\\b`, 'g');
+        codePart = codePart.replace(reg, '<span class="py-func">$1</span>');
+    });
+
+    // 주석 부분은 더 이상 건드리지 않고 통째로 감싸기
+    if (commentPart) {
+        commentPart = `<span class="py-comment">${commentPart}</span>`;
+    }
+
+    return codePart + commentPart;
+}
+
+        // CMD(명령 프롬프트) 명령어 표시 함수 - 줄마다 프롬프트 기호(>) 추가
+        function highlightCmdCode(codeStr) {
+            let escaped = codeStr
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+
+            return escaped
+                .split('\n')
+                .map(line => `<span class="cmd-line"><span class="cmd-prompt">&gt;</span>${line}</span>`)
+                .join('\n');
+        }
+
+        // 상세 페이지 열기
+        function openDetailPage(lessonId) {
+            const data = lessonsData[lessonId] || lessonsData[1];
+
+            document.getElementById('detail-title').innerText = data.title;
+            document.getElementById('detail-desc').innerText = data.desc;
+            
+const detailHero = document.querySelector('.detail-hero-banner');
+
+const iconContainer = document.getElementById('detail-icon');
+
+detailHero.className = `detail-hero-banner ${data.bgColor}`;
+
+iconContainer.className = `header-icon ${data.bgColor}`;
+iconContainer.innerHTML = `<i class="fa-solid ${data.icon}"></i>`;
+
+            const stepsContainer = document.getElementById('steps-container');
+            stepsContainer.innerHTML = '';
+
+data.steps.forEach((step, index) => {
+    const stepWrapper = document.createElement('div');
+    stepWrapper.className = 'step-wrapper';
+
+    // 1) 리스트(설명 목록) 처리
+    let listHtml = '';
+    if (step.list && step.list.length > 0) {
+        listHtml = '<ul>' + 
+            step.list.map(item => `<li>${item}</li>`).join('') + 
+            '</ul>';
+    }
+
+    // 2) 이미지 처리
+    let imageHtml = '';
+
+    if (step.image) {
+        imageHtml = `
+            <div class="step-img-box">
+                <img src="${IMAGE_BASE_PATH}${step.image}" alt="${step.title}">
+            </div>
+        `;
+    }
+
+                // 3) 외부 링크 버튼 처리 (추가됨)
+                let buttonHtml = '';
+                if (step.button) {
+                    buttonHtml = `
+                        <div style="margin-top: 15px; text-align: center;">
+                            <a href="${step.button.link}" target="_blank" class="modal-item-btn python-download-btn">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> ${step.button.text}
+                            </a>
+                        </div>
+                    `;
+                }
+
+// 4) 교재 페이지 이동 버튼 처리
+let pageBtnHtml = '';
+if (step.page) {
+    pageBtnHtml = `
+        <div style="margin-bottom: 12px; text-align: left;">
+            <a href="${getTextbookPageUrl(step.page)}" target="_blank" class="modal-item-btn textbook-page-btn">
+                <i class="fa-solid fa-book-open"></i> 교재 ${step.page} page
+            </a>
+        </div>
+    `;
+}
+
+                // 5) 코드 영역 처리 - type이 "cmd"이면 터미널 템플릿, 아니면 기본 파이썬 템플릿
+                let codeHtml = '';
+                if (step.code) {
+                    if (step.type === 'cmd') {
+                        const highlightedCmd = highlightCmdCode(step.code);
+                        codeHtml = `
+                            <div class="cmd-editor-container">
+                                <div class="cmd-header">
+                                    <span class="cmd-title">
+                                        <span class="cmd-dots"><span></span><span></span><span></span></span>
+                                        <i class="fa-solid fa-terminal" style="color:#4cd137;"></i> 명령 프롬프트 (CMD)
+                                    </span>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i class="fa-regular fa-copy"></i> 코드 복사
+                                    </button>
+                                </div>
+                                <div class="cmd-block-wrapper">
+                                    <div class="cmd-display">${highlightedCmd}</div>
+                                    <textarea class="raw-code" style="display:none;">${step.code}</textarea>
+                                </div>
+                            </div>
+                        `;
+                    } else if (step.type === 'syntax') {
+    const highlightedCode = highlightPythonCode(step.code);
+    codeHtml = `
+        <div class="syntax-editor-container">
+            <div class="syntax-header">
+                <span><i class="fa-brands fa-python" style="color: #c792ea;"></i> 파이썬 문법</span>
+                <button class="copy-btn" onclick="copyCode(this)">
+                    <i class="fa-regular fa-copy"></i> 코드 복사
+                </button>
+            </div>
+            <div class="syntax-block-wrapper">
+                <div class="syntax-display">${highlightedCode}</div>
+                <textarea class="raw-code" style="display:none;">${step.code}</textarea>
+            </div>
+        </div>
+    `;
+
+                    } else {
+                        const highlightedCode = highlightPythonCode(step.code);
+                        codeHtml = `
+                            <div class="code-editor-container">
+                                <div class="code-header">
+                                    <span><i class="fa-brands fa-python" style="color: #3776ab;"></i> python.py</span>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i class="fa-regular fa-copy"></i> 코드 복사
+                                    </button>
+                                </div>
+                                <div class="code-block-wrapper">
+                                    <div class="code-display">${highlightedCode}</div>
+                                    <textarea class="raw-code" style="display:none;">${step.code}</textarea>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+
+stepWrapper.innerHTML = `
+    <div class="step-badge">STEP 0${index + 1}</div>
+    <div class="step-box">
+      ${pageBtnHtml}
+        <h3><i class="fa-solid fa-circle-check" style="color:#00a8e8;"></i> ${step.title}</h3>
+        <p>${step.content}</p>
+      ${listHtml}                      
+       	  ${imageHtml}
+      ${buttonHtml}
+      ${codeHtml}
+    </div>
+`;
+
+                stepsContainer.appendChild(stepWrapper);
+            });
+
+            const completeArea = document.createElement('div');
+            completeArea.className = 'complete-btn-area';
+            completeArea.innerHTML = `<button class="complete-btn" onclick="showMainPage()"><i class="fa-solid fa-check"></i> 학습 완료 및 목록으로</button>`;
+            stepsContainer.appendChild(completeArea);
+
+            document.getElementById('main-page').classList.remove('active');
+            document.getElementById('detail-page').classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function showMainPage() {
+            document.getElementById('detail-page').classList.remove('active');
+            document.getElementById('main-page').classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // 코드 복사 기능 (파이썬 / CMD 템플릿 공통 대응)
+        function copyCode(buttonElement) {
+            const container = buttonElement.closest('.code-editor-container, .cmd-editor-container, .syntax-editor-container');
+            const rawTextarea = container.querySelector('.raw-code');
+            
+            navigator.clipboard.writeText(rawTextarea.value).then(() => {
+                const originalHtml = buttonElement.innerHTML;
+                buttonElement.innerHTML = `<i class="fa-solid fa-check"></i> 복사 완료!`;
+                buttonElement.style.backgroundColor = "#27ae60";
+
+                setTimeout(() => {
+                    buttonElement.innerHTML = originalHtml;
+                    buttonElement.style.backgroundColor = "#2ecc71";
+                }, 2000);
+            }).catch(err => {
+                alert("코드 복사에 실패했습니다.");
+            });
+        }
+
+        // 모달(선생님 자료실 / 도움말) 열기/닫기
+        function openModal(modalType) {
+            document.getElementById(`modal-${modalType}`).classList.add('active');
+        }
+
+        function closeModal(modalType) {
+            document.getElementById(`modal-${modalType}`).classList.remove('active');
+        }
+
+        // 모달 외부 영역 클릭 시 닫기
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal-overlay')) {
+                event.target.classList.remove('active');
+            }
+        }
+        // 맨 위로 이동 버튼 동작
+        const scrollTopBtn = document.getElementById('scrollTopBtn');
+
+        window.addEventListener('scroll', function () {
+            if (window.scrollY > 300) {
+                scrollTopBtn.classList.add('show');
+            } else {
+                scrollTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollTopBtn.addEventListener('click', function () {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
