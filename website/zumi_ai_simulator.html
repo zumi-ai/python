@@ -1,0 +1,3494 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주미 AI (Zumi AI) 카드코딩 3D 시뮬레이터</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Three.js & OrbitControls -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        * {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            user-select: none;
+        }
+        
+        /* Glassmorphism Styling */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        /* Marker Pattern inside Card */
+        .aruco-marker {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1px;
+            background-color: black;
+            padding: 3px;
+            border: 2px solid white;
+            border-radius: 2px;
+        }
+        .aruco-cell {
+            aspect-ratio: 1;
+            background-color: white;
+        }
+        .aruco-cell.b { background-color: black; }
+
+        /* Card Hover Animations */
+        .coding-card {
+            transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .coding-card:hover {
+            transform: translateY(-6px) scale(1.04);
+            box-shadow: 0 14px 24px -6px rgba(0, 0, 0, 0.35);
+        }
+        .coding-card:active {
+            transform: translateY(-2px) scale(0.97);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(56, 189, 248, 0.5);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(56, 189, 248, 0.8);
+        }
+
+        /* Sequence Block Pulse Glow */
+        .active-execution-block {
+            box-shadow: 0 0 18px 4px #f59e0b !important;
+            transform: scale(1.08) translateY(-2px) !important;
+            border-color: #fbbf24 !important;
+        }
+
+        /* Drive mode buttons */
+        .drive-btn {
+            width: 56px; height: 56px; border-radius: 14px;
+            background: rgba(30, 41, 59, 0.95);
+            border: 2px solid rgba(148, 163, 184, 0.35);
+            color: #e2e8f0; font-size: 20px;
+            touch-action: none; transition: all 0.08s;
+        }
+        .drive-btn:hover { border-color: #34d399; }
+        .drive-btn.active {
+            background: #10b981; color: #022c22; border-color: #6ee7b7;
+            transform: scale(0.93); box-shadow: 0 0 16px rgba(16, 185, 129, 0.6);
+        }
+
+        /* Zumi camera overlay */
+        .cam-scanlines { background: repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 3px); }
+        .cam-vignette { background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.5) 100%); }
+        .cam-bracket { position: absolute; width: 16px; height: 16px; border-color: rgba(125, 211, 252, 0.9); }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 h-screen w-screen overflow-hidden flex flex-col justify-between">
+
+    <!-- 1. MODE SELECTION MODAL -->
+    <div id="landingModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-md p-4 transition-opacity duration-300">
+        <div class="bg-slate-900 rounded-3xl max-w-5xl w-full p-8 shadow-2xl border border-slate-700/80 text-center relative overflow-hidden">
+            <div class="absolute -top-12 -left-12 w-44 h-44 bg-sky-500/20 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-12 -right-12 w-44 h-44 bg-indigo-500/20 rounded-full blur-3xl"></div>
+
+            <div class="relative z-10">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-sky-500/10 text-sky-400 rounded-2xl mb-4 border border-sky-500/20 shadow-inner">
+                    <i class="fa-solid fa-robot text-4xl"></i>
+                </div>
+                <h1 class="text-3xl font-extrabold text-white mb-2">주미 AI (Zumi AI) 시뮬레이터</h1>
+                <p class="text-slate-400 text-sm mb-8 max-w-md mx-auto">카드를 직접 스캔하여 정교한 3D 주미 AI 로봇을 자유롭게 조정해보세요!</p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <button onclick="selectMode('lab')" class="group p-6 rounded-2xl bg-slate-800/80 hover:bg-sky-600 border border-slate-700 hover:border-sky-400 text-left transition-all duration-300 shadow-lg hover:-translate-y-1">
+                        <div class="w-12 h-12 rounded-xl bg-sky-500 text-white group-hover:bg-white group-hover:text-sky-600 flex items-center justify-center text-xl font-bold mb-3 transition-colors">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-1">카드 실험실</h3>
+                        <p class="text-xs text-slate-400 group-hover:text-sky-100 leading-relaxed">
+                            카드를 클릭하면 주미 AI가 카드를 즉시 카메라로 인식하여 바로 실행합니다.
+                        </p>
+                    </button>
+
+                    <button onclick="selectMode('advanced')" class="group p-6 rounded-2xl bg-slate-800/80 hover:bg-indigo-600 border border-slate-700 hover:border-indigo-400 text-left transition-all duration-300 shadow-lg hover:-translate-y-1">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-500 text-white group-hover:bg-white group-hover:text-indigo-600 flex items-center justify-center text-xl font-bold mb-3 transition-colors">
+                            <i class="fa-solid fa-code"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-1">심화 코딩</h3>
+                        <p class="text-xs text-slate-400 group-hover:text-indigo-100 leading-relaxed">
+                            원하는 값(거리/각도)을 설정하여 타임라인에 순차적으로 코딩을 쌓은 뒤 한 번에 실행합니다.
+                        </p>
+                    </button>
+
+                    <button onclick="selectMode('drive')" class="group p-6 rounded-2xl bg-slate-800/80 hover:bg-emerald-600 border border-slate-700 hover:border-emerald-400 text-left transition-all duration-300 shadow-lg hover:-translate-y-1">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-500 text-white group-hover:bg-white group-hover:text-emerald-600 flex items-center justify-center text-xl font-bold mb-3 transition-colors">
+                            <i class="fa-solid fa-gamepad"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-1">조종 모드</h3>
+                        <p class="text-xs text-slate-400 group-hover:text-emerald-100 leading-relaxed">
+                            방향키와 속도 조절로 주미 AI를 직접 운전합니다. 나무·돌·건물은 통과할 수 없어요!
+                        </p>
+                    </button>
+
+                    <button onclick="selectMode('learn')" class="group p-6 rounded-2xl bg-slate-800/80 hover:bg-fuchsia-600 border border-slate-700 hover:border-fuchsia-400 text-left transition-all duration-300 shadow-lg hover:-translate-y-1">
+                        <div class="w-12 h-12 rounded-xl bg-fuchsia-500 text-white group-hover:bg-white group-hover:text-fuchsia-600 flex items-center justify-center text-xl font-bold mb-3 transition-colors">
+                            <i class="fa-solid fa-brain"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-1">AI 학습 모드</h3>
+                        <p class="text-xs text-slate-400 group-hover:text-fuchsia-100 leading-relaxed">
+                            센서 · 물체 인식 · 머신러닝 · SLAM! 자율주행 AI의 원리를 직접 체험하며 배워요.
+                        </p>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. TOP 2-TIER HEADER BAR -->
+    <header class="relative z-20 glass-panel flex flex-col shadow-2xl border-b border-slate-800">
+        <div class="px-6 py-2.5 flex items-center justify-between border-b border-slate-800/80">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-blue-600 text-white flex items-center justify-center font-black text-lg shadow-md shadow-sky-500/30">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div>
+                    <h2 class="font-extrabold text-white text-base leading-tight flex items-center gap-2">
+                        주미 AI 카드코딩
+                        <span id="currentModeBadge" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30">
+                            카드 실험실
+                        </span>
+                    </h2>
+                </div>
+            </div>
+
+            <!-- Theme & System Buttons -->
+            <div class="flex items-center gap-2">
+                <div class="flex bg-slate-900 p-1 rounded-xl text-xs font-semibold gap-1 border border-slate-800">
+                    <button onclick="changeTheme('default')" id="btn-theme-default" class="px-3 py-1 rounded-lg bg-sky-500 text-white transition shadow">
+                        <i class="fa-solid fa-border-all mr-1"></i>격자
+                    </button>
+                    <button onclick="changeTheme('city')" id="btn-theme-city" class="px-3 py-1 rounded-lg text-slate-400 hover:text-white transition">
+                        <i class="fa-solid fa-city mr-1"></i>도시
+                    </button>
+                    <button onclick="changeTheme('forest')" id="btn-theme-forest" class="px-3 py-1 rounded-lg text-slate-400 hover:text-white transition">
+                        <i class="fa-solid fa-tree mr-1"></i>숲
+                    </button>
+                </div>
+
+                <button onclick="toggleZumiCam()" id="btn-cam" class="px-3 py-1.5 rounded-xl bg-sky-600/80 hover:bg-sky-500 text-sky-50 transition font-bold text-xs flex items-center gap-1.5 border border-sky-400/60">
+                    <i class="fa-solid fa-video"></i><span id="btn-cam-label">주미 카메라 ON</span>
+                </button>
+                <button onclick="generateRandomRoads()" id="btn-random-road" class="px-3 py-1.5 rounded-xl bg-amber-600/80 hover:bg-amber-500 text-amber-100 transition font-bold text-xs flex items-center gap-1.5 border border-amber-500/50 hidden">
+                    <i class="fa-solid fa-shuffle"></i>
+                    <span>랜덤 도로 생성</span>
+                </button>
+
+                <button onclick="resetPosition()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 transition font-bold text-xs flex items-center gap-1.5 border border-slate-700">
+                    <i class="fa-solid fa-rotate-left text-sky-400"></i>
+                    <span>위치 리셋</span>
+                </button>
+
+                <button onclick="openLandingModal()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 transition font-bold text-xs flex items-center gap-1.5 border border-slate-700">
+                    <i class="fa-solid fa-arrow-right-arrow-left text-indigo-400"></i>
+                    <span>모드 변경</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Tier 2: Timeline Ribbon -->
+        <div id="advancedSequenceRibbon" class="hidden px-6 py-2.5 bg-slate-950/90 flex items-center gap-4 min-h-[68px]">
+            <div class="flex items-center gap-2 flex-shrink-0">
+                <span class="text-xs font-bold text-slate-400 flex items-center gap-1">
+                    <i class="fa-solid fa-list-check text-sky-400"></i> 코딩 명령어
+                </span>
+                <span id="queueCountBadge" class="text-[10px] font-black bg-slate-800 text-sky-300 px-2 py-0.5 rounded-full border border-slate-700">0개</span>
+            </div>
+
+            <div class="flex-1 overflow-x-auto py-1 flex items-center gap-2 min-h-[46px]" id="sequenceQueue">
+                <div class="text-slate-500 text-xs font-medium flex items-center gap-2" id="emptySequenceHint">
+                    <i class="fa-regular fa-square-plus text-sm"></i> 아래 카드를 클릭하여 순차 코딩 명령어를 생성하세요.
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 flex-shrink-0 border-l border-slate-800 pl-4">
+                <button onclick="clearAllCommands()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-rose-900/50 hover:text-rose-300 text-slate-400 transition font-bold text-xs flex items-center gap-1 border border-slate-700">
+                    <i class="fa-solid fa-trash-can"></i> 전체삭제
+                </button>
+                <button onclick="runAdvancedSequence()" class="px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-slate-950 font-black text-xs transition shadow-lg shadow-emerald-500/20 flex items-center gap-1.5">
+                    <i class="fa-solid fa-play text-sm"></i> 실행하기 (Run)
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 3. 3D CANVAS VIEWPORT -->
+    <main class="relative flex-1 w-full h-full overflow-hidden bg-slate-950">
+        <div id="canvas-container" class="w-full h-full cursor-grab active:cursor-grabbing"></div>
+
+        <div id="speechBubble" class="absolute top-6 left-1/2 -translate-x-1/2 opacity-0 pointer-events-none transition-all duration-300 transform -translate-y-2 z-30">
+            <div class="bg-slate-900/90 text-white px-6 py-2.5 rounded-full shadow-2xl border-2 border-sky-400 font-bold text-sm flex items-center gap-3">
+                <span class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
+                <span id="speechText">주미 AI가 준비되었습니다!</span>
+            </div>
+        </div>
+
+        <div id="cameraFlash" class="absolute inset-0 pointer-events-none z-40 bg-white/0 transition-colors duration-200"></div>
+
+        <!-- AI LEARNING PANEL -->
+        <div id="learnPanel" class="hidden absolute left-4 top-4 bottom-4 z-30 flex flex-col rounded-2xl glass-panel border border-slate-700 shadow-2xl overflow-hidden" style="width:21.5rem;max-width:88vw">
+            <div class="flex items-center justify-between px-3 py-2 border-b border-slate-700/80">
+                <div class="text-sm font-black text-white"><i class="fa-solid fa-graduation-cap text-fuchsia-400 mr-1.5"></i>AI 학습 모드</div>
+                <div class="flex items-center gap-2">
+                    <span id="learnProgress" class="text-[11px] font-bold text-amber-300">⭐ 0/4 완료</span>
+                    <button id="learnCollapseBtn" onclick="learnToggleCollapse()" class="w-6 h-6 rounded bg-slate-800 text-slate-300 text-xs" aria-label="접기">▾</button>
+                </div>
+            </div>
+            <div id="learnTabs" class="grid grid-cols-4 gap-1 p-2">
+                <button id="learnTab-sensor" onclick="learnSwitch('sensor')"><i class="fa-solid fa-tower-broadcast text-sm"></i><span>센서</span><span class="tab-star absolute -top-1 -right-1 text-[10px]"></span></button>
+                <button id="learnTab-vision" onclick="learnSwitch('vision')"><i class="fa-solid fa-eye text-sm"></i><span>비전</span><span class="tab-star absolute -top-1 -right-1 text-[10px]"></span></button>
+                <button id="learnTab-ml" onclick="learnSwitch('ml')"><i class="fa-solid fa-brain text-sm"></i><span>학습</span><span class="tab-star absolute -top-1 -right-1 text-[10px]"></span></button>
+                <button id="learnTab-slam" onclick="learnSwitch('slam')"><i class="fa-solid fa-map-location-dot text-sm"></i><span>SLAM</span><span class="tab-star absolute -top-1 -right-1 text-[10px]"></span></button>
+            </div>
+            <div id="learnBody" class="flex-1 overflow-y-auto p-3 space-y-3"></div>
+        </div>
+
+        <!-- ZUMI CAMERA (PiP) -->
+        <div id="zumiCamPanel" class="absolute right-4 z-30 w-56 sm:w-72 md:w-80" style="top:50%;transform:translateY(-50%)">
+            <div class="relative rounded-2xl overflow-hidden border-4 border-sky-400 shadow-2xl shadow-black/60 bg-black">
+                <div id="zumiCamView" class="w-full bg-slate-900" style="aspect-ratio:16/10"></div>
+                <canvas id="camDetectCanvas" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+                <div class="cam-scanlines pointer-events-none absolute inset-0"></div>
+                <div class="cam-vignette pointer-events-none absolute inset-0"></div>
+                <div class="cam-bracket top-2 left-2 border-t-2 border-l-2"></div>
+                <div class="cam-bracket top-2 right-2 border-t-2 border-r-2"></div>
+                <div class="cam-bracket bottom-2 left-2 border-b-2 border-l-2"></div>
+                <div class="cam-bracket bottom-2 right-2 border-b-2 border-r-2"></div>
+                <div class="absolute top-0 inset-x-0 px-3 py-1.5 flex items-center justify-between bg-gradient-to-b from-black/70 to-transparent">
+                    <span class="flex items-center gap-1.5 text-[11px] font-black tracking-wider text-white"><span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>ZUMI CAM</span>
+                    <button onclick="toggleZumiCam()" class="w-6 h-6 rounded-full bg-black/40 hover:bg-rose-500/80 text-white text-[10px]" aria-label="카메라 끄기"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="absolute bottom-0 inset-x-0 px-3 py-1 text-[10px] font-bold text-sky-200/90 bg-gradient-to-t from-black/60 to-transparent pointer-events-none">전방 카메라 · 75°</div>
+                <div id="camCardPreview" class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-0 scale-75 transition-all duration-300">
+                    <div id="camCardBody" class="w-20 h-28 rounded-xl border-2 border-white shadow-xl flex flex-col items-center justify-between p-2 text-white">
+                        <span id="camCardTitle" class="text-[10px] font-extrabold text-center leading-tight"></span>
+                        <span id="camCardIcon" class="text-2xl"></span>
+                        <span class="w-6 h-6 bg-white/90 rounded"></span>
+                    </div>
+                </div>
+                <div id="zumiCamFlash" class="absolute inset-0 bg-white pointer-events-none opacity-0 transition-opacity duration-150"></div>
+            </div>
+        </div>
+
+        <div id="cardScanAnimation" class="absolute bottom-24 left-1/2 -translate-x-1/2 z-30 pointer-events-none opacity-0 transition-all duration-300 transform scale-50">
+            <div id="scannedCardBody" class="w-36 h-48 rounded-2xl p-3 shadow-2xl flex flex-col justify-between items-center text-white border-4 border-white">
+                <div class="w-full flex justify-between items-center">
+                    <span id="scanCardNum" class="w-5 h-5 rounded-full bg-black/30 flex items-center justify-center text-[10px] font-black">1</span>
+                    <span id="scanCardTitle" class="text-xs font-bold">전진하기</span>
+                </div>
+                <div id="scanCardMarker" class="w-14 h-14 bg-white p-1 rounded"></div>
+                <div id="scanCardIcon" class="text-2xl">
+                    <i class="fa-solid fa-arrow-up"></i>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 4. BOTTOM CARD PALETTE FOOTER -->
+    <footer class="relative z-20 px-6 py-3 glass-panel border-t border-slate-800 flex items-center justify-center shadow-2xl">
+        <div id="cardPalette" class="flex items-center gap-3 overflow-x-auto pb-1 max-w-full">
+            
+            <button onclick="handleCardClick('run')" class="coding-card flex-shrink-0 w-28 h-36 bg-gradient-to-b from-emerald-500 to-green-600 rounded-2xl p-2.5 text-white shadow-lg flex flex-col justify-between border-2 border-white/30">
+                <div class="flex justify-between items-center">
+                    <span class="w-5 h-5 rounded-full bg-black/20 flex items-center justify-center text-[10px] font-black">1</span>
+                    <span class="text-[11px] font-extrabold tracking-tight">실행하기</span>
+                </div>
+                <div class="self-center bg-white p-1 rounded">
+                    <div class="aruco-marker w-8 h-8">
+                        <div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div>
+                        <div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div>
+                        <div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div>
+                        <div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div>
+                        <div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell b"></div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <i class="fa-solid fa-play text-lg"></i>
+                    <div class="text-[9px] text-emerald-100 mt-0.5">코딩 순서 실행</div>
+                </div>
+            </button>
+
+            <button onclick="handleCardClick('forward')" class="coding-card flex-shrink-0 w-28 h-36 bg-gradient-to-b from-pink-500 to-rose-600 rounded-2xl p-2.5 text-white shadow-lg flex flex-col justify-between border-2 border-white/30">
+                <div class="flex justify-between items-center">
+                    <span class="w-5 h-5 rounded-full bg-black/20 flex items-center justify-center text-[10px] font-black">2</span>
+                    <span class="text-[11px] font-extrabold tracking-tight">전진하기</span>
+                </div>
+                <div class="self-center bg-white p-1 rounded">
+                    <div class="aruco-marker w-8 h-8">
+                        <div class="aruco-cell b"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div>
+                        <div class="aruco-cell"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div>
+                        <div class="aruco-cell b"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div>
+                        <div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell b"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div>
+                        <div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <i class="fa-solid fa-arrow-up text-lg"></i>
+                    <div class="text-[9px] text-pink-100 mt-0.5">앞으로 이동</div>
+                </div>
+            </button>
+
+            <button onclick="handleCardClick('backward')" class="coding-card flex-shrink-0 w-28 h-36 bg-gradient-to-b from-sky-400 to-blue-600 rounded-2xl p-2.5 text-white shadow-lg flex flex-col justify-between border-2 border-white/30">
+                <div class="flex justify-between items-center">
+                    <span class="w-5 h-5 rounded-full bg-black/20 flex items-center justify-center text-[10px] font-black">3</span>
+                    <span class="text-[11px] font-extrabold tracking-tight">후진하기</span>
+                </div>
+                <div class="self-center bg-white p-1 rounded">
+                    <div class="aruco-marker w-8 h-8">
+                        <div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div>
+                        <div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div>
+                        <div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div>
+                        <div class="aruco-cell b"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div>
+                        <div class="aruco-cell"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <i class="fa-solid fa-arrow-down text-lg"></i>
+                    <div class="text-[9px] text-sky-100 mt-0.5">뒤로 이동</div>
+                </div>
+            </button>
+
+            <button onclick="handleCardClick('turnLeft')" class="coding-card flex-shrink-0 w-28 h-36 bg-gradient-to-b from-indigo-600 to-slate-800 rounded-2xl p-2.5 text-white shadow-lg flex flex-col justify-between border-2 border-white/30">
+                <div class="flex justify-between items-center">
+                    <span class="w-5 h-5 rounded-full bg-black/20 flex items-center justify-center text-[10px] font-black">4</span>
+                    <span class="text-[11px] font-extrabold tracking-tight">왼쪽 회전</span>
+                </div>
+                <div class="self-center bg-white p-1 rounded">
+                    <div class="aruco-marker w-8 h-8">
+                        <div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div>
+                        <div class="aruco-cell b"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div>
+                        <div class="aruco-cell"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell b"></div><div class="aruco-cell b"></div>
+                        <div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div>
+                        <div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell"></div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <i class="fa-solid fa-rotate-left text-lg"></i>
+                    <div class="text-[9px] text-indigo-200 mt-0.5">왼쪽으로 회전</div>
+                </div>
+            </button>
+
+            <button onclick="handleCardClick('turnRight')" class="coding-card flex-shrink-0 w-28 h-36 bg-gradient-to-b from-teal-500 to-emerald-700 rounded-2xl p-2.5 text-white shadow-lg flex flex-col justify-between border-2 border-white/30">
+                <div class="flex justify-between items-center">
+                    <span class="w-5 h-5 rounded-full bg-black/20 flex items-center justify-center text-[10px] font-black">5</span>
+                    <span class="text-[11px] font-extrabold tracking-tight">오른쪽 회전</span>
+                </div>
+                <div class="self-center bg-white p-1 rounded">
+                    <div class="aruco-marker w-8 h-8">
+                        <div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell b"></div>
+                        <div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell"></div>
+                        <div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell b"></div>
+                        <div class="aruco-cell b"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div>
+                        <div class="aruco-cell"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <i class="fa-solid fa-rotate-right text-lg"></i>
+                    <div class="text-[9px] text-teal-100 mt-0.5">오른쪽으로 회전</div>
+                </div>
+            </button>
+
+            <button onclick="handleCardClick('wait')" class="coding-card flex-shrink-0 w-28 h-36 bg-gradient-to-b from-amber-500 to-orange-600 rounded-2xl p-2.5 text-white shadow-lg flex flex-col justify-between border-2 border-white/30">
+                <div class="flex justify-between items-center">
+                    <span class="w-5 h-5 rounded-full bg-black/20 flex items-center justify-center text-[10px] font-black">6</span>
+                    <span class="text-[11px] font-extrabold tracking-tight">기다리기</span>
+                </div>
+                <div class="self-center bg-white p-1 rounded">
+                    <div class="aruco-marker w-8 h-8">
+                        <div class="aruco-cell b"></div><div class="aruco-cell b"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell"></div>
+                        <div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell b"></div>
+                        <div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div>
+                        <div class="aruco-cell b"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell"></div><div class="aruco-cell"></div>
+                        <div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell b"></div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <i class="fa-solid fa-hourglass-half text-lg"></i>
+                    <div class="text-[9px] text-amber-100 mt-0.5">지정한 시간 대기</div>
+                </div>
+            </button>
+
+            <button onclick="handleCardClick('delete')" class="coding-card flex-shrink-0 w-28 h-36 bg-gradient-to-b from-purple-600 to-indigo-800 rounded-2xl p-2.5 text-white shadow-lg flex flex-col justify-between border-2 border-white/30">
+                <div class="flex justify-between items-center">
+                    <span class="w-5 h-5 rounded-full bg-black/20 flex items-center justify-center text-[10px] font-black">7</span>
+                    <span class="text-[11px] font-extrabold tracking-tight">삭제하기</span>
+                </div>
+                <div class="self-center bg-white p-1 rounded">
+                    <div class="aruco-marker w-8 h-8">
+                        <div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell b"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div>
+                        <div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div>
+                        <div class="aruco-cell b"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell b"></div>
+                        <div class="aruco-cell"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell"></div>
+                        <div class="aruco-cell b"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div><div class="aruco-cell b"></div><div class="aruco-cell"></div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <i class="fa-solid fa-trash-can text-lg"></i>
+                    <div class="text-[9px] text-purple-200 mt-0.5">마지막 명령 삭제</div>
+                </div>
+            </button>
+
+        </div>
+
+        <!-- DRIVE MODE CONTROL PANEL -->
+        <div id="drivePanel" class="hidden w-full max-w-3xl items-center justify-center gap-10 flex" style="min-height:144px">
+            <div class="grid grid-cols-3 gap-2" style="touch-action:none">
+                <div></div>
+                <button data-key="up" class="drive-btn" aria-label="전진"><i class="fa-solid fa-chevron-up"></i></button>
+                <div></div>
+                <button data-key="left" class="drive-btn" aria-label="좌회전"><i class="fa-solid fa-chevron-left"></i></button>
+                <button data-key="down" class="drive-btn" aria-label="후진"><i class="fa-solid fa-chevron-down"></i></button>
+                <button data-key="right" class="drive-btn" aria-label="우회전"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+
+            <div class="flex-1 max-w-sm">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold text-slate-300"><i class="fa-solid fa-gauge-high text-emerald-400 mr-1"></i>속도</span>
+                    <span id="driveSpeedLabel" class="text-xl font-black text-emerald-300">30 cm/s</span>
+                </div>
+                <input id="driveSpeed" type="range" min="10" max="80" step="5" value="30" class="w-full accent-emerald-400 cursor-pointer">
+                <div class="flex justify-between gap-2 mt-2">
+                    <button data-speed="15" class="flex-1 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 border border-slate-700">🐢 느리게</button>
+                    <button data-speed="30" class="flex-1 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 border border-slate-700">🚗 보통</button>
+                    <button data-speed="60" class="flex-1 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 border border-slate-700">🚀 빠르게</button>
+                </div>
+                <p class="text-[11px] text-slate-400 mt-2 leading-relaxed">
+                    키보드: <b class="text-slate-200">↑ ↓ ← →</b> 또는 <b class="text-slate-200">W A S D</b><br>
+                    나무·돌·건물에 부딪히면 멈춰요 🚧
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 5. PARAMETER INPUT MODAL -->
+    <div id="paramModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 backdrop-blur-md hidden">
+        <div class="bg-sky-500 p-3.5 rounded-3xl shadow-2xl border-4 border-white max-w-sm w-full mx-4 transform transition-all">
+            <div class="bg-slate-900 rounded-2xl p-5 text-white border-2 border-slate-800 shadow-inner text-center relative">
+                <div class="w-12 h-3 bg-black mx-auto mb-3 rounded-full border border-slate-700 flex items-center justify-center">
+                    <div class="w-2 h-2 rounded-full bg-sky-500"></div>
+                </div>
+
+                <h4 id="paramTitle" class="text-xl font-black text-sky-400 mb-1">값 설정하기</h4>
+                <p id="paramSubtitle" class="text-xs text-slate-300 mb-4">몇 cm 전진하시겠습니까?</p>
+
+                <div class="mb-5">
+                    <div class="flex items-center justify-center gap-2">
+                        <input type="number" id="paramValueInput" value="10" min="1" max="500" class="w-32 text-center bg-slate-800 border-2 border-sky-400 text-white font-black text-3xl py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-300">
+                        <span id="paramUnit" class="text-lg font-bold text-slate-300">cm</span>
+                    </div>
+                    <div id="presetButtons" class="flex justify-center gap-1.5 mt-3"></div>
+                </div>
+
+                <div class="pt-3 border-t border-slate-800 flex items-center justify-between gap-2">
+                    <button onclick="closeParamModal()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition">
+                        취소
+                    </button>
+                    <button onclick="confirmParamModal()" class="flex-1 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm transition shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-emerald-200 border-2 border-emerald-700 animate-pulse"></span>
+                        녹색 버튼 누르기 (적용)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT APP LOGIC -->
+    <script>
+        let mode = 'lab';
+        let currentTheme = 'default';
+        let commandQueue = [];
+        let isExecuting = false;
+        let sequenceRunning = false;
+        let currentEyeState = 'normal';
+        let nextBlinkAt = 0;
+        let lastFollowX = 0, lastFollowZ = 0;
+        let pendingCommandType = null;
+
+        // ThreeJS Globals
+        let scene, camera, renderer, controls;
+        let zumiGroup, wheelLeft, wheelRight, eyeCanvas, eyeTexture, eyeContext;
+        let gridHelper, groundMesh;
+        let envObjectsGroup = new THREE.Group();
+
+        // 1cm = 0.2 units
+        const CM_TO_UNITS = 0.2; 
+        const WHEEL_RADIUS = 0.4;
+        const WHEEL_TRACK = 0.84; // 바퀴 중심의 좌우 거리
+
+        const CARD_META = {
+            run: { id: 1, title: '실행하기', color: 'from-emerald-500 to-green-600', icon: 'fa-play' },
+            forward: { id: 2, title: '전진하기', color: 'from-pink-500 to-rose-600', icon: 'fa-arrow-up', defaultVal: 10, unit: 'cm', label: '몇 cm 전진하시겠습니까?' },
+            backward: { id: 3, title: '후진하기', color: 'from-sky-400 to-blue-600', icon: 'fa-arrow-down', defaultVal: 10, unit: 'cm', label: '몇 cm 후진하시겠습니까?' },
+            turnLeft: { id: 4, title: '왼쪽 회전', color: 'from-indigo-600 to-slate-800', icon: 'fa-rotate-left', defaultVal: 90, unit: '도', label: '몇 도 좌회전하시겠습니까?' },
+            turnRight: { id: 5, title: '오른쪽 회전', color: 'from-teal-500 to-emerald-700', icon: 'fa-rotate-right', defaultVal: 90, unit: '도', label: '몇 도 우회전하시겠습니까?' },
+            wait: { id: 6, title: '기다리기', color: 'from-amber-500 to-orange-600', icon: 'fa-hourglass-half', defaultVal: 1, unit: '초', label: '몇 초 동안 기다리시겠습니까?' },
+            delete: { id: 7, title: '삭제하기', color: 'from-purple-600 to-indigo-800', icon: 'fa-trash-can' }
+        };
+
+        // --- 1. THREE.JS SCENE SETUP ---
+        function initThree() {
+            const container = document.getElementById('canvas-container');
+            
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0f1d);
+            scene.fog = new THREE.FogExp2(0x0a0f1d, 0.012);
+
+            camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(1.2, 5.2, -8.3);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            container.appendChild(renderer.domElement);
+
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.maxPolarAngle = Math.PI / 2 - 0.01;
+            controls.target.set(0, 0.75, 0);
+            controls.update();
+
+            const ambient = new THREE.AmbientLight(0xffffff, 0.42);
+            scene.add(ambient);
+            const hemi = new THREE.HemisphereLight(0xdbeafe, 0x1e293b, 0.4);
+            scene.add(hemi);
+            const fill = new THREE.DirectionalLight(0xbfdbfe, 0.3);
+            fill.position.set(-8, 6, -12);
+            scene.add(fill);
+
+            const sun = new THREE.DirectionalLight(0xffffff, 0.9);
+            sun.position.set(10, 20, 15);
+            sun.castShadow = true;
+            sun.shadow.mapSize.width = 2048;
+            sun.shadow.mapSize.height = 2048;
+            sun.shadow.bias = -0.0002;
+            sun.shadow.camera.left = -24; sun.shadow.camera.right = 24;
+            sun.shadow.camera.top = 24; sun.shadow.camera.bottom = -24;
+            sun.shadow.camera.near = 1; sun.shadow.camera.far = 90;
+            sun.shadow.camera.updateProjectionMatrix();
+            scene.add(sun);
+            scene.add(sun.target);
+            sunLight = sun;
+
+            scene.add(envObjectsGroup);
+
+            createGround();
+
+            zumiGroup = createDetailedZumiRobot();
+            scene.add(zumiGroup);
+            createSkyDome();
+            initZumiCam();
+
+            window.addEventListener('resize', onWindowResize);
+            animate();
+        }
+
+        function createGround() {
+            const groundGeo = new THREE.PlaneGeometry(600, 600);
+            const groundMat = new THREE.MeshStandardMaterial({ 
+                color: 0x111827, 
+                roughness: 0.8, 
+                metalness: 0.2 
+            });
+            groundMesh = new THREE.Mesh(groundGeo, groundMat);
+            groundMesh.rotation.x = -Math.PI / 2;
+            groundMesh.receiveShadow = true;
+            scene.add(groundMesh);
+
+            gridHelper = new THREE.GridHelper(100, 100, 0x38bdf8, 0x1e293b);
+            gridHelper.position.y = 0.005;
+            scene.add(gridHelper);
+        }
+
+        
+        // ===== 둥근 모서리 박스 (라운드 처리된 플라스틱 느낌) =====
+        function roundedBoxGeo(w, h, d, r) {
+            const b = Math.max(0.004, Math.min(r * 0.55, d * 0.25, w * 0.25, h * 0.25));
+            const iw = w - 2 * b, ih = h - 2 * b;
+            const ir = Math.max(r - b, 0.002);
+            const x = -iw / 2, y = -ih / 2;
+            const sh = new THREE.Shape();
+            sh.moveTo(x + ir, y);
+            sh.lineTo(x + iw - ir, y);
+            sh.absarc(x + iw - ir, y + ir, ir, -Math.PI / 2, 0, false);
+            sh.lineTo(x + iw, y + ih - ir);
+            sh.absarc(x + iw - ir, y + ih - ir, ir, 0, Math.PI / 2, false);
+            sh.lineTo(x + ir, y + ih);
+            sh.absarc(x + ir, y + ih - ir, ir, Math.PI / 2, Math.PI, false);
+            sh.lineTo(x, y + ir);
+            sh.absarc(x + ir, y + ir, ir, Math.PI, Math.PI * 1.5, false);
+            const depth = Math.max(0.001, d - 2 * b);
+            const g = new THREE.ExtrudeGeometry(sh, {
+                depth: depth, bevelEnabled: true, bevelThickness: b, bevelSize: b,
+                bevelSegments: 4, curveSegments: 10
+            });
+            g.translate(0, 0, -depth / 2);
+            return g;
+        }
+
+        // ===== 바퀴 휠 텍스처 (검정 + 회색 스포크) =====
+        function makeWheelTexture() {
+            const c = document.createElement('canvas');
+            c.width = c.height = 256;
+            const g = c.getContext('2d');
+            const C = 128;
+            g.fillStyle = '#14171b';
+            g.beginPath(); g.arc(C, C, 128, 0, Math.PI * 2); g.fill();
+
+            g.strokeStyle = '#6b7280'; g.lineWidth = 6;
+            g.beginPath(); g.arc(C, C, 118, 0, Math.PI * 2); g.stroke();
+
+            for (let i = 0; i < 5; i++) {
+                g.save();
+                g.translate(C, C);
+                g.rotate((i * 72 * Math.PI) / 180);
+                g.fillStyle = '#4b525c';
+                g.beginPath();
+                g.moveTo(-12, -20);
+                g.lineTo(-30, -108);
+                g.quadraticCurveTo(0, -120, 30, -108);
+                g.lineTo(12, -20);
+                g.closePath();
+                g.fill();
+                g.strokeStyle = '#7b838e'; g.lineWidth = 3;
+                g.stroke();
+                g.restore();
+            }
+            g.fillStyle = '#9aa1ab';
+            g.beginPath(); g.arc(C, C, 28, 0, Math.PI * 2); g.fill();
+            g.fillStyle = '#e2e5ea';
+            g.beginPath(); g.arc(C, C, 11, 0, Math.PI * 2); g.fill();
+            const tex = new THREE.CanvasTexture(c);
+            tex.anisotropy = 4;
+            return tex;
+        }
+
+        function createDetailedZumiRobot() {
+            const zumi = new THREE.Group();
+
+            // ----- 재질 (사진의 하늘색 / 흰색 / 검정 / 빨강) -----
+            const blueMat  = new THREE.MeshPhysicalMaterial({ color: 0x2f9be8, roughness: 0.28, metalness: 0.0, clearcoat: 0.9, clearcoatRoughness: 0.15 });
+            const whiteMat = new THREE.MeshPhysicalMaterial({ color: 0xf3f6fb, roughness: 0.38, clearcoat: 0.5, clearcoatRoughness: 0.3 });
+            const blackMat = new THREE.MeshPhysicalMaterial({ color: 0x15181d, roughness: 0.35, clearcoat: 0.6 });
+            const glassMat = new THREE.MeshPhysicalMaterial({ color: 0x1d2228, roughness: 0.12, metalness: 0.25, clearcoat: 1.0, clearcoatRoughness: 0.05 });
+            const redMat   = new THREE.MeshStandardMaterial({ color: 0xc8303c, roughness: 0.35, metalness: 0.1 });
+            const grayMat  = new THREE.MeshStandardMaterial({ color: 0x8d949c, roughness: 0.5 });
+            const rubberMat = new THREE.MeshStandardMaterial({ color: 0x101214, roughness: 0.95 });
+
+            const add = (geo, mat, x, y, z, cast = true) => {
+                const m = new THREE.Mesh(geo, mat);
+                m.position.set(x, y, z);
+                m.castShadow = cast;
+                m.receiveShadow = true;
+                zumi.add(m);
+                return m;
+            };
+
+            // ----- 흰색 하단 베이스 -----
+            add(roundedBoxGeo(1.3, 0.46, 1.78, 0.09), whiteMat, 0, 0.35, -0.02);
+
+            // ----- 빨간 띠 (옆면/뒷면) -----
+            add(roundedBoxGeo(1.32, 0.045, 1.6, 0.03), redMat, 0, 0.585, 0.07, false);
+            // 앞쪽 회색 띠
+            add(roundedBoxGeo(1.31, 0.04, 0.2, 0.02), grayMat, 0, 0.585, -0.82, false);
+
+            // ----- 파란 상단 바디 -----
+            add(roundedBoxGeo(1.26, 0.86, 1.62, 0.14), blueMat, 0, 1.01, 0.06);
+
+            // 지붕 단차
+            const roofSlab = roundedBoxGeo(1.0, 1.0, 0.07, 0.04);
+            roofSlab.rotateX(Math.PI / 2);
+            add(roofSlab, blueMat, 0, 1.465, 0.3, false);
+
+            // 스피커 무늬
+            for (let i = 0; i < 3; i++) {
+                add(new THREE.BoxGeometry(0.16 - i * 0.03, 0.006, 0.012), new THREE.MeshStandardMaterial({ color: 0x1a73b8 }),
+                    0, 1.447, -0.55 + i * 0.035, false);
+            }
+
+            // ----- 손잡이(롤바) 2개 -----
+            [-0.44, 0.44].forEach(x => {
+                const curve = new THREE.CatmullRomCurve3([
+                    new THREE.Vector3(x, 1.40, -0.58),
+                    new THREE.Vector3(x, 1.56, -0.52),
+                    new THREE.Vector3(x, 1.61, -0.3),
+                    new THREE.Vector3(x, 1.61, 0.38),
+                    new THREE.Vector3(x, 1.56, 0.6),
+                    new THREE.Vector3(x, 1.40, 0.66)
+                ]);
+                const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 48, 0.04, 10, false), blackMat);
+                tube.castShadow = true;
+                zumi.add(tube);
+            });
+
+            // ----- 옆면 창문 (큰 창 + 작은 창) -----
+            const bigWinGeo = roundedBoxGeo(0.7, 0.42, 0.04, 0.05); bigWinGeo.rotateY(Math.PI / 2);
+            const smallWinGeo = roundedBoxGeo(0.3, 0.42, 0.04, 0.05); smallWinGeo.rotateY(Math.PI / 2);
+            [-1, 1].forEach(sd => {
+                add(bigWinGeo, glassMat, sd * 0.63, 1.1, -0.2, false);
+                add(smallWinGeo, glassMat, sd * 0.63, 1.1, 0.5, false);
+                // 옆 작은 핀
+                const pin = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.09, 10), blueMat);
+                pin.rotation.z = Math.PI / 2;
+                pin.position.set(sd * 0.66, 0.98, -0.66);
+                zumi.add(pin);
+            });
+
+            // ----- 뒷면 큰 창 -----
+            add(roundedBoxGeo(0.86, 0.5, 0.04, 0.06), glassMat, 0, 1.07, 0.87, false);
+
+            // ----- 앞면: 얼굴 화면 -----
+            add(roundedBoxGeo(0.94, 0.5, 0.05, 0.06), blackMat, 0, 1.13, -0.745, false);
+
+            eyeCanvas = document.createElement('canvas');
+            eyeCanvas.width = 512;
+            eyeCanvas.height = 256;
+            eyeContext = eyeCanvas.getContext('2d');
+            eyeTexture = new THREE.CanvasTexture(eyeCanvas);
+            updateEyeDisplay('normal');
+
+            const screenMesh = new THREE.Mesh(
+                new THREE.PlaneGeometry(0.84, 0.42),
+                new THREE.MeshBasicMaterial({ map: eyeTexture })
+            );
+            screenMesh.rotation.y = Math.PI; // 앞(-z)을 바라보게
+            screenMesh.position.set(0, 1.13, -0.773);
+            zumi.add(screenMesh);
+
+            // ----- 앞면: 카메라 + 통풍구 그릴 -----
+            add(roundedBoxGeo(0.94, 0.22, 0.06, 0.04), new THREE.MeshStandardMaterial({ color: 0x050607, roughness: 0.6 }), 0, 0.74, -0.755, false);
+
+            const slatMat = new THREE.MeshStandardMaterial({ color: 0x2c3138, roughness: 0.5 });
+            [-1, 1].forEach(sd => {
+                for (let i = 0; i < 4; i++) {
+                    add(new THREE.BoxGeometry(0.05, 0.15, 0.03), slatMat, sd * (0.2 + i * 0.07), 0.74, -0.785, false);
+                }
+            });
+            // 카메라 렌즈
+            const lensHousing = new THREE.Mesh(new THREE.CylinderGeometry(0.085, 0.085, 0.05, 24), blackMat);
+            lensHousing.rotation.x = Math.PI / 2;
+            lensHousing.position.set(0, 0.74, -0.785);
+            zumi.add(lensHousing);
+            const lens = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.06, 0.06, 0.02, 24),
+                new THREE.MeshStandardMaterial({ color: 0x1b1033, emissive: 0x5b2a9e, emissiveIntensity: 0.55, metalness: 0.9, roughness: 0.1 })
+            );
+            lens.rotation.x = Math.PI / 2;
+            lens.position.set(0, 0.74, -0.81);
+            zumi.add(lens);
+
+            // ----- 앞 베이스의 4색 버튼 (빨/파 | 초/노) -----
+            const btnColors = [0xe5322d, 0x2a62d9, 0x1faa4b, 0xf5c518];
+            const btnX = [-0.5, -0.34, 0.34, 0.5];
+            btnX.forEach((x, i) => {
+                const ring = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.02, 20), grayMat);
+                ring.rotation.x = Math.PI / 2;
+                ring.position.set(x, 0.3, -0.905);
+                zumi.add(ring);
+                const dome = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.048, 18, 12),
+                    new THREE.MeshStandardMaterial({ color: btnColors[i], roughness: 0.25, emissive: btnColors[i], emissiveIntensity: 0.25 })
+                );
+                dome.scale.set(1, 1, 0.55);
+                dome.position.set(x, 0.3, -0.92);
+                zumi.add(dome);
+            });
+
+            // ----- 바퀴 덮개(파란 펜더) -----
+            const fenderGeo = roundedBoxGeo(0.95, 0.6, 0.12, 0.14);
+            fenderGeo.rotateY(Math.PI / 2);
+            [-1, 1].forEach(sd => add(fenderGeo, blueMat, sd * 0.71, 0.5, 0.2, true));
+
+            // ----- 바퀴 -----
+            const wheelTex = makeWheelTexture();
+            const rimMat = new THREE.MeshStandardMaterial({ map: wheelTex, roughness: 0.45, metalness: 0.35 });
+            const makeWheel = (side) => {
+                const g = new THREE.Group();
+                const tire = new THREE.Mesh(new THREE.CylinderGeometry(WHEEL_RADIUS, WHEEL_RADIUS, 0.14, 48), rubberMat);
+                tire.rotation.z = Math.PI / 2;
+                tire.castShadow = true;
+                g.add(tire);
+                // 타이어 트레드 홈
+                for (let i = 0; i < 28; i++) {
+                    const a = (i / 28) * Math.PI * 2;
+                    const t = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.03, 0.035), new THREE.MeshStandardMaterial({ color: 0x2a2e33, roughness: 1 }));
+                    t.position.set(0, Math.cos(a) * (WHEEL_RADIUS + 0.004), Math.sin(a) * (WHEEL_RADIUS + 0.004));
+                    t.rotation.x = -a;
+                    g.add(t);
+                }
+                const rim = new THREE.Mesh(new THREE.CircleGeometry(WHEEL_RADIUS * 0.88, 48), rimMat);
+                rim.rotation.y = side * Math.PI / 2;
+                rim.position.x = side * 0.073;
+                g.add(rim);
+                g.position.set(side * WHEEL_TRACK, WHEEL_RADIUS, 0.2);
+                return g;
+            };
+            wheelLeft = makeWheel(-1);
+            wheelRight = makeWheel(1);
+            zumi.add(wheelLeft, wheelRight);
+
+            // ----- 앞쪽 보조 바퀴(캐스터) -----
+            add(new THREE.SphereGeometry(0.06, 16, 12), blackMat, 0, 0.07, -0.66, false);
+
+            // ----- 주미 AI 카메라 (렌즈 위치에서 앞(-z)을 바라봄) -----
+            zumiCam = new THREE.PerspectiveCamera(75, 16 / 10, 0.08, 1000);
+            zumiCam.position.set(0, 0.74, -0.84);
+            zumiCam.rotation.x = -0.1;
+            zumi.add(zumiCam);
+
+            zumi.position.set(0, 0, 0);
+            return zumi;
+        }
+
+        function updateEyeDisplay(state) {
+            currentEyeState = state;
+            const c = eyeContext;
+
+            // 유리 느낌의 짙은 회색 화면
+            c.save();
+            c.shadowBlur = 0;
+            const bg = c.createLinearGradient(0, 0, 512, 256);
+            bg.addColorStop(0, '#3a4048');
+            bg.addColorStop(1, '#1b1f25');
+            c.fillStyle = bg;
+            c.fillRect(0, 0, 512, 256);
+            c.restore();
+
+            c.save();
+            c.shadowColor = '#22d3ee';
+            c.shadowBlur = 24;
+            const eg = c.createLinearGradient(0, 60, 0, 200);
+            eg.addColorStop(0, '#a5f3ff');
+            eg.addColorStop(1, '#22c5e8');
+            c.fillStyle = eg;
+
+            if (state === 'normal') {
+                roundRect(c, 172 - 19, 128 - 56, 38, 112, 19);
+                roundRect(c, 340 - 19, 128 - 56, 38, 112, 19);
+            } else if (state === 'blink') {
+                roundRect(c, 172 - 19, 123, 38, 10, 5);
+                roundRect(c, 340 - 19, 123, 38, 10, 5);
+            } else if (state === 'happy') {
+                c.lineWidth = 22;
+                c.strokeStyle = '#67e8f9';
+                c.lineCap = 'round';
+                c.beginPath(); c.arc(172, 150, 42, Math.PI, 0, false); c.stroke();
+                c.beginPath(); c.arc(340, 150, 42, Math.PI, 0, false); c.stroke();
+            } else if (state === 'scan') {
+                c.fillStyle = '#22c55e';
+                c.shadowColor = '#22c55e';
+                c.fillRect(60, 36, 392, 184);
+                c.fillStyle = '#1b1f25';
+                c.shadowBlur = 0;
+                c.fillRect(78, 54, 356, 148);
+                c.fillStyle = '#22c55e';
+                c.fillRect(206, 78, 100, 100);
+                c.fillStyle = '#1b1f25';
+                c.fillRect(226, 98, 60, 60);
+            }
+            c.restore();
+
+            // 유리 반사광
+            c.save();
+            c.fillStyle = 'rgba(255,255,255,0.07)';
+            c.beginPath();
+            c.moveTo(0, 0); c.lineTo(230, 0); c.lineTo(90, 256); c.lineTo(0, 256);
+            c.closePath(); c.fill();
+            c.restore();
+
+            if (eyeTexture) eyeTexture.needsUpdate = true;
+        }
+
+function roundRect(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        // --- 2. ENVIRONMENT THEMES & ROADS ---
+        
+        // 장애물 / 도로 정보 (충돌 판정 & 배치 판정에 사용)
+        let obstacles = [];     // {type:'c', x, z, r}  |  {type:'b', x, z, hw, hd}
+        let cityRoads = [];     // {cx, cz, w, d}  (축 정렬 사각형)
+        let forestRoad = null;  // {pts:[Vector3...], half}
+
+        function clearEnv() {
+            while (envObjectsGroup.children.length > 0) {
+                envObjectsGroup.remove(envObjectsGroup.children[0]);
+            }
+            obstacles = [];
+            cityRoads = [];
+            forestRoad = null;
+            cloudsGroup = null;
+        }
+
+        function distToSeg(px, pz, a, b) {
+            const abx = b.x - a.x, abz = b.z - a.z;
+            const len2 = abx * abx + abz * abz;
+            let t = len2 === 0 ? 0 : ((px - a.x) * abx + (pz - a.z) * abz) / len2;
+            t = Math.max(0, Math.min(1, t));
+            return Math.hypot(px - (a.x + abx * t), pz - (a.z + abz * t));
+        }
+
+        // (x, z) 점이 도로 위(또는 margin 이내)에 있는가?
+        function isOnRoad(x, z, margin) {
+            for (const r of cityRoads) {
+                if (Math.abs(x - r.cx) < r.w / 2 + margin && Math.abs(z - r.cz) < r.d / 2 + margin) return true;
+            }
+            if (forestRoad) {
+                const p = forestRoad.pts;
+                for (let i = 0; i < p.length - 1; i++) {
+                    if (distToSeg(x, z, p[i], p[i + 1]) < forestRoad.half + margin) return true;
+                }
+            }
+            return false;
+        }
+
+        // 사각형(건물)이 도로와 겹치는가?
+        function boxOverlapsRoad(x, z, hw, hd, margin) {
+            for (const r of cityRoads) {
+                if (Math.abs(x - r.cx) < hw + r.w / 2 + margin && Math.abs(z - r.cz) < hd + r.d / 2 + margin) return true;
+            }
+            return false;
+        }
+
+        function circleHitsObstacle(cx, cz, cr, o) {
+            if (o.type === 'c') return Math.hypot(cx - o.x, cz - o.z) < cr + o.r;
+            const px = Math.max(o.x - o.hw, Math.min(cx, o.x + o.hw));
+            const pz = Math.max(o.z - o.hd, Math.min(cz, o.z + o.hd));
+            return Math.hypot(cx - px, cz - pz) < cr;
+        }
+
+        function hitsAnyObstacle(x, z, r) {
+            return obstacles.some(o => circleHitsObstacle(x, z, r, o));
+        }
+
+        // ===================== 공통 헬퍼 =====================
+        function flatMat(color, layer, rough = 0.9) {
+            return new THREE.MeshStandardMaterial({
+                color, roughness: rough,
+                polygonOffset: true, polygonOffsetFactor: -layer, polygonOffsetUnits: -layer
+            });
+        }
+
+        // 같은 위치의 꼭짓점은 같은 값으로 흔들리는 해시 지터 (갈라짐 방지)
+        function hash3(x, y, z, k) {
+            const n = Math.sin(x * 12.9898 + y * 78.233 + z * 37.719 + k * 11.13) * 43758.5453;
+            return (n - Math.floor(n)) - 0.5;
+        }
+        function jitterGeometry(geo, amount) {
+            const p = geo.attributes.position;
+            for (let i = 0; i < p.count; i++) {
+                const x = p.getX(i), y = p.getY(i), z = p.getZ(i);
+                p.setXYZ(i, x + hash3(x, y, z, 1) * amount, y + hash3(x, y, z, 2) * amount, z + hash3(x, y, z, 3) * amount);
+            }
+            geo.computeVertexNormals();
+            return geo;
+        }
+
+        function makeInstanced(geo, mat, count, fn) {
+            const im = new THREE.InstancedMesh(geo, mat, count);
+            const d = new THREE.Object3D();
+            for (let i = 0; i < count; i++) {
+                d.position.set(0, 0, 0); d.rotation.set(0, 0, 0); d.scale.set(1, 1, 1);
+                fn(d, i, im);
+                d.updateMatrix();
+                im.setMatrixAt(i, d.matrix);
+            }
+            im.instanceMatrix.needsUpdate = true;
+            if (im.instanceColor) im.instanceColor.needsUpdate = true;
+            return im;
+        }
+
+        // ===================== 하늘 / 구름 =====================
+        let skyDome = null, cloudsGroup = null, sunLight = null;
+
+        function createSkyDome() {
+            const mat = new THREE.ShaderMaterial({
+                side: THREE.BackSide, depthWrite: false, fog: false,
+                uniforms: { top: { value: new THREE.Color(0x3b9be6) }, bottom: { value: new THREE.Color(0xd5efff) } },
+                vertexShader: 'varying float vH; void main(){ vH = normalize(position).y; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+                fragmentShader: 'uniform vec3 top; uniform vec3 bottom; varying float vH; void main(){ float t = smoothstep(0.0, 0.55, vH); gl_FragColor = vec4(mix(bottom, top, t), 1.0); }'
+            });
+            skyDome = new THREE.Mesh(new THREE.SphereGeometry(300, 24, 16), mat);
+            skyDome.visible = false;
+            skyDome.renderOrder = -1;
+            scene.add(skyDome);
+        }
+
+        function applySky(topHex, bottomHex) {
+            skyDome.material.uniforms.top.value.setHex(topHex);
+            skyDome.material.uniforms.bottom.value.setHex(bottomHex);
+            skyDome.visible = true;
+            scene.background.setHex(bottomHex);
+            scene.fog.color.setHex(bottomHex);
+        }
+
+        function buildClouds() {
+            cloudsGroup = new THREE.Group();
+            const mat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 1, emissive: 0xffffff, emissiveIntensity: 0.5, flatShading: true, fog: false });
+            for (let i = 0; i < 10; i++) {
+                const cloud = new THREE.Group();
+                const parts = 4 + Math.floor(Math.random() * 3);
+                for (let k = 0; k < parts; k++) {
+                    const m = new THREE.Mesh(new THREE.IcosahedronGeometry(3 + Math.random() * 3, 1), mat);
+                    m.position.set((k - parts / 2) * 4 + (Math.random() - 0.5) * 2, (Math.random() - 0.5) * 1.5, (Math.random() - 0.5) * 3);
+                    m.scale.y = 0.6;
+                    cloud.add(m);
+                }
+                const a = Math.random() * Math.PI * 2, d = 60 + Math.random() * 90;
+                cloud.position.set(Math.cos(a) * d, 32 + Math.random() * 16, Math.sin(a) * d);
+                cloud.rotation.y = Math.random() * Math.PI;
+                cloudsGroup.add(cloud);
+            }
+            envObjectsGroup.add(cloudsGroup);
+        }
+
+        // ===================== 테마 전환 =====================
+        function changeTheme(themeName) {
+            currentTheme = themeName;
+
+            const randomRoadBtn = document.getElementById('btn-random-road');
+
+            ['default', 'city', 'forest'].forEach(t => {
+                const btn = document.getElementById(`btn-theme-${t}`);
+                if (t === themeName) {
+                    btn.className = "px-3 py-1 rounded-lg bg-sky-500 text-white transition shadow font-bold";
+                } else {
+                    btn.className = "px-3 py-1 rounded-lg text-slate-400 hover:text-white transition";
+                }
+            });
+
+            clearEnv();
+
+            if (themeName === 'default') {
+                skyDome.visible = false;
+                scene.background.setHex(0x0a0f1d);
+                scene.fog.color.setHex(0x0a0f1d);
+                groundMesh.material.color.setHex(0x111827);
+                gridHelper.visible = true;
+                randomRoadBtn.classList.add('hidden');
+            } else if (themeName === 'city') {
+                applySky(0x3b9be6, 0xd5efff);
+                groundMesh.material.color.setHex(0x4b5563);
+                gridHelper.visible = false;
+                randomRoadBtn.classList.remove('hidden');
+                buildCityMap(false);
+            } else if (themeName === 'forest') {
+                applySky(0x56b4ee, 0xe4fad2);
+                groundMesh.material.color.setHex(0x357f33);
+                gridHelper.visible = false;
+                randomRoadBtn.classList.remove('hidden');
+                buildForestMap(false);
+            }
+            afterEnvRebuild();
+        }
+
+        // 맵이 새로 만들어지면 조종 모드에서는 시작 위치로 되돌림 (장애물과 겹치는 것 방지)
+        function afterEnvRebuild() {
+            if ((mode === 'drive' || mode === 'learn') && !isExecuting && !sequenceRunning) placeAtOrigin();
+            if (typeof learnOnMapChange === 'function') learnOnMapChange();
+        }
+
+        // ===================== 도시 =====================
+        const facadeCache = {};
+        function getFacadeMat(hex) {
+            if (facadeCache[hex]) return facadeCache[hex];
+            const c = document.createElement('canvas');
+            c.width = c.height = 256;
+            const g = c.getContext('2d');
+            g.fillStyle = '#' + hex.toString(16).padStart(6, '0');
+            g.fillRect(0, 0, 256, 256);
+            g.fillStyle = 'rgba(0,0,0,0.14)';
+            for (let r = 0; r < 4; r++) g.fillRect(0, r * 64 + 58, 256, 6);
+            for (let cx = 0; cx < 4; cx++) {
+                for (let cy = 0; cy < 4; cy++) {
+                    const x = cx * 64 + 12, y = cy * 64 + 10, w = 40, h = 38;
+                    const lit = Math.random() < 0.3;
+                    const grad = g.createLinearGradient(x, y, x + w, y + h);
+                    if (lit) { grad.addColorStop(0, '#fff3b0'); grad.addColorStop(1, '#f7c948'); }
+                    else { grad.addColorStop(0, '#6a9ac6'); grad.addColorStop(1, '#1e3a5f'); }
+                    g.fillStyle = grad;
+                    g.fillRect(x, y, w, h);
+                    g.strokeStyle = 'rgba(255,255,255,0.5)';
+                    g.lineWidth = 2;
+                    g.strokeRect(x, y, w, h);
+                    g.fillStyle = 'rgba(255,255,255,0.22)';
+                    g.fillRect(x + 3, y + 3, 10, h - 6);
+                }
+            }
+            const tex = new THREE.CanvasTexture(c);
+            tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+            tex.anisotropy = 4;
+            const mats = {
+                side: new THREE.MeshStandardMaterial({ map: tex, roughness: 0.5, metalness: 0.08 }),
+                plain: new THREE.MeshStandardMaterial({ color: hex, roughness: 0.6 })
+            };
+            facadeCache[hex] = mats;
+            return mats;
+        }
+
+        // 자기 자신을 제외한 다른 도로 위인가?
+        function offOtherRoads(x, z, own, margin) {
+            for (const r of cityRoads) {
+                if (r === own) continue;
+                if (Math.abs(x - r.cx) < r.w / 2 + margin && Math.abs(z - r.cz) < r.d / 2 + margin) return false;
+            }
+            return true;
+        }
+
+        function makeLamp(x, z, dirX, dirZ) {
+            const g = new THREE.Group();
+            const metal = new THREE.MeshStandardMaterial({ color: 0x374151, roughness: 0.5, metalness: 0.5 });
+            const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.09, 4.6, 8), metal);
+            pole.position.y = 2.3; pole.castShadow = true;
+            const arm = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.08, 0.08), metal);
+            arm.position.set(0.55, 4.55, 0);
+            const head = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.12, 0.26), new THREE.MeshStandardMaterial({ color: 0xe5e7eb }));
+            head.position.set(1.05, 4.5, 0);
+            const bulb = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.04, 0.18), new THREE.MeshBasicMaterial({ color: 0xfff1a8 }));
+            bulb.position.set(1.05, 4.43, 0);
+            g.add(pole, arm, head, bulb);
+            g.rotation.y = Math.atan2(-dirZ, dirX);
+            g.position.set(x, 0, z);
+            envObjectsGroup.add(g);
+            obstacles.push({ type: 'c', x, z, r: 0.3, kind: 'lamp', bw: 0.5, bh: 4.7 });
+        }
+
+        function makeStreetTree(x, z) {
+            const g = new THREE.Group();
+            const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.15, 2.0, 8), new THREE.MeshStandardMaterial({ color: 0x78350f }));
+            trunk.position.y = 1.0; trunk.castShadow = true;
+            const col = new THREE.Color().setHSL(0.27 + Math.random() * 0.07, 0.55, 0.32 + Math.random() * 0.08);
+            const crown = new THREE.Mesh(jitterGeometry(new THREE.IcosahedronGeometry(0.95, 1), 0.2), new THREE.MeshStandardMaterial({ color: col, roughness: 0.8, flatShading: true }));
+            crown.position.y = 2.85; crown.castShadow = true;
+            g.add(trunk, crown);
+            g.position.set(x, 0, z);
+            envObjectsGroup.add(g);
+            obstacles.push({ type: 'c', x, z, r: 0.35, kind: 'streettree', bw: 0.95, bh: 3.8 });
+        }
+
+        function makeTrafficLight(x, z) {
+            const g = new THREE.Group();
+            const metal = new THREE.MeshStandardMaterial({ color: 0x1f2937, roughness: 0.5, metalness: 0.4 });
+            const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.09, 4.2, 8), metal);
+            pole.position.y = 2.1; pole.castShadow = true;
+            const box = new THREE.Mesh(new THREE.BoxGeometry(0.34, 1.0, 0.3), metal);
+            box.position.y = 4.0;
+            g.add(pole, box);
+            const lights = [[0xff2d2d, 4.3], [0x6b5b00, 4.0], [0x22ff66, 3.7]];
+            lights.forEach(([c, y]) => {
+                const s = new THREE.Mesh(new THREE.SphereGeometry(0.09, 10, 8), new THREE.MeshBasicMaterial({ color: c }));
+                s.position.set(0, y, 0.17);
+                g.add(s);
+            });
+            g.rotation.y = Math.atan2(-x, -z);   // 교차로 중심을 바라보게
+            g.position.set(x, 0, z);
+            envObjectsGroup.add(g);
+            obstacles.push({ type: 'c', x, z, r: 0.3, kind: 'trafficlight', bw: 0.3, bh: 4.6 });
+        }
+
+        function buildCityMap(random = false) {
+            clearEnv();
+
+            const roadMat = flatMat(0x1f2937, 2, 0.95);
+            const sidewalkMat = flatMat(0xb8c0cc, 1, 0.85);
+            const yellowMat = new THREE.MeshBasicMaterial({ color: 0xfacc15, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -3 });
+            const whiteMat = new THREE.MeshBasicMaterial({ color: 0xf1f5f9, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -3 });
+
+            const addRoad = (cx, cz, w, d, y) => {
+                const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), roadMat);
+                m.rotation.x = -Math.PI / 2;
+                m.position.set(cx, y, cz);
+                m.receiveShadow = true;
+                envObjectsGroup.add(m);
+                cityRoads.push({ cx, cz, w, d });
+            };
+
+            // 기본 도로
+            addRoad(0, 0, 6, 80, 0.010);
+            addRoad(0, 0, 80, 6, 0.010);
+            addRoad(15, 0, 4, 50, 0.010);
+            addRoad(0, 15, 50, 4, 0.010);
+
+            // 랜덤 도로
+            if (random) {
+                const n = 3 + Math.floor(Math.random() * 3);
+                for (let i = 0; i < n; i++) {
+                    const vertical = Math.random() < 0.5;
+                    const w = 3 + Math.random() * 1.5;
+                    const len = 25 + Math.random() * 25;
+                    const off = (Math.random() - 0.5) * 56;
+                    const along = (Math.random() - 0.5) * 24;
+                    const y = 0.012 + i * 0.0006;
+                    if (vertical) addRoad(off, along, w, len, y);
+                    else addRoad(along, off, len, w, y);
+                }
+            }
+
+            // 인도 (도로 양옆). 도로보다 낮은 층이라 교차로에서는 도로에 가려짐
+            const SW = 1.3;
+            cityRoads.forEach(r => {
+                const vertical = r.d >= r.w;
+                [-1, 1].forEach(sd => {
+                    const m = new THREE.Mesh(
+                        new THREE.PlaneGeometry(vertical ? SW : r.w, vertical ? r.d : SW), sidewalkMat);
+                    m.rotation.x = -Math.PI / 2;
+                    m.position.set(
+                        vertical ? r.cx + sd * (r.w / 2 + SW / 2) : r.cx,
+                        0.006,
+                        vertical ? r.cz : r.cz + sd * (r.d / 2 + SW / 2));
+                    m.receiveShadow = true;
+                    envObjectsGroup.add(m);
+                });
+            });
+
+            // 중앙선 점선 (교차로 부분은 자동으로 건너뜀)
+            const dashV = new THREE.PlaneGeometry(0.28, 1.8); dashV.rotateX(-Math.PI / 2);
+            const dashH = new THREE.PlaneGeometry(1.8, 0.28); dashH.rotateX(-Math.PI / 2);
+            cityRoads.forEach((r, i) => {
+                const vertical = r.d >= r.w;
+                const len = vertical ? r.d : r.w;
+                for (let t = -len / 2 + 2; t < len / 2 - 2; t += 4) {
+                    const x = vertical ? r.cx : r.cx + t;
+                    const z = vertical ? r.cz + t : r.cz;
+                    if (i < 2 && Math.hypot(x, z) < 9) continue;
+                    if (!offOtherRoads(x, z, r, 0.8)) continue;
+                    const dash = new THREE.Mesh(vertical ? dashV : dashH, i < 2 ? yellowMat : whiteMat);
+                    dash.position.set(x, 0.022, z);
+                    envObjectsGroup.add(dash);
+                }
+            });
+
+            // 메인 교차로 횡단보도
+            const stripeV = new THREE.PlaneGeometry(0.5, 1.6); stripeV.rotateX(-Math.PI / 2);
+            const stripeH = new THREE.PlaneGeometry(1.6, 0.5); stripeH.rotateX(-Math.PI / 2);
+            [-1, 1].forEach(sd => {
+                for (let k = -3; k <= 2; k++) {
+                    const a = new THREE.Mesh(stripeV, whiteMat);   // 세로 도로를 가로지르는 줄무늬
+                    a.position.set(-2.25 + (k + 3) * 0.9, 0.022, sd * 4.7);
+                    envObjectsGroup.add(a);
+                    const b = new THREE.Mesh(stripeH, whiteMat);   // 가로 도로를 가로지르는 줄무늬
+                    b.position.set(sd * 4.7, 0.022, -2.25 + (k + 3) * 0.9);
+                    envObjectsGroup.add(b);
+                }
+            });
+
+            // 건물
+            const palette = [0x64748b, 0x7c8aa0, 0x8a6f5a, 0x94a3b8, 0x5b7c99, 0xa8836a];
+            const awningColors = [0xdc2626, 0xea580c, 0x0d9488, 0x7c3aed, 0x2563eb];
+            let placed = 0, tries = 0;
+            while (placed < 22 && tries < 900) {
+                tries++;
+                const h = 6 + Math.random() * 14;
+                const w = 4 + Math.random() * 3;
+                const d = 4 + Math.random() * 3;
+                const x = (Math.random() - 0.5) * 78;
+                const z = (Math.random() - 0.5) * 78;
+                const hw = w / 2, hd = d / 2;
+
+                if (Math.hypot(x, z) < 9) continue;
+                if (Math.abs(x) + hw > 45 || Math.abs(z) + hd > 45) continue;
+                if (boxOverlapsRoad(x, z, hw, hd, 2.2)) continue;
+                if (obstacles.some(o => o.type === 'b' && Math.abs(x - o.x) < hw + o.hw + 1 && Math.abs(z - o.z) < hd + o.hd + 1)) continue;
+
+                const wallHex = palette[Math.floor(Math.random() * palette.length)];
+                const fm = getFacadeMat(wallHex);
+                const roofMat = new THREE.MeshStandardMaterial({ color: 0x4b5563, roughness: 0.9 });
+
+                const geo = new THREE.BoxGeometry(w, h, d);
+                const uv = geo.attributes.uv;
+                for (let i = 0; i < uv.count; i++) {
+                    const face = Math.floor(i / 4);
+                    let su = 1, sv = 1;
+                    if (face < 2) { su = d / 5; sv = h / 5; }
+                    else if (face >= 4) { su = w / 5; sv = h / 5; }
+                    uv.setXY(i, uv.getX(i) * su, uv.getY(i) * sv);
+                }
+                const building = new THREE.Mesh(geo, [fm.side, fm.side, roofMat, roofMat, fm.side, fm.side]);
+                building.position.set(x, h / 2, z);
+                building.castShadow = true;
+                building.receiveShadow = true;
+                envObjectsGroup.add(building);
+
+                // 옥상 디테일
+                let topY = h;
+                const detailMat = new THREE.MeshStandardMaterial({ color: 0x9ca3af, roughness: 0.6, metalness: 0.3 });
+                if (h > 12) {
+                    const tier = new THREE.Mesh(new THREE.BoxGeometry(w * 0.62, 2.2, d * 0.62), fm.plain);
+                    tier.position.set(x, h + 1.1, z);
+                    tier.castShadow = true;
+                    envObjectsGroup.add(tier);
+                    topY = h + 2.2;
+                } else {
+                    const n = 1 + Math.floor(Math.random() * 3);
+                    for (let k = 0; k < n; k++) {
+                        const ac = new THREE.Mesh(new THREE.BoxGeometry(0.8 + Math.random() * 0.5, 0.5, 0.8 + Math.random() * 0.3), detailMat);
+                        ac.position.set(x + (Math.random() - 0.5) * (w - 1.6), h + 0.25, z + (Math.random() - 0.5) * (d - 1.6));
+                        ac.castShadow = true;
+                        envObjectsGroup.add(ac);
+                    }
+                }
+                if (h > 9) {
+                    const ant = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.05, 3, 6), detailMat);
+                    ant.position.set(x + hw * 0.4, topY + 1.5, z - hd * 0.4);
+                    const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.1, 8, 8), new THREE.MeshBasicMaterial({ color: 0xff3b30 }));
+                    lamp.position.set(x + hw * 0.4, topY + 3.05, z - hd * 0.4);
+                    envObjectsGroup.add(ant, lamp);
+                }
+
+                // 1층 출입문 + 차양 (도로 쪽 면)
+                const awnMat = new THREE.MeshStandardMaterial({ color: awningColors[Math.floor(Math.random() * awningColors.length)], roughness: 0.7 });
+                const doorMat = new THREE.MeshStandardMaterial({ color: 0x1f2937, roughness: 0.4 });
+                if (Math.abs(x) > Math.abs(z)) {
+                    const sx = -Math.sign(x);
+                    const door = new THREE.Mesh(new THREE.BoxGeometry(0.1, 1.8, 1.2), doorMat);
+                    door.position.set(x + sx * (hw + 0.03), 0.9, z);
+                    const awn = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.12, 2.2), awnMat);
+                    awn.position.set(x + sx * (hw + 0.3), 2.05, z);
+                    envObjectsGroup.add(door, awn);
+                } else {
+                    const sz = -Math.sign(z);
+                    const door = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.8, 0.1), doorMat);
+                    door.position.set(x, 0.9, z + sz * (hd + 0.03));
+                    const awn = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.12, 0.7), awnMat);
+                    awn.position.set(x, 2.05, z + sz * (hd + 0.3));
+                    envObjectsGroup.add(door, awn);
+                }
+
+                obstacles.push({ type: 'b', x, z, hw, hd, kind: 'building', bh: h });
+                placed++;
+            }
+
+            // 가로등 + 가로수 (인도 위, 도로 / 건물과 겹치지 않는 곳만)
+            cityRoads.slice(0, 4).forEach(r => {
+                const vertical = r.d >= r.w;
+                const len = vertical ? r.d : r.w;
+                [-1, 1].forEach((sd, si) => {
+                    for (let t = -len / 2 + 5 + si * 5; t < len / 2 - 5; t += 10) {
+                        // 가로등: 인도 안쪽 가장자리
+                        const lx = vertical ? r.cx + sd * (r.w / 2 + 0.45) : r.cx + t;
+                        const lz = vertical ? r.cz + t : r.cz + sd * (r.d / 2 + 0.45);
+                        if (offOtherRoads(lx, lz, r, 0.6) && !hitsAnyObstacle(lx, lz, 0.8)) {
+                            makeLamp(lx, lz, vertical ? -sd : 0, vertical ? 0 : -sd);
+                        }
+                        // 가로수: 인도 바깥쪽, 가로등 사이
+                        const tt = t + 5;
+                        const tx = vertical ? r.cx + sd * (r.w / 2 + 0.95) : r.cx + tt;
+                        const tz = vertical ? r.cz + tt : r.cz + sd * (r.d / 2 + 0.95);
+                        if (tt < len / 2 - 3 && offOtherRoads(tx, tz, r, 0.9) && !hitsAnyObstacle(tx, tz, 1.0)) {
+                            makeStreetTree(tx, tz);
+                        }
+                    }
+                });
+            });
+
+            // 메인 교차로 신호등
+            [[3.9, 3.9], [-3.9, 3.9], [3.9, -3.9], [-3.9, -3.9]].forEach(([x, z]) => {
+                if (!isOnRoad(x, z, 0.6) && !hitsAnyObstacle(x, z, 0.5)) makeTrafficLight(x, z);
+            });
+
+            // 먼 배경: 도시 스카이라인 (도달할 수 없는 바깥쪽)
+            const skylineMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.7 });
+            const count = 46;
+            const skyline = makeInstanced(new THREE.BoxGeometry(1, 1, 1), skylineMat, count, (o, i, im) => {
+                const a = Math.random() * Math.PI * 2, dist = 62 + Math.random() * 45;
+                const hh = 14 + Math.random() * 40, ww = 7 + Math.random() * 7;
+                o.position.set(Math.cos(a) * dist, hh / 2, Math.sin(a) * dist);
+                o.scale.set(ww, hh, ww * (0.8 + Math.random() * 0.5));
+                o.rotation.y = Math.random() * Math.PI;
+                im.setColorAt(i, new THREE.Color().setHSL(0.58 + Math.random() * 0.05, 0.18, 0.5 + Math.random() * 0.2));
+            });
+            envObjectsGroup.add(skyline);
+
+            buildClouds();
+        }
+
+        // ===================== 숲 =====================
+        // 시작점(0,0)을 지나는 랜덤 닫힌 흙길
+        function makeRandomForestLoop() {
+            const ang = Math.random() * Math.PI * 2;
+            const dist = 10 + Math.random() * 5;
+            const cx = Math.cos(ang) * dist, cz = Math.sin(ang) * dist;
+            const startAngle = Math.atan2(0 - cz, 0 - cx);
+            const n = 6 + Math.floor(Math.random() * 3);
+            const pts = [new THREE.Vector3(0, 0.01, 0)];
+            for (let i = 1; i < n; i++) {
+                const a = startAngle + (i / n) * Math.PI * 2 + (Math.random() - 0.5) * 0.35;
+                const r = dist * (0.7 + Math.random() * 0.45);
+                pts.push(new THREE.Vector3(cx + Math.cos(a) * r, 0.01, cz + Math.sin(a) * r));
+            }
+            return pts;
+        }
+
+        // 길 리본 메시 (한 번에 부드럽게 그려지는 흙길)
+        function makeRibbon(pts, half, y, mat, offset = 0) {
+            const n = pts.length - 1;   // 닫힌 곡선: 마지막 점 = 첫 점
+            const pos = [], nor = [], idx = [];
+            for (let i = 0; i < n; i++) {
+                const p = pts[i], a = pts[(i - 1 + n) % n], b = pts[(i + 1) % n];
+                let tx = b.x - a.x, tz = b.z - a.z;
+                const l = Math.hypot(tx, tz) || 1;
+                tx /= l; tz /= l;
+                const nx = -tz, nz = tx;
+                const cx = p.x + nx * offset, cz = p.z + nz * offset;
+                pos.push(cx + nx * half, y, cz + nz * half, cx - nx * half, y, cz - nz * half);
+                nor.push(0, 1, 0, 0, 1, 0);
+            }
+            const pushUp = (p, q, r) => {
+                // (q-p) x (r-p) 의 y 성분이 + 이면 위를 향함
+                const ux = pos[q * 3] - pos[p * 3], uz = pos[q * 3 + 2] - pos[p * 3 + 2];
+                const vx = pos[r * 3] - pos[p * 3], vz = pos[r * 3 + 2] - pos[p * 3 + 2];
+                if (uz * vx - ux * vz >= 0) idx.push(p, q, r); else idx.push(p, r, q);
+            };
+            for (let i = 0; i < n; i++) {
+                const j = (i + 1) % n;
+                const a = 2 * i, b = 2 * i + 1, c = 2 * j, d = 2 * j + 1;
+                pushUp(a, c, b);
+                pushUp(b, c, d);
+            }
+            const g = new THREE.BufferGeometry();
+            g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+            g.setAttribute('normal', new THREE.Float32BufferAttribute(nor, 3));
+            g.setIndex(idx);
+            const m = new THREE.Mesh(g, mat);
+            m.receiveShadow = true;
+            return m;
+        }
+
+        function buildForestMap(random = false) {
+            clearEnv();
+            const ROAD_HALF = 2.25;
+
+            const ctrl = random ? makeRandomForestLoop() : [
+                new THREE.Vector3(0, 0.01, 0),
+                new THREE.Vector3(12, 0.01, -10),
+                new THREE.Vector3(20, 0.01, 5),
+                new THREE.Vector3(5, 0.01, 22),
+                new THREE.Vector3(-15, 0.01, 15),
+                new THREE.Vector3(-18, 0.01, -12),
+                new THREE.Vector3(-5, 0.01, -20)
+            ];
+            const curve = new THREE.CatmullRomCurve3(ctrl, true);
+            const points = curve.getPoints(140);
+            forestRoad = { pts: points, half: ROAD_HALF };
+
+            // 흙길: 가장자리 + 본체 + 바퀴 자국
+            envObjectsGroup.add(
+                makeRibbon(points, ROAD_HALF + 0.4, 0.012, flatMat(0x7d5629, 1.5, 1)),
+                makeRibbon(points, ROAD_HALF, 0.014, flatMat(0xb07a3a, 2, 0.95)),
+                makeRibbon(points, 0.22, 0.016, flatMat(0x94662e, 2.5, 1), 0.9),
+                makeRibbon(points, 0.22, 0.016, flatMat(0x94662e, 2.5, 1), -0.9)
+            );
+
+            // 잔디 색 변화 패치
+            const patchColors = [0x347c30, 0x2c6e2d, 0x3f8a37, 0x4a9640, 0x275f29];
+            for (let i = 0; i < 28; i++) {
+                const patch = new THREE.Mesh(new THREE.CircleGeometry(3 + Math.random() * 6, 24), flatMat(patchColors[i % patchColors.length], 1 + (i % 3) * 0.1, 1));
+                patch.rotation.x = -Math.PI / 2;
+                patch.position.set((Math.random() - 0.5) * 90, 0.004 + (i % 5) * 0.0004, (Math.random() - 0.5) * 90);
+                patch.receiveShadow = true;
+                envObjectsGroup.add(patch);
+            }
+
+            // ---- 연못 ----
+            {
+                const R = 2.6 + Math.random() * 1.0;
+                for (let tries = 0; tries < 300; tries++) {
+                    const x = (Math.random() - 0.5) * 64, z = (Math.random() - 0.5) * 64;
+                    if (Math.hypot(x, z) < 10) continue;
+                    if (isOnRoad(x, z, R + 1.6)) continue;
+                    const water = new THREE.Mesh(new THREE.CircleGeometry(R, 40),
+                        new THREE.MeshStandardMaterial({ color: 0x2a9fd6, roughness: 0.08, metalness: 0.4, transparent: true, opacity: 0.92, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }));
+                    water.rotation.x = -Math.PI / 2; water.position.set(x, 0.02, z);
+                    const mud = new THREE.Mesh(new THREE.RingGeometry(R - 0.05, R + 0.55, 40), flatMat(0x6b4a2b, 1.8, 1));
+                    mud.rotation.x = -Math.PI / 2; mud.position.set(x, 0.018, z);
+                    envObjectsGroup.add(mud, water);
+                    const stoneMat = new THREE.MeshStandardMaterial({ color: 0x78808c, roughness: 0.9, flatShading: true });
+                    const reedMat = new THREE.MeshStandardMaterial({ color: 0x4d7c0f, roughness: 0.8 });
+                    for (let k = 0; k < 14; k++) {
+                        const a = (k / 14) * Math.PI * 2 + Math.random() * 0.2;
+                        const sx = x + Math.cos(a) * (R + 0.3), sz = z + Math.sin(a) * (R + 0.3);
+                        if (k % 3 === 0) {
+                            const reed = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.035, 1.1 + Math.random() * 0.5, 5), reedMat);
+                            reed.position.set(sx, 0.55, sz); reed.rotation.z = (Math.random() - 0.5) * 0.3;
+                            const tip = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.25, 6), new THREE.MeshStandardMaterial({ color: 0x5b3a1a }));
+                            tip.position.set(sx, 1.2, sz);
+                            envObjectsGroup.add(reed, tip);
+                        } else {
+                            const st = new THREE.Mesh(jitterGeometry(new THREE.DodecahedronGeometry(0.2 + Math.random() * 0.2, 0), 0.08), stoneMat);
+                            st.position.set(sx, 0.12, sz); st.castShadow = true;
+                            envObjectsGroup.add(st);
+                        }
+                    }
+                    const padMat = new THREE.MeshStandardMaterial({ color: 0x3f9e3a, roughness: 0.8 });
+                    for (let k = 0; k < 6; k++) {
+                        const a = Math.random() * Math.PI * 2, rr = Math.random() * (R - 0.6);
+                        const pad = new THREE.Mesh(new THREE.CircleGeometry(0.22 + Math.random() * 0.12, 10), padMat);
+                        pad.rotation.x = -Math.PI / 2; pad.position.set(x + Math.cos(a) * rr, 0.03, z + Math.sin(a) * rr);
+                        envObjectsGroup.add(pad);
+                    }
+                    obstacles.push({ type: 'c', x, z, r: R + 0.5, kind: 'pond', bw: R, bh: 0.15 });
+                    break;
+                }
+            }
+
+            // ---- 나무 (소나무 / 참나무 / 자작나무) ----
+            const pineMats = [0x14532d, 0x166534, 0x1a6b3a].map(c => new THREE.MeshStandardMaterial({ color: c, roughness: 0.8, flatShading: true }));
+            const oakMats = [0x3f8f2f, 0x4d9c33, 0x357a2a].map(c => new THREE.MeshStandardMaterial({ color: c, roughness: 0.8, flatShading: true }));
+            const birchMats = [0x8bc34a, 0x9ccc45].map(c => new THREE.MeshStandardMaterial({ color: c, roughness: 0.8, flatShading: true }));
+            const barkMat = new THREE.MeshStandardMaterial({ color: 0x6b3f1d, roughness: 1 });
+            const birchBark = new THREE.MeshStandardMaterial({ color: 0xeceff1, roughness: 0.9 });
+            const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
+            function buildTree(type, s) {
+                const g = new THREE.Group();
+                const add = (m) => { m.castShadow = true; g.add(m); return m; };
+                let canopyR;
+                if (type === 'pine') {
+                    const trunk = add(new THREE.Mesh(new THREE.CylinderGeometry(0.2 * s, 0.38 * s, 2.4 * s, 8), barkMat));
+                    trunk.position.y = 1.2 * s;
+                    const m = pick(pineMats);
+                    [[2.0, 1.7, 2.2], [3.2, 1.35, 2.0], [4.3, 0.95, 1.8]].forEach(([by, r, hh]) => {
+                        const cone = add(new THREE.Mesh(jitterGeometry(new THREE.ConeGeometry(r * s, hh * s, 9), 0.12 * s), m));
+                        cone.position.y = (by + hh / 2) * s;
+                    });
+                    canopyR = 1.7 * s;
+                } else if (type === 'oak') {
+                    const trunk = add(new THREE.Mesh(new THREE.CylinderGeometry(0.25 * s, 0.42 * s, 2.3 * s, 8), barkMat));
+                    trunk.position.y = 1.15 * s;
+                    const m = pick(oakMats);
+                    [[0, 3.1, 0, 1.15], [0.7, 3.4, 0.2, 0.95], [-0.6, 3.5, -0.3, 1.0], [0.1, 4.0, 0.1, 0.9]].forEach(([ox, oy, oz, r]) => {
+                        const blob = add(new THREE.Mesh(jitterGeometry(new THREE.IcosahedronGeometry(r * s, 1), 0.3 * s), m));
+                        blob.position.set(ox * s, oy * s, oz * s);
+                    });
+                    canopyR = 1.8 * s;
+                } else {
+                    const trunk = add(new THREE.Mesh(new THREE.CylinderGeometry(0.13 * s, 0.2 * s, 3.2 * s, 8), birchBark));
+                    trunk.position.y = 1.6 * s;
+                    for (let k = 0; k < 4; k++) {
+                        const band = new THREE.Mesh(new THREE.BoxGeometry(0.2 * s, 0.05, 0.08), new THREE.MeshStandardMaterial({ color: 0x263238 }));
+                        band.position.set(0.1 * s, (0.7 + k * 0.6) * s, 0.08 * s); band.rotation.y = k;
+                        g.add(band);
+                    }
+                    const m = pick(birchMats);
+                    [[0, 3.6, 0, 0.9], [0.5, 3.3, 0.2, 0.7], [-0.45, 3.5, -0.2, 0.75]].forEach(([ox, oy, oz, r]) => {
+                        const blob = add(new THREE.Mesh(jitterGeometry(new THREE.IcosahedronGeometry(r * s, 1), 0.25 * s), m));
+                        blob.position.set(ox * s, oy * s, oz * s);
+                    });
+                    canopyR = 1.4 * s;
+                }
+                return { g, canopyR };
+            }
+
+            let placed = 0, tries = 0;
+            while (placed < 46 && tries < 1000) {
+                tries++;
+                const x = (Math.random() - 0.5) * 68, z = (Math.random() - 0.5) * 68;
+                if (Math.hypot(x, z) < 6) continue;
+                const s = 1.0 + Math.random() * 0.4;
+                const roll = Math.random();
+                const type = roll < 0.5 ? 'pine' : (roll < 0.8 ? 'oak' : 'birch');
+                const canopyGuess = (type === 'pine' ? 1.7 : type === 'oak' ? 1.8 : 1.4) * s;
+                if (isOnRoad(x, z, canopyGuess + 0.3)) continue;      // 잎까지 도로 밖
+                if (hitsAnyObstacle(x, z, 1.2 * s)) continue;
+                const t = buildTree(type, s);
+                t.g.position.set(x, 0, z);
+                t.g.rotation.y = Math.random() * Math.PI * 2;
+                envObjectsGroup.add(t.g);
+                obstacles.push({ type: 'c', x, z, r: 0.45 * s, kind: 'tree', bw: canopyGuess, bh: 5.6 * s });
+                placed++;
+            }
+
+            // ---- 덤불 ----
+            const bushMats = [0x2f7d32, 0x3a8f3a, 0x4a9d3f].map(c => new THREE.MeshStandardMaterial({ color: c, roughness: 0.85, flatShading: true }));
+            placed = 0; tries = 0;
+            while (placed < 32 && tries < 800) {
+                tries++;
+                const x = (Math.random() - 0.5) * 70, z = (Math.random() - 0.5) * 70;
+                if (Math.hypot(x, z) < 5) continue;
+                if (isOnRoad(x, z, 0.9 + 0.3)) continue;
+                if (hitsAnyObstacle(x, z, 0.6)) continue;
+                const bush = new THREE.Group();
+                const m = pick(bushMats);
+                for (let k = 0; k < 3; k++) {
+                    const b = new THREE.Mesh(jitterGeometry(new THREE.IcosahedronGeometry(0.4 + Math.random() * 0.2, 1), 0.15), m);
+                    b.position.set((Math.random() - 0.5) * 0.6, 0.35 + Math.random() * 0.1, (Math.random() - 0.5) * 0.6);
+                    b.castShadow = true;
+                    bush.add(b);
+                }
+                bush.position.set(x, 0, z);
+                envObjectsGroup.add(bush);
+                obstacles.push({ type: 'c', x, z, r: 0.75, kind: 'bush', bw: 0.8, bh: 0.95 });
+                placed++;
+            }
+
+            // ---- 쓰러진 통나무 ----
+            const logMat = new THREE.MeshStandardMaterial({ color: 0x7a4a24, roughness: 1 });
+            const logEnd = new THREE.MeshStandardMaterial({ color: 0xd6a566, roughness: 0.9 });
+            placed = 0; tries = 0;
+            while (placed < 5 && tries < 400) {
+                tries++;
+                const x = (Math.random() - 0.5) * 64, z = (Math.random() - 0.5) * 64;
+                if (Math.hypot(x, z) < 8) continue;
+                const yaw = Math.random() * Math.PI;
+                const dx = Math.cos(yaw), dz = Math.sin(yaw);
+                const circles = [-0.9, 0, 0.9].map(t => ({ x: x + dx * t, z: z + dz * t }));
+                if (circles.some(c => isOnRoad(c.x, c.z, 1.0) || hitsAnyObstacle(c.x, c.z, 0.45))) continue;
+                const log = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.26, 2.3, 10), [logMat, logEnd, logEnd]);
+                log.rotation.z = Math.PI / 2;
+                const lg = new THREE.Group();
+                lg.add(log); log.castShadow = true;
+                lg.position.set(x, 0.25, z);
+                lg.rotation.y = -yaw;
+                envObjectsGroup.add(lg);
+                circles.forEach((c, ci) => obstacles.push({ type: 'c', x: c.x, z: c.z, r: 0.4, kind: 'log', bw: 1.2, bh: 0.55, det: ci === 1 }));
+                placed++;
+            }
+
+            // ---- 바위 (찌그러진 모양 + 주변 자갈) ----
+            const rockMats = [0x6b7280, 0x78808c, 0x5b6370].map(c => new THREE.MeshStandardMaterial({ color: c, roughness: 0.95, flatShading: true }));
+            placed = 0; tries = 0;
+            while (placed < 16 && tries < 700) {
+                tries++;
+                const rSize = 0.45 + Math.random() * 0.85;
+                const x = (Math.random() - 0.5) * 62, z = (Math.random() - 0.5) * 62;
+                if (Math.hypot(x, z) < 5) continue;
+                if (isOnRoad(x, z, rSize + 0.9)) continue;
+                if (hitsAnyObstacle(x, z, rSize + 0.3)) continue;
+                const m = pick(rockMats);
+                const rock = new THREE.Mesh(jitterGeometry(new THREE.DodecahedronGeometry(rSize, 0), rSize * 0.45), m);
+                rock.scale.set(1, 0.65 + Math.random() * 0.3, 0.85 + Math.random() * 0.3);
+                rock.position.set(x, rSize * 0.45, z);
+                rock.rotation.y = Math.random() * Math.PI;
+                rock.castShadow = true; rock.receiveShadow = true;
+                envObjectsGroup.add(rock);
+                for (let k = 0; k < 4; k++) {
+                    const a = Math.random() * Math.PI * 2, rr = rSize + 0.15 + Math.random() * 0.3;
+                    const pr = 0.07 + Math.random() * 0.1;
+                    const peb = new THREE.Mesh(jitterGeometry(new THREE.DodecahedronGeometry(pr, 0), pr * 0.4), m);
+                    peb.position.set(x + Math.cos(a) * rr, pr * 0.5, z + Math.sin(a) * rr);
+                    envObjectsGroup.add(peb);
+                }
+                obstacles.push({ type: 'c', x, z, r: rSize * 1.05, kind: 'rock', bw: rSize, bh: rSize * 0.9 });
+                placed++;
+            }
+
+            // ---- 풀 (인스턴싱) ----
+            const tuftPos = [];
+            for (let i = 0, t = 0; i < 420 && t < 2000; t++) {
+                const x = (Math.random() - 0.5) * 92, z = (Math.random() - 0.5) * 92;
+                if (isOnRoad(x, z, 0.5)) continue;
+                tuftPos.push([x, z]); i++;
+            }
+            const bladeGeo = new THREE.ConeGeometry(0.07, 0.42, 4); bladeGeo.translate(0, 0.21, 0);
+            const bladeMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9, flatShading: true });
+            for (let k = 0; k < 3; k++) {
+                envObjectsGroup.add(makeInstanced(bladeGeo, bladeMat, tuftPos.length, (o, i, im) => {
+                    const [x, z] = tuftPos[i];
+                    o.position.set(x + (Math.random() - 0.5) * 0.18, 0, z + (Math.random() - 0.5) * 0.18);
+                    o.rotation.set((Math.random() - 0.5) * 0.7, Math.random() * 6.28, (Math.random() - 0.5) * 0.7);
+                    const sc = 0.7 + Math.random() * 0.8;
+                    o.scale.set(sc, sc, sc);
+                    im.setColorAt(i, new THREE.Color().setHSL(0.25 + Math.random() * 0.08, 0.6, 0.28 + Math.random() * 0.14));
+                }));
+            }
+
+            // ---- 들꽃 (인스턴싱) ----
+            const flowerCols = [0xf9a8d4, 0xfde047, 0xffffff, 0xc084fc, 0xfb7185];
+            const flowerPos = [];
+            for (let i = 0, t = 0; i < 140 && t < 1000; t++) {
+                const x = (Math.random() - 0.5) * 80, z = (Math.random() - 0.5) * 80;
+                if (isOnRoad(x, z, 0.6)) continue;
+                flowerPos.push([x, z]); i++;
+            }
+            envObjectsGroup.add(makeInstanced(new THREE.SphereGeometry(0.09, 6, 5), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.7 }), flowerPos.length, (o, i, im) => {
+                o.position.set(flowerPos[i][0], 0.32, flowerPos[i][1]);
+                im.setColorAt(i, new THREE.Color(flowerCols[Math.floor(Math.random() * flowerCols.length)]));
+            }));
+            envObjectsGroup.add(makeInstanced(new THREE.CylinderGeometry(0.012, 0.012, 0.32, 4), new THREE.MeshStandardMaterial({ color: 0x3f7d20 }), flowerPos.length, (o, i) => {
+                o.position.set(flowerPos[i][0], 0.16, flowerPos[i][1]);
+            }));
+
+            // ---- 먼 배경: 숲 띠 + 언덕 ----
+            const farPos = [];
+            for (let i = 0; i < 170; i++) {
+                const a = Math.random() * Math.PI * 2, d = 52 + Math.random() * 45;
+                farPos.push({ x: Math.cos(a) * d, z: Math.sin(a) * d, sc: 0.8 + Math.random() * 0.9 });
+            }
+            envObjectsGroup.add(makeInstanced(new THREE.CylinderGeometry(0.4, 0.6, 3, 6), barkMat, farPos.length, (o, i) => {
+                o.position.set(farPos[i].x, 1.5, farPos[i].z);
+            }));
+            envObjectsGroup.add(makeInstanced(new THREE.ConeGeometry(2.4, 9, 7), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9, flatShading: true }), farPos.length, (o, i, im) => {
+                const p = farPos[i];
+                o.position.set(p.x, 3 + 4.5 * p.sc, p.z);
+                o.scale.set(p.sc, p.sc, p.sc);
+                im.setColorAt(i, new THREE.Color().setHSL(0.3 + Math.random() * 0.06, 0.5, 0.2 + Math.random() * 0.1));
+            }));
+            const hillMat = new THREE.MeshStandardMaterial({ color: 0x4f9a45, roughness: 1 });
+            for (let i = 0; i < 9; i++) {
+                const a = (i / 9) * Math.PI * 2 + Math.random() * 0.4, d = 120 + Math.random() * 40;
+                const hill = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 10, 0, Math.PI * 2, 0, Math.PI / 2), hillMat);
+                const R = 25 + Math.random() * 20;
+                hill.scale.set(R, 8 + Math.random() * 10, R);
+                hill.position.set(Math.cos(a) * d, 0, Math.sin(a) * d);
+                envObjectsGroup.add(hill);
+            }
+
+            buildClouds();
+        }
+
+function generateRandomRoads() {
+            if (currentTheme === 'default') return;
+
+            if (currentTheme === 'city') {
+                buildCityMap(true);
+                showSpeech('도시 맵의 랜덤 도로가 새롭게 생성되었습니다!');
+            } else if (currentTheme === 'forest') {
+                buildForestMap(true);
+                showSpeech('숲속 맵의 랜덤 흙길이 새롭게 생성되었습니다!');
+            }
+            afterEnvRebuild();
+        }
+
+        // --- 3. MODES & USER INTERACTION ---
+        function selectMode(selectedMode) {
+            mode = selectedMode;
+            if (typeof learnLeave === 'function') learnLeave();
+            document.getElementById('landingModal').classList.add('opacity-0', 'pointer-events-none');
+            releaseAllKeys();
+
+            const badge = document.getElementById('currentModeBadge');
+            const ribbon = document.getElementById('advancedSequenceRibbon');
+            const palette = document.getElementById('cardPalette');
+            const drivePanel = document.getElementById('drivePanel');
+
+            const driving = (mode === 'drive' || mode === 'learn');
+            palette.classList.toggle('hidden', driving);
+            drivePanel.classList.toggle('hidden', !driving);
+
+            if (mode === 'lab') {
+                badge.textContent = '카드 실험실';
+                badge.className = 'text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30';
+                ribbon.classList.add('hidden');
+                showSpeech('카드 실험실: 카드를 누르면 즉시 주미 AI가 움직입니다!');
+            } else if (mode === 'advanced') {
+                badge.textContent = '심화 코딩';
+                badge.className = 'text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30';
+                ribbon.classList.remove('hidden');
+                showSpeech('심화 코딩: 원하는 카드를 입력 후 [실행하기] 버튼을 누르세요.');
+            } else if (mode === 'drive') {
+                badge.textContent = '조종 모드';
+                badge.className = 'text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+                ribbon.classList.add('hidden');
+                if (isExecuting || sequenceRunning) pendingDriveReset = true;
+                else placeAtOrigin();
+                showSpeech('조종 모드: 방향키(또는 WASD)로 운전하세요! 장애물은 지나갈 수 없어요.');
+            } else if (mode === 'learn') {
+                badge.textContent = 'AI 학습';
+                badge.className = 'text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-fuchsia-500/20 text-fuchsia-300 border border-fuchsia-500/30';
+                ribbon.classList.add('hidden');
+                if (isExecuting || sequenceRunning) pendingDriveReset = true;
+                else placeAtOrigin();
+                learnEnter();
+                showSpeech('AI 학습 모드: 왼쪽 패널에서 체험할 주제를 골라 보세요! 방향키로 운전할 수 있어요.');
+            }
+
+            // 상단/하단 바 높이가 바뀌므로 캔버스 크기 갱신
+            if (typeof onWindowResize === 'function' && renderer) onWindowResize();
+        }
+
+        function openLandingModal() {
+            releaseAllKeys();
+            document.getElementById('landingModal').classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function handleCardClick(type) {
+            if (isExecuting || sequenceRunning) return;
+
+            if (mode === 'lab') {
+                if (type === 'run') {
+                    showSpeech('실행하기 카드는 [심화 코딩] 모드에서 동작합니다.');
+                    return;
+                }
+                if (type === 'delete') {
+                    resetPosition();
+                    return;
+                }
+
+                const cardInfo = CARD_META[type];
+                triggerCameraScan(cardInfo, () => {
+                    executeSingleActionAsync(type, cardInfo.defaultVal);
+                });
+
+            } else {
+                if (type === 'run') {
+                    runAdvancedSequence();
+                    return;
+                }
+                if (type === 'delete') {
+                    deleteLastCommand();
+                    return;
+                }
+
+                openParamModal(type);
+            }
+        }
+
+        function triggerCameraScan(cardInfo, callback) {
+            const flash = document.getElementById('cameraFlash');
+            const scanAnim = document.getElementById('cardScanAnimation');
+            const scannedBody = document.getElementById('scannedCardBody');
+
+            document.getElementById('scanCardNum').textContent = cardInfo.id;
+            document.getElementById('scanCardTitle').textContent = cardInfo.title;
+            document.getElementById('scanCardIcon').innerHTML = `<i class="fa-solid ${cardInfo.icon}"></i>`;
+            scannedBody.className = `w-36 h-48 rounded-2xl p-3 shadow-2xl flex flex-col justify-between items-center text-white border-4 border-white bg-gradient-to-b ${cardInfo.color}`;
+
+            scanAnim.classList.remove('opacity-0', 'scale-50');
+            scanAnim.classList.add('opacity-100', 'scale-100');
+
+            updateEyeDisplay('scan');
+            showCamCard(cardInfo);
+
+            setTimeout(() => {
+                camFlash();
+                hideCamCard();
+                flash.classList.add('bg-white/70');
+                setTimeout(() => flash.classList.remove('bg-white/70'), 120);
+
+                scanAnim.classList.add('opacity-0', 'scale-50');
+                scanAnim.classList.remove('opacity-100', 'scale-100');
+
+                updateEyeDisplay('happy');
+                setTimeout(() => updateEyeDisplay('normal'), 1200);
+
+                if (callback) callback();
+            }, 500);
+        }
+
+        // --- 4. PARAMETER MODAL ---
+        function openParamModal(type) {
+            pendingCommandType = type;
+            const meta = CARD_META[type];
+
+            document.getElementById('paramTitle').textContent = meta.title;
+            document.getElementById('paramSubtitle').textContent = meta.label;
+            document.getElementById('paramUnit').textContent = meta.unit;
+
+            const input = document.getElementById('paramValueInput');
+            input.value = meta.defaultVal;
+
+            const presetContainer = document.getElementById('presetButtons');
+            presetContainer.innerHTML = '';
+
+            let presets = type.includes('turn') ? [30, 45, 90, 180] : (type === 'wait' ? [1, 2, 3, 5] : [10, 20, 30, 50]);
+            presets.forEach(val => {
+                const btn = document.createElement('button');
+                btn.className = "px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-lg text-sky-300 border border-slate-700";
+                btn.textContent = `+${val}${meta.unit}`;
+                btn.onclick = () => { input.value = val; };
+                presetContainer.appendChild(btn);
+            });
+
+            document.getElementById('paramModal').classList.remove('hidden');
+        }
+
+        function closeParamModal() {
+            document.getElementById('paramModal').classList.add('hidden');
+            pendingCommandType = null;
+        }
+
+        function confirmParamModal() {
+            if (!pendingCommandType) return;
+
+            // ★ 버그 수정: closeParamModal()이 pendingCommandType을 null로 만들기 때문에
+            //   값을 먼저 지역 변수에 저장해 둬야 합니다. (0.5초 뒤 콜백에서 null이 저장되던 문제)
+            const type = pendingCommandType;
+            const meta = CARD_META[type];
+
+            let val = parseInt(document.getElementById('paramValueInput').value, 10);
+            if (!Number.isFinite(val) || val <= 0) val = meta.defaultVal;
+            val = Math.min(val, 500);
+
+            closeParamModal();
+
+            triggerCameraScan(meta, () => {
+                commandQueue.push({
+                    id: Date.now(),
+                    type: type,
+                    value: val,
+                    meta: meta
+                });
+                renderSequenceQueue();
+                showSpeech(`'${meta.title} (${val}${meta.unit})' 명령어 추가 완료!`);
+            });
+        }
+
+        // --- 5. TIMELINE QUEUE RENDERER ---
+        function renderSequenceQueue() {
+            const container = document.getElementById('sequenceQueue');
+            const countBadge = document.getElementById('queueCountBadge');
+            container.innerHTML = '';
+
+            countBadge.textContent = `${commandQueue.length}개`;
+
+            if (commandQueue.length === 0) {
+                container.innerHTML = `
+                    <div class="text-slate-500 text-xs font-medium flex items-center gap-2" id="emptySequenceHint">
+                        <i class="fa-regular fa-square-plus text-sm"></i> 아래 카드를 클릭하여 순차 코딩 명령어를 생성하세요.
+                    </div>
+                `;
+                return;
+            }
+
+            commandQueue.forEach((cmd, idx) => {
+                const block = document.createElement('div');
+                block.id = `seq-block-${idx}`;
+                block.className = `flex-shrink-0 px-3 py-1.5 rounded-xl bg-gradient-to-r ${cmd.meta.color} text-white font-extrabold text-xs flex items-center gap-2 shadow-md border border-white/20 transition-all duration-300 relative group`;
+                block.innerHTML = `
+                    <span class="w-4 h-4 rounded-full bg-black/25 flex items-center justify-center text-[10px] font-black">${idx + 1}</span>
+                    <span>${cmd.meta.title} <span class="text-yellow-300 font-black">(${cmd.value}${cmd.meta.unit})</span></span>
+                    <button onclick="removeCommandAtIndex(${idx})" class="ml-1 text-white/70 hover:text-white text-xs">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                `;
+                container.appendChild(block);
+            });
+
+            container.scrollLeft = container.scrollWidth;
+        }
+
+        function removeCommandAtIndex(index) {
+            if (isExecuting || sequenceRunning) return;
+            commandQueue.splice(index, 1);
+            renderSequenceQueue();
+        }
+
+        function clearAllCommands() {
+            if (isExecuting || sequenceRunning) return;
+            commandQueue = [];
+            renderSequenceQueue();
+            showSpeech('모든 코딩 명령어가 삭제되었습니다.');
+        }
+
+        function deleteLastCommand() {
+            if (commandQueue.length > 0) {
+                commandQueue.pop();
+                renderSequenceQueue();
+                showSpeech('마지막 명령어를 삭제했습니다.');
+            }
+        }
+
+        // --- 6. ROBUST SEQUENTIAL ANIMATION ENGINE (FIXED) ---
+        function executeSingleActionAsync(type, value) {
+            return new Promise((resolve) => {
+                const known = ['forward', 'backward', 'turnLeft', 'turnRight', 'wait'];
+                if (!known.includes(type)) {
+                    console.warn('알 수 없는 명령어:', type);
+                    resolve();
+                    return;
+                }
+
+                isExecuting = true;
+                zumiGroup.position.y = 0;
+
+                const duration = Math.max(600, Math.min(value * 35, 3000));
+                const startTime = performance.now();
+
+                const startPos = zumiGroup.position.clone();
+                const startRotY = zumiGroup.rotation.y;
+                const startWheelL = wheelLeft.rotation.x;
+                const startWheelR = wheelRight.rotation.x;
+
+                if (type === 'forward') showSpeech(`주미 AI 전진 중... (${value}cm)`);
+                else if (type === 'backward') showSpeech(`주미 AI 후진 중... (${value}cm)`);
+                else if (type === 'turnLeft') showSpeech(`주미 AI 좌회전 중... (${value}도)`);
+                else if (type === 'turnRight') showSpeech(`주미 AI 우회전 중... (${value}도)`);
+                else if (type === 'wait') {
+                    showSpeech(`주미 AI 대기 중... (${value}초)`);
+                    setTimeout(() => {
+                        isExecuting = false;
+                        resolve();
+                    }, value * 1000);
+                    return;
+                }
+
+                function stepAnimation(now) {
+                    const elapsed = now - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const ease = progress < 0.5 ? 4 * progress * progress * progress : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+                    if (type === 'forward' || type === 'backward') {
+                        const dirSign = type === 'forward' ? -1 : 1;      // 앞쪽은 -z
+                        const currentDist = value * CM_TO_UNITS * ease;
+                        const dirVec = new THREE.Vector3(0, 0, dirSign).applyAxisAngle(new THREE.Vector3(0, 1, 0), startRotY);
+
+                        zumiGroup.position.copy(startPos).addScaledVector(dirVec, currentDist);
+
+                        // 바퀴 굴러가는 방향: 전진이면 윗부분이 앞(-z)으로 → x축 음의 회전
+                        const travel = (type === 'forward' ? 1 : -1) * currentDist;
+                        wheelLeft.rotation.x = startWheelL - travel / WHEEL_RADIUS;
+                        wheelRight.rotation.x = startWheelR - travel / WHEEL_RADIUS;
+
+                    } else if (type === 'turnLeft' || type === 'turnRight') {
+                        const sign = type === 'turnLeft' ? 1 : -1;
+                        const rad = (value * Math.PI / 180) * ease;
+                        zumiGroup.rotation.y = startRotY + sign * rad;
+                        zumiGroup.rotation.z = sign * Math.sin(ease * Math.PI) * 0.05;
+
+                        // 제자리 회전: 양쪽 바퀴가 서로 반대로 굴러감
+                        const arc = rad * WHEEL_TRACK;
+                        wheelLeft.rotation.x = startWheelL + sign * arc / WHEEL_RADIUS;
+                        wheelRight.rotation.x = startWheelR - sign * arc / WHEEL_RADIUS;
+                    }
+
+                    if (progress < 1) {
+                        requestAnimationFrame(stepAnimation);
+                    } else {
+                        zumiGroup.rotation.z = 0;
+                        isExecuting = false;
+                        resolve();
+                    }
+                }
+
+                requestAnimationFrame(stepAnimation);
+            });
+        }
+
+        async function runAdvancedSequence() {
+            if (commandQueue.length === 0) {
+                showSpeech('실행할 명령어가 없습니다. 카드를 먼저 추가하세요!');
+                return;
+            }
+            if (isExecuting || sequenceRunning) return;
+
+            sequenceRunning = true;
+            showSpeech('심화 코딩 순차 실행 시작!');
+
+            try {
+                for (let i = 0; i < commandQueue.length; i++) {
+                    for (let j = 0; j < commandQueue.length; j++) {
+                        const block = document.getElementById(`seq-block-${j}`);
+                        if (block) block.classList.remove('active-execution-block');
+                    }
+
+                    const activeBlock = document.getElementById(`seq-block-${i}`);
+                    if (activeBlock) {
+                        activeBlock.classList.add('active-execution-block');
+                        activeBlock.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+
+                    const cmd = commandQueue[i];
+                    await executeSingleActionAsync(cmd.type, cmd.value);
+                    await new Promise(r => setTimeout(r, 200));
+                }
+
+                updateEyeDisplay('happy');
+                setTimeout(() => updateEyeDisplay('normal'), 1500);
+                showSpeech('모든 코딩 명령어 실행이 완료되었습니다! 🎉');
+            } finally {
+                for (let j = 0; j < commandQueue.length; j++) {
+                    const block = document.getElementById(`seq-block-${j}`);
+                    if (block) block.classList.remove('active-execution-block');
+                }
+                isExecuting = false;
+                sequenceRunning = false;
+            }
+        }
+
+        function resetPosition() {
+            if (isExecuting || sequenceRunning) {
+                showSpeech('실행이 끝난 뒤에 리셋해주세요.');
+                return;
+            }
+            placeAtOrigin();
+            showSpeech('주미 AI가 시작 위치로 리셋되었습니다.');
+        }
+
+        function placeAtOrigin() {
+            zumiGroup.position.set(0, 0, 0);
+            zumiGroup.rotation.set(0, 0, 0);
+            if (wheelLeft) wheelLeft.rotation.set(0, 0, 0);
+            if (wheelRight) wheelRight.rotation.set(0, 0, 0);
+            driveVel = 0;
+            if (typeof SLAM !== 'undefined' && SLAM.active) slamReset();
+            if (mode === 'learn' && learnModule === 'ml' && typeof mlAlignToRoad === 'function') mlAlignToRoad();
+        }
+
+        function showSpeech(text) {
+            const bubble = document.getElementById('speechBubble');
+            const speechText = document.getElementById('speechText');
+            speechText.textContent = text;
+
+            bubble.classList.remove('opacity-0', '-translate-y-2');
+            bubble.classList.add('opacity-100', 'translate-y-0');
+
+            clearTimeout(window.speechTimer);
+            window.speechTimer = setTimeout(() => {
+                bubble.classList.add('opacity-0', '-translate-y-2');
+                bubble.classList.remove('opacity-100', 'translate-y-0');
+            }, 3200);
+        }
+
+        function onWindowResize() {
+            const container = document.getElementById('canvas-container');
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            if (typeof resizeZumiCam === 'function') resizeZumiCam();
+        }
+
+        // ===== 조종 모드 =====
+        const keys = new Set();
+        const KEYMAP = {
+            ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down',
+            ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right'
+        };
+        let driveSpeedCm = 30;
+        let driveVel = 0;            // 현재 속도 (units/s, 앞쪽이 +)
+        let driveBusy = false;
+        let pendingDriveReset = false;
+        let lastBlockMsg = 0;
+        let lastFrameTime = performance.now();
+        const DRIVE_TURN_RATE = 110 * Math.PI / 180;  // 초당 회전각
+        const ROBOT_R = 0.8;                          // 충돌 원 반지름
+        const ROBOT_OFFSETS = [-0.25, 0.25];          // 몸통 앞/뒤 충돌 원 위치
+        const WORLD_LIMIT = 47;
+
+        function setKey(k, down) {
+            if (down) keys.add(k); else keys.delete(k);
+            document.querySelectorAll(`[data-key="${k}"]`).forEach(b => b.classList.toggle('active', down));
+        }
+        function releaseAllKeys() {
+            ['up', 'down', 'left', 'right'].forEach(k => setKey(k, false));
+        }
+
+        function robotCollides(x, z, yaw) {
+            const sn = Math.sin(yaw), cs = Math.cos(yaw);
+            for (const lz of ROBOT_OFFSETS) {
+                const cx = x + lz * sn, cz = z + lz * cs;
+                if (Math.abs(cx) > WORLD_LIMIT || Math.abs(cz) > WORLD_LIMIT) return true;
+                for (const o of obstacles) {
+                    if (circleHitsObstacle(cx, cz, ROBOT_R, o)) return true;
+                }
+            }
+            return false;
+        }
+
+        function updateDrive(dt) {
+            driveBusy = false;
+            blockedNow = false;
+            if ((mode !== 'drive' && mode !== 'learn') || !zumiGroup || isExecuting || sequenceRunning) { driveVel = 0; return; }
+            if (pendingDriveReset) { placeAtOrigin(); pendingDriveReset = false; }
+
+            let move = (keys.has('up') ? 1 : 0) - (keys.has('down') ? 1 : 0);
+            let turn = (keys.has('left') ? 1 : 0) - (keys.has('right') ? 1 : 0);
+
+            // AI 자율주행: 방향키를 누르면 사람이 다시 운전
+            if (autopilot) {
+                if (keys.size > 0) stopAutopilot('사람이 운전을 이어받았어요!');
+                else { const o = autopilot(dt) || { move: 0, turn: 0 }; move = o.move; turn = o.turn; }
+            }
+            // 긴급제동 AI: 앞 센서가 가까우면 멈춤
+            if (brakeAssist.on && move > 0 && frontMinDist < brakeAssist.thr) {
+                if (!brakeAssist.active) { brakeAssist.active = true; brakeAssist.triggered++; showSpeech('🛑 긴급제동! 앞이 너무 가까워요.'); }
+                move = 0;
+                driveVel *= Math.max(0, 1 - dt * 20);
+            } else brakeAssist.active = false;
+
+            // 부드러운 가속/감속
+            const targetVel = move * driveSpeedCm * CM_TO_UNITS;
+            driveVel += (targetVel - driveVel) * Math.min(1, dt * 9);
+            if (move === 0 && Math.abs(driveVel) < 0.02) driveVel = 0;
+
+            let px = zumiGroup.position.x, pz = zumiGroup.position.z, yaw = zumiGroup.rotation.y;
+            let dyaw = 0, travel = 0, blocked = false;
+
+            if (turn !== 0) {
+                const ny = yaw + turn * DRIVE_TURN_RATE * dt;
+                if (!robotCollides(px, pz, ny)) { dyaw = ny - yaw; yaw = ny; }
+                else blocked = true;
+            }
+
+            if (driveVel !== 0) {
+                const dist = driveVel * dt;
+                const fx = -Math.sin(yaw), fz = -Math.cos(yaw);
+                const nx = px + fx * dist, nz = pz + fz * dist;
+                if (!robotCollides(nx, nz, yaw)) {
+                    px = nx; pz = nz; travel = dist;
+                } else if (!robotCollides(nx, pz, yaw)) {          // 벽을 따라 미끄러지기
+                    travel = (nx - px) * fx; px = nx;
+                } else if (!robotCollides(px, nz, yaw)) {
+                    travel = (nz - pz) * fz; pz = nz;
+                } else {
+                    driveVel = 0;
+                }
+                if (Math.abs(travel) < Math.abs(dist) * 0.5) blocked = true;
+            }
+
+            zumiGroup.position.set(px, 0, pz);
+            zumiGroup.rotation.y = yaw;
+            wheelLeft.rotation.x += (-travel + dyaw * WHEEL_TRACK) / WHEEL_RADIUS;
+            wheelRight.rotation.x += (-travel - dyaw * WHEEL_TRACK) / WHEEL_RADIUS;
+
+            blockedNow = blocked && (move !== 0 || turn !== 0);
+            if (typeof slamOdometry === 'function') slamOdometry(travel, dyaw);
+
+            driveBusy = keys.size > 0 || driveVel !== 0 || !!autopilot;
+
+            if (blocked && (move !== 0 || turn !== 0)) {
+                const now = performance.now();
+                if (now - lastBlockMsg > 1500) {
+                    lastBlockMsg = now;
+                    showSpeech('장애물이 있어서 지나갈 수 없어요! 🚧');
+                }
+            }
+        }
+
+        function initDriveControls() {
+            window.addEventListener('keydown', (e) => {
+                if (mode !== 'drive' && mode !== 'learn') return;
+                if (!document.getElementById('landingModal').classList.contains('opacity-0')) return;
+                if (e.target && (e.target.tagName === 'TEXTAREA' || (e.target.tagName === 'INPUT' && (e.target.type === 'text' || e.target.type === 'number')))) return;
+                const k = KEYMAP[e.code];
+                if (!k) return;
+                e.preventDefault();
+                setKey(k, true);
+            });
+            window.addEventListener('keyup', (e) => {
+                const k = KEYMAP[e.code];
+                if (k) setKey(k, false);
+            });
+            window.addEventListener('blur', releaseAllKeys);
+
+            document.querySelectorAll('[data-key]').forEach(btn => {
+                const k = btn.dataset.key;
+                btn.addEventListener('pointerdown', (e) => { e.preventDefault(); btn.setPointerCapture && btn.setPointerCapture(e.pointerId); setKey(k, true); });
+                ['pointerup', 'pointercancel', 'pointerleave'].forEach(ev => btn.addEventListener(ev, () => setKey(k, false)));
+            });
+
+            const slider = document.getElementById('driveSpeed');
+            const label = document.getElementById('driveSpeedLabel');
+            const applySpeed = (v) => {
+                driveSpeedCm = parseInt(v, 10);
+                slider.value = driveSpeedCm;
+                label.textContent = `${driveSpeedCm} cm/s`;
+            };
+            slider.addEventListener('input', () => applySpeed(slider.value));
+            document.querySelectorAll('[data-speed]').forEach(b => b.addEventListener('click', () => applySpeed(b.dataset.speed)));
+        }
+
+        // ============================================================
+        //  AI 학습 모드  (센서 인식 · AI 비전 · 머신러닝 · SLAM)
+        // ============================================================
+        let autopilot = null;                       // () => {move, turn}  (AI가 운전할 때)
+        const brakeAssist = { on: false, thr: 3, triggered: 0, active: false };
+        let frontMinDist = 99;
+        let blockedNow = false;
+        let learnModule = null;
+        let learnCollisions = 0, prevBlocked = false, learnUiT = 0;
+        let camRes = 0;                             // 0 = 원본, 그 외 = 가로 픽셀 수
+
+        const lg = (id) => document.getElementById(id);
+        const lclamp = (v, a, b) => Math.max(a, Math.min(b, v));
+        function lgauss() {
+            let u = 0, v = 0;
+            while (!u) u = Math.random();
+            while (!v) v = Math.random();
+            return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+        }
+        function lhash(n) { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
+
+        // ---------- 레이캐스트 (센서 / 라이다 공용) ----------
+        function castRay(ox, oz, dx, dz, maxR) {
+            let best = maxR, hit = null;
+            for (const o of obstacles) {
+                let t = -1;
+                if (o.type === 'c') {
+                    const fx = ox - o.x, fz = oz - o.z;
+                    const b = fx * dx + fz * dz;
+                    const c = fx * fx + fz * fz - o.r * o.r;
+                    const disc = b * b - c;
+                    if (disc >= 0) {
+                        t = -b - Math.sqrt(disc);
+                        if (t < 0) t = (c < 0) ? 0 : -1;
+                    }
+                } else {
+                    const minx = o.x - o.hw, maxx = o.x + o.hw, minz = o.z - o.hd, maxz = o.z + o.hd;
+                    let t1 = -Infinity, t2 = Infinity, miss = false;
+                    if (Math.abs(dx) < 1e-9) { if (ox < minx || ox > maxx) miss = true; }
+                    else { let a = (minx - ox) / dx, b = (maxx - ox) / dx; if (a > b) { const k = a; a = b; b = k; } t1 = Math.max(t1, a); t2 = Math.min(t2, b); }
+                    if (Math.abs(dz) < 1e-9) { if (oz < minz || oz > maxz) miss = true; }
+                    else { let a = (minz - oz) / dz, b = (maxz - oz) / dz; if (a > b) { const k = a; a = b; b = k; } t1 = Math.max(t1, a); t2 = Math.min(t2, b); }
+                    if (!miss && t1 <= t2 && t2 >= 0) t = Math.max(t1, 0);
+                }
+                if (t >= 0 && t < best) { best = t; hit = o; }
+            }
+            let tb = Infinity;
+            if (dx > 1e-9) tb = Math.min(tb, (WORLD_LIMIT - ox) / dx); else if (dx < -1e-9) tb = Math.min(tb, (-WORLD_LIMIT - ox) / dx);
+            if (dz > 1e-9) tb = Math.min(tb, (WORLD_LIMIT - oz) / dz); else if (dz < -1e-9) tb = Math.min(tb, (-WORLD_LIMIT - oz) / dz);
+            if (tb < best) { best = tb; hit = 'wall'; }
+            return { d: best, o: hit };
+        }
+
+        // ---------- 학습 상태 / 미션 / 퀴즈 ----------
+        const LEARN = {
+            sensor: {
+                title: '센서 인식', short: '센서', icon: 'fa-tower-broadcast', color: 'amber',
+                concept: '센서는 로봇의 <b>눈과 귀</b>예요. 거리 센서는 빛을 쏘고 <b>되돌아오는 시간</b>으로 거리를 <b>숫자</b>로 알려줘요. 이 숫자로 <b>"가까우면 멈춰!"</b> 같은 규칙을 만들면 <b>규칙 기반 AI</b>가 된답니다.',
+                missions: [['near', '장애물 20cm 안으로 다가가서 빨간 경고 만들기'], ['brake', '긴급제동 AI를 켜고 멈추는 순간 확인하기'], ['explore', '자율 탐험으로 10초 동안 안 부딪히고 달리기']],
+                quiz: { q: '센서가 하는 일로 가장 알맞은 것은?', options: ['세상의 정보를 숫자로 바꿔 컴퓨터에게 알려준다', '로봇을 앞으로 밀어준다', '배터리를 충전해 준다'], answer: 0, explain: '센서는 거리·빛·소리 같은 세상의 정보를 숫자(데이터)로 바꿔줘요. AI는 그 숫자를 보고 판단해요.' }
+            },
+            vision: {
+                title: 'AI 비전', short: '비전', icon: 'fa-eye', color: 'sky',
+                concept: '컴퓨터에게 사진은 <b>숫자(픽셀)의 모음</b>이에요. 물체 인식 AI는 사진에서 물체의 <b>위치(네모 상자)</b>, <b>이름</b>, 그리고 얼마나 확신하는지 <b>확신도(%)</b>를 알려줘요. 멀리 있거나 작게 보이면 확신도가 낮아지고 <b>가끔 틀리기도</b> 해요!',
+                missions: [['res', '해상도를 낮춰서 AI의 눈이 거칠어지는 것 보기'], ['conf', '확신도 90% 이상으로 물체 찾아내기'], ['wrong', '정답 보기를 켜고 AI가 헷갈린 물체 찾기']],
+                quiz: { q: 'AI가 "나무 94%"라고 말했어요. 94%의 뜻은?', options: ['나무의 크기가 94cm', 'AI가 나무라고 확신하는 정도', '나무까지의 거리'], answer: 1, explain: '확신도는 AI가 "내 답이 맞을 것 같다"고 생각하는 정도예요. 확신도가 낮으면 틀릴 수 있어요.' }
+            },
+            ml: {
+                title: '머신러닝', short: '학습', icon: 'fa-brain', color: 'fuchsia',
+                concept: '규칙을 사람이 일일이 쓰지 않고, <b>데이터(입력 + 정답 행동)</b>를 보여주면 컴퓨터가 <b>스스로 규칙을 찾는 것</b>이 머신러닝이에요. 주미 AI는 앞쪽 <b>바닥 15칸</b>(길=초록)을 보고 <b>좌회전 / 직진 / 우회전</b>을 배워요. 좋은 데이터가 좋은 AI를 만들어요!',
+                missions: [['data', '운전 데이터를 100개 이상 모으기'], ['train', 'AI를 학습시켜 정확도 80% 넘기기'], ['drive', 'AI 자율주행으로 25초 동안 길 안 벗어나기']],
+                quiz: { q: 'AI가 운전을 더 잘 배우게 하려면?', options: ['좋은 운전 데이터를 다양하게 많이 모은다', '데이터를 모두 지운다', '속도를 최대로 올린다'], answer: 0, explain: '머신러닝은 데이터로 배워요. 데이터가 적거나 엉터리면 AI도 엉터리로 배운답니다. (Garbage in, garbage out!)' }
+            },
+            slam: {
+                title: 'SLAM 지도 만들기', short: 'SLAM', icon: 'fa-map-location-dot', color: 'emerald',
+                concept: '<b>SLAM</b>은 <b>지도 만들기</b>와 <b>내 위치 찾기</b>를 <b>동시에</b> 하는 기술이에요. 라이다로 주변을 쏘아 지도를 그리지만, 바퀴가 미끄러지면 내 위치 계산이 점점 틀어져 지도가 번져요(<b>드리프트</b>). 새 스캔을 이미 그린 지도와 맞춰 보면(<b>스캔 매칭</b>) 위치를 바로잡을 수 있어요.',
+                missions: [['area', '운전하며 지도를 10% 이상 그리기'], ['drift', '오차를 켜고 위치 오차 40cm 만들어 보기'], ['fix', '지도 지우고 SLAM 보정을 켠 채 200cm 달려 오차 15cm 이하 만들기']],
+                quiz: { q: 'SLAM은 무엇을 동시에 할까요?', options: ['지도 만들기와 내 위치 알아내기', '사진 찍기와 인쇄하기', '충전과 방전'], answer: 0, explain: 'SLAM = Simultaneous Localization And Mapping. 지도를 그리면서 동시에 내가 지도 어디에 있는지 알아내요.' }
+            }
+        };
+        const learnState = {};
+        Object.keys(LEARN).forEach(k => learnState[k] = { m: {}, quiz: false });
+
+        function learnProgressText() {
+            const n = Object.values(learnState).filter(s => s.quiz).length;
+            return `⭐ ${n}/4 완료`;
+        }
+        function completeMission(mod, mid) {
+            const st = learnState[mod];
+            if (!st || st.m[mid]) return;
+            st.m[mid] = true;
+            const li = lg(`ms-${mod}-${mid}`);
+            if (li) {
+                li.classList.add('text-emerald-300');
+                li.classList.remove('text-slate-300');
+                li.querySelector('.ms-box').textContent = '✅';
+            }
+            const text = LEARN[mod].missions.find(m => m[0] === mid)[1];
+            showSpeech(`🎉 미션 완료! ${text}`);
+        }
+        function learnAnswer(mod, idx) {
+            const q = LEARN[mod].quiz;
+            const fb = lg(`quizfb-${mod}`);
+            if (idx === q.answer) {
+                learnState[mod].quiz = true;
+                fb.innerHTML = `<span class="text-emerald-300 font-bold">⭐ 정답!</span> <span class="text-slate-300">${q.explain}</span>`;
+                learnUpdateTabs();
+                showSpeech('⭐ 퀴즈 정답! 별을 획득했어요!');
+            } else {
+                fb.innerHTML = '<span class="text-rose-300 font-bold">앗, 다시 생각해 볼까요? 🤔</span>';
+            }
+        }
+
+        // ---------- 패널 HTML ----------
+        const COLORS = { amber: 'text-amber-300 border-amber-500/40 bg-amber-500/10', sky: 'text-sky-300 border-sky-500/40 bg-sky-500/10', fuchsia: 'text-fuchsia-300 border-fuchsia-500/40 bg-fuchsia-500/10', emerald: 'text-emerald-300 border-emerald-500/40 bg-emerald-500/10' };
+
+        function learnControlsHtml(id) {
+            if (id === 'sensor') return `
+                <div class="rounded-xl bg-slate-950/60 border border-slate-700 p-2">
+                    <canvas id="sensorRadar" width="300" height="130" class="w-full"></canvas>
+                    <div class="flex justify-between text-xs mt-1"><span class="text-slate-400">앞 장애물까지</span><span id="sensorFrontText" class="font-black text-emerald-300">-- cm</span></div>
+                </div>
+                <div>
+                    <div class="flex justify-between text-xs mb-1"><span class="text-slate-300 font-bold">🛑 멈춤 거리</span><span id="sensorThrLabel" class="font-black text-amber-300">15 cm</span></div>
+                    <input id="sensorThr" type="range" min="5" max="40" step="1" value="${Math.round(brakeAssist.thr * 5)}" class="w-full accent-amber-400" oninput="sensorSetThr(this.value)">
+                </div>
+                <label class="flex items-center gap-2 text-xs text-slate-200 cursor-pointer"><input id="sensorBrake" type="checkbox" class="accent-amber-400" ${brakeAssist.on ? 'checked' : ''} onchange="sensorToggleBrake(this.checked); this.blur()"> 🛑 자동 긴급제동 AI <span class="text-slate-500">(앞이 가까우면 멈춤)</span></label>
+                <label class="flex items-center gap-2 text-xs text-slate-200 cursor-pointer"><input id="sensorExplore" type="checkbox" class="accent-amber-400" ${autopilot === exploreAutopilot ? 'checked' : ''} onchange="sensorToggleExplore(this.checked); this.blur()"> 🤖 자율 탐험 <span class="text-slate-500">(센서로 스스로 운전)</span></label>
+                <div class="grid grid-cols-2 gap-2 text-center text-[11px]">
+                    <div class="rounded-lg bg-slate-800/80 border border-slate-700 py-1.5"><div class="text-slate-400">긴급제동 횟수</div><div id="sensorBrakeCnt" class="text-lg font-black text-amber-300">0</div></div>
+                    <div class="rounded-lg bg-slate-800/80 border border-slate-700 py-1.5"><div class="text-slate-400">충돌 횟수</div><div id="sensorColCnt" class="text-lg font-black text-rose-300">0</div></div>
+                </div>`;
+            if (id === 'vision') return `
+                <div>
+                    <div class="text-xs font-bold text-slate-300 mb-1">👁 AI의 눈 해상도 <span class="text-slate-500 font-normal">(사진 = 숫자 픽셀)</span></div>
+                    <div class="grid grid-cols-4 gap-1 text-[11px] font-bold">
+                        ${[[32, '32px'], [64, '64px'], [128, '128px'], [0, '원본']].map(([v, t]) => `<button data-res="${v}" onclick="visSetRes(${v})" class="py-1.5 rounded-lg border ${camRes === v ? 'bg-sky-500 text-white border-sky-300' : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'}">${t}</button>`).join('')}
+                    </div>
+                </div>
+                <div>
+                    <div class="flex justify-between text-xs mb-1"><span class="text-slate-300 font-bold">🎯 확신도 기준</span><span id="visThrLabel" class="font-black text-sky-300">${Math.round(VIS.thr * 100)}%</span></div>
+                    <input id="visThr" type="range" min="0" max="95" step="5" value="${Math.round(VIS.thr * 100)}" class="w-full accent-sky-400" oninput="visSetThr(this.value)">
+                    <div class="text-[10px] text-slate-500">기준보다 낮은 확신도의 물체는 AI가 말하지 않아요.</div>
+                </div>
+                <label class="flex items-center gap-2 text-xs text-slate-200 cursor-pointer"><input id="visTruth" type="checkbox" class="accent-sky-400" ${VIS.truth ? 'checked' : ''} onchange="VIS.truth=this.checked; this.blur()"> ✅ 정답 보기 <span class="text-slate-500">(AI가 맞았는지 채점)</span></label>
+                <div class="rounded-xl bg-slate-950/60 border border-slate-700 p-2">
+                    <div class="text-[11px] font-bold text-sky-300 mb-1">🔍 지금 AI가 본 것</div>
+                    <div id="visList" class="text-xs text-slate-200 space-y-0.5 min-h-[3.5rem]">카메라 앞으로 물체가 들어오면 알려줄게요.</div>
+                    <div id="visHidden" class="text-[10px] text-slate-500 mt-1"></div>
+                </div>`;
+            if (id === 'ml') return `
+                <div class="flex gap-3 items-center">
+                    <div>
+                        <div class="text-[10px] text-slate-400 mb-1 text-center">AI가 보는 바닥 15칸</div>
+                        <div id="mlGrid" class="grid grid-cols-5 gap-0.5 p-1 rounded-lg bg-slate-950 border border-slate-700">${'<div class="w-5 h-5 rounded-sm bg-slate-700"></div>'.repeat(15)}</div>
+                        <div class="text-center text-[10px] text-slate-400 mt-0.5">🤖 ▲ 앞</div>
+                    </div>
+                    <div class="flex-1 space-y-1 text-[11px]">
+                        <div class="text-slate-400">모은 데이터: <b id="mlTotal" class="text-fuchsia-300">0</b>개</div>
+                        ${[['mlBarL', '← 좌회전', 'bg-sky-400'], ['mlBarS', '↑ 직진', 'bg-emerald-400'], ['mlBarR', '→ 우회전', 'bg-amber-400']].map(([i, t, c]) => `<div><div class="flex justify-between text-slate-400"><span>${t}</span><b id="${i}n" class="text-slate-200">0</b></div><div class="h-1.5 rounded bg-slate-800 overflow-hidden"><div id="${i}" class="h-full ${c}" style="width:0%"></div></div></div>`).join('')}
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-1.5 text-[11px] font-bold">
+                    <button id="mlBtnRec" onclick="mlToggleRec()" class="py-2 rounded-lg bg-rose-600/80 hover:bg-rose-500 text-white">● 내가 운전하며 수집</button>
+                    <button id="mlBtnTeacher" onclick="mlToggleTeacher()" class="py-2 rounded-lg bg-indigo-600/80 hover:bg-indigo-500 text-white">🧑‍🏫 선생님 시범 수집</button>
+                </div>
+                <div class="flex items-center justify-between text-[11px]">
+                    <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer"><input id="mlAug" type="checkbox" class="accent-fuchsia-400" ${ML.aug ? 'checked' : ''} onchange="ML.aug=this.checked; this.blur()"> 🔄 좌우 뒤집어 데이터 늘리기</label>
+                    <button onclick="mlClear()" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">🗑 지우기</button>
+                </div>
+                <button id="mlBtnTrain" onclick="mlStartTraining()" class="w-full py-2 rounded-lg bg-fuchsia-600 hover:bg-fuchsia-500 text-white text-xs font-black">🧠 AI 학습시키기</button>
+                <div class="rounded-xl bg-slate-950/60 border border-slate-700 p-2">
+                    <canvas id="mlLoss" width="300" height="80" class="w-full"></canvas>
+                    <div id="mlStatus" class="text-[11px] text-slate-300 mt-1">데이터를 모은 뒤 학습시켜 보세요.</div>
+                </div>
+                <button id="mlBtnAI" onclick="mlToggleAI()" class="w-full py-2 rounded-lg bg-emerald-600/40 text-emerald-100/60 text-xs font-black border border-emerald-500/30">🚗 AI 자율주행 시작 (학습 후)</button>`;
+            if (id === 'slam') return `
+                <div class="rounded-xl bg-slate-950/60 border border-slate-700 p-2">
+                    <canvas id="slamCanvas" width="300" height="300" class="w-full rounded-lg" style="image-rendering:pixelated"></canvas>
+                    <div class="flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] text-slate-400 mt-1">
+                        <span><span class="inline-block w-2 h-2 rounded-full bg-sky-400"></span> 진짜 위치</span>
+                        <span><span class="inline-block w-2 h-2 rounded-full bg-rose-400"></span> 로봇이 믿는 위치</span>
+                        <span><span class="inline-block w-2 h-2 rounded-sm bg-cyan-200"></span> 벽·물체</span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-1.5 text-center text-[11px]">
+                    <div class="rounded-lg bg-slate-800/80 border border-slate-700 py-1.5"><div class="text-slate-400">위치 오차</div><div id="slamErr" class="text-base font-black text-rose-300">0cm</div></div>
+                    <div class="rounded-lg bg-slate-800/80 border border-slate-700 py-1.5"><div class="text-slate-400">지도 완성</div><div id="slamArea" class="text-base font-black text-emerald-300">0%</div></div>
+                    <div class="rounded-lg bg-slate-800/80 border border-slate-700 py-1.5"><div class="text-slate-400">이동 거리</div><div id="slamDist" class="text-base font-black text-sky-300">0cm</div></div>
+                </div>
+                <label class="flex items-center gap-2 text-xs text-slate-200 cursor-pointer"><input id="slamAuto" type="checkbox" class="accent-emerald-400" ${autopilot === exploreAutopilot ? 'checked' : ''} onchange="sensorToggleExplore(this.checked); this.blur()"> 🤖 자동으로 탐험하며 지도 그리기</label>
+                <label class="flex items-center gap-2 text-xs text-slate-200 cursor-pointer"><input id="slamDrift" type="checkbox" class="accent-emerald-400" ${SLAM.drift ? 'checked' : ''} onchange="SLAM.drift=this.checked; this.blur()"> 🛞 바퀴 미끄러짐 오차 켜기</label>
+                <label class="flex items-center gap-2 text-xs text-slate-200 cursor-pointer"><input id="slamMatch" type="checkbox" class="accent-emerald-400" ${SLAM.match ? 'checked' : ''} onchange="SLAM.match=this.checked; this.blur()"> 🧭 SLAM 보정 (스캔 매칭) 켜기</label>
+                <button onclick="slamClearMap()" class="w-full py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700">🗑 지도 지우고 다시 시작</button>`;
+            return '';
+        }
+
+        function learnBodyHtml(id) {
+            const L = LEARN[id], st = learnState[id];
+            return `
+                <details class="rounded-xl border p-3 ${COLORS[L.color]}" ${st.seen ? '' : 'open'}>
+                    <summary class="text-[11px] font-black cursor-pointer select-none">💡 오늘의 개념 · ${L.title} <span class="font-normal opacity-60">(눌러서 접기/펼치기)</span></summary>
+                    <p class="text-xs text-slate-200 leading-relaxed mt-1.5">${L.concept}</p>
+                </details>
+                <div class="space-y-2">${learnControlsHtml(id)}</div>
+                <div class="rounded-xl bg-slate-800/60 border border-slate-700 p-3">
+                    <div class="text-[11px] font-black text-slate-200 mb-1.5">🎯 미션</div>
+                    <ul class="space-y-1">
+                        ${L.missions.map(([mid, txt]) => `<li id="ms-${id}-${mid}" class="flex gap-1.5 text-xs ${st.m[mid] ? 'text-emerald-300' : 'text-slate-300'}"><span class="ms-box">${st.m[mid] ? '✅' : '⬜'}</span><span>${txt}</span></li>`).join('')}
+                    </ul>
+                </div>
+                <div class="rounded-xl bg-slate-800/60 border border-slate-700 p-3">
+                    <div class="text-[11px] font-black text-slate-200 mb-1.5">❓ 퀴즈</div>
+                    <p class="text-xs text-slate-200 mb-2">${L.quiz.q}</p>
+                    <div class="space-y-1">${L.quiz.options.map((o, i) => `<button onclick="learnAnswer('${id}', ${i})" class="w-full text-left text-xs px-2.5 py-1.5 rounded-lg bg-slate-900/80 hover:bg-slate-700 border border-slate-700 text-slate-200">${i + 1}. ${o}</button>`).join('')}</div>
+                    <div id="quizfb-${id}" class="text-xs mt-2 min-h-[1rem]">${st.quiz ? `<span class="text-emerald-300 font-bold">⭐ 정답!</span> <span class="text-slate-300">${L.quiz.explain}</span>` : ''}</div>
+                </div>`;
+        }
+
+        function learnUpdateTabs() {
+            Object.keys(LEARN).forEach(id => {
+                const b = lg(`learnTab-${id}`);
+                if (!b) return;
+                const on = id === learnModule;
+                b.className = `relative py-1.5 rounded-lg border text-[10px] font-black flex flex-col items-center gap-0.5 ${on ? 'bg-fuchsia-500 text-white border-fuchsia-300' : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'}`;
+                b.querySelector('.tab-star').textContent = learnState[id].quiz ? '⭐' : '';
+            });
+            const p = lg('learnProgress');
+            if (p) p.textContent = learnProgressText();
+        }
+
+        // ---------- 모듈 전환 ----------
+        function learnEnsureTheme(id) {
+            const want = { sensor: ['forest', 'city'], vision: ['forest', 'city'], ml: ['forest'], slam: ['city'] }[id];
+            if (!want.includes(currentTheme)) {
+                changeTheme(want[0]);
+                showSpeech(`이 체험에는 ${want[0] === 'forest' ? '숲' : '도시'} 맵이 좋아서 맵을 바꿨어요!`);
+            }
+        }
+
+        function learnHideHelpers() {
+            if (sensorLines) sensorLines.visible = false;
+            if (mlDots) mlDots.visible = false;
+            if (lidarPoints) lidarPoints.visible = false;
+            const cv = lg('camDetectCanvas');
+            if (cv) cv.getContext('2d').clearRect(0, 0, cv.width, cv.height);
+        }
+
+        function learnSwitch(id) {
+            if (learnModule === id) return;
+            stopAutopilot();
+            brakeAssist.on = false; brakeAssist.active = false;
+            ML.rec = false; ML.teacher = null; ML.training = false;
+            SLAM.active = false;
+            learnHideHelpers();
+            if (camRes !== 0 && id !== 'vision') visSetRes(0, true);
+
+            learnModule = id;
+            lg('zumiCamPanel').style.width = (id === 'vision') ? 'min(30rem, 42vw)' : '';
+            resizeZumiCam();
+            learnEnsureTheme(id);
+            lg('learnBody').innerHTML = learnBodyHtml(id);
+            learnState[id].seen = true;
+            lg('learnBody').scrollTop = 0;
+            learnUpdateTabs();
+
+            if (id === 'sensor') { ensureSensorLines(); sensorLines.visible = true; }
+            if (id === 'vision') { if (!camOn) toggleZumiCam(); }
+            if (id === 'ml') { ensureMlDots(); mlDots.visible = true; placeAtOrigin(); mlRenderLoss(); mlUpdateUI(); }
+            if (id === 'slam') { ensureLidarPoints(); lidarPoints.visible = true; SLAM.active = true; slamReset(); }
+            learnUiT = 1;
+        }
+
+        function learnEnter() {
+            lg('learnPanel').classList.remove('hidden');
+            learnModule = null;
+            learnSwitch('sensor');
+            learnUpdateTabs();
+        }
+        function learnLeave() {
+            if (!lg('learnPanel')) return;
+            stopAutopilot();
+            brakeAssist.on = false;
+            ML.rec = false; ML.teacher = null; ML.training = false;
+            SLAM.active = false;
+            learnHideHelpers();
+            if (camRes !== 0) visSetRes(0, true);
+            lg('learnPanel').classList.add('hidden');
+            lg('zumiCamPanel').style.width = '';
+            resizeZumiCam();
+            learnModule = null;
+        }
+        function learnOnMapChange() {
+            if (mode !== 'learn') return;
+            if (learnModule === 'slam') slamReset();
+            if (learnModule === 'ml') mlAlignToRoad();
+            learnUiT = 1;
+        }
+        function learnToggleCollapse() {
+            const b = lg('learnBody'), t = lg('learnTabs');
+            const hide = !b.classList.contains('hidden');
+            b.classList.toggle('hidden', hide);
+            t.classList.toggle('hidden', hide);
+            lg('learnCollapseBtn').textContent = hide ? '▸' : '▾';
+        }
+
+        function stopAutopilot(msg) {
+            autopilot = null;
+            ML.teacher = null;
+            ML.aiOn = false;
+            exploreTurnDir = 0; exploreBackT = 0; exploreStuck = 0; exploreTime = 0;
+            learnRefreshAutopilotUI();
+            if (msg) showSpeech(msg);
+        }
+        function learnRefreshAutopilotUI() {
+            const on = (autopilot === exploreAutopilot);
+            const cb = lg('sensorExplore'); if (cb) cb.checked = on;
+            const cs = lg('slamAuto'); if (cs) cs.checked = on;
+            mlRefreshButtons();
+        }
+
+        // ============================================================
+        //  1) 센서 인식
+        // ============================================================
+        const SENSOR_ANGLES = [-60, -45, -30, -15, 0, 15, 30, 45, 60].map(d => d * Math.PI / 180);   // +가 왼쪽
+        const SENSOR_MAX = 10;
+        let sensorReadings = SENSOR_ANGLES.map(() => SENSOR_MAX);
+        let sensorLines = null;
+        let exploreTurnDir = 0, exploreBackT = 0, exploreStuck = 0, exploreTime = 0;
+
+        function readFrontSensors() {
+            const p = zumiGroup.position, yaw = zumiGroup.rotation.y;
+            const ox = p.x - Math.sin(yaw) * 1.05, oz = p.z - Math.cos(yaw) * 1.05;
+            for (let i = 0; i < SENSOR_ANGLES.length; i++) {
+                const a = yaw + SENSOR_ANGLES[i];
+                sensorReadings[i] = castRay(ox, oz, -Math.sin(a), -Math.cos(a), SENSOR_MAX).d;
+            }
+            frontMinDist = Math.min(sensorReadings[2], sensorReadings[3], sensorReadings[4], sensorReadings[5], sensorReadings[6]);
+            return { ox, oz, yaw };
+        }
+        function ensureSensorLines() {
+            if (sensorLines) return;
+            const n = SENSOR_ANGLES.length;
+            const geo = new THREE.BufferGeometry();
+            geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 6), 3));
+            geo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(n * 6), 3));
+            sensorLines = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({ vertexColors: true }));
+            sensorLines.frustumCulled = false;
+            sensorLines.visible = false;
+            scene.add(sensorLines);
+        }
+        function updateSensorLines(o) {
+            const pos = sensorLines.geometry.attributes.position, col = sensorLines.geometry.attributes.color;
+            const thr = brakeAssist.thr;
+            for (let i = 0; i < SENSOR_ANGLES.length; i++) {
+                const a = o.yaw + SENSOR_ANGLES[i], d = sensorReadings[i];
+                pos.setXYZ(i * 2, o.ox, 0.74, o.oz);
+                pos.setXYZ(i * 2 + 1, o.ox - Math.sin(a) * d, 0.74, o.oz - Math.cos(a) * d);
+                const c = d < thr ? [1, 0.2, 0.2] : d < thr * 2 ? [1, 0.85, 0.2] : [0.2, 1, 0.5];
+                col.setXYZ(i * 2, c[0], c[1], c[2]); col.setXYZ(i * 2 + 1, c[0], c[1], c[2]);
+            }
+            pos.needsUpdate = true; col.needsUpdate = true;
+        }
+        function sensorSetThr(v) {
+            brakeAssist.thr = parseInt(v, 10) * CM_TO_UNITS;
+            const l = lg('sensorThrLabel'); if (l) l.textContent = `${v} cm`;
+        }
+        function sensorToggleBrake(on) {
+            brakeAssist.on = on;
+            showSpeech(on ? '🛑 긴급제동 AI 켜짐! 앞이 가까우면 스스로 멈춰요.' : '긴급제동 AI 꺼짐. 조심해서 운전하세요!');
+        }
+        function sensorToggleExplore(on) {
+            if (on) { stopAutopilot(); autopilot = exploreAutopilot; showSpeech('🤖 자율 탐험 시작! 센서만 보고 스스로 운전해요. (방향키를 누르면 멈춰요)'); exploreTime = 0; }
+            else stopAutopilot('자율 탐험을 멈췄어요.');
+        }
+        function exploreAutopilot(dt) {
+            const r = sensorReadings, thr = Math.max(brakeAssist.thr, 3);
+            const front = Math.min(r[2], r[3], r[4], r[5], r[6]);
+            const speedK = Math.min(1, 40 / driveSpeedCm);
+            if (blockedNow) exploreStuck += dt; else exploreStuck = Math.max(0, exploreStuck - dt);
+            if (exploreBackT > 0) { exploreBackT -= dt; return { move: -0.6 * speedK, turn: exploreTurnDir || 1 }; }
+            if (exploreStuck > 0.35) {
+                exploreBackT = 0.7; exploreStuck = 0;
+                if (!exploreTurnDir) exploreTurnDir = Math.random() < 0.5 ? 1 : -1;
+                return { move: -0.6 * speedK, turn: exploreTurnDir };
+            }
+            const left = r[5] + r[6] + r[7] + r[8], right = r[0] + r[1] + r[2] + r[3];
+            if (exploreTurnDir !== 0) {
+                if (front > thr + 3) exploreTurnDir = 0;
+                else return { move: 0.12 * speedK, turn: exploreTurnDir };
+            }
+            if (front < thr + 1.5) {
+                exploreTurnDir = left >= right ? 1 : -1;
+                return { move: 0.12 * speedK, turn: exploreTurnDir };
+            }
+            // 옆이 너무 가까우면 살짝 비켜가기
+            let turn = 0;
+            if (Math.min(r[0], r[1]) < thr) turn += 0.6;     // 오른쪽이 가까움 → 왼쪽으로
+            if (Math.min(r[7], r[8]) < thr) turn -= 0.6;
+            return { move: speedK, turn: lclamp(turn, -1, 1) };
+        }
+        function drawRadar() {
+            const c = lg('sensorRadar'); if (!c) return;
+            const g = c.getContext('2d'), W = c.width, H = c.height;
+            g.clearRect(0, 0, W, H);
+            const ox = W / 2, oy = H - 10, sc = (H - 22) / SENSOR_MAX;
+            g.strokeStyle = 'rgba(148,163,184,0.18)'; g.lineWidth = 1;
+            for (let r = 2; r <= SENSOR_MAX; r += 2) { g.beginPath(); g.arc(ox, oy, r * sc, Math.PI, 2 * Math.PI); g.stroke(); }
+            const thr = brakeAssist.thr, half = 7.5 * Math.PI / 180;
+            SENSOR_ANGLES.forEach((a, i) => {
+                const d = sensorReadings[i];
+                const col = d < thr ? '239,68,68' : d < thr * 2 ? '250,204,21' : '52,211,153';
+                g.fillStyle = `rgba(${col},0.55)`; g.strokeStyle = `rgba(${col},1)`;
+                g.beginPath(); g.moveTo(ox, oy);
+                const a1 = -Math.PI / 2 - a - half, a2 = -Math.PI / 2 - a + half;
+                g.arc(ox, oy, d * sc, a1, a2); g.closePath(); g.fill(); g.stroke();
+            });
+            g.setLineDash([4, 3]); g.strokeStyle = 'rgba(251,191,36,0.9)';
+            g.beginPath(); g.arc(ox, oy, thr * sc, Math.PI, 2 * Math.PI); g.stroke(); g.setLineDash([]);
+            g.fillStyle = '#38bdf8'; g.fillRect(ox - 8, oy - 4, 16, 12);
+        }
+        function sensorUi() {
+            drawRadar();
+            const t = lg('sensorFrontText');
+            if (t) {
+                const cm = Math.round(frontMinDist / CM_TO_UNITS);
+                t.textContent = frontMinDist >= SENSOR_MAX - 0.01 ? '10m 이상 (멀어요)' : `${cm} cm`;
+                t.className = 'font-black ' + (frontMinDist < brakeAssist.thr ? 'text-rose-400' : frontMinDist < brakeAssist.thr * 2 ? 'text-amber-300' : 'text-emerald-300');
+            }
+            const a = lg('sensorBrakeCnt'), b = lg('sensorColCnt');
+            if (a) a.textContent = brakeAssist.triggered;
+            if (b) b.textContent = learnCollisions;
+        }
+        function sensorTick(dt) {
+            const o = readFrontSensors();
+            updateSensorLines(o);
+            if (Math.min(...sensorReadings) <= 4) completeMission('sensor', 'near');
+            if (brakeAssist.triggered > 0) completeMission('sensor', 'brake');
+            if (autopilot === exploreAutopilot) {
+                if (blockedNow) exploreTime = 0; else exploreTime += dt;
+                if (exploreTime >= 10) completeMission('sensor', 'explore');
+            }
+        }
+
+        // ============================================================
+        //  2) AI 비전 (물체 인식)
+        // ============================================================
+        const VIS = { thr: 0.5, truth: false, dets: [], seenWrong: false };
+        const KIND = {
+            tree: ['나무', '🌲'], bush: ['덤불', '🌿'], rock: ['바위', '🪨'], log: ['통나무', '🪵'], pond: ['연못', '💧'],
+            lamp: ['가로등', '💡'], streettree: ['가로수', '🌳'], trafficlight: ['신호등', '🚦'], building: ['건물', '🏢']
+        };
+        const CONFUSE = { tree: 'bush', bush: 'rock', rock: 'bush', log: 'rock', lamp: 'trafficlight', trafficlight: 'lamp', streettree: 'bush' };
+        const RES_FACTOR = { 32: 0.55, 64: 0.8, 128: 0.93, 0: 1 };
+
+        function visSetRes(v, silent) {
+            camRes = v;
+            resizeZumiCam();
+            document.querySelectorAll('[data-res]').forEach(b => {
+                const on = parseInt(b.dataset.res, 10) === v;
+                b.className = `py-1.5 rounded-lg border ${on ? 'bg-sky-500 text-white border-sky-300' : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'}`;
+            });
+            if (!silent && v > 0 && v <= 64) completeMission('vision', 'res');
+            if (!silent) showSpeech(v === 0 ? '원본 해상도예요.' : `AI의 눈이 ${v}×${Math.round(v / 1.6)} 픽셀로 거칠어졌어요! 확신도도 낮아져요.`);
+        }
+        function visSetThr(v) {
+            VIS.thr = parseInt(v, 10) / 100;
+            const l = lg('visThrLabel'); if (l) l.textContent = `${v}%`;
+        }
+
+        function visionUpdate() {
+            if (!camOn || !camRenderer || !zumiCam) return;
+            const cv = lg('camDetectCanvas'), holder = lg('zumiCamView');
+            const W = holder.clientWidth, H = holder.clientHeight;
+            if (!W || !H) return;
+            if (cv.width !== W || cv.height !== H) { cv.width = W; cv.height = H; }
+            const g = cv.getContext('2d');
+            g.clearRect(0, 0, W, H);
+
+            const camPos = new THREE.Vector3(); zumiCam.getWorldPosition(camPos);
+            const mInv = zumiCam.matrixWorldInverse;
+            const now = performance.now() / 1000;
+            const resF = RES_FACTOR[camRes] !== undefined ? RES_FACTOR[camRes] : 1;
+            const shown = [], hidden = [];
+            const v = new THREE.Vector3(), cs = new THREE.Vector3();
+
+            obstacles.forEach((o, id) => {
+                if (o.det === false || !o.kind) return;
+                const dxw = o.x - camPos.x, dzw = o.z - camPos.z, dist = Math.hypot(dxw, dzw);
+                if (dist > 28 || dist < 0.5) return;
+                const hx = o.type === 'b' ? o.hw : o.bw, hz = o.type === 'b' ? o.hd : o.bw, hgt = o.bh;
+                let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity, ok = true;
+                for (const sx of [-1, 1]) for (const sz of [-1, 1]) for (const yy of [0, hgt]) {
+                    v.set(o.x + sx * hx, yy, o.z + sz * hz);
+                    cs.copy(v).applyMatrix4(mInv);
+                    if (cs.z > -0.25) { ok = false; }
+                    v.project(zumiCam);
+                    minX = Math.min(minX, v.x); maxX = Math.max(maxX, v.x); minY = Math.min(minY, v.y); maxY = Math.max(maxY, v.y);
+                }
+                if (!ok) return;
+                if (maxX < -1 || minX > 1 || maxY < -1 || minY > 1) return;
+                const full = (maxX - minX) * (maxY - minY);
+                const cx0 = Math.max(minX, -1), cx1 = Math.min(maxX, 1), cy0 = Math.max(minY, -1), cy1 = Math.min(maxY, 1);
+                const clipFrac = full > 0 ? ((cx1 - cx0) * (cy1 - cy0)) / full : 0;
+                if (clipFrac < 0.35) return;
+                // 가려졌는지 확인
+                const r = castRay(camPos.x, camPos.z, dxw / dist, dzw / dist, dist);
+                if (r.o && r.o !== 'wall' && r.o !== o && r.d < dist - (hx + 0.6)) return;
+
+                const hFrac = (maxY - minY) / 2, wFrac = (maxX - minX) / 2;
+                const size = Math.max(hFrac, wFrac * 0.6);
+                const cx = (minX + maxX) / 2;
+                let conf = 0.30 + 0.62 * Math.pow(lclamp(size * 2.2, 0, 1), 0.6);
+                conf -= 0.12 * cx * cx;
+                conf += 0.05 * (lhash(id + Math.floor(now * 2.5)) * 2 - 1);
+                conf *= resF * (0.6 + 0.4 * clipFrac);
+                conf = lclamp(conf, 0.15, 0.99);
+                let kind = o.kind, wrong = false;
+                if (CONFUSE[o.kind] && lhash(id * 7.3) > 0.4 && conf < 0.66) { kind = CONFUSE[o.kind]; wrong = true; }
+                const det = { id, kind, truth: o.kind, wrong, conf, dist,
+                    x0: (cx0 + 1) / 2 * W, x1: (cx1 + 1) / 2 * W, y0: (1 - cy1) / 2 * H, y1: (1 - cy0) / 2 * H };
+                (conf >= VIS.thr ? shown : hidden).push(det);
+            });
+
+            shown.sort((a, b) => b.conf - a.conf);
+            const placed = [];
+            shown.forEach(d => {
+                const col = d.conf >= 0.8 ? '#4ade80' : d.conf >= 0.6 ? '#facc15' : '#fb923c';
+                g.lineWidth = 2; g.strokeStyle = col;
+                g.strokeRect(d.x0, d.y0, d.x1 - d.x0, d.y1 - d.y0);
+                let label = `${KIND[d.kind][1]} ${KIND[d.kind][0]} ${Math.round(d.conf * 100)}%`;
+                if (VIS.truth) label += d.wrong ? ` ✗${KIND[d.truth][0]}` : ' ✓';
+                g.font = 'bold 11px sans-serif';
+                const tw = g.measureText(label).width + 8;
+                const tx = lclamp(d.x0, 0, Math.max(0, W - tw));
+                let ty = d.y0 > 18 ? d.y0 - 17 : d.y0 + 1;
+                for (let k = 0; k < 8; k++) {
+                    if (placed.some(r => tx < r.x + r.w && tx + tw > r.x && ty < r.y + 16 && ty + 16 > r.y)) ty += 17; else break;
+                }
+                placed.push({ x: tx, y: ty, w: tw });
+                g.fillStyle = (VIS.truth && d.wrong) ? '#dc2626' : col;
+                g.fillRect(tx, ty, tw, 16);
+                g.fillStyle = (VIS.truth && d.wrong) ? '#fff' : '#0f172a';
+                g.fillText(label, tx + 4, ty + 12);
+            });
+            VIS.dets = shown;
+            VIS.hiddenCount = hidden.length;
+
+            if (shown.some(d => d.conf >= 0.9 && !d.wrong)) completeMission('vision', 'conf');
+            if (VIS.truth && shown.some(d => d.wrong)) completeMission('vision', 'wrong');
+        }
+        function visUi() {
+            const l = lg('visList'); if (!l) return;
+            const top = VIS.dets.slice(0, 6);
+            l.innerHTML = top.length ? top.map(d => `<div class="flex justify-between"><span>${KIND[d.kind][1]} ${KIND[d.kind][0]}${VIS.truth && d.wrong ? ` <span class="text-rose-400">✗ ${KIND[d.truth][0]}</span>` : ''}</span><b class="${d.conf >= 0.8 ? 'text-emerald-300' : d.conf >= 0.6 ? 'text-amber-300' : 'text-orange-400'}">${Math.round(d.conf * 100)}%</b></div>`).join('') : '<span class="text-slate-500">카메라 앞으로 물체가 들어오면 알려줄게요.</span>';
+            const h = lg('visHidden');
+            if (h) h.textContent = VIS.hiddenCount ? `확신도가 낮아서 말하지 않은 물체: ${VIS.hiddenCount}개` : '';
+        }
+
+        // ============================================================
+        //  3) 머신러닝 (데이터로 배우는 자율주행)
+        // ============================================================
+        const ML_ROWS = [1.8, 3.6, 5.4];          // 로봇 앞쪽 거리
+        const ML_COLS = [3, 1.5, 0, -1.5, -3];    // 왼쪽(+) → 오른쪽(-)
+        const ML_IN = 15, ML_H = 12, ML_OUT = 3;
+        const ML = {
+            rec: false, X: [], Y: [], counts: [0, 0, 0], aug: false,
+            model: null, training: false, epoch: 0, maxEpoch: 50, losses: [], accs: [], bestAcc: 0,
+            recT: 0, teacher: null, aiOn: false, aiTime: 0, aiLost: 0, aiBlocked: 0, lastF: new Array(15).fill(0),
+            train: null, test: null, order: [], pos: 0, epochLoss: 0, epochN: 0, status: ''
+        };
+        let mlDots = null;
+
+        function mlSamplePoints() {
+            const p = zumiGroup.position, yaw = zumiGroup.rotation.y;
+            const fx = -Math.sin(yaw), fz = -Math.cos(yaw), lx = -Math.cos(yaw), lz = Math.sin(yaw);
+            const pts = [];
+            for (let r = 0; r < 3; r++) for (let c = 0; c < 5; c++) {
+                pts.push({ x: p.x + fx * ML_ROWS[r] + lx * ML_COLS[c], z: p.z + fz * ML_ROWS[r] + lz * ML_COLS[c] });
+            }
+            return pts;
+        }
+        function mlFeatures() { return mlSamplePoints().map(q => isOnRoad(q.x, q.z, 0) ? 1 : 0); }
+        function mlMirror(x) {
+            const o = new Array(15);
+            for (let r = 0; r < 3; r++) for (let c = 0; c < 5; c++) o[r * 5 + c] = x[r * 5 + (4 - c)];
+            return o;
+        }
+        function mlPush(f, label) {
+            if (ML.X.length >= 3000) return;
+            ML.X.push(f); ML.Y.push(label); ML.counts[label]++;
+        }
+
+        // ---- 아주 작은 신경망 (15 → 12 → 3) ----
+        function mlNewModel() {
+            const rnd = (s) => lgauss() * s;
+            return {
+                W1: Array.from({ length: ML_H }, () => Array.from({ length: ML_IN }, () => rnd(0.5))), b1: new Array(ML_H).fill(0),
+                W2: Array.from({ length: ML_OUT }, () => Array.from({ length: ML_H }, () => rnd(0.5))), b2: new Array(ML_OUT).fill(0)
+            };
+        }
+        function mlForward(m, x) {
+            const h = new Array(ML_H);
+            for (let j = 0; j < ML_H; j++) { let s = m.b1[j]; const w = m.W1[j]; for (let i = 0; i < ML_IN; i++) s += w[i] * x[i]; h[j] = Math.tanh(s); }
+            const z = new Array(ML_OUT);
+            let mx = -1e9;
+            for (let k = 0; k < ML_OUT; k++) { let s = m.b2[k]; for (let j = 0; j < ML_H; j++) s += m.W2[k][j] * h[j]; z[k] = s; if (s > mx) mx = s; }
+            let sum = 0; const p = z.map(v => { const e = Math.exp(v - mx); sum += e; return e; });
+            return { h, p: p.map(v => v / sum) };
+        }
+        function mlStep(m, batch, lr) {
+            const gW1 = Array.from({ length: ML_H }, () => new Array(ML_IN).fill(0)), gb1 = new Array(ML_H).fill(0);
+            const gW2 = Array.from({ length: ML_OUT }, () => new Array(ML_H).fill(0)), gb2 = new Array(ML_OUT).fill(0);
+            let loss = 0;
+            for (const [x, y] of batch) {
+                const { h, p } = mlForward(m, x);
+                loss += -Math.log(p[y] + 1e-9);
+                const dz2 = p.map((v, k) => v - (k === y ? 1 : 0));
+                const dh = new Array(ML_H).fill(0);
+                for (let k = 0; k < ML_OUT; k++) { gb2[k] += dz2[k]; for (let j = 0; j < ML_H; j++) { gW2[k][j] += dz2[k] * h[j]; dh[j] += m.W2[k][j] * dz2[k]; } }
+                for (let j = 0; j < ML_H; j++) { const dz1 = dh[j] * (1 - h[j] * h[j]); gb1[j] += dz1; for (let i = 0; i < ML_IN; i++) gW1[j][i] += dz1 * x[i]; }
+            }
+            const s = lr / batch.length;
+            for (let k = 0; k < ML_OUT; k++) { m.b2[k] -= s * gb2[k]; for (let j = 0; j < ML_H; j++) m.W2[k][j] -= s * gW2[k][j]; }
+            for (let j = 0; j < ML_H; j++) { m.b1[j] -= s * gb1[j]; for (let i = 0; i < ML_IN; i++) m.W1[j][i] -= s * gW1[j][i]; }
+            return loss / batch.length;
+        }
+        function mlShuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+        function mlBalancedAcc(m, set) {
+            const ok = [0, 0, 0], tot = [0, 0, 0];
+            for (const [x, y] of set) { tot[y]++; const p = mlForward(m, x).p; if (p.indexOf(Math.max(...p)) === y) ok[y]++; }
+            const rs = tot.map((t, k) => t > 0 ? ok[k] / t : null).filter(v => v !== null);
+            return rs.length ? rs.reduce((a, b) => a + b, 0) / rs.length : 0;
+        }
+
+        function mlStartTraining() {
+            if (ML.training) return;
+            const n = ML.X.length;
+            if (n < 30) { showSpeech('데이터가 너무 적어요! 30개 이상 모아 주세요.'); return false; }
+            if (ML.counts.filter(c => c >= 5).length < 2) { showSpeech('한 가지 행동만 있어요! 좌회전·직진·우회전 데이터가 골고루 필요해요.'); return false; }
+            stopAutopilot();
+            ML.rec = false; mlRefreshButtons();
+            const idx = mlShuffle(Array.from({ length: n }, (_, i) => i));
+            const nTest = Math.max(6, Math.floor(n * 0.2));
+            const test = idx.slice(0, nTest).map(i => [ML.X[i], ML.Y[i]]);
+            let train = idx.slice(nTest).map(i => [ML.X[i], ML.Y[i]]);
+            if (ML.aug) train = train.concat(train.map(([x, y]) => [mlMirror(x), 2 - y]));
+            ML.train = train; ML.test = test;
+            ML.model = mlNewModel();
+            ML.training = true; ML.epoch = 0; ML.losses = []; ML.accs = []; ML.order = []; ML.pos = 0; ML.epochLoss = 0; ML.epochN = 0;
+            ML.status = '학습 중... 🧠';
+            return true;
+        }
+        function mlBuildEpoch() {
+            const byClass = [[], [], []];
+            ML.train.forEach(s => byClass[s[1]].push(s));
+            const present = byClass.filter(c => c.length > 0);
+            const target = Math.min(500, Math.max(...present.map(c => c.length)));
+            const list = [];
+            present.forEach(c => { for (let i = 0; i < target; i++) list.push(c[Math.floor(Math.random() * c.length)]); });
+            ML.order = mlShuffle(list); ML.pos = 0; ML.epochLoss = 0; ML.epochN = 0;
+        }
+        function mlTrainTick(budgetMs) {
+            const t0 = performance.now();
+            while (ML.training && performance.now() - t0 < budgetMs) {
+                if (ML.pos >= ML.order.length) {
+                    if (ML.order.length > 0) {
+                        ML.losses.push(ML.epochLoss / Math.max(1, ML.epochN));
+                        ML.accs.push(mlBalancedAcc(ML.model, ML.test));
+                        ML.epoch++;
+                        ML.bestAcc = ML.accs[ML.accs.length - 1];
+                        if (ML.epoch >= ML.maxEpoch) { mlFinishTraining(); break; }
+                    }
+                    mlBuildEpoch();
+                }
+                const batch = ML.order.slice(ML.pos, ML.pos + 16);
+                ML.pos += 16;
+                ML.epochLoss += mlStep(ML.model, batch, 0.25) * batch.length;
+                ML.epochN += batch.length;
+            }
+        }
+        function mlFinishTraining() {
+            ML.training = false;
+            const acc = ML.accs[ML.accs.length - 1] || 0;
+            ML.status = `학습 끝! 정확도 ${Math.round(acc * 100)}% 🎉`;
+            if (acc >= 0.8) completeMission('ml', 'train');
+            else showSpeech('정확도가 아직 낮아요. 데이터를 더 다양하게 모으고 다시 학습해 보세요!');
+            mlRefreshButtons();
+        }
+
+        // 학습 맵에서는 시작할 때 로봇이 길 방향을 바라보게 맞춰요
+        function mlAlignToRoad() {
+            if (!forestRoad || !zumiGroup) return;
+            const pts = forestRoad.pts, n = pts.length - 1;
+            if (!forestRoad.len) { let L = 0; for (let i = 0; i < n; i++) L += Math.hypot(pts[i + 1].x - pts[i].x, pts[i + 1].z - pts[i].z); forestRoad.len = L; }
+            const look = Math.max(3, Math.round(5.5 / (forestRoad.len / n)));
+            const t = pts[look % n], p = zumiGroup.position;
+            zumiGroup.rotation.y = Math.atan2(-(t.x - p.x), -(t.z - p.z));
+        }
+
+        // ---- 선생님(전문가) 시범 주행 ----
+        function mlExpert() {
+            if (!forestRoad) return null;
+            const pts = forestRoad.pts, n = pts.length - 1;
+            if (!forestRoad.len) { let L = 0; for (let i = 0; i < n; i++) L += Math.hypot(pts[i + 1].x - pts[i].x, pts[i + 1].z - pts[i].z); forestRoad.len = L; }
+            const p = zumiGroup.position;
+            let bi = 0, bd = 1e12;
+            for (let i = 0; i < n; i++) { const d = (pts[i].x - p.x) ** 2 + (pts[i].z - p.z) ** 2; if (d < bd) { bd = d; bi = i; } }
+            const look = Math.max(3, Math.round(5.5 / (forestRoad.len / n)));
+            const t = pts[(bi + look) % n];
+            const yaw = zumiGroup.rotation.y;
+            const fx = -Math.sin(yaw), fz = -Math.cos(yaw), lx = -Math.cos(yaw), lz = Math.sin(yaw);
+            const dx = t.x - p.x, dz = t.z - p.z;
+            const err = Math.atan2(dx * lx + dz * lz, dx * fx + dz * fz);
+            return { err, turn: lclamp(err * 2.2, -1, 1) };
+        }
+        function mlTeacherPolicy(dt) {
+            const T = ML.teacher;
+            if (!T) return { move: 0, turn: 0 };
+            const ex = mlExpert();
+            if (!ex) { stopAutopilot('숲 맵의 흙길에서만 시범 주행을 할 수 있어요.'); return { move: 0, turn: 0 }; }
+            T.t += dt; T.rec += dt;
+            if (T.rec >= 1 / 12) {
+                T.rec = 0;
+                mlPush(mlFeatures(), ex.err > 0.1 ? 0 : ex.err < -0.1 ? 2 : 1);
+            }
+            // 가끔 일부러 삐끗해서 → 바로잡는 법도 배우게 함
+            if (T.pert > 0) T.pert -= dt;
+            else { T.next -= dt; if (T.next <= 0) { T.pert = 0.35 + Math.random() * 0.3; T.dir = Math.random() < 0.5 ? -1 : 1; T.next = 2 + Math.random() * 2.5; } }
+            if (blockedNow) T.stuck += dt; else T.stuck = 0;
+            if (T.t > 45 || T.stuck > 1) { stopAutopilot(T.t > 45 ? '🧑‍🏫 시범 주행 끝! 데이터가 모였어요.' : '시범 주행이 막혔어요.'); return { move: 0, turn: 0 }; }
+            return { move: Math.min(1, 40 / driveSpeedCm), turn: T.pert > 0 ? T.dir : ex.turn };
+        }
+        function mlAIPolicy(dt) {
+            if (!ML.model) return { move: 0, turn: 0 };
+            const p = mlForward(ML.model, mlFeatures()).p;
+            const turn = lclamp((p[0] - p[2]) * 1.8, -1, 1);
+            const pos = zumiGroup.position;
+            if (isOnRoad(pos.x, pos.z, 0.4)) { ML.aiTime += dt; ML.aiLost = 0; }
+            else { ML.aiLost += dt; }
+            if (blockedNow) ML.aiBlocked += dt; else ML.aiBlocked = 0;
+            if (ML.aiLost > 1.2) { stopAutopilot('앗! AI가 길을 벗어났어요 😵 데이터를 더 모으거나 다르게 모아 보세요.'); return { move: 0, turn: 0 }; }
+            if (ML.aiBlocked > 0.8) { stopAutopilot('AI가 장애물에 막혔어요.'); return { move: 0, turn: 0 }; }
+            return { move: Math.min(1, 40 / driveSpeedCm), turn };
+        }
+
+        function mlToggleRec() {
+            if (autopilot) stopAutopilot();
+            ML.rec = !ML.rec;
+            showSpeech(ML.rec ? '● 수집 시작! 방향키로 길을 따라 운전하세요. (좌·우 회전도 골고루!)' : '수집을 멈췄어요.');
+            mlRefreshButtons();
+        }
+        function mlToggleTeacher() {
+            if (ML.teacher) { stopAutopilot('시범 주행을 멈췄어요.'); return; }
+            if (!forestRoad) { showSpeech('숲 맵의 흙길에서만 시범 주행을 할 수 있어요.'); return; }
+            stopAutopilot(); ML.rec = false;
+            ML.teacher = { t: 0, rec: 0, pert: 0, dir: 1, next: 2, stuck: 0 };
+            autopilot = mlTeacherPolicy;
+            showSpeech('🧑‍🏫 선생님이 시범 운전을 하며 데이터를 모아요! (약 45초, 방향키를 누르면 멈춰요)');
+            mlRefreshButtons();
+        }
+        function mlClear() {
+            ML.X = []; ML.Y = []; ML.counts = [0, 0, 0]; ML.model = null; ML.losses = []; ML.accs = []; ML.status = '데이터를 모두 지웠어요.';
+            mlRefreshButtons(); mlRenderLoss(); mlUpdateUI();
+        }
+        function mlToggleAI() {
+            if (!ML.model || ML.training) { showSpeech('먼저 AI를 학습시켜 주세요!'); return; }
+            if (ML.aiOn) { stopAutopilot('AI 자율주행을 멈췄어요.'); return; }
+            stopAutopilot(); ML.rec = false;
+            ML.aiOn = true; ML.aiTime = 0; ML.aiLost = 0; ML.aiBlocked = 0;
+            autopilot = mlAIPolicy;
+            showSpeech('🚗 AI 자율주행 시작! 배운 대로 길을 따라가 볼까요?');
+            mlRefreshButtons();
+        }
+        function mlRefreshButtons() {
+            const r = lg('mlBtnRec'), t = lg('mlBtnTeacher'), a = lg('mlBtnAI'), tr = lg('mlBtnTrain');
+            if (r) r.textContent = ML.rec ? '■ 수집 멈추기' : '● 내가 운전하며 수집';
+            if (t) t.textContent = ML.teacher ? '■ 시범 멈추기' : '🧑‍🏫 선생님 시범 수집';
+            if (tr) tr.textContent = ML.training ? '학습 중... 🧠' : '🧠 AI 학습시키기';
+            if (a) {
+                const ready = !!ML.model && !ML.training;
+                a.textContent = ML.aiOn ? '■ AI 자율주행 멈추기' : (ready ? '🚗 AI 자율주행 시작' : '🚗 AI 자율주행 시작 (학습 후)');
+                a.className = `w-full py-2 rounded-lg text-xs font-black border ${ready ? 'bg-emerald-600 hover:bg-emerald-500 text-white border-emerald-300' : 'bg-emerald-600/40 text-emerald-100/60 border-emerald-500/30'}`;
+            }
+        }
+        function ensureMlDots() {
+            if (mlDots) return;
+            const geo = new THREE.CircleGeometry(0.28, 14); geo.rotateX(-Math.PI / 2);
+            mlDots = new THREE.InstancedMesh(geo, new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.85 }), 15);
+            mlDots.frustumCulled = false; mlDots.visible = false;
+            mlDots.setColorAt(0, new THREE.Color(0x22c55e));
+            scene.add(mlDots);
+        }
+        function mlUpdateDots(pts, f) {
+            const d = new THREE.Object3D(), on = new THREE.Color(0x22c55e), off = new THREE.Color(0xef4444);
+            pts.forEach((q, i) => { d.position.set(q.x, 0.08, q.z); d.updateMatrix(); mlDots.setMatrixAt(i, d.matrix); mlDots.setColorAt(i, f[i] ? on : off); });
+            mlDots.instanceMatrix.needsUpdate = true; mlDots.instanceColor.needsUpdate = true;
+        }
+        function mlRenderLoss() {
+            const c = lg('mlLoss'); if (!c) return;
+            const g = c.getContext('2d'), W = c.width, H = c.height;
+            g.clearRect(0, 0, W, H);
+            g.strokeStyle = 'rgba(148,163,184,0.2)'; g.lineWidth = 1;
+            for (let i = 1; i < 4; i++) { g.beginPath(); g.moveTo(0, H * i / 4); g.lineTo(W, H * i / 4); g.stroke(); }
+            const plot = (arr, max, col) => {
+                if (arr.length < 2) return;
+                g.strokeStyle = col; g.lineWidth = 2; g.beginPath();
+                arr.forEach((v, i) => { const x = i / (ML.maxEpoch - 1) * W, y = H - 4 - lclamp(v / max, 0, 1) * (H - 8); i ? g.lineTo(x, y) : g.moveTo(x, y); });
+                g.stroke();
+            };
+            plot(ML.losses, Math.max(1.2, ...ML.losses), '#f472b6');
+            plot(ML.accs, 1, '#34d399');
+            g.font = '10px sans-serif'; g.fillStyle = '#f472b6'; g.fillText('손실(틀린 정도) ↓', 6, 12);
+            g.fillStyle = '#34d399'; g.fillText('정확도 ↑', W - 54, 12);
+        }
+        function mlUpdateUI() {
+            const cells = lg('mlGrid');
+            if (cells) {
+                const f = ML.lastF;
+                for (let r = 2; r >= 0; r--) for (let c = 0; c < 5; c++) {
+                    const el = cells.children[(2 - r) * 5 + c];
+                    if (el) el.className = `w-5 h-5 rounded-sm ${f[r * 5 + c] ? 'bg-emerald-500' : 'bg-rose-600'}`;
+                }
+            }
+            const tot = ML.X.length, mx = Math.max(1, ...ML.counts);
+            const t = lg('mlTotal'); if (t) t.textContent = tot;
+            [['mlBarL', 0], ['mlBarS', 1], ['mlBarR', 2]].forEach(([id, k]) => {
+                const b = lg(id), n = lg(id + 'n');
+                if (b) b.style.width = (ML.counts[k] / mx * 100) + '%';
+                if (n) n.textContent = ML.counts[k];
+            });
+            const s = lg('mlStatus');
+            if (s) {
+                if (ML.training) s.textContent = `학습 중... ${ML.epoch}/${ML.maxEpoch} 번째 · 손실 ${(ML.losses[ML.losses.length - 1] || 0).toFixed(3)} · 정확도 ${Math.round((ML.accs[ML.accs.length - 1] || 0) * 100)}%`;
+                else if (ML.aiOn) s.textContent = `🚗 자율주행 중 · 길 위에서 ${ML.aiTime.toFixed(0)}초`;
+                else if (ML.teacher) s.textContent = `🧑‍🏫 시범 주행 중 · ${ML.teacher.t.toFixed(0)}초`;
+                else if (ML.rec) s.textContent = '● 데이터 수집 중... 길을 따라 운전해 보세요!';
+                else s.textContent = ML.status || '데이터를 모은 뒤 학습시켜 보세요.';
+            }
+            mlRenderLoss();
+        }
+        function mlTick(dt) {
+            const pts = mlSamplePoints(), f = pts.map(q => isOnRoad(q.x, q.z, 0) ? 1 : 0);
+            ML.lastF = f;
+            if (mlDots) mlUpdateDots(pts, f);
+
+            if (ML.rec && !autopilot && Math.abs(driveVel) > 0.6) {
+                ML.recT += dt;
+                if (ML.recT >= 1 / 12) {
+                    ML.recT = 0;
+                    const l = keys.has('left'), r = keys.has('right');
+                    mlPush(f, l && !r ? 0 : r && !l ? 2 : 1);
+                }
+            }
+            if (ML.training) { mlTrainTick(7); if (!ML.training) { mlRefreshButtons(); } }
+            if (ML.X.length >= 100) completeMission('ml', 'data');
+            if (ML.aiOn && ML.aiTime >= 25) completeMission('ml', 'drive');
+        }
+
+        // ============================================================
+        //  4) SLAM (지도 만들기 + 내 위치 찾기)
+        // ============================================================
+        const SLAM = {
+            cell: 0.5, n: 188, lo: null, est: { x: 0, z: 0, yaw: 0 }, drift: true, match: true, active: false,
+            rays: 72, maxR: 14, ranges: [], hits: [], trailT: [], trailE: [], trailTimer: 0, scanT: 0,
+            travel: 0, err: 0, areaPct: 0, occCount: 0, drawT: 0, off: null
+        };
+        let lidarPoints = null;
+
+        function slamReset() {
+            SLAM.lo = new Float32Array(SLAM.n * SLAM.n);
+            const p = zumiGroup ? zumiGroup.position : { x: 0, z: 0 }, yaw = zumiGroup ? zumiGroup.rotation.y : 0;
+            SLAM.est = { x: p.x, z: p.z, yaw };
+            SLAM.trailT = []; SLAM.trailE = []; SLAM.travel = 0; SLAM.occCount = 0; SLAM.areaPct = 0; SLAM.err = 0;
+        }
+        function slamClearMap() { slamReset(); showSpeech('지도를 지웠어요. 처음부터 다시 그려 볼까요?'); }
+
+        // 바퀴 센서(오도메트리)로 추정한 위치 갱신 — 오차를 켜면 점점 틀어져요
+        function slamOdometry(travel, dyaw) {
+            if (!SLAM.active || !SLAM.lo) return;
+            let dy = dyaw, dl = travel;
+            if (SLAM.drift) {
+                dy = dyaw * 1.05 + travel * 0.008 + lgauss() * 0.003 * Math.sqrt(Math.abs(travel) + 1e-4);
+                dl = travel * 1.02;
+            }
+            const e = SLAM.est;
+            e.yaw += dy;
+            e.x += -Math.sin(e.yaw) * dl;
+            e.z += -Math.cos(e.yaw) * dl;
+            SLAM.travel += Math.abs(travel);
+        }
+        const slamCellIdx = (x, z) => {
+            const ix = Math.floor((x + 47) / SLAM.cell), iz = Math.floor((z + 47) / SLAM.cell);
+            return (ix < 0 || iz < 0 || ix >= SLAM.n || iz >= SLAM.n) ? -1 : iz * SLAM.n + ix;
+        };
+        function slamScore(cx, cz, cyaw) {
+            let s = 0;
+            const dA = 2 * Math.PI / SLAM.rays, n = SLAM.n, lo = SLAM.lo;
+            for (let i = 0; i < SLAM.rays; i++) {
+                if (!SLAM.hits[i]) continue;
+                const a = cyaw + i * dA;
+                const idx = slamCellIdx(cx - Math.sin(a) * SLAM.ranges[i], cz - Math.cos(a) * SLAM.ranges[i]);
+                if (idx < 0) continue;
+                let v = lo[idx] * 0.6, nb = 0;
+                if (idx % n > 0) nb += lo[idx - 1];
+                if (idx % n < n - 1) nb += lo[idx + 1];
+                if (idx >= n) nb += lo[idx - n];
+                if (idx < n * (n - 1)) nb += lo[idx + n];
+                s += lclamp(v + nb * 0.1, -1, 2);
+            }
+            return s;
+        }
+        function slamScan() {
+            const p = zumiGroup.position, yaw = zumiGroup.rotation.y;
+            const R = SLAM.rays, dA = 2 * Math.PI / R;
+            let nHit = 0;
+            for (let i = 0; i < R; i++) {
+                const a = yaw + i * dA;
+                const r = castRay(p.x, p.z, -Math.sin(a), -Math.cos(a), SLAM.maxR);
+                const hit = r.d < SLAM.maxR - 0.01;
+                SLAM.hits[i] = hit;
+                SLAM.ranges[i] = hit ? Math.max(0.1, r.d + lgauss() * 0.04) : SLAM.maxR;
+                if (hit) nHit++;
+            }
+            // 3D 라이다 점
+            if (lidarPoints) {
+                const pos = lidarPoints.geometry.attributes.position;
+                for (let i = 0; i < R; i++) {
+                    const a = yaw + i * dA, d = SLAM.hits[i] ? SLAM.ranges[i] : 0;
+                    pos.setXYZ(i, p.x - Math.sin(a) * d, SLAM.hits[i] ? 0.75 : -50, p.z - Math.cos(a) * d);
+                }
+                pos.needsUpdate = true;
+            }
+            const e = SLAM.est;
+            // 스캔 매칭: 새 스캔을 지금까지 그린 지도에 가장 잘 맞는 위치를 찾아 보정
+            if (SLAM.match && SLAM.occCount >= 30 && nHit >= 10) {
+                const search = (cx, cz, cy, sx, sy) => {
+                    let best = { dx: 0, dz: 0, dy: 0 }, bestS = -1e9;
+                    for (let iy = -2; iy <= 2; iy++) for (let ix = -2; ix <= 2; ix++) for (let iz = -2; iz <= 2; iz++) {
+                        const dx = ix * sx, dz = iz * sx, dy = iy * sy;
+                        const s = slamScore(cx + dx, cz + dz, cy + dy) - 0.15 * (Math.abs(dx) + Math.abs(dz)) - 1.5 * Math.abs(dy);
+                        if (s > bestS) { bestS = s; best = { dx, dz, dy }; }
+                    }
+                    return best;
+                };
+                const b1 = search(e.x, e.z, e.yaw, 0.15, 0.02);                              // 거칠게
+                const b2 = search(e.x + b1.dx, e.z + b1.dz, e.yaw + b1.dy, 0.05, 0.007);   // 정밀하게
+                e.x += b1.dx + b2.dx; e.z += b1.dz + b2.dz; e.yaw += b1.dy + b2.dy;
+            }
+            // 지도 갱신 (추정 위치 기준!)
+            for (let i = 0; i < R; i++) {
+                const a = e.yaw + i * dA, dx = -Math.sin(a), dz = -Math.cos(a), rg = SLAM.ranges[i];
+                for (let d = 0; d < rg - 0.6; d += 0.25) {
+                    const idx = slamCellIdx(e.x + dx * d, e.z + dz * d);
+                    if (idx >= 0) {
+                        const old = SLAM.lo[idx];
+                        SLAM.lo[idx] = Math.max(-4, old - 0.25);
+                        if (old > 0.6 && SLAM.lo[idx] <= 0.6) SLAM.occCount--;
+                    }
+                }
+                if (SLAM.hits[i]) {
+                    const idx = slamCellIdx(e.x + dx * rg, e.z + dz * rg);
+                    if (idx >= 0) {
+                        const old = SLAM.lo[idx];
+                        SLAM.lo[idx] = Math.min(4, old + 0.9);
+                        if (old <= 0.6 && SLAM.lo[idx] > 0.6) SLAM.occCount++;
+                    }
+                }
+            }
+        }
+        function slamTick(dt) {
+            SLAM.scanT += dt;
+            if (SLAM.scanT >= 0.1) { SLAM.scanT = 0; slamScan(); }
+            const p = zumiGroup.position, e = SLAM.est;
+            SLAM.err = Math.hypot(e.x - p.x, e.z - p.z);
+            SLAM.trailTimer += dt;
+            if (SLAM.trailTimer > 0.2) {
+                SLAM.trailTimer = 0;
+                SLAM.trailT.push([p.x, p.z]); SLAM.trailE.push([e.x, e.z]);
+                if (SLAM.trailT.length > 500) { SLAM.trailT.shift(); SLAM.trailE.shift(); }
+            }
+            const errCm = SLAM.err / CM_TO_UNITS;
+            if (SLAM.areaPct >= 10) completeMission('slam', 'area');
+            if (SLAM.drift && !SLAM.match && errCm >= 40) completeMission('slam', 'drift');
+            if (SLAM.drift && SLAM.match && SLAM.travel / CM_TO_UNITS >= 200 && errCm <= 15) completeMission('slam', 'fix');
+        }
+        function ensureLidarPoints() {
+            if (lidarPoints) return;
+            const geo = new THREE.BufferGeometry();
+            geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(SLAM.rays * 3).fill(-50), 3));
+            lidarPoints = new THREE.Points(geo, new THREE.PointsMaterial({ color: 0xff4d6d, size: 0.14 }));
+            lidarPoints.frustumCulled = false; lidarPoints.visible = false;
+            scene.add(lidarPoints);
+        }
+        function slamDraw() {
+            const c = lg('slamCanvas'); if (!c || !SLAM.lo) return;
+            const n = SLAM.n;
+            if (!SLAM.off) { SLAM.off = document.createElement('canvas'); SLAM.off.width = SLAM.off.height = n; }
+            const og = SLAM.off.getContext('2d'), img = og.createImageData(n, n);
+            let known = 0, occ = 0;
+            for (let i = 0; i < n * n; i++) {
+                const v = SLAM.lo[i], o = i * 4;
+                let r = 15, g = 23, b = 42;
+                if (v > 0.6) { r = 165; g = 243; b = 252; occ++; known++; }
+                else if (v < -0.3) { r = 30; g = 64; b = 110; known++; }
+                img.data[o] = r; img.data[o + 1] = g; img.data[o + 2] = b; img.data[o + 3] = 255;
+            }
+            SLAM.areaPct = known / (n * n) * 100;
+            og.putImageData(img, 0, 0);
+            const g = c.getContext('2d'), W = c.width, S = W / 94;
+            g.imageSmoothingEnabled = false;
+            g.drawImage(SLAM.off, 0, 0, W, W);
+            const X = (x) => (x + 47) * S, Z = (z) => (z + 47) * S;
+            const trail = (arr, col) => { if (arr.length < 2) return; g.strokeStyle = col; g.lineWidth = 1.5; g.beginPath(); arr.forEach((q, i) => i ? g.lineTo(X(q[0]), Z(q[1])) : g.moveTo(X(q[0]), Z(q[1]))); g.stroke(); };
+            trail(SLAM.trailT, 'rgba(56,189,248,0.9)');
+            trail(SLAM.trailE, 'rgba(251,113,133,0.9)');
+            const p = zumiGroup.position, yaw = zumiGroup.rotation.y, e = SLAM.est;
+            g.fillStyle = '#38bdf8'; g.beginPath(); g.arc(X(p.x), Z(p.z), 4, 0, 7); g.fill();
+            g.strokeStyle = '#38bdf8'; g.lineWidth = 2; g.beginPath(); g.moveTo(X(p.x), Z(p.z)); g.lineTo(X(p.x - Math.sin(yaw) * 2.5), Z(p.z - Math.cos(yaw) * 2.5)); g.stroke();
+            g.fillStyle = '#fb7185'; g.beginPath(); g.arc(X(e.x), Z(e.z), 4, 0, 7); g.fill();
+            g.strokeStyle = '#fb7185'; g.beginPath(); g.moveTo(X(e.x), Z(e.z)); g.lineTo(X(e.x - Math.sin(e.yaw) * 2.5), Z(e.z - Math.cos(e.yaw) * 2.5)); g.stroke();
+        }
+        function slamUi() {
+            slamDraw();
+            const a = lg('slamErr'), b = lg('slamArea'), d = lg('slamDist');
+            const errCm = SLAM.err / CM_TO_UNITS;
+            if (a) { a.textContent = `${Math.round(errCm)}cm`; a.className = 'text-base font-black ' + (errCm < 15 ? 'text-emerald-300' : errCm < 40 ? 'text-amber-300' : 'text-rose-300'); }
+            if (b) b.textContent = `${SLAM.areaPct.toFixed(0)}%`;
+            if (d) d.textContent = `${Math.round(SLAM.travel / CM_TO_UNITS)}cm`;
+        }
+
+        // ============================================================
+        //  학습 모드 메인 루프
+        // ============================================================
+        function learnUpdate(dt) {
+            if (mode !== 'learn' || !learnModule || !zumiGroup) return;
+            if (blockedNow && !prevBlocked) learnCollisions++;
+            prevBlocked = blockedNow;
+
+            if (autopilot === exploreAutopilot && learnModule !== 'sensor') readFrontSensors();
+            if (learnModule === 'sensor') sensorTick(dt);
+            else if (learnModule === 'ml') mlTick(dt);
+            else if (learnModule === 'slam') slamTick(dt);
+
+            learnUiT += dt;
+            const period = learnModule === 'slam' ? 0.2 : 0.12;
+            if (learnUiT >= period) {
+                learnUiT = 0;
+                if (learnModule === 'sensor') sensorUi();
+                else if (learnModule === 'vision') visUi();
+                else if (learnModule === 'ml') mlUpdateUI();
+                else if (learnModule === 'slam') slamUi();
+            }
+        }
+
+
+        // ===== 주미 AI 카메라 (PiP) =====
+        let zumiCam = null, camRenderer = null, camOn = true;
+
+        function initZumiCam() {
+            const holder = document.getElementById('zumiCamView');
+            camRenderer = new THREE.WebGLRenderer({ antialias: true });
+            camRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+            camRenderer.domElement.style.cssText = 'display:block;width:100%;height:100%';
+            holder.appendChild(camRenderer.domElement);
+            resizeZumiCam();
+        }
+
+        function resizeZumiCam() {
+            if (!camRenderer) return;
+            const holder = document.getElementById('zumiCamView');
+            const w = holder.clientWidth, h = holder.clientHeight;
+            if (!w || !h) return;
+            if (camRes > 0) {
+                camRenderer.setPixelRatio(1);
+                camRenderer.setSize(camRes, Math.max(1, Math.round(camRes * h / w)), false);
+                camRenderer.domElement.style.imageRendering = 'pixelated';
+            } else {
+                camRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+                camRenderer.setSize(w, h, false);
+                camRenderer.domElement.style.imageRendering = 'auto';
+            }
+            zumiCam.aspect = w / h;
+            zumiCam.updateProjectionMatrix();
+        }
+
+        function toggleZumiCam() {
+            camOn = !camOn;
+            document.getElementById('zumiCamPanel').classList.toggle('hidden', !camOn);
+            const btn = document.getElementById('btn-cam');
+            const label = document.getElementById('btn-cam-label');
+            if (camOn) {
+                btn.className = 'px-3 py-1.5 rounded-xl bg-sky-600/80 hover:bg-sky-500 text-sky-50 transition font-bold text-xs flex items-center gap-1.5 border border-sky-400/60';
+                label.textContent = '주미 카메라 ON';
+                resizeZumiCam();
+            } else {
+                btn.className = 'px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 transition font-bold text-xs flex items-center gap-1.5 border border-slate-600';
+                label.textContent = '주미 카메라 OFF';
+            }
+        }
+
+        function showCamCard(cardInfo) {
+            document.getElementById('camCardTitle').textContent = cardInfo.title;
+            document.getElementById('camCardIcon').innerHTML = `<i class="fa-solid ${cardInfo.icon}"></i>`;
+            document.getElementById('camCardBody').className = `w-20 h-28 rounded-xl border-2 border-white shadow-xl flex flex-col items-center justify-between p-2 text-white bg-gradient-to-b ${cardInfo.color}`;
+            const p = document.getElementById('camCardPreview');
+            p.classList.remove('opacity-0', 'scale-75');
+            p.classList.add('opacity-100', 'scale-100');
+        }
+        function hideCamCard() {
+            const p = document.getElementById('camCardPreview');
+            p.classList.add('opacity-0', 'scale-75');
+            p.classList.remove('opacity-100', 'scale-100');
+        }
+        function camFlash() {
+            const f = document.getElementById('zumiCamFlash');
+            f.classList.remove('opacity-0'); f.classList.add('opacity-80');
+            setTimeout(() => { f.classList.remove('opacity-80'); f.classList.add('opacity-0'); }, 130);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const nowT = performance.now();
+            const dt = Math.min((nowT - lastFrameTime) / 1000, 0.05);
+            lastFrameTime = nowT;
+            updateDrive(dt);
+            learnUpdate(dt);
+
+            if (zumiGroup) {
+                // 로봇이 움직인 만큼 카메라도 같이 이동
+                const dx = zumiGroup.position.x - lastFollowX;
+                const dz = zumiGroup.position.z - lastFollowZ;
+                if (dx !== 0 || dz !== 0) {
+                    camera.position.x += dx;
+                    camera.position.z += dz;
+                    controls.target.x += dx;
+                    controls.target.z += dz;
+                    lastFollowX = zumiGroup.position.x;
+                    lastFollowZ = zumiGroup.position.z;
+                }
+                // 하늘 / 태양(그림자)도 로봇을 따라다님
+                if (skyDome) skyDome.position.set(zumiGroup.position.x, 0, zumiGroup.position.z);
+                if (sunLight) {
+                    sunLight.position.set(zumiGroup.position.x + 10, 20, zumiGroup.position.z + 15);
+                    sunLight.target.position.set(zumiGroup.position.x, 0, zumiGroup.position.z);
+                }
+            }
+            if (cloudsGroup) cloudsGroup.rotation.y += dt * 0.004;
+
+            controls.update();
+
+            if (!isExecuting && !driveBusy && zumiGroup) {
+                zumiGroup.position.y = Math.sin(Date.now() * 0.004) * 0.012;
+            }
+
+            // 눈 깜빡임
+            if (currentEyeState === 'normal' && nowT > nextBlinkAt) {
+                updateEyeDisplay('blink');
+                setTimeout(() => { if (currentEyeState === 'blink') updateEyeDisplay('normal'); }, 130);
+                nextBlinkAt = nowT + 2500 + Math.random() * 2500;
+            }
+
+            renderer.render(scene, camera);
+
+            // 주미 AI 카메라 화면
+            if (camOn && camRenderer && zumiCam) {
+                camRenderer.render(scene, zumiCam);
+                if (mode === 'learn' && learnModule === 'vision') visionUpdate();
+            }
+        }
+
+        window.onload = () => {
+            initThree();
+            initDriveControls();
+        };
+    </script>
+</body>
+</html>
