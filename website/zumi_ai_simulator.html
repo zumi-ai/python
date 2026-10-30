@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>주미 AI (Zumi AI) 카드코딩 3D 시뮬레이터</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -96,62 +96,110 @@
         .cam-scanlines { background: repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 3px); }
         .cam-vignette { background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.5) 100%); }
         .cam-bracket { position: absolute; width: 16px; height: 16px; border-color: rgba(125, 211, 252, 0.9); }
+
+        /* ===================== 모바일 / 반응형 ===================== */
+        body { height: 100vh; height: 100dvh; overscroll-behavior: none; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; }
+        input, textarea { -webkit-user-select: text; user-select: text; }
+        #canvas-container { touch-action: none; }
+        button { touch-action: manipulation; -webkit-touch-callout: none; }
+        header { padding-top: env(safe-area-inset-top); }
+        footer { padding-bottom: max(0.5rem, env(safe-area-inset-bottom)); }
+        #speechBubble { width: max-content; max-width: 88vw; z-index: 40; }
+        .cam-large { width: min(30rem, 42vw) !important; }
+        .drive-presets button { white-space: nowrap; font-size: 10px; padding-left: 0.1rem; padding-right: 0.1rem; }
+
+        /* 세로 휴대폰: 학습 패널은 아래에서 올라오는 시트, 카메라는 오른쪽 위 작은 창 */
+        @media (max-width: 767px) and (min-height: 521px) {
+            #learnPanel { left: 0.5rem !important; right: 0.5rem !important; top: auto !important; bottom: 0.5rem !important; width: auto !important; max-width: none !important; height: 50% !important; }
+            #learnPanel.collapsed { height: auto !important; }
+            #zumiCamPanel { top: 0.5rem !important; right: 0.5rem !important; transform: none !important; width: 9.5rem !important; }
+            #zumiCamPanel.cam-large { width: 12.5rem !important; }
+            #drivePanel { min-height: 0 !important; }
+            .drive-btn { width: 52px; height: 52px; }
+            #cardPalette .coding-card { width: 6.5rem !important; }
+        }
+
+        /* 가로 휴대폰(높이가 낮은 화면): 조작 버튼을 3D 화면 위에 겹쳐서 화면을 최대한 넓게 */
+        @media (max-height: 520px) {
+            header > div:first-child { padding: 0.25rem 0.5rem !important; }
+            #advancedSequenceRibbon { min-height: 0 !important; padding: 0.25rem 0.5rem !important; }
+            footer { position: fixed; left: 0; right: 0; bottom: 0; z-index: 25; border: 0 !important; background: linear-gradient(to top, rgba(2,6,23,0.9), rgba(2,6,23,0)) !important; padding: 0 0.5rem max(0.25rem, env(safe-area-inset-bottom)); pointer-events: none; box-shadow: none !important; }
+            footer > * { pointer-events: auto; }
+            #cardPalette .coding-card { width: 4.6rem !important; height: 5.2rem !important; padding: 0.35rem !important; }
+            #cardPalette .coding-card .self-center, #cardPalette .coding-card .text-center > div { display: none; }
+            #drivePanel { min-height: 0 !important; max-width: none !important; flex-direction: row-reverse !important; justify-content: flex-start !important; gap: 0.75rem !important; }
+            #drivePanel .flex-1 { max-width: 15rem !important; background: rgba(15,23,42,0.78); padding: 0.4rem 0.6rem; border-radius: 0.75rem; }
+            .drive-presets, .drive-hint { display: none !important; }
+            .drive-btn { width: 46px; height: 46px; }
+            #cardPalette .coding-card span.w-5 { display: none; }
+            #cardPalette .coding-card > div:first-child { justify-content: center; }
+            #cardPalette .coding-card span { white-space: nowrap; }
+            #landingModal > div { padding: 0.75rem !important; }
+            #landingModal .grid { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 0.5rem !important; }
+            #landingModal .group { display: block !important; padding: 0.6rem !important; }
+            #landingModal .group > div:first-child { margin-bottom: 0.35rem !important; width: 2.25rem; height: 2.25rem; font-size: 1rem; }
+            #landingModal h1 { font-size: 1.1rem !important; margin-bottom: 0.4rem !important; }
+            #landingModal .inline-flex, #landingModal .relative.z-10 > p { display: none; }
+            #learnPanel { top: 0.4rem !important; bottom: 0.4rem !important; left: 0.4rem !important; width: 17rem !important; }
+            #zumiCamPanel { right: 0.4rem !important; top: 0.4rem !important; transform: none !important; width: 10rem !important; }
+            #zumiCamPanel.cam-large { width: 18rem !important; }
+        }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 h-screen w-screen overflow-hidden flex flex-col justify-between">
+<body class="bg-slate-950 text-slate-100 w-full overflow-hidden flex flex-col justify-between">
 
     <!-- 1. MODE SELECTION MODAL -->
-    <div id="landingModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-md p-4 transition-opacity duration-300">
-        <div class="bg-slate-900 rounded-3xl max-w-5xl w-full p-8 shadow-2xl border border-slate-700/80 text-center relative overflow-hidden">
+    <div id="landingModal" class="fixed inset-0 z-50 flex overflow-y-auto bg-slate-950/85 backdrop-blur-md p-3 sm:p-4 transition-opacity duration-300">
+        <div class="bg-slate-900 rounded-3xl max-w-5xl w-full p-4 sm:p-8 m-auto shadow-2xl border border-slate-700/80 text-center relative overflow-hidden">
             <div class="absolute -top-12 -left-12 w-44 h-44 bg-sky-500/20 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-12 -right-12 w-44 h-44 bg-indigo-500/20 rounded-full blur-3xl"></div>
 
             <div class="relative z-10">
-                <div class="inline-flex items-center justify-center w-20 h-20 bg-sky-500/10 text-sky-400 rounded-2xl mb-4 border border-sky-500/20 shadow-inner">
-                    <i class="fa-solid fa-robot text-4xl"></i>
+                <div class="inline-flex items-center justify-center w-14 h-14 sm:w-20 sm:h-20 bg-sky-500/10 text-sky-400 rounded-2xl mb-3 sm:mb-4 border border-sky-500/20 shadow-inner">
+                    <i class="fa-solid fa-robot text-3xl sm:text-4xl"></i>
                 </div>
-                <h1 class="text-3xl font-extrabold text-white mb-2">주미 AI (Zumi AI) 시뮬레이터</h1>
-                <p class="text-slate-400 text-sm mb-8 max-w-md mx-auto">카드를 직접 스캔하여 정교한 3D 주미 AI 로봇을 자유롭게 조정해보세요!</p>
+                <h1 class="text-xl sm:text-3xl font-extrabold text-white mb-2">주미 AI (Zumi AI) 시뮬레이터</h1>
+                <p class="text-slate-400 text-xs sm:text-sm mb-4 sm:mb-8 max-w-md mx-auto">카드를 직접 스캔하여 정교한 3D 주미 AI 로봇을 자유롭게 조정해보세요!</p>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <button onclick="selectMode('lab')" class="group p-6 rounded-2xl bg-slate-800/80 hover:bg-sky-600 border border-slate-700 hover:border-sky-400 text-left transition-all duration-300 shadow-lg hover:-translate-y-1">
-                        <div class="w-12 h-12 rounded-xl bg-sky-500 text-white group-hover:bg-white group-hover:text-sky-600 flex items-center justify-center text-xl font-bold mb-3 transition-colors">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+                    <button onclick="selectMode('lab')" class="group flex sm:block items-center gap-3 sm:gap-0 p-3 sm:p-6 rounded-2xl bg-slate-800/80 hover:bg-sky-600 border border-slate-700 hover:border-sky-400 text-left transition-all duration-300 shadow-lg hover:-translate-y-1">
+                        <div class="w-12 h-12 rounded-xl bg-sky-500 text-white group-hover:bg-white group-hover:text-sky-600 flex items-center justify-center text-xl font-bold mb-0 sm:mb-3 flex-shrink-0 transition-colors">
                             <i class="fa-solid fa-bolt"></i>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-1">카드 실험실</h3>
+                        <div class="min-w-0"><h3 class="text-base sm:text-xl font-bold text-white mb-0.5 sm:mb-1">카드 실험실</h3>
                         <p class="text-xs text-slate-400 group-hover:text-sky-100 leading-relaxed">
                             카드를 클릭하면 주미 AI가 카드를 즉시 카메라로 인식하여 바로 실행합니다.
-                        </p>
+                        </p></div>
                     </button>
 
-                    <button onclick="selectMode('advanced')" class="group p-6 rounded-2xl bg-slate-800/80 hover:bg-indigo-600 border border-slate-700 hover:border-indigo-400 text-left transition-all duration-300 shadow-lg hover:-translate-y-1">
-                        <div class="w-12 h-12 rounded-xl bg-indigo-500 text-white group-hover:bg-white group-hover:text-indigo-600 flex items-center justify-center text-xl font-bold mb-3 transition-colors">
+                    <button onclick="selectMode('advanced')" class="group flex sm:block items-center gap-3 sm:gap-0 p-3 sm:p-6 rounded-2xl bg-slate-800/80 hover:bg-indigo-600 border border-slate-700 hover:border-indigo-400 text-left transition-all duration-300 shadow-lg hover:-translate-y-1">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-500 text-white group-hover:bg-white group-hover:text-indigo-600 flex items-center justify-center text-xl font-bold mb-0 sm:mb-3 flex-shrink-0 transition-colors">
                             <i class="fa-solid fa-code"></i>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-1">심화 코딩</h3>
+                        <div class="min-w-0"><h3 class="text-base sm:text-xl font-bold text-white mb-0.5 sm:mb-1">심화 코딩</h3>
                         <p class="text-xs text-slate-400 group-hover:text-indigo-100 leading-relaxed">
                             원하는 값(거리/각도)을 설정하여 타임라인에 순차적으로 코딩을 쌓은 뒤 한 번에 실행합니다.
-                        </p>
+                        </p></div>
                     </button>
 
-                    <button onclick="selectMode('drive')" class="group p-6 rounded-2xl bg-slate-800/80 hover:bg-emerald-600 border border-slate-700 hover:border-emerald-400 text-left transition-all duration-300 shadow-lg hover:-translate-y-1">
-                        <div class="w-12 h-12 rounded-xl bg-emerald-500 text-white group-hover:bg-white group-hover:text-emerald-600 flex items-center justify-center text-xl font-bold mb-3 transition-colors">
+                    <button onclick="selectMode('drive')" class="group flex sm:block items-center gap-3 sm:gap-0 p-3 sm:p-6 rounded-2xl bg-slate-800/80 hover:bg-emerald-600 border border-slate-700 hover:border-emerald-400 text-left transition-all duration-300 shadow-lg hover:-translate-y-1">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-500 text-white group-hover:bg-white group-hover:text-emerald-600 flex items-center justify-center text-xl font-bold mb-0 sm:mb-3 flex-shrink-0 transition-colors">
                             <i class="fa-solid fa-gamepad"></i>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-1">조종 모드</h3>
+                        <div class="min-w-0"><h3 class="text-base sm:text-xl font-bold text-white mb-0.5 sm:mb-1">조종 모드</h3>
                         <p class="text-xs text-slate-400 group-hover:text-emerald-100 leading-relaxed">
                             방향키와 속도 조절로 주미 AI를 직접 운전합니다. 나무·돌·건물은 통과할 수 없어요!
-                        </p>
+                        </p></div>
                     </button>
 
-                    <button onclick="selectMode('learn')" class="group p-6 rounded-2xl bg-slate-800/80 hover:bg-fuchsia-600 border border-slate-700 hover:border-fuchsia-400 text-left transition-all duration-300 shadow-lg hover:-translate-y-1">
-                        <div class="w-12 h-12 rounded-xl bg-fuchsia-500 text-white group-hover:bg-white group-hover:text-fuchsia-600 flex items-center justify-center text-xl font-bold mb-3 transition-colors">
+                    <button onclick="selectMode('learn')" class="group flex sm:block items-center gap-3 sm:gap-0 p-3 sm:p-6 rounded-2xl bg-slate-800/80 hover:bg-fuchsia-600 border border-slate-700 hover:border-fuchsia-400 text-left transition-all duration-300 shadow-lg hover:-translate-y-1">
+                        <div class="w-12 h-12 rounded-xl bg-fuchsia-500 text-white group-hover:bg-white group-hover:text-fuchsia-600 flex items-center justify-center text-xl font-bold mb-0 sm:mb-3 flex-shrink-0 transition-colors">
                             <i class="fa-solid fa-brain"></i>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-1">AI 학습 모드</h3>
+                        <div class="min-w-0"><h3 class="text-base sm:text-xl font-bold text-white mb-0.5 sm:mb-1">AI 학습 모드</h3>
                         <p class="text-xs text-slate-400 group-hover:text-fuchsia-100 leading-relaxed">
                             센서 · 물체 인식 · 머신러닝 · SLAM! 자율주행 AI의 원리를 직접 체험하며 배워요.
-                        </p>
+                        </p></div>
                     </button>
                 </div>
             </div>
@@ -160,14 +208,14 @@
 
     <!-- 2. TOP 2-TIER HEADER BAR -->
     <header class="relative z-20 glass-panel flex flex-col shadow-2xl border-b border-slate-800">
-        <div class="px-6 py-2.5 flex items-center justify-between border-b border-slate-800/80">
+        <div class="px-3 sm:px-6 py-2 sm:py-2.5 flex flex-wrap items-center justify-between gap-x-2 gap-y-1.5 border-b border-slate-800/80">
             <div class="flex items-center gap-3">
                 <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-blue-600 text-white flex items-center justify-center font-black text-lg shadow-md shadow-sky-500/30">
                     <i class="fa-solid fa-robot"></i>
                 </div>
                 <div>
                     <h2 class="font-extrabold text-white text-base leading-tight flex items-center gap-2">
-                        주미 AI 카드코딩
+                        <span class="hidden sm:inline">주미 AI 카드코딩</span>
                         <span id="currentModeBadge" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30">
                             카드 실험실
                         </span>
@@ -176,41 +224,41 @@
             </div>
 
             <!-- Theme & System Buttons -->
-            <div class="flex items-center gap-2">
+            <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
                 <div class="flex bg-slate-900 p-1 rounded-xl text-xs font-semibold gap-1 border border-slate-800">
                     <button onclick="changeTheme('default')" id="btn-theme-default" class="px-3 py-1 rounded-lg bg-sky-500 text-white transition shadow">
-                        <i class="fa-solid fa-border-all mr-1"></i>격자
+                        <i class="fa-solid fa-border-all sm:mr-1"></i><span class="hidden sm:inline">격자</span>
                     </button>
                     <button onclick="changeTheme('city')" id="btn-theme-city" class="px-3 py-1 rounded-lg text-slate-400 hover:text-white transition">
-                        <i class="fa-solid fa-city mr-1"></i>도시
+                        <i class="fa-solid fa-city sm:mr-1"></i><span class="hidden sm:inline">도시</span>
                     </button>
                     <button onclick="changeTheme('forest')" id="btn-theme-forest" class="px-3 py-1 rounded-lg text-slate-400 hover:text-white transition">
-                        <i class="fa-solid fa-tree mr-1"></i>숲
+                        <i class="fa-solid fa-tree sm:mr-1"></i><span class="hidden sm:inline">숲</span>
                     </button>
                 </div>
 
-                <button onclick="toggleZumiCam()" id="btn-cam" class="px-3 py-1.5 rounded-xl bg-sky-600/80 hover:bg-sky-500 text-sky-50 transition font-bold text-xs flex items-center gap-1.5 border border-sky-400/60">
-                    <i class="fa-solid fa-video"></i><span id="btn-cam-label">주미 카메라 ON</span>
+                <button onclick="toggleZumiCam()" id="btn-cam" title="주미 카메라 켜기/끄기" aria-label="주미 카메라" class="px-3 py-1.5 rounded-xl bg-sky-600/80 hover:bg-sky-500 text-sky-50 transition font-bold text-xs flex items-center gap-1.5 border border-sky-400/60">
+                    <i class="fa-solid fa-video"></i><span id="btn-cam-label" class="hidden md:inline">주미 카메라 ON</span>
                 </button>
-                <button onclick="generateRandomRoads()" id="btn-random-road" class="px-3 py-1.5 rounded-xl bg-amber-600/80 hover:bg-amber-500 text-amber-100 transition font-bold text-xs flex items-center gap-1.5 border border-amber-500/50 hidden">
+                <button onclick="generateRandomRoads()" id="btn-random-road" title="랜덤 도로 생성" aria-label="랜덤 도로 생성" class="px-3 py-1.5 rounded-xl bg-amber-600/80 hover:bg-amber-500 text-amber-100 transition font-bold text-xs flex items-center gap-1.5 border border-amber-500/50 hidden">
                     <i class="fa-solid fa-shuffle"></i>
-                    <span>랜덤 도로 생성</span>
+                    <span class="hidden md:inline">랜덤 도로 생성</span>
                 </button>
 
-                <button onclick="resetPosition()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 transition font-bold text-xs flex items-center gap-1.5 border border-slate-700">
+                <button onclick="resetPosition()" title="위치 리셋" aria-label="위치 리셋" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 transition font-bold text-xs flex items-center gap-1.5 border border-slate-700">
                     <i class="fa-solid fa-rotate-left text-sky-400"></i>
-                    <span>위치 리셋</span>
+                    <span class="hidden md:inline">위치 리셋</span>
                 </button>
 
-                <button onclick="openLandingModal()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 transition font-bold text-xs flex items-center gap-1.5 border border-slate-700">
+                <button onclick="openLandingModal()" title="모드 변경" aria-label="모드 변경" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 transition font-bold text-xs flex items-center gap-1.5 border border-slate-700">
                     <i class="fa-solid fa-arrow-right-arrow-left text-indigo-400"></i>
-                    <span>모드 변경</span>
+                    <span class="hidden md:inline">모드 변경</span>
                 </button>
             </div>
         </div>
 
         <!-- Tier 2: Timeline Ribbon -->
-        <div id="advancedSequenceRibbon" class="hidden px-6 py-2.5 bg-slate-950/90 flex items-center gap-4 min-h-[68px]">
+        <div id="advancedSequenceRibbon" class="hidden px-3 sm:px-6 py-2 sm:py-2.5 bg-slate-950/90 flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-4 sm:min-h-[68px]">
             <div class="flex items-center gap-2 flex-shrink-0">
                 <span class="text-xs font-bold text-slate-400 flex items-center gap-1">
                     <i class="fa-solid fa-list-check text-sky-400"></i> 코딩 명령어
@@ -218,13 +266,13 @@
                 <span id="queueCountBadge" class="text-[10px] font-black bg-slate-800 text-sky-300 px-2 py-0.5 rounded-full border border-slate-700">0개</span>
             </div>
 
-            <div class="flex-1 overflow-x-auto py-1 flex items-center gap-2 min-h-[46px]" id="sequenceQueue">
+            <div class="order-last sm:order-none w-full sm:w-auto sm:flex-1 overflow-x-auto py-1 flex items-center gap-2 min-h-[46px]" id="sequenceQueue">
                 <div class="text-slate-500 text-xs font-medium flex items-center gap-2" id="emptySequenceHint">
                     <i class="fa-regular fa-square-plus text-sm"></i> 아래 카드를 클릭하여 순차 코딩 명령어를 생성하세요.
                 </div>
             </div>
 
-            <div class="flex items-center gap-2 flex-shrink-0 border-l border-slate-800 pl-4">
+            <div class="flex items-center gap-2 flex-shrink-0 ml-auto sm:ml-0 sm:border-l border-slate-800 sm:pl-4">
                 <button onclick="clearAllCommands()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-rose-900/50 hover:text-rose-300 text-slate-400 transition font-bold text-xs flex items-center gap-1 border border-slate-700">
                     <i class="fa-solid fa-trash-can"></i> 전체삭제
                 </button>
@@ -236,7 +284,7 @@
     </header>
 
     <!-- 3. 3D CANVAS VIEWPORT -->
-    <main class="relative flex-1 w-full h-full overflow-hidden bg-slate-950">
+    <main class="relative flex-1 min-h-0 w-full h-full overflow-hidden bg-slate-950">
         <div id="canvas-container" class="w-full h-full cursor-grab active:cursor-grabbing"></div>
 
         <div id="speechBubble" class="absolute top-6 left-1/2 -translate-x-1/2 opacity-0 pointer-events-none transition-all duration-300 transform -translate-y-2 z-30">
@@ -263,7 +311,7 @@
                 <button id="learnTab-ml" onclick="learnSwitch('ml')"><i class="fa-solid fa-brain text-sm"></i><span>학습</span><span class="tab-star absolute -top-1 -right-1 text-[10px]"></span></button>
                 <button id="learnTab-slam" onclick="learnSwitch('slam')"><i class="fa-solid fa-map-location-dot text-sm"></i><span>SLAM</span><span class="tab-star absolute -top-1 -right-1 text-[10px]"></span></button>
             </div>
-            <div id="learnBody" class="flex-1 overflow-y-auto p-3 space-y-3"></div>
+            <div id="learnBody" class="flex-1 min-h-0 overflow-y-auto p-3 space-y-3" style="-webkit-overflow-scrolling:touch"></div>
         </div>
 
         <!-- ZUMI CAMERA (PiP) -->
@@ -308,7 +356,7 @@
     </main>
 
     <!-- 4. BOTTOM CARD PALETTE FOOTER -->
-    <footer class="relative z-20 px-6 py-3 glass-panel border-t border-slate-800 flex items-center justify-center shadow-2xl">
+    <footer class="relative z-20 px-3 sm:px-6 py-2 sm:py-3 glass-panel border-t border-slate-800 flex items-center justify-center shadow-2xl">
         <div id="cardPalette" class="flex items-center gap-3 overflow-x-auto pb-1 max-w-full">
             
             <button onclick="handleCardClick('run')" class="coding-card flex-shrink-0 w-28 h-36 bg-gradient-to-b from-emerald-500 to-green-600 rounded-2xl p-2.5 text-white shadow-lg flex flex-col justify-between border-2 border-white/30">
@@ -454,7 +502,7 @@
         </div>
 
         <!-- DRIVE MODE CONTROL PANEL -->
-        <div id="drivePanel" class="hidden w-full max-w-3xl items-center justify-center gap-10 flex" style="min-height:144px">
+        <div id="drivePanel" class="hidden w-full max-w-3xl items-center justify-center gap-4 sm:gap-10 flex" style="min-height:144px">
             <div class="grid grid-cols-3 gap-2" style="touch-action:none">
                 <div></div>
                 <button data-key="up" class="drive-btn" aria-label="전진"><i class="fa-solid fa-chevron-up"></i></button>
@@ -470,12 +518,12 @@
                     <span id="driveSpeedLabel" class="text-xl font-black text-emerald-300">30 cm/s</span>
                 </div>
                 <input id="driveSpeed" type="range" min="10" max="80" step="5" value="30" class="w-full accent-emerald-400 cursor-pointer">
-                <div class="flex justify-between gap-2 mt-2">
+                <div class="drive-presets flex justify-between gap-2 mt-2">
                     <button data-speed="15" class="flex-1 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 border border-slate-700">🐢 느리게</button>
                     <button data-speed="30" class="flex-1 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 border border-slate-700">🚗 보통</button>
                     <button data-speed="60" class="flex-1 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 border border-slate-700">🚀 빠르게</button>
                 </div>
-                <p class="text-[11px] text-slate-400 mt-2 leading-relaxed">
+                <p class="drive-hint hidden md:block text-[11px] text-slate-400 mt-2 leading-relaxed">
                     키보드: <b class="text-slate-200">↑ ↓ ← →</b> 또는 <b class="text-slate-200">W A S D</b><br>
                     나무·돌·건물에 부딪히면 멈춰요 🚧
                 </p>
@@ -561,7 +609,7 @@
 
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(container.clientWidth, container.clientHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, window.matchMedia('(max-width: 767px)').matches ? 1.5 : 2));
             renderer.shadowMap.enabled = true;
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
             container.appendChild(renderer.domElement);
@@ -605,6 +653,8 @@
             initZumiCam();
 
             window.addEventListener('resize', onWindowResize);
+            window.addEventListener('orientationchange', () => setTimeout(onWindowResize, 250));
+            if (window.ResizeObserver) new ResizeObserver(() => onWindowResize()).observe(document.getElementById('canvas-container'));
             animate();
         }
 
@@ -1825,7 +1875,7 @@ function generateRandomRoads() {
                 if (isExecuting || sequenceRunning) pendingDriveReset = true;
                 else placeAtOrigin();
                 learnEnter();
-                showSpeech('AI 학습 모드: 왼쪽 패널에서 체험할 주제를 골라 보세요! 방향키로 운전할 수 있어요.');
+                showSpeech('AI 학습 모드: 패널에서 체험할 주제를 골라 보세요! 방향키로 운전할 수 있어요.');
             }
 
             // 상단/하단 바 높이가 바뀌므로 캔버스 크기 갱신
@@ -2167,9 +2217,16 @@ function generateRandomRoads() {
 
         function onWindowResize() {
             const container = document.getElementById('canvas-container');
-            camera.aspect = container.clientWidth / container.clientHeight;
+            const cw = container.clientWidth, ch = container.clientHeight;
+            if (!cw || !ch) return;
+            camera.aspect = cw / ch;
+            // 휴대폰 세로 화면: 학습 시트가 아래 절반을 가리므로 로봇이 위쪽에 보이게 화면 중심을 위로 옮김
+            const lp = document.getElementById('learnPanel');
+            const sheetOpen = document.body.classList.contains('learn-open') && lp && !lp.classList.contains('collapsed');
+            if (sheetOpen && window.matchMedia('(max-width: 767px) and (min-height: 521px)').matches) camera.setViewOffset(cw, ch, (typeof learnModule !== 'undefined' && learnModule === 'vision' && camOn) ? Math.round(cw * 0.24) : 0, Math.round(ch * 0.22), cw, ch);
+            else camera.clearViewOffset();
             camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setSize(cw, ch);
             if (typeof resizeZumiCam === 'function') resizeZumiCam();
         }
 
@@ -2298,10 +2355,11 @@ function generateRandomRoads() {
 
             document.querySelectorAll('[data-key]').forEach(btn => {
                 const k = btn.dataset.key;
-                btn.addEventListener('pointerdown', (e) => { e.preventDefault(); btn.setPointerCapture && btn.setPointerCapture(e.pointerId); setKey(k, true); });
+                btn.addEventListener('pointerdown', (e) => { e.preventDefault(); try { btn.setPointerCapture(e.pointerId); } catch (err) {} setKey(k, true); });
                 ['pointerup', 'pointercancel', 'pointerleave'].forEach(ev => btn.addEventListener(ev, () => setKey(k, false)));
             });
 
+            document.querySelectorAll('[data-key]').forEach(b => b.addEventListener('contextmenu', (e) => e.preventDefault()));
             const slider = document.getElementById('driveSpeed');
             const label = document.getElementById('driveSpeedLabel');
             const applySpeed = (v) => {
@@ -2383,13 +2441,13 @@ function generateRandomRoads() {
             ml: {
                 title: '머신러닝', short: '학습', icon: 'fa-brain', color: 'fuchsia',
                 concept: '규칙을 사람이 일일이 쓰지 않고, <b>데이터(입력 + 정답 행동)</b>를 보여주면 컴퓨터가 <b>스스로 규칙을 찾는 것</b>이 머신러닝이에요. 주미 AI는 앞쪽 <b>바닥 15칸</b>(길=초록)을 보고 <b>좌회전 / 직진 / 우회전</b>을 배워요. 좋은 데이터가 좋은 AI를 만들어요!',
-                missions: [['data', '운전 데이터를 100개 이상 모으기'], ['train', 'AI를 학습시켜 정확도 80% 넘기기'], ['drive', 'AI 자율주행으로 25초 동안 길 안 벗어나기']],
+                missions: [['data', '운전 데이터를 100개 이상 모으기'], ['train', 'AI를 학습시켜 정확도 50% 넘기기'], ['drive', 'AI 자율주행으로 25초 동안 길 안 벗어나기']],
                 quiz: { q: 'AI가 운전을 더 잘 배우게 하려면?', options: ['좋은 운전 데이터를 다양하게 많이 모은다', '데이터를 모두 지운다', '속도를 최대로 올린다'], answer: 0, explain: '머신러닝은 데이터로 배워요. 데이터가 적거나 엉터리면 AI도 엉터리로 배운답니다. (Garbage in, garbage out!)' }
             },
             slam: {
                 title: 'SLAM 지도 만들기', short: 'SLAM', icon: 'fa-map-location-dot', color: 'emerald',
                 concept: '<b>SLAM</b>은 <b>지도 만들기</b>와 <b>내 위치 찾기</b>를 <b>동시에</b> 하는 기술이에요. 라이다로 주변을 쏘아 지도를 그리지만, 바퀴가 미끄러지면 내 위치 계산이 점점 틀어져 지도가 번져요(<b>드리프트</b>). 새 스캔을 이미 그린 지도와 맞춰 보면(<b>스캔 매칭</b>) 위치를 바로잡을 수 있어요.',
-                missions: [['area', '운전하며 지도를 10% 이상 그리기'], ['drift', '오차를 켜고 위치 오차 40cm 만들어 보기'], ['fix', '지도 지우고 SLAM 보정을 켠 채 200cm 달려 오차 15cm 이하 만들기']],
+                missions: [['area', '운전하며 지도를 10% 이상 그리기'], ['dist', '맵에서 500cm(5m) 이상 달려 보기'], ['fix', '지도 지우고 SLAM 보정을 켠 채 200cm 달려 오차 15cm 이하 만들기']],
                 quiz: { q: 'SLAM은 무엇을 동시에 할까요?', options: ['지도 만들기와 내 위치 알아내기', '사진 찍기와 인쇄하기', '충전과 방전'], answer: 0, explain: 'SLAM = Simultaneous Localization And Mapping. 지도를 그리면서 동시에 내가 지도 어디에 있는지 알아내요.' }
             }
         };
@@ -2571,7 +2629,7 @@ function generateRandomRoads() {
             if (camRes !== 0 && id !== 'vision') visSetRes(0, true);
 
             learnModule = id;
-            lg('zumiCamPanel').style.width = (id === 'vision') ? 'min(30rem, 42vw)' : '';
+            lg('zumiCamPanel').classList.toggle('cam-large', id === 'vision');
             resizeZumiCam();
             learnEnsureTheme(id);
             lg('learnBody').innerHTML = learnBodyHtml(id);
@@ -2584,10 +2642,12 @@ function generateRandomRoads() {
             if (id === 'ml') { ensureMlDots(); mlDots.visible = true; placeAtOrigin(); mlRenderLoss(); mlUpdateUI(); }
             if (id === 'slam') { ensureLidarPoints(); lidarPoints.visible = true; SLAM.active = true; slamReset(); }
             learnUiT = 1;
+            if (typeof onWindowResize === 'function' && renderer) onWindowResize();
         }
 
         function learnEnter() {
             lg('learnPanel').classList.remove('hidden');
+            document.body.classList.add('learn-open');
             learnModule = null;
             learnSwitch('sensor');
             learnUpdateTabs();
@@ -2601,7 +2661,8 @@ function generateRandomRoads() {
             learnHideHelpers();
             if (camRes !== 0) visSetRes(0, true);
             lg('learnPanel').classList.add('hidden');
-            lg('zumiCamPanel').style.width = '';
+            document.body.classList.remove('learn-open');
+            lg('zumiCamPanel').classList.remove('cam-large');
             resizeZumiCam();
             learnModule = null;
         }
@@ -2617,6 +2678,8 @@ function generateRandomRoads() {
             b.classList.toggle('hidden', hide);
             t.classList.toggle('hidden', hide);
             lg('learnCollapseBtn').textContent = hide ? '▸' : '▾';
+            lg('learnPanel').classList.toggle('collapsed', hide);
+            if (typeof onWindowResize === 'function' && renderer) onWindowResize();
         }
 
         function stopAutopilot(msg) {
@@ -2998,7 +3061,7 @@ function generateRandomRoads() {
             ML.training = false;
             const acc = ML.accs[ML.accs.length - 1] || 0;
             ML.status = `학습 끝! 정확도 ${Math.round(acc * 100)}% 🎉`;
-            if (acc >= 0.8) completeMission('ml', 'train');
+            if (acc >= 0.5) completeMission('ml', 'train');
             else showSpeech('정확도가 아직 낮아요. 데이터를 더 다양하게 모으고 다시 학습해 보세요!');
             mlRefreshButtons();
         }
@@ -3178,7 +3241,7 @@ function generateRandomRoads() {
         const SLAM = {
             cell: 0.5, n: 188, lo: null, est: { x: 0, z: 0, yaw: 0 }, drift: true, match: true, active: false,
             rays: 72, maxR: 14, ranges: [], hits: [], trailT: [], trailE: [], trailTimer: 0, scanT: 0,
-            travel: 0, err: 0, areaPct: 0, occCount: 0, drawT: 0, off: null
+            travel: 0, total: 0, err: 0, areaPct: 0, occCount: 0, drawT: 0, off: null
         };
         let lidarPoints = null;
 
@@ -3203,6 +3266,7 @@ function generateRandomRoads() {
             e.x += -Math.sin(e.yaw) * dl;
             e.z += -Math.cos(e.yaw) * dl;
             SLAM.travel += Math.abs(travel);
+            SLAM.total += Math.abs(travel);
         }
         const slamCellIdx = (x, z) => {
             const ix = Math.floor((x + 47) / SLAM.cell), iz = Math.floor((z + 47) / SLAM.cell);
@@ -3296,7 +3360,7 @@ function generateRandomRoads() {
             }
             const errCm = SLAM.err / CM_TO_UNITS;
             if (SLAM.areaPct >= 10) completeMission('slam', 'area');
-            if (SLAM.drift && !SLAM.match && errCm >= 40) completeMission('slam', 'drift');
+            if (SLAM.total / CM_TO_UNITS >= 500) completeMission('slam', 'dist');
             if (SLAM.drift && SLAM.match && SLAM.travel / CM_TO_UNITS >= 200 && errCm <= 15) completeMission('slam', 'fix');
         }
         function ensureLidarPoints() {
@@ -3401,6 +3465,7 @@ function generateRandomRoads() {
 
         function toggleZumiCam() {
             camOn = !camOn;
+            setTimeout(() => { if (typeof onWindowResize === 'function' && renderer) onWindowResize(); }, 0);
             document.getElementById('zumiCamPanel').classList.toggle('hidden', !camOn);
             const btn = document.getElementById('btn-cam');
             const label = document.getElementById('btn-cam-label');
