@@ -1,0 +1,899 @@
+<!doctype html>
+<html lang="ko" data-p="all">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>로보링크 도움말 센터 · FAQ</title>
+<meta name="description" content="주미, 주미 AI, 코드론 EDU, 코드론 미니, 코드론 II, 코드론 프로·라이트 자주 묻는 질문을 한곳에서 검색하세요.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --bg:#F5F9FF; --bg2:#E6F0FF; --card:#FFFFFF; --ink:#14213D; --ink2:#46526E; --ink3:#8792AB;
+  --line:#DCE6F5; --brand:#3F7BFF; --brand2:#40C8FF; --navy:#12255C;
+  --theme:#3F7BFF; --theme2:#40C8FF; --theme-ink:#fff;
+  --warn:#B25E09; --shadow:0 6px 24px rgba(30,60,140,.09); --radius:18px;
+  --tint:color-mix(in srgb,var(--theme) 17%,transparent);
+  --glow:color-mix(in srgb,var(--theme) 24%,transparent);
+  --glow2:color-mix(in srgb,var(--theme2) 30%,transparent);
+  --hair:color-mix(in srgb,var(--theme) 9%,transparent);
+  --pat:radial-gradient(60% 55% at 6% 0%,var(--glow2),transparent 70%),radial-gradient(50% 50% at 96% 10%,var(--glow),transparent 72%);
+}
+:root[data-theme="dark"]{
+  --bg:#0D1322; --bg2:#16203A; --card:#151C30; --ink:#F2F5FC; --ink2:#B8C1D8; --ink3:#7F8AA6;
+  --line:#26314F; --shadow:0 6px 24px rgba(0,0,0,.4);
+  --tint:color-mix(in srgb,var(--theme) 24%,transparent);
+  --glow:color-mix(in srgb,var(--theme) 28%,transparent);
+  --glow2:color-mix(in srgb,var(--theme2) 22%,transparent);
+  --hair:color-mix(in srgb,var(--theme) 14%,transparent);
+}
+
+/* ===== 제품별 테마 컬러 + 배경 패턴 ===== */
+html[data-p="all"]{--theme:#3F7BFF;--theme2:#40C8FF;--theme-ink:#fff}
+/* 코드론 EDU — 로즈 글로우 + 아주 고운 점 */
+html[data-p="edu"]{--theme:#D14666;--theme2:#EE8DA2;--theme-ink:#fff;
+  --pat:radial-gradient(55% 50% at 92% 0%,var(--glow),transparent 70%),radial-gradient(50% 45% at 0% 18%,var(--glow2),transparent 72%),radial-gradient(circle,var(--hair) 1px,transparent 1.5px) 0 0/26px 26px}
+/* 주미 AI — 블루 글로우 + 넓은 회로 그리드 */
+html[data-p="zumiai"]{--theme:#0089DD;--theme2:#58C0FF;--theme-ink:#fff;
+  --pat:radial-gradient(55% 50% at 8% 0%,var(--glow),transparent 70%),radial-gradient(45% 45% at 98% 14%,var(--glow2),transparent 72%),linear-gradient(90deg,var(--hair) 1px,transparent 1px) 0 0/72px 72px,linear-gradient(var(--hair) 1px,transparent 1px) 0 0/72px 72px}
+/* 코드론 미니 — 선샤인 글로우 + 모눈 종이 */
+html[data-p="mini"]{--theme:#FFD100;--theme2:#FFE673;--theme-ink:#3A2B00;
+  --pat:radial-gradient(60% 50% at 50% -5%,var(--glow2),transparent 72%),radial-gradient(40% 40% at 100% 20%,var(--glow),transparent 72%),linear-gradient(var(--hair) 1px,transparent 1px) 0 0/64px 64px,linear-gradient(90deg,var(--hair) 1px,transparent 1px) 0 0/64px 64px}
+/* 주미 — 민트 글로우 + 부드러운 동심원 */
+html[data-p="zumi"]{--theme:#5ABEB6;--theme2:#A4E3DD;--theme-ink:#0C3733;
+  --pat:radial-gradient(55% 50% at 0% 0%,var(--glow2),transparent 70%),repeating-radial-gradient(circle at 96% -8%,transparent 0 52px,var(--hair) 52px 53px)}
+/* 코드론 II — 선셋 글로우 + 넓은 동심원 */
+html[data-p="c2"]{--theme:#ED7D31;--theme2:#F7B27E;--theme-ink:#fff;
+  --pat:radial-gradient(60% 50% at 100% 0%,var(--glow),transparent 70%),radial-gradient(45% 45% at 0% 14%,var(--glow2),transparent 72%),repeating-radial-gradient(circle at 4% -10%,transparent 0 60px,var(--hair) 60px 61px)}
+/* 코드론 프로·라이트 — 실버 글로우 + 헤어라인(브러시드 메탈) */
+html[data-p="pro"]{--theme:#AFABAB;--theme2:#D5D2D2;--theme-ink:#2A2828;
+  --pat:radial-gradient(60% 50% at 50% -6%,var(--glow2),transparent 72%),radial-gradient(40% 40% at 100% 20%,var(--glow),transparent 72%),repeating-linear-gradient(0deg,var(--hair) 0 1px,transparent 1px 8px)}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{margin:0;background:transparent;color:var(--ink);font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+/* 배경 레이어 (테마 컬러 + 패턴) */
+.bgfx{position:fixed;inset:0;z-index:-1;pointer-events:none;background-color:color-mix(in srgb,var(--theme) 9%,var(--bg));transition:background-color .5s ease}
+.bgfx::before{content:"";position:absolute;inset:0;background:var(--pat);-webkit-mask-image:linear-gradient(180deg,#000 0,#000 30%,rgba(0,0,0,.4) 100%);mask-image:linear-gradient(180deg,#000 0,#000 30%,rgba(0,0,0,.4) 100%)}
+.bgfx.swap::before{animation:patin .7s ease}
+@keyframes patin{from{opacity:0}to{opacity:1}}
+
+/* header */
+.top{display:flex;align-items:center;justify-content:space-between;padding:16px 20px}
+.logo{display:flex;align-items:center;gap:14px;text-decoration:none}
+.logo img{height:23px;width:auto;display:block}
+.top-actions{display:flex;gap:8px;align-items:center}
+.pill-btn{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:8px 14px;font-size:14px;font-weight:600;text-decoration:none;display:inline-flex;gap:6px;align-items:center;transition:.15s}
+.pill-btn:hover{border-color:var(--theme)}
+
+/* hero */
+.top{position:relative;z-index:2}
+.hero{position:relative;overflow:hidden;margin-top:-74px;padding-top:74px;background:linear-gradient(180deg,color-mix(in srgb,var(--theme) 13%,transparent),transparent)}
+.hero .star{position:absolute;pointer-events:none;color:var(--theme)}
+.hero .s1{width:300px;right:-40px;top:-60px;opacity:.16;transform:rotate(14deg)}
+.hero .s2{width:130px;left:5%;bottom:20px;opacity:.14;transform:rotate(-12deg)}
+.hero .s3{width:56px;right:19%;bottom:54px;opacity:.28;transform:rotate(8deg)}
+.hero-in{padding:14px 0 34px;position:relative;z-index:1;text-align:center}
+.hero h1{margin:4px 0 10px;font-size:clamp(28px,5vw,44px);line-height:1.2;letter-spacing:-.02em;font-weight:900}
+.hero h1 em{font-style:normal;background:linear-gradient(transparent 60%,color-mix(in srgb,var(--theme) 55%,transparent) 60%);padding:0 5px;transition:background .4s}
+.hero p{margin:0 auto 22px;color:var(--ink2);max-width:560px}
+.search{max-width:680px;margin:0 auto;position:relative}
+.search input{width:100%;padding:18px 118px 18px 54px;font:inherit;font-size:17px;border-radius:999px;border:2px solid transparent;background:var(--card);color:var(--ink);box-shadow:var(--shadow);outline:none;transition:border-color .15s}
+.search input:focus{border-color:var(--theme)}
+.search .ico{position:absolute;left:20px;top:50%;transform:translateY(-50%);font-size:20px;opacity:.7}
+.search .kbd{position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--ink3);border:1px solid var(--line);border-radius:6px;padding:2px 8px;background:var(--bg)}
+.search .clear{position:absolute;right:14px;top:50%;transform:translateY(-50%);border:0;background:var(--bg2);width:34px;height:34px;border-radius:50%;display:none;font-size:16px}
+.search.has .clear{display:block}.search.has .kbd{display:none}
+
+/* 카테고리(자주 찾는 증상) — 검색창 아래 */
+.cats{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:860px;margin:18px auto 0}
+.chip{border:1px solid var(--line);background:color-mix(in srgb,var(--card) 88%,transparent);border-radius:999px;padding:6px 14px;font-size:14px;font-weight:600;color:var(--ink2);transition:.15s}
+.chip:hover{border-color:var(--theme);color:var(--ink);transform:translateY(-1px)}
+.cats .chip[aria-pressed="true"]{background:var(--theme);color:var(--theme-ink);border-color:var(--theme)}
+
+/* products — 7개 한 줄 */
+.section-label{font-size:13px;font-weight:800;color:var(--ink3);letter-spacing:.08em;margin:26px 0 10px}
+.products{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px}
+.pcard{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:12px 6px 10px;text-align:center;position:relative;transition:.18s;display:flex;flex-direction:column;align-items:center;gap:3px}
+.pcard:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+a.pcard{text-decoration:none;color:inherit}
+a.pcard:hover{border-color:var(--c)}
+a.pcard .ct{background:color-mix(in srgb,var(--c) 22%,var(--card));color:var(--ink)}
+.pimg{width:100%;max-width:58px;aspect-ratio:1/1;object-fit:contain;display:flex;align-items:center;justify-content:center;font-size:30px;line-height:1}
+.pcard .nm{font-weight:800;font-size:13.5px;margin-top:3px;line-height:1.25;letter-spacing:-.01em;word-break:keep-all}
+.pcard .sb{font-size:11px;color:var(--ink3);line-height:1.25;word-break:keep-all}
+.pcard .ct{position:absolute;top:6px;right:6px;font-size:10.5px;font-weight:800;background:var(--bg2);color:var(--ink2);border-radius:999px;padding:0 7px;line-height:18px}
+.pcard[aria-pressed="true"]{border-color:var(--c);background:color-mix(in srgb,var(--c) 10%,var(--card));box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 22%,transparent)}
+.pcard[aria-pressed="true"] .ct{background:var(--c);color:var(--cink,#fff)}
+.allstar{width:44px;height:44px;color:var(--brand)}
+
+/* toolbar */
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:22px 0 12px}
+.meta{font-size:14px;color:var(--ink3);display:flex;gap:14px;align-items:center;width:100%;justify-content:space-between}
+.meta button{background:none;border:0;color:var(--ink2);font-weight:700;text-decoration:underline;padding:0;font-size:14px}
+
+/* faq list */
+.list{display:flex;flex-direction:column;gap:10px;padding-bottom:30px}
+.item{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:box-shadow .15s}
+.item[open]{box-shadow:var(--shadow);border-color:color-mix(in srgb,var(--c) 55%,var(--line))}
+.item summary{list-style:none;cursor:pointer;display:flex;gap:12px;align-items:center;padding:16px 18px}
+.item summary::-webkit-details-marker{display:none}
+.badge{flex:none;font-size:12px;font-weight:800;padding:3px 10px 3px 6px;border-radius:999px;background:color-mix(in srgb,var(--c) 16%,transparent);color:var(--ink);border:1px solid color-mix(in srgb,var(--c) 50%,transparent);white-space:nowrap;display:inline-flex;align-items:center;gap:5px}
+.badge .bimg{width:20px;height:20px;object-fit:contain;display:inline-block;font-size:14px;line-height:20px;text-align:center}
+.q{flex:1;font-weight:700;font-size:16.5px;letter-spacing:-.01em;min-width:0}
+.q small{display:block;font-weight:500;color:var(--ink3);font-size:12.5px;margin-top:1px}
+.tag-soon{font-size:11.5px;font-weight:800;color:var(--warn);background:#FFF0DC;border-radius:6px;padding:2px 8px;margin-left:6px;white-space:nowrap}
+:root[data-theme="dark"] .tag-soon{background:#3a2a12}
+.chev{flex:none;transition:transform .2s;color:var(--ink3)}
+.item[open] .chev{transform:rotate(180deg)}
+.ans{padding:2px 22px 22px;color:var(--ink2);font-size:15.5px}
+.ans>*:first-child{margin-top:4px}
+.ans h4{margin:18px 0 6px;color:var(--ink);font-size:15.5px}
+.ans p{margin:8px 0}
+.ans ol,.ans ul{padding-left:22px;margin:8px 0}
+.ans li{margin:5px 0}
+.ans strong{color:var(--ink)}
+.ans a{color:#2563EB;font-weight:600}
+:root[data-theme="dark"] .ans a{color:#8DB1FF}
+.note{background:var(--bg2);border-left:4px solid var(--theme);padding:10px 14px;border-radius:8px;margin:12px 0;color:var(--ink)}
+.warn{background:#FFEFEF;border-left-color:#E5484D}
+:root[data-theme="dark"] .warn{background:#3a1c20}
+.ans table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0;display:block;overflow-x:auto}
+.ans th,.ans td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+.ans th{background:var(--bg2);color:var(--ink);white-space:nowrap}
+.ans code{background:var(--bg2);padding:1px 7px;border-radius:6px;font-size:13.5px;color:var(--ink)}
+.item-foot{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.item-foot button,.item-foot a{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:6px 12px;font-size:13px;font-weight:600;text-decoration:none;color:var(--ink2)}
+.item-foot button:hover,.item-foot a:hover{border-color:var(--theme)}
+mark{background:#FFE27A;color:#2b2200;border-radius:4px;padding:0 2px}
+
+/* empty */
+.empty{text-align:center;padding:50px 20px;background:var(--card);border:2px dashed var(--line);border-radius:var(--radius)}
+.empty .big{font-size:42px}
+.empty h3{margin:8px 0}
+.empty p{color:var(--ink2);margin:6px 0}
+
+/* contact */
+.contact{background:linear-gradient(135deg,#2A54E4,#2FA9F0);color:#fff;border-radius:24px;padding:32px;margin:10px 0 40px;display:grid;grid-template-columns:1.4fr 1fr;gap:20px;align-items:center;position:relative;overflow:hidden}
+.contact::after{content:"";position:absolute;right:-30px;top:-40px;width:200px;height:200px;background:#fff;opacity:.08;clip-path:path("M100 0C108 60 140 92 200 100C140 108 108 140 100 200C92 140 60 108 0 100C60 92 92 60 100 0Z")}
+.contact h2{margin:0 0 6px;font-size:24px}
+.contact p{margin:0;color:#E2EEFF}
+.contact .btns{display:flex;flex-direction:column;gap:10px;position:relative;z-index:1}
+.btn{display:block;text-align:center;text-decoration:none;font-weight:800;border-radius:14px;padding:13px 16px}
+.btn.y{background:#fff;color:#1F4FD8}
+.btn.g{background:rgba(255,255,255,.18);color:#fff}
+footer{border-top:1px solid var(--line);padding:26px 0 50px;color:var(--ink3);font-size:13.5px;text-align:center}
+
+@media(max-width:860px){
+  .products{grid-template-columns:repeat(7,minmax(96px,1fr));overflow-x:auto;scroll-snap-type:x proximity;padding:4px 4px 10px;margin:0 -4px}
+  .pcard{scroll-snap-align:start}
+}
+@media(max-width:700px){
+  .contact{grid-template-columns:1fr;padding:24px}
+  .badge{display:none}
+  .item summary{padding:14px}
+  .logo img{height:20px}
+  .search input{padding-right:60px;font-size:16px}
+}
+</style>
+</head>
+<body>
+<div class="bgfx" id="bgfx" aria-hidden="true"></div>
+
+<header class="wrap top">
+  <a class="logo" href="https://robolink.co.kr" aria-label="로보링크 홈페이지로 이동"><img src="data:image/png;base64,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" alt="ROBOLINK"></a>
+  <div class="top-actions">
+    <a class="pill-btn" href="http://www.robolink.co.kr/web/cate03/as.php" target="_blank" rel="noopener">🛠 AS 신청</a>
+    <a class="pill-btn" href="as-status.html">📦 AS 진행 현황</a>
+    <button class="pill-btn" id="theme" aria-label="다크 모드 전환">🌙</button>
+  </div>
+</header>
+
+<section class="hero">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--theme)"/><stop offset="1" style="stop-color:var(--theme2)"/></linearGradient>
+    <path id="starp" d="M50 0C54 30 70 46 100 50C70 54 54 70 50 100C46 70 30 54 0 50C30 46 46 30 50 0Z"/>
+  </defs></svg>
+  <svg class="star s1" viewBox="0 0 100 100" aria-hidden="true"><use href="#starp" fill="url(#sg)"/></svg>
+  <svg class="star s2" viewBox="0 0 100 100" aria-hidden="true"><use href="#starp" fill="url(#sg)"/></svg>
+  <svg class="star s3" viewBox="0 0 100 100" aria-hidden="true"><use href="#starp" fill="url(#sg)"/></svg>
+  <div class="wrap hero-in">
+    <h1>무엇을 <em>도와드릴까요?</em></h1>
+    <p>증상이나 제품 이름을 입력해 보세요.<br>제품 6종의 자주 묻는 질문을 한 번에 찾아드려요.</p>
+    <div class="search" id="searchBox" role="search">
+      <span class="ico">🔍</span>
+      <input id="q" type="search" autocomplete="off" placeholder="예) 이륙이 안 돼요, 페어링, 한쪽으로 흘러요" aria-label="FAQ 검색">
+      <span class="kbd">/</span>
+      <button class="clear" id="clear" aria-label="검색어 지우기">✕</button>
+    </div>
+    <div class="cats" id="cats" aria-label="증상 카테고리"></div>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="section-label">제품 선택</div>
+  <div class="products" id="products"></div>
+
+  <div class="toolbar">
+    <div class="meta"><span id="count"></span><button id="toggleAll">모두 펼치기</button></div>
+  </div>
+
+  <div class="list" id="list" aria-live="polite"></div>
+
+  <section class="contact">
+    <div>
+      <h2>원하는 답을 찾지 못하셨나요?</h2>
+      <p>증상을 촬영한 사진·영상과 함께 문의해 주시면 더 빠르게 원인을 확인할 수 있어요.<br>전화 02-554-8862 · contact@robolink.co.kr</p>
+    </div>
+    <div class="btns">
+      <a class="btn y" href="http://www.robolink.co.kr/web/cate03/as.php" target="_blank" rel="noopener">기술 및 AS 신청하기</a>
+      <a class="btn g" href="tel:025548862">📞 02-554-8862</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">로보링크 주식회사 · 서울특별시 송파구 삼학사로 83 신화빌딩 5층 · Tel. 02-554-8862 · Fax. 02-554-8860</div>
+</footer>
+
+<script>
+/* ============ 제품 정보 ============ */
+const IMG='https://robolink.co.kr/img/renewal26/';
+const P = {
+  edu:   {name:'코드론 EDU',  sub:'교육용 코딩 드론', color:'#D14666', ink:'#fff',    img:IMG+'cde.png',    em:'🛸'},
+  mini:  {name:'코드론 미니', sub:'코딩 키트',        color:'#FFD100', ink:'#3A2B00', img:IMG+'cdm.png',    em:'🚁'},
+  c2:    {name:'코드론 II',   sub:'Starter · Pro',    color:'#ED7D31', ink:'#fff',    img:IMG+'cd2.png',    em:'🛩️'},
+  pro:   {name:'코드론 프로·라이트', sub:'Pro & Lite', color:'#AFABAB', ink:'#2A2828', img:IMG+'cd1.png',   em:'🕹️'},
+  zumi:  {name:'주미',        sub:'AI 자율주행 카',   color:'#5ABEB6', ink:'#0C3733', img:IMG+'zumi1.png',  em:'🚗'},
+  zumiai:{name:'주미 AI',     sub:'파이썬·AI 교육',   color:'#0089DD', ink:'#fff',    img:IMG+'zumiAI.png', em:'🤖'}
+};
+/* 이미지 로딩 실패 시 이모지로 대체 */
+const pimg=(k,cls)=>`<img class="${cls}" src="${P[k].img}" alt="${P[k].name}" loading="lazy" onerror="this.outerHTML='<span class=&quot;${cls}&quot;>${P[k].em}</span>'">`;
+const AS_URL='http://www.robolink.co.kr/web/cate03/as.php';
+const ZUMI_AI_URL='https://zumi.co.kr/faq';
+const ZUMI_URL='https://spurious-taste-d2d.notion.site/FAQ-22f494983d1c47908972a0b66a7c0c43';
+
+const asLink=`<a href="${AS_URL}" target="_blank" rel="noopener">기술 및 AS 신청</a>`;
+const soon=`<div class="note">이 항목의 상세 답변은 <b>준비 중</b>입니다. 급한 경우 ${asLink} 또는 02-554-8862로 문의해 주세요.</div>`;
+
+const D=[]; // 모든 FAQ
+const add=(p,c,q,a,k='',o={})=>D.push({p,c,q,a,k,soon:!!o.soon,ext:o.ext||null});
+
+/* ============ 코드론 EDU ============ */
+add('edu','연결·전원','코드론 EDU와 조종기의 연결이 자꾸 끊겨요.',`
+<p>조종 중 연결이 갑자기 끊기면 당황스럽지만, 전원 공급 문제나 신호 간섭처럼 미리 예방할 수 있는 원인도 많아요. 순서대로 확인해 주세요.</p>
+<h4>1. 전원 공급 상태 확인</h4>
+<ul>
+<li><b>조종기 배터리:</b> AA 배터리 잔량이 부족하면 연결이 간헐적으로 끊길 수 있어요. 조종기 화면 오른쪽 상단에서 잔량을 확인하고 필요하면 새 배터리로 교체하세요.</li>
+<li><b>USB 전원:</b> USB 케이블로 사용할 때는 포트가 최소 <b>5V / 0.5A</b>를 지원해야 해요. 노트북 배터리가 부족하면 전압이 충분하지 않을 수 있어요. 다른 USB 포트, 벽면 어댑터, 보조 배터리를 써 보거나 노트북을 어댑터에 연결한 채 사용해 보세요.</li>
+</ul>
+<h4>2. 조종기 안테나 올바르게 펼치기</h4>
+<p>안테나를 끝까지 위로 곧게 펼치고 드론 방향을 향하게 해 주세요. 회전시키지 말고 위로 곧게 당겨 고정하면 수신 상태가 가장 좋아요.</p>
+<h4>3. 드론과 조종기 사이 시야 확보</h4>
+<ul>
+<li>벽이나 사람 등 장애물 뒤에서 비행하지 마세요.</li>
+<li>유리, 금속, 물 등 반사성 표면 주변은 피해 주세요.</li>
+<li>신호 간섭이 생기기 쉬운 좁은 공간은 피해 주세요.</li>
+<li>여러 대를 동시에 비행할 때는 드론과 조종기 사이 간격을 충분히 두세요. 가까이 모아두면 간섭이 생겨요.</li>
+</ul>
+<h4>4. 하드웨어 손상 확인</h4>
+<p>안테나 하단 연결 부위의 전선이 느슨하거나 빠지지 않았는지 확인하세요. 안테나를 과도하게 돌리거나 강제로 구부리면 손상되어 통신 거리가 짧아질 수 있어요.</p>
+<h4>5. 명령어 과부하 방지</h4>
+<ul>
+<li>Blockly·Python·수동 조종 모드를 전환하기 전에 드론 연결을 해제하세요.</li>
+<li>코딩 프로그램의 정지 버튼으로 백그라운드 실행 프로그램이 없는지 확인하세요.</li>
+<li>적절한 간격 없이 명령어를 연속 실행하지 마세요.</li>
+</ul>
+<div class="note"><b>그래도 해결되지 않으면</b> ${asLink} 메뉴로 문의하면서 ① 안테나 손상이 의심되면 안테나 사진 ② 끊기는 시점과 구체적인 증상 ③ 문제 상황을 촬영한 영상을 함께 보내주세요.</div>`,
+'연결 끊김 끊겨요 통신 신호 간섭 안테나 disconnected 배터리 usb 5v 시야 rf');
+
+add('edu','연결·전원','코드론 EDU 조종기에는 어떤 배터리를 사용할 수 있나요?',`
+<p>일반형 코드론 EDU 조종기는 <b>AA 배터리 2개</b>를 사용해요.</p>
+<ol>
+<li><b>극성 확인:</b> 배터리와 조종기에 표시된 (+), (-)에 맞춰 넣어 주세요. 반대로 넣으면 조종기가 손상될 수 있어요.</li>
+<li><b>조종기가 평소보다 뜨거울 때:</b> 즉시 배터리를 분리하세요.</li>
+<li><b>전원이 켜지지 않을 때:</b> 올바르게 넣었는데도 켜지지 않으면 ${asLink}로 문의해 주세요.</li>
+<li><b>충전식 배터리:</b> 일회용·충전식 AA 모두 사용할 수 있지만, 일부 충전식 배터리는 전류가 부족해 전원이 꺼지거나 연결이 끊기거나 사용 시간이 짧아질 수 있어요. 전압과 전류가 안정적인 품질 좋은 제품을 권장해요.</li>
+</ol>`,'배터리 aa 건전지 충전식 극성 전원 조종기 뜨거워');
+
+add('edu','연결·전원','코드론 EDU 배터리가 충전되지 않아요.',`
+<p>멀티 충전기에 꽂았는데 LED가 켜지지 않거나, 오래 충전해도 충전되지 않을 때 확인하세요.</p>
+<h4>1. 충전기 전원·연결 확인</h4>
+<ol>
+<li>멀티 충전기에 배터리를 삽입합니다.</li>
+<li>배터리가 아닌 <b>충전기의 USB 케이블</b>을 뺐다가 다시 연결합니다.</li>
+<li>충분한 전력을 주는 USB 포트인지 확인합니다. 배터리 1개는 최소 <b>5V / 1A</b>, 2개는 최소 <b>5V / 2A</b>가 필요해요.</li>
+</ol>
+<p>다시 연결하면 <b>빨간색 LED</b>가 켜져야 해요. 켜지지 않으면 충전기 자체의 문제일 수 있어요.</p>
+<h4>2. 멀티 충전기 작동 확인</h4>
+<ol>
+<li>정상 작동하는 방전된 배터리(잔량 50% 이하)를 준비합니다.</li>
+<li>점검할 충전기의 각 포트에 차례로 꽂고 빨간 LED가 켜지는지 봅니다.</li>
+<li>LED가 꺼져 있어도 60분간 그대로 둔 뒤 드론에 끼워 충전 여부를 확인합니다. 60분 후에도 충전되지 않았다면 해당 포트 문제일 가능성이 높아요.</li>
+</ol>
+<h4>3. 배터리 상태 확인</h4>
+<ol>
+<li>정상 작동하는 다른 멀티 충전기에서 60분 충전합니다. LED가 안 켜지면 USB 케이블을 뺐다 끼워 초기화해 보세요.</li>
+<li>충전 후 드론에 장착해 조종기 또는 Blockly / Python for Robolink에서 잔량을 확인합니다.</li>
+<li>100%에 도달하지 않으면 손상 가능성이 있어요. 가볍게 흔들었을 때 달그락거리는 소리가 나면 내부가 물리적으로 손상된 거예요.</li>
+</ol>
+<div class="note warn"><b>손상된 배터리는 절대 사용하지 말고 안전하게 폐기하세요.</b> 배터리는 소모품이라 수리가 불가능해요. 새 배터리는 로보링크 온라인 샵에서 구매할 수 있어요.</div>`,
+'충전 안됨 안돼요 멀티충전기 led 빨간 배터리 불량 5v 1a 2a 폐기');
+
+add('edu','오류 메시지','코드론 EDU 화면에 표시되는 오류 메시지는 무엇을 의미하나요?',`
+<p>조종기 화면에 드론의 상태와 오류가 표시돼요. 여러 오류가 동시에 발생하면 <b>우선순위가 가장 높은(숫자가 작은)</b> 메시지만 표시돼요.</p>
+<table>
+<tr><th>순위</th><th>메시지</th><th>의미 및 조치</th></tr>
+<tr><td>1</td><td><code>CONTROLLER LOW BATTERY</code></td><td>조종기 배터리가 부족해요. 충전하거나 교체하세요.</td></tr>
+<tr><td>2</td><td><code>DISCONNECTED</code></td><td>드론과 연결이 끊겼어요. 드론 전원, 통신 범위를 확인하고 안테나를 끝까지 펼쳐 시야를 확보하세요.</td></tr>
+<tr><td>3</td><td><code>[MOTION] NO ANSWER</code></td><td>모션 센서 무응답. 드론을 재시작한 뒤 다시 시도하세요.</td></tr>
+<tr><td>4</td><td><code>[MOTION] WRONG VALUE</code></td><td>모션 센서에서 잘못된 데이터가 감지됐어요. 자이로스코프를 재보정하세요.</td></tr>
+<tr><td>5</td><td><code>[MOTION] CALIBRATING - PLACE ON A FLAT SURFACE</code></td><td>보정 중이에요. 드론을 평평한 바닥에 두세요. 계속되면 기술 지원을 요청하세요.</td></tr>
+<tr><td>6</td><td><code>[PRESSURE] NO ANSWER</code></td><td>압력 센서 무응답. 드론을 재시작하세요.</td></tr>
+<tr><td>7</td><td><code>[PRESSURE] WRONG VALUE</code></td><td>압력 센서 데이터 이상. 드론을 재보정하세요.</td></tr>
+<tr><td>8</td><td><code>[RANGE GROUND] NO ANSWER</code></td><td>하단 높이 감지 센서 무응답. 재시작하고 센서에 이물질이 없는지 확인하세요.</td></tr>
+<tr><td>9</td><td><code>[RANGE GROUND] WRONG VALUE</code></td><td>하단 높이 감지 센서 데이터 이상. 주변 장애물을 확인하고 재보정하세요.</td></tr>
+<tr><td>10</td><td><code>[FLOW] NO ANSWER</code></td><td>옵티컬 플로우 센서 무응답. 드론을 재시작하세요.</td></tr>
+<tr><td>11</td><td><code>[FLOW] WRONG VALUE</code></td><td>옵티컬 플로우 센서 데이터 이상. 명암이나 패턴이 뚜렷한 바닥 위에서 비행하세요.</td></tr>
+<tr><td>12</td><td><code>[FLOW] CANNOT RECOGNIZE GROUND IMAGE</code></td><td>지면 이미지를 인식하지 못해요. 무늬나 질감이 있는 바닥 위에서 비행하세요.</td></tr>
+<tr><td>13</td><td><code>CHECK PROPELLERS AND MOTOR</code></td><td>모터나 프로펠러가 원활히 회전하지 못해요. 이물질·장애물을 확인하고 필요하면 부품을 교체하세요.</td></tr>
+<tr><td>14</td><td><code>REPLACE VIBRATION PROPELLER</code></td><td>프로펠러가 과하게 진동하거나 모터가 손상됐을 수 있어요. 프레임 균열, 프로펠러 걸림을 확인하고 필요한 부품을 교체하세요.</td></tr>
+<tr><td>15</td><td><code>DRONE LOW BATTERY</code></td><td>드론 배터리가 부족해요. 비행 전에 충전하세요.</td></tr>
+<tr><td>16</td><td><code>CANNOT FLIP - BATTERY IS UNDER 50%</code></td><td>배터리 50% 미만에서는 플립을 쓸 수 없어요. 충전 후 다시 시도하세요.</td></tr>
+<tr><td>17</td><td><code>CANNOT FLIP - TOO HEAVY</code></td><td>플립하기에 너무 무거워요. 추가로 장착한 물체나 무게를 확인하세요.</td></tr>
+</table>
+<p>확인 후에도 해결되지 않으면 ${asLink}로 문의해 주세요.</p>`,
+'오류 에러 메시지 경고 low battery disconnected motion pressure range ground flow propeller motor flip 센서 화면');
+
+add('edu','시작하기','코드론 EDU를 조종기와 어떻게 페어링하나요?',`
+<p>로보링크 공식 <b>「코드론 EDU 드론과 조종기 페어링 방법」 영상</b>을 참고해 주세요.</p>
+<div class="note">영상 링크는 공식 FAQ 페이지에서 확인할 수 있어요. 문제가 있으면 ${asLink}로 문의해 주세요.</div>`,
+'페어링 연결 조종기 pairing 영상');
+
+[
+['조종기 화면이 나오지 않아요','조종기 화면 안나와 디스플레이','연결·전원'],
+['Mac에서 LINK 모드로 전환할 수 없어요','맥 mac link 모드 전환','연결·전원'],
+['코드론 EDU를 구입한 후 무엇부터 시작해야 하나요?','구입 처음 시작 입문 구매','시작하기'],
+['코드론 EDU는 Wi-Fi의 영향을 받나요?','wifi 와이파이 간섭','연결·전원'],
+['조종기가 LINK 모드로 전환되지 않아요','link 모드 전환 안됨','연결·전원'],
+['조종기의 USB 포트가 헐거우면 어떻게 해야 하나요?','usb 포트 헐거움 단자','연결·전원'],
+['코드론 EDU 사용자 매뉴얼은 어디에서 확인할 수 있나요?','매뉴얼 설명서 사용설명서','시작하기'],
+['배터리를 넣어도 코드론 EDU 조종기의 전원이 켜지지 않아요','전원 안켜짐 안 켜져 조종기 배터리','연결·전원'],
+['코드론 EDU가 조종기와 페어링되지 않고 노란색과 초록색 LED가 깜빡여요','페어링 안됨 노란 초록 led 깜빡','연결·전원'],
+['코드론 EDU 조종기에서 LINK 모드와 FLIGHT 모드를 어떻게 전환하나요?','link flight 모드 전환','시작하기'],
+['코드론 EDU는 어떤 기기 및 프로그램과 호환되나요?','호환 윈도우 맥 태블릿 blockly python','시작하기'],
+['코드론 EDU가 이륙하지 않고 하단 LED가 깜빡여요','이륙 안됨 하단 led 깜빡','비행·센서'],
+['코드론 EDU의 센서는 어떻게 사용하나요? 사용 시 주의 사항이 있나요?','센서 사용법 주의사항','비행·센서'],
+['비행 중에도 컬러 센서를 사용할 수 있나요?','컬러 센서 색상 비행중','비행·센서'],
+['배터리 잔량이 갑자기 변하는 이유는 무엇인가요?','배터리 잔량 갑자기 변함 퍼센트','비행·센서'],
+['코드론 EDU에 카메라가 내장되어 있나요?','카메라 내장 영상','비행·센서'],
+['코드론 EDU 조종기에 ‘모터 정지(Motor Stalling)’ 메시지가 표시되는 이유는 무엇인가요?','모터 정지 motor stalling 메시지','오류 메시지']
+].forEach(([q,k,c])=>add('edu',c,q,soon,k,{soon:true}));
+
+/* ============ 코드론 미니 ============ */
+add('mini','비행 문제','코드론 미니가 한쪽 방향으로 흘러갑니다.',`
+<p>드론의 4개 모터가 똑같은 출력을 내지 않아서 생기는 현상이에요. 모터 출력을 <b>미세조정(트림)</b>해서 균형을 잡아주면 돼요.</p>
+<ol>
+<li>드론을 이륙시킨 뒤, 아무 조작도 하지 않을 때 <b>어느 쪽으로 흘러가는지</b> 확인합니다.</li>
+<li><b>흘러가는 반대 방향</b>의 미세조정 버튼을 눌러 보정합니다.</li>
+</ol>
+<table>
+<tr><th>드론이 흐르는 방향</th><th>조종기에서 누를 버튼</th></tr>
+<tr><td>뒤쪽</td><td>F 버튼 (앞쪽으로 비행하도록 조정)</td></tr>
+<tr><td>앞쪽</td><td>B 버튼 (뒤쪽으로 비행하도록 조정)</td></tr>
+<tr><td>오른쪽</td><td>L 버튼 (왼쪽으로 비행하도록 조정)</td></tr>
+<tr><td>왼쪽</td><td>R 버튼 (오른쪽으로 비행하도록 조정)</td></tr>
+</table>
+<div class="note warn">미세조정을 잘못 사용하면 오히려 비행 성능이 떨어질 수 있어요.</div>`,
+'흘러가요 흐름 쏠림 한쪽 트림 미세조정 밸런스 드리프트 균형');
+
+add('mini','부품·수리','드론의 선이 끊어져 있습니다.',`
+<p>드론 안쪽의 <b>하얀색 케이블은 전파 수신부(안테나)</b>예요. 단선되어 있어도 비행에는 지장이 없으니 안심하세요.</p>`,
+'선 끊어짐 단선 케이블 하얀 안테나 수신부');
+
+add('mini','비행 문제','이륙이 안 됩니다. / 이륙할 때 프로펠러가 돌지 않습니다.',`
+<p>아래 4가지를 확인해 주세요.</p>
+<ol>
+<li><b>가드가 찌그러짐</b> — 가드가 찌그러지면 프로펠러가 가드에 닿아 이륙할 수 없어요. 구부러진 가드를 펴 주세요.</li>
+<li><b>프로펠러가 덜 끼워짐</b> — 해당 프로펠러가 돌지 않아요. 윗부분을 꾹 눌러 끼워 주세요.</li>
+<li><b>모터 소켓이 빠짐</b> — 해당 모터가 돌지 않아요. 빠진 소켓을 방향에 맞춰 다시 끼워 주세요.</li>
+<li><b>이물질</b> — 모터나 프로펠러에 머리카락 같은 이물질이 끼어 회전을 방해하면 제거해 주세요.</li>
+</ol>`,
+'이륙 안됨 안돼요 안떠요 프로펠러 안돌아 가드 찌그러 소켓 이물질 머리카락');
+
+add('mini','부품·수리','컨트롤러의 버튼이 들어가서 눌리지 않습니다.',`
+<p>스위치와 접촉부가 어긋나서 생기는 문제예요. 컨트롤러를 재조립해 주세요.</p>
+<ol>
+<li>버튼이 눌리지 않는 조종기를 준비합니다.</li>
+<li>뒤쪽에 나사 2개가 있어요.</li>
+<li>드라이버로 나사를 풀어 분해합니다.</li>
+<li>분해한 뒤 조립부를 분리합니다.</li>
+<li>버튼이 눌리지 않는 경우는 스위치와 접촉부가 어긋났기 때문이에요. 어긋난 부분을 맞춰 조립합니다.</li>
+<li>반대 과정으로 조립합니다. 조립 중 테스트해서 어긋나 있으면 다시 5번으로 돌아가 맞춰 주세요.</li>
+</ol>`,
+'버튼 안눌려 눌리지 않음 컨트롤러 조종기 분해 재조립 나사 스위치');
+
+add('mini','사용법','드론을 초기화 하는 방법',`
+<p>드론을 페어링한 뒤 <b>수평한 바닥</b>에 둔 상태에서 컨트롤러 좌측의 <b>Reset 버튼</b>을 길게 눌러 주세요. 드론이 깜빡이면서 캘리브레이션과 각종 센서를 초기화해요.</p>`,
+'초기화 리셋 reset 캘리브레이션 센서');
+
+add('mini','사용법','헤드리스 모드가 무엇인가요?',`
+<p>드론이 바라보는 방향이 아니라 <b>사용자가 바라보는 방향</b>을 기준으로 움직이는 모드예요.</p>
+<p>드론을 바닥에 둔 채 가운데의 <b>F와 B 버튼을 길게 눌러</b> 켜고 끌 수 있어요.</p>`,
+'헤드리스 headless 모드 방향 F B');
+
+add('mini','제품 정보','드론의 최대 비행 시간과 충전 시간이 어떻게 되나요?',`
+<table>
+<tr><th>최대 비행 시간</th><td>5분 이내</td></tr>
+<tr><th>충전 시간</th><td>40분 이내 (전용 충전기 사용 시)</td></tr>
+<tr><th>배터리</th><td>3.7V 220mAh 30C</td></tr>
+</table>
+<p>전체 사양은 아래와 같아요.</p>
+<table>
+<tr><th>제품명</th><td>코드론 미니 코딩 키트</td></tr>
+<tr><th>크기 / 무게</th><td>80×80×34 mm / 20g (배터리 포함)</td></tr>
+<tr><th>최대 조종 거리</th><td>80m (RF 통신)</td></tr>
+<tr><th>소음</th><td>평균 42.4 dB (최대 67.0 dB)</td></tr>
+<tr><th>탑재 센서</th><td>3축 자이로 센서, 기압 센서</td></tr>
+<tr><th>조종 모드</th><td>모드 1, 모드 2 (코드론 미니 조종기는 모드 2)</td></tr>
+</table>`,
+'비행시간 충전시간 사양 스펙 배터리 크기 무게 mah 몇분');
+
+add('mini','제품 정보','소음이 심한가요?',`<p>코드론 미니의 소음은 <b>평균 42 dB ~ 최대 67 dB</b>예요. 조용한 대화(40dB)부터 바쁜 사무실(60dB) 정도의 수준이에요.</p>`,
+'소음 시끄러 데시벨 db');
+
+add('mini','제품 정보','최대 통신거리와 무게가 어느 정도 되나요?',`<p>무게는 배터리 포함 <b>20g</b>, 최대 조종 거리는 RF 통신으로 약 <b>80m</b>예요.</p>`,
+'통신거리 조종거리 무게 20g 80m rf');
+
+add('mini','연결·페어링','컨트롤러 페어링 문제 / 잘못 페어링 되었습니다.',`
+<p>프로그램을 내려받아 컨트롤러의 페어링 정보를 초기화해 주세요.</p>
+<ol>
+<li><b>Drone4AutoSetup</b> 프로그램을 실행합니다.</li>
+<li>우측 화살표를 눌러 <code>Controller</code>, <code>Pairing Clear</code>로 설정합니다.</li>
+<li>설정이 끝나면 <b>5핀 케이블</b>로 PC와 컨트롤러를 연결합니다.</li>
+<li>잠시 후 전송이 완료되고 「다른 장치를 연결해달라」는 메시지가 뜨면 페어링 정보가 초기화돼요.</li>
+</ol>
+<p><a href="http://www.robolink.co.kr/web/cate02/product05.dn.php?act=view&encData=aWR4PTEzOTMmc3RhcnQ9MCZza2V5PSZzc3RyPSZjYXRlPQ==" target="_blank" rel="noopener">프로그램 다운로드 페이지 ↗</a></p>`,
+'페어링 잘못 컨트롤러 초기화 pairing clear drone4autosetup 5핀 케이블 연결');
+
+/* ============ 코드론 II ============ */
+add('c2','제품 정보','코드론 I(프로·라이트)과 코드론 II의 차이는 무엇인가요?',`
+<p>코드론 1 시리즈(Pro & Lite)와 코드론 II 시리즈(Starter & Pro)는 크기·모양·스펙에 다양한 차이가 있어요. 주요 사양을 비교하면 다음과 같아요.</p>
+<table>
+<tr><th></th><th>코드론 라이트</th><th>코드론 II 프로</th></tr>
+<tr><td>크기</td><td>133×133×29 mm</td><td>180×190×65 mm</td></tr>
+<tr><td>무게</td><td>35g (배터리 포함)</td><td>평균 150g (센서 별도)</td></tr>
+<tr><td>배터리</td><td>3.7V 300mAh</td><td>7.4V 1000mAh</td></tr>
+<tr><td>최대 비행 시간</td><td>5~8분</td><td>7분 이내</td></tr>
+<tr><td>최대 조종 거리</td><td>20m</td><td>50m</td></tr>
+<tr><td>충전 시간</td><td>40분</td><td>20분 이내 (전용 충전기)</td></tr>
+<tr><td>통신 방식</td><td>블루투스 4.0 LE</td><td>RF, 블루투스, Wi-Fi</td></tr>
+<tr><td>소프트웨어</td><td>iOS 7.0 이상 / 안드로이드 4.4 이상</td><td>Windows 7/8/10, OSX / 안드로이드 4.4 이상</td></tr>
+</table>
+<p><b>코드론 II 사용 가능 SW:</b> 드론 시뮬레이터(PC), 로킷브릭(스크래치 방식), 아두이노, 파이썬 · <b>Starter</b>는 드론 시뮬레이터, 로킷브릭, 드론브릭(스마트폰 App)</p>
+<div class="note">더 자세한 비교표는 공식 FAQ 이미지를 참고해 주세요.</div>`,
+'차이 비교 코드론1 코드론2 프로 라이트 스펙 사양');
+
+add('c2','제품 정보','코드론 II와 허밍버드의 차이점은 무엇인가요?',`
+<table>
+<tr><th></th><th>코드론 II</th><th>허밍버드</th></tr>
+<tr><td>대상 1</td><td>전문지식 대학생, 성인</td><td>드론 입문자, 방과후 강사</td></tr>
+<tr><td>대상 2</td><td>전문 코딩 교육, 대회 미션</td><td>조종 교육, 코딩 기초</td></tr>
+<tr><td>코딩</td><td>시뮬레이터, 로킷브릭, 아두이노, 파이썬</td><td>시뮬레이터, 로킷브릭</td></tr>
+<tr><td>교육 시장</td><td>코딩 교육, 고교, 대학, 개발자</td><td>방과후, 동아리, RC Hobby</td></tr>
+<tr><td>추가 모듈</td><td>코드로더, 센서, 영상, 추가 배터리</td><td>없음</td></tr>
+<tr><td>확장 기능</td><td>추가 확장 센서, LED 등</td><td>라즈베리파이, LED 등</td></tr>
+</table>`,
+'허밍버드 humming bird 비교 차이 대상');
+
+add('c2','제품 정보','코드론 II ‘프로’와 ‘스타터’의 차이점은 무엇인가요?',`
+<p>제품 <b>구성 목록</b>이 달라요.</p>
+<table>
+<tr><th>구성품</th><th>Starter</th><th>Pro</th></tr>
+<tr><td>드론 기체 &amp; 조종기</td><td>✔</td><td>✔</td></tr>
+<tr><td>가드 &amp; 쉘</td><td>✔</td><td>✔</td></tr>
+<tr><td>프로펠러 &amp; 여분 프로펠러</td><td>✔</td><td>✔</td></tr>
+<tr><td>전용 충전기 &amp; 5핀 케이블</td><td>✔</td><td>✔</td></tr>
+<tr><td>가이드북 &amp; 드라이버</td><td>✔</td><td>✔</td></tr>
+<tr><td>코드로더 &amp; 코드로더 케이블</td><td>—</td><td>✔</td></tr>
+<tr><td>IR 레인지 센서 모듈</td><td>—</td><td>✔</td></tr>
+<tr><td>메인 센서 모듈</td><td>—</td><td>✔</td></tr>
+<tr><td>여분 배터리</td><td>—</td><td>✔</td></tr>
+</table>
+<p>스타터 키트에는 추가 모듈이 포함되어 있지 않으며 별도 구매할 수 있어요.</p>`,
+'프로 스타터 starter pro 구성 차이 구성품 모듈');
+
+add('c2','제품 정보','코드론 II 추가 모듈은 어떻게 사용하나요?',`
+<p>코드론 II는 <b>DIY형 드론</b>이에요. 각 모듈을 용도에 맞게 사용해 주세요.</p>
+<ul>
+<li>카메라 센서를 쓰지 않을 때는 모듈을 제거하거나 Wi-Fi 연결을 해제해 주세요.</li>
+<li>IR 레인지 센서는 전면 또는 측면 거리를 센서 값으로 읽을 때 사용해요. 센서 값을 쓰는 코딩이 아니라면 모듈을 제거하세요.</li>
+<li>코드로더는 아두이노 프로그램을 업로드할 때 쓰는 보드예요. 아두이노를 쓰지 않는다면 제거하세요.</li>
+<li>메인보드의 ③, ④ 단자에는 <b>코드로더와 IR 레인지 센서 중 하나</b>를 선택해 연결하세요. (코드로더 + 카메라 센서 ○ / IR 레인지 센서 + 카메라 센서 ○ / 코드로더 + IR 레인지 센서 ✕)</li>
+<li>①, ②는 LED 소켓이에요. 모듈을 연결해도 작동하지 않으며 LED는 별도 판매하지 않아요.</li>
+</ul>
+<div class="note warn">모든 모듈을 연결하고 사용하면 원활한 비행이 어려울 수 있어요.</div>`,
+'추가 모듈 센서 ir 레인지 카메라 코드로더 메인보드 단자 diy led');
+
+add('c2','제품 정보','코드로더는 어디에 사용하나요?',`
+<p>드론 하단에 <b>4핀 케이블</b>을 연결한 뒤 코드로더를 드론 상단에 부착해 사용해요. 코드로더를 장착하면 <b>아두이노 프로그램</b>을 사용할 수 있어요.</p>
+<p>자세한 내용은 로보링크 사이트 → 교육·제품 → 코드론II프로 → E 매뉴얼 → 아두이노 교재를 참고해 주세요.</p>
+<p><a href="http://www.robolink.co.kr/web/cate02/product01.mn.php?act=view&encData=aWR4PTkwMiZzdGFydD0wJnNrZXk9JnNzdHI9JmNhdGU9" target="_blank" rel="noopener">E 매뉴얼 바로가기 ↗</a></p>`,
+'코드로더 아두이노 arduino 4핀 케이블 텍스트 코딩');
+
+add('c2','연결·페어링','페어링이 잘 되지 않습니다.',`
+<p>다수의 드론을 사용하는 환경에서 무선 다중 동시 접속을 시도하면 통신을 인지하지 못해 페어링이 잘 안 되는 경우가 있어요.</p>
+<ol>
+<li><b>펌웨어가 최신</b>인지 확인해 주세요.</li>
+<li>컨트롤러 또는 기체 자체의 페어링 기능이 불량인 상황도 고려해야 해요. 계속되면 ${asLink}로 문의해 주세요.</li>
+</ol>`,
+'페어링 안됨 연결 여러대 다수 동시 펌웨어 최신 업데이트');
+
+add('c2','비행 문제','날개가 돌다가 드론이 이륙하지 않습니다.',`
+<p>페어링 후 ‘이륙’ 버튼을 눌렀는데 프로펠러가 돌다가 이륙하지 않을 때:</p>
+<ol>
+<li>드론과 컨트롤러의 <b>배터리가 충분한지</b> 확인하세요. (조종기 화면 우측 상단에서 확인)</li>
+<li>회전하지 않는 방향의 모터와 프로펠러 사이에 <b>이물질</b>이 끼지 않았는지 확인하세요.</li>
+<li>드론의 <b>모터 선이 빠지지 않았는지</b> 확인하세요.</li>
+<li>드론을 <b>평평한 곳</b>에 두고 이륙을 시도하세요.</li>
+<li>모터가 <b>주저앉아 있는지</b> 확인하세요.</li>
+</ol>`,
+'이륙 안함 안돼요 안떠요 날개 프로펠러 회전 모터선 이물질 주저앉');
+
+add('c2','비행 문제','이륙하지 않고 제자리에서 뱅글뱅글 돕니다.',`
+<p>각 프로펠러가 <b>올바른 위치·방향</b>에 끼워져 있는지 확인해 주세요. 드론은 각 모터 위치에 맞는 프로펠러를 장착해야 정상 비행이 가능해요.</p>
+<ul>
+<li>프로펠러마다 날개 기울기가 달라요. (1~4번 위치 및 CW / CCW 방향 구분)</li>
+<li>2엽 프로펠러에서 3엽 프로펠러로 교체할 때도 <b>같은 방향의 프로펠러</b>로 바꿔 끼워야 해요.</li>
+</ul>`,
+'뱅글뱅글 빙글빙글 제자리 회전 돌아요 프로펠러 방향 cw ccw 3엽 교체 2엽');
+
+add('c2','비행 문제','3엽 프로펠러로 교체하는 방법',`
+<p>2엽 프로펠러를 3엽 프로펠러로 갈아 끼울 때는 <b>같은 방향(CW / CCW)의 프로펠러</b>로 교체해 주세요.</p>
+<div class="note">3엽 프로펠러는 호버링이 더 안정적이지만 배터리 사용 시간이 짧아질 수 있어요.</div>`,
+'3엽 프로펠러 교체 방법 2엽 호버링 비행시간');
+
+add('c2','비행 문제','드론이 이륙하자마자 천장으로 올라갑니다.',`
+<p>코드론 II의 이륙은 현재 위치에서 <b>1m 높이로 스로틀</b>을 올리는 방식이에요. 1m라고 판단하지 못하면 계속 상승해요.</p>
+<h4>A. 확인할 것</h4>
+<ol>
+<li>드론 하단부로 위치를 인식할 수 있는 환경인지 확인하세요. (프로펠러·가드·모터 등 액세서리도 함께 확인)</li>
+<li>현재 위치값 초기화를 위해 <b>SENSOR RESET</b>을 진행하세요. (조종기 S 버튼 → FUNCTION → SENSOR RESET)</li>
+<li>모드를 확인하세요. <b>POSITION MODE</b>로 바꿔 주세요. (SETUP → CONTROL)</li>
+</ol>
+<h4>B. 비행 대기 상태로 이륙</h4>
+<p>비행 대기 상태를 사용해 이륙시킬 수도 있어요. (아래 「낮은 고도로 이륙」 항목 참고)</p>`,
+'천장 계속 상승 올라가 이륙 1m 센서리셋 sensor reset position mode 스로틀');
+
+add('c2','사용법','낮은 고도로 이륙 시킬 수 있나요?',`
+<p>네, 가능해요.</p>
+<ol>
+<li>페어링 후 <b>조이스틱을 중앙으로 모으면</b> 비행 대기 상태(이륙하지 않고 프로펠러만 회전)가 돼요.</li>
+<li>이때 <b>왼쪽 조이스틱으로 스로틀을 올리면</b> 일정 위치까지만 이륙시킬 수 있어요.</li>
+</ol>`,
+'낮은 고도 이륙 비행 대기 스로틀 조이스틱 낮게');
+
+add('c2','비행 문제','드론의 호버링이 불안정합니다.',`
+<p>호버링이 불안정한 이유는 크게 두 가지예요.</p>
+<h4>1) 바닥 환경 문제</h4>
+<ul><li>바닥에 패턴이나 무늬가 없는 단색일 경우</li><li>빛이 반사되는 경우</li></ul>
+<p>패턴이 있는 바닥(체크무늬 등)에서 비행하세요.</p>
+<h4>2) 충돌 등으로 센서 초기값이 이상해진 경우</h4>
+<p>기체를 바닥에 내려놓고 <b>센서 리셋</b>을 진행해 주세요. (조종기 S 버튼 → FUNCTION → SENSOR RESET)</p>
+<div class="note">3엽 프로펠러는 호버링을 더 안정적으로 해줘요. (단, 배터리 사용 시간에 차이가 생길 수 있어요)</div>`,
+'호버링 불안정 흔들 떨림 바닥 패턴 반사 센서리셋 3엽');
+
+add('c2','사용법','카메라 센서는 어떻게 사용하나요?',`
+<ol>
+<li>구글 플레이스토어에서 <b>Codrone Cam</b>을 검색해 앱을 설치합니다.</li>
+<li>스마트폰 Wi-Fi 목록에서 드론(예: Codrone_cam_…)에 연결합니다.</li>
+<li>앱을 실행하면 영상을 볼 수 있어요.</li>
+</ol>
+<div class="note warn">안드로이드(플레이스토어)만 지원하며 <b>애플(iOS)은 지원하지 않아요.</b> 카메라 앱 실행 시 비행 시간이 더 짧아질 수 있어요.</div>`,
+'카메라 센서 앱 codrone cam 와이파이 영상 안드로이드 아이폰 ios 애플');
+
+add('c2','오류·보정','드론에서 캘리브레이션 메시지가 뜹니다.',`
+<p>드론 기체를 <b>평평한 바닥</b>에 두고 컨트롤러 설정에서 <b>Sensor Reset</b>을 진행해 주세요.</p>
+<ol>
+<li>컨트롤러의 <code>S</code> 버튼을 눌러 세부설정 모드로 들어갑니다.</li>
+<li><code>FUNCTION</code> → <code>SENSOR RESET</code>을 실행합니다.</li>
+<li>시간이 지나면 캘리브레이션이 완료돼요.</li>
+</ol>`,
+'캘리브레이션 켈리브레이션 메시지 센서 리셋 sensor reset 보정 s버튼');
+
+add('c2','부품·수리','드론의 모터 선이 꼬입니다.',`
+<p>모터를 식히지 않고 오래 사용하면 열과 회전 때문에 <b>과열로 모터 선이 꼬일 수</b> 있어요.</p>
+<ol>
+<li>프레임 하단 커버를 제거하고 모터를 빼 주세요.</li>
+<li>꼬인 모터 선을 펴 주세요.</li>
+<li>올바른 방향으로 모터를 다시 끼워 주세요.</li>
+</ol>`,
+'모터선 꼬임 꼬여 과열 열 모터 식히기');
+
+add('c2','배터리','코드론 II 배터리가 너무 빨리 방전됩니다.',`
+<p>코드론 II는 DIY형 교육 드론이라 <b>부착한 파츠에 따라 비행 시간 편차</b>가 있어요.</p>
+<table>
+<tr><th>구성</th><th>평균 비행 시간</th><th>총 무게</th></tr>
+<tr><td>기본 (기체 + 배터리 등)</td><td>12:00</td><td>113.7g</td></tr>
+<tr><td>+ 가드/쉘 등</td><td>11:00</td><td>135.6g</td></tr>
+<tr><td>+ 일부 모듈</td><td>09:40</td><td>—</td></tr>
+<tr><td>+ 센서·코드로더 모듈</td><td>06:50</td><td>152.1g</td></tr>
+<tr><td>+ 카메라 센서</td><td>02:50</td><td>157.9g (약 160g)</td></tr>
+</table>
+<ul>
+<li>필요 없는 기능·모듈은 빼고 사용하세요.</li>
+<li>배터리가 불량인지 확인해 보세요.</li>
+<li>카메라 센서 앱을 실행하면 비행 시간이 더 줄어들 수 있어요.</li>
+<li>3엽 프로펠러는 비행 시간은 짧아지지만 호버링이 안정돼요.</li>
+</ul>
+<div class="note warn">코드론 II의 비행체 무게가 <b>140~160g을 초과</b>하면 비행이 어려워요.</div>`,
+'배터리 빨리 방전 비행시간 짧아 무게 모듈 카메라 오래 안가');
+
+add('c2','부품·수리','드론 케이블이 자주 빠집니다.',`
+<ol>
+<li>드론 하단의 <b>하얀 케이스</b>를 뺍니다.</li>
+<li>보드의 표시된 부분(빨간 박스)에 케이블을 <b>정확하게</b> 끼웁니다.</li>
+<li>기체 프레임의 <b>케이블 홀더</b>에 케이블을 한 번 감아서 연결하면 케이블 길이가 짧아져 자주 빠지는 현상을 막을 수 있어요.</li>
+</ol>`,
+'케이블 빠짐 빠져요 홀더 커넥터 선 헐거');
+
+/* ============ 코드론 프로·라이트 ============ */
+add('pro','시작하기','코드론을 처음 알게 되었습니다.',`
+<p>코드론 연결부터 코딩 예제까지 아래 가이드를 참고해 보세요. (BLE보드 드라이버 설치 → 드론 시뮬레이터 연결 → 페어링 → 가상 비행 연습 → 실습 예제 → 동영상 강의)</p>
+<p><a href="http://robolink.co.kr/sw/codrone/codronesw/1_dronsimulator.html#01" target="_blank" rel="noopener">코드론 시작 가이드 ↗</a></p>`,
+'처음 시작 입문 가이드 시뮬레이터 연결 예제 코딩');
+
+add('pro','오류·보정','호버링이 유지되지 않고 계속 상승합니다. 센서 보정 방법(캘리브레이션)',`
+<ol>
+<li>드론의 <b>펌웨어를 최신</b>으로 업데이트해 주세요.</li>
+<li>드론 센서를 <b>캘리브레이션</b>해 주세요. (캘리브레이션: 모든 센서 값을 사용자의 환경에 맞게 교정하는 것)</li>
+</ol>
+<ol>
+<li>기체를 뒤집고 <b>왼쪽 스위치를 약 5초간</b> 누릅니다.</li>
+<li>기체의 불빛이 깜빡이면 바로 원상태로 뒤집어 <b>수평한 바닥</b>에 내려놓습니다.</li>
+<li>잠시 뒤 기체가 비행하며 센서 값을 교정한 후 착륙합니다.</li>
+</ol>
+<p><a href="https://youtu.be/uMVtn2AIztM" target="_blank" rel="noopener">캘리브레이션 영상 ↗</a></p>`,
+'호버링 계속 상승 올라가 캘리브레이션 센서 보정 펌웨어 스위치 5초');
+
+add('pro','비행 문제','프로펠러는 돌아가지만 드론이 뜨지 않습니다.',`
+<ol>
+<li>배터리를 충분히 충전한 후 시도해 주세요.</li>
+<li>프로펠러의 <b>방향(CW / CCW)</b>이 올바른지 확인해 주세요. 각 위치에 맞는 프로펠러를 끼워야 해요.</li>
+</ol>
+<p><a href="https://youtu.be/jQWdRLHhBXI" target="_blank" rel="noopener">프로펠러 방향 영상 ↗</a></p>`,
+'안떠요 안뜸 이륙 프로펠러 방향 cw ccw 배터리 충전');
+
+add('pro','부품·수리','드론의 한쪽 또는 몇 개의 모터가 돌지 않습니다.',`
+<ol>
+<li>배터리를 충분히 충전한 후 시도해 주세요.</li>
+<li>돌지 않는 쪽 모터를 손으로 빼고 모터와 브라켓 사이의 <b>이물질</b>을 확인한 뒤 다시 장착해 주세요.</li>
+<li>모터가 고장이면 새 모터로 교체해 주세요.</li>
+</ol>
+<p><a href="https://youtu.be/LsYe4vbQWcs" target="_blank" rel="noopener">모터 교체 영상 ↗</a></p>`,
+'모터 안돌아 안돌아요 한쪽 고장 교체 이물질 브라켓');
+
+add('pro','비행 문제','드론이 비행 중 한쪽으로 흐를 땐 어떻게 해야 하나요?',`
+<ol>
+<li>에어컨·선풍기·히터 등 <b>바람이 없는 곳</b>에서 비행하세요.</li>
+<li>어두운 곳이나 일정한 패턴이 없는 바닥을 피하세요.</li>
+<li>모터의 위치를 서로 바꾼 후 다시 시도하세요.</li>
+<li>캘리브레이션을 시도하세요.</li>
+<li>드론 시뮬레이터 또는 로킷 브릭으로 <b>트림</b>을 조절하세요.</li>
+</ol>
+<p><a href="https://youtu.be/QWHUw9l_pf0" target="_blank" rel="noopener">드론 시뮬레이터로 트림하기 ↗</a> · <a href="https://youtu.be/MAJtDmFcwRk" target="_blank" rel="noopener">로킷 브릭으로 트림하기 ↗</a></p>`,
+'흘러가요 흐름 한쪽 쏠림 트림 미세조정 바람 캘리브레이션 시뮬레이터 로킷브릭');
+
+add('pro','부품·수리','프로펠러가 부서짐 / 모터가 망가짐',`
+<p>로보링크 SHOP 페이지에서 드론의 프로펠러 또는 모터를 구매할 수 있어요.</p>
+<p><a href="http://roboshop.co.kr/product/list.html?cate_no=26&page=3" target="_blank" rel="noopener">로보링크 SHOP 바로가기 ↗</a></p>`,
+'프로펠러 부서짐 모터 망가짐 구매 부품 교체 샵');
+
+add('pro','제품 정보','드론의 최대 비행 거리는 어떻게 되나요?',`
+<p>조종자와 너무 멀리 떨어진 거리에서 조종하면 통신이 끊겨 제어가 불가능해질 수 있어요.</p>
+<p>사이에 장애물이 없는 환경에서 조종자로부터 <b>20m 반경</b>을 권장해요.</p>`,
+'비행 거리 조종 거리 통신 20m 반경');
+
+add('pro','제품 정보','드라이브 모드의 최대 속도는 얼마인가요?',`<p>코드론 드라이브 모드의 최대 속도는 <b>8km</b>입니다.</p>`,
+'드라이브 모드 최대 속도 8km');
+
+add('pro','연결·페어링','안드로이드 6.0 이상에서 BLE를 사용한 페어링이 안됩니다.',`
+<p>스마트폰에서 <b>GPS(위치)를 켠 뒤</b>, 스마트폰 세부 설정에서 앱의 <b>위치 액세스 권한</b>을 다시 확인해 주세요. (권장: ‘항상 허용’)</p>`,
+'안드로이드 6.0 ble 페어링 안됨 gps 위치 권한 블루투스');
+
+add('pro','연결·페어링','포트가 보이지 않을 땐 어떻게 해야 하나요?',`
+<p>사용하는 PC가 드론의 포트를 인식하지 못해 생기는 문제예요. <b>드라이버를 수동으로 설치</b>해 주세요.</p>
+<ol>
+<li>‘내 컴퓨터’를 우클릭 → 속성에서 PC 버전(Win 64bit / Win 32bit / MAC)을 확인합니다.</li>
+<li>해당 버전의 <b>USB Helper</b>로 드라이버를 설치합니다.</li>
+<li><b>반드시 기존에 설치된 드라이버를 제거한 후</b> 설치해 주세요.</li>
+</ol>
+<div class="note">USB Helper(Win 64/32bit · MAC OSX) 다운로드와 사용 방법은 공식 FAQ 페이지에서 확인할 수 있어요.</div>`,
+'포트 안보여 com포트 드라이버 usb helper 설치 인식 윈도우 맥');
+
+add('pro','연결·페어링','코드론의 페어링에 실패 하였습니다.',`
+<ol>
+<li><b>BLE 보드가 빨간 불빛으로 깜빡이도록</b> 한 뒤 다시 페어링을 시도해 주세요. (보드의 버튼을 눌러 통신 모드로 전환)</li>
+<li>드론 시뮬레이터나 로킷 브릭 코드론(RBCodrone)을 사용할 때는 <b>인벤터보드에 연결한 4핀 케이블을 제거</b>해 주세요.</li>
+</ol>
+<p><a href="http://robolink.co.kr/sw/codrone/codronesw/1_dronsimulator.html#01" target="_blank" rel="noopener">연결 가이드 ↗</a></p>`,
+'페어링 실패 안됨 ble 보드 빨간 불빛 인벤터보드 4핀 시뮬레이터 로킷브릭');
+
+add('pro','연결·페어링','BLE 보드의 펌웨어 업데이트는 어떻게 해야 하나요?',`
+<ol>
+<li>BLE 보드 프로그램을 다운로드하여 압축을 해제합니다.</li>
+<li>폴더 안의 <code>FirmwareUpdater</code>를 실행합니다.</li>
+<li>드론 BLE 보드의 <b>스위치를 누른 상태로 USB를 연결</b>합니다. 파란색 불빛이 켜지며 업데이트 모드가 돼요.</li>
+<li><code>SCAN</code> 버튼을 눌러 포트를 찾습니다.</li>
+<li><code>UPDATE</code> 버튼을 눌러 펌웨어를 업데이트합니다. (약 1분 소요)</li>
+</ol>
+<p><a href="https://youtu.be/YBKrJqWO6r8" target="_blank" rel="noopener">업데이트 영상 ↗</a></p>`,
+'펌웨어 업데이트 ble 보드 firmwareupdater scan update 파란색');
+
+add('pro','사용법','코드론 pro & lite 초기화 방법',`
+<p>비행 기록 초기화는 <b>불가능</b>하지만, 기본 설정값 초기화는 가능해요.</p>
+<ol>
+<li><b>petrone</b> 앱을 실행하고 드론과 페어링합니다.</li>
+<li>‘setting’으로 들어갑니다.</li>
+<li>‘기본값’, ‘자이로셋업’ 버튼으로 옵션을 초기화할 수 있어요.</li>
+</ol>`,
+'초기화 리셋 기본값 자이로셋업 petrone 페트론 설정 비행기록');
+
+add('pro','사용법','인벤터 보드 조종 펌웨어 사용하기 / 기존 펌웨어 복구하기',`
+<p>로보링크 사이트 → 교육·제품 → 코드론(프로&라이트) → E매뉴얼에서 확인할 수 있어요.</p>
+<p><a href="http://www.robolink.co.kr/web/cate02/product02.mn.php?act=view&encData=aWR4PTEzNzcmc3RhcnQ9MCZza2V5PSZzc3RyPSZjYXRlPQ==" target="_blank" rel="noopener">E매뉴얼 바로가기 ↗</a></p>`,
+'인벤터 보드 조종 펌웨어 복구 조이스틱 diy 컨트롤러');
+
+/* ============ 주미 AI (질문 목록: 공식 페이지 링크) ============ */
+const zaiNote=`<div class="note">이 질문의 상세 답변은 <b>주미 AI 공식 FAQ 페이지</b>에서 확인하실 수 있어요.</div>`;
+[
+['제품 FAQ','주미 AI는 어떤 기기에서 사용이 가능한가요?','기기 호환 윈도우 맥 태블릿 pc 사용환경'],
+['제품 FAQ','엔트리 프로그램은 어디에서 다운로드는 할 수 있나요?','엔트리 entry 다운로드 프로그램 설치'],
+['제품 FAQ','주미 AI는 어떻게 충전하나요? 고속충전도 가능할까요?','충전 고속충전 배터리 usb'],
+['제품 FAQ','배터리를 별도로 판매하나요?','배터리 판매 구매 교체'],
+['제품 FAQ','주미 AI의 교육 대상은 몇 세부터일까요?','나이 연령 대상 학년 초등'],
+['제품 FAQ','주미 AI는 조립이 필요한 제품인가요?','조립 완제품 키트'],
+['제품 FAQ','주행하면서 카메라를 사용할 수 있나요?','카메라 주행 영상 촬영'],
+['제품 FAQ','품질 보증은 어떻게 되나요?','품질보증 보증 as 무상 수리 보증서 a/s'],
+['교육 및 활용','수업시간에 쓸 수 있는 수업안도 제공되나요?','수업안 교안 수업 자료 학교'],
+['교육 및 활용','교사 연수나 사용법 교육이 따로 있나요?','교사 연수 교육 강사'],
+['교육 및 활용','어떤 과목과 연계해 활용할 수 있나요?','과목 연계 교과 수학 과학 정보 실과'],
+['교육 및 활용','대회나 챌린지 같은 이벤트도 있나요?','대회 챌린지 이벤트'],
+['교육 및 활용','교구 인증이나 교육부 관련 인증을 받은 제품인가요?','교구 인증 교육부 인증 kc'],
+['교육 및 활용','파이썬은 어느 수준까지 학습이 가능한가요?','파이썬 python 수준 학습 코딩'],
+['교육 및 활용','AI 기능은 어떤 식으로 동작하나요?','ai 인공지능 기능 동작 머신러닝 자율주행']
+].forEach(([c,q,k])=>add('zumiai',c,q,zaiNote,k,{ext:ZUMI_AI_URL}));
+
+/* ============ 주미 ============ */
+add('zumi','안내','주미 FAQ는 어디에서 확인하나요?',`
+<p>주미 FAQ는 공식 FAQ 노션 페이지에서 확인할 수 있어요.</p>
+<p><a href="${ZUMI_URL}" target="_blank" rel="noopener">주미 FAQ 열기 ↗</a></p>
+<div class="note">주미 FAQ 항목이 이 페이지에 아직 연동되지 않았어요. 급한 문의는 ${asLink} 또는 02-554-8862로 연락해 주세요.</div>`,
+'주미 zumi faq 노션 안내',{ext:ZUMI_URL});
+
+/* ============ 앱 로직 ============ */
+const $=s=>document.querySelector(s);
+const state={p:'all',c:'all',q:'',open:new Set()};
+const catsOf=p=>[...new Set(D.filter(d=>p==='all'||d.p===p).map(d=>d.c))];
+D.forEach((d,i)=>{d.id='f'+(i+1); d.plain=(d.q+' '+d.k+' '+P[d.p].name+' '+d.c+' '+d.a.replace(/<[^>]+>/g,' ')).toLowerCase(); d.ql=(d.q+' '+d.k).toLowerCase();});
+
+const esc=s=>s.replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const rx=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+
+function tokens(){return state.q.toLowerCase().split(/\s+/).filter(Boolean)}
+function hl(text){
+  let out=esc(text);
+  tokens().forEach(t=>{ if(t.length<1) return; out=out.replace(new RegExp('('+rx(esc(t))+')(?![^<]*>)','gi'),'<mark>$1</mark>'); });
+  return out;
+}
+
+function renderProducts(){
+  const el=$('#products');
+  const star=`<span class="pimg"><svg class="allstar" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="sgb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3F7BFF"/><stop offset="1" stop-color="#40C8FF"/></linearGradient></defs><path d="M50 0C54 30 70 46 100 50C70 54 54 70 50 100C46 70 30 54 0 50C30 46 46 30 50 0Z" fill="url(#sgb)"/></svg></span>`;
+  const all=`<button class="pcard" data-p="all" aria-pressed="${state.p==='all'}" style="--c:#3F7BFF;--cink:#fff">${star}<span class="nm">전체 제품</span><span class="sb">모든 FAQ</span><span class="ct">${D.length}</span></button>`;
+  const EXT={zumi:ZUMI_URL,zumiai:ZUMI_AI_URL}; // 별도 FAQ 페이지가 있는 제품은 바로 이동
+  el.innerHTML=all+Object.entries(P).map(([k,v])=>{
+    const inner=`${pimg(k,'pimg')}<span class="nm">${v.name}</span><span class="sb">${v.sub}</span>`;
+    if(EXT[k]) return `<a class="pcard" href="${EXT[k]}" target="_blank" rel="noopener" style="--c:${v.color};--cink:${v.ink}" title="${v.name} 공식 FAQ 페이지로 이동">${inner}<span class="ct">↗</span></a>`;
+    return `<button class="pcard" data-p="${k}" aria-pressed="${state.p===k}" style="--c:${v.color};--cink:${v.ink}">${inner}<span class="ct">${D.filter(d=>d.p===k).length}</span></button>`;
+  }).join('');
+}
+/* 제품 선택 시 배경 테마 컬러 + 패턴 변경 */
+function applyTheme(){
+  if(document.documentElement.dataset.p===state.p) return;
+  document.documentElement.dataset.p=state.p;
+  const bg=$('#bgfx'); bg.classList.remove('swap'); void bg.offsetWidth; bg.classList.add('swap');
+}
+function renderCats(){
+  const cs=catsOf(state.p);
+  if(state.c!=='all'&&!cs.includes(state.c)) state.c='all';
+  $('#cats').innerHTML=[`<button class="chip" data-c="all" aria-pressed="${state.c==='all'}">전체</button>`].concat(cs.map(c=>`<button class="chip" data-c="${c}" aria-pressed="${state.c===c}">${c}</button>`)).join('');
+}
+function filtered(){
+  const ts=tokens();
+  let r=D.filter(d=>(state.p==='all'||d.p===state.p)&&(state.c==='all'||d.c===state.c));
+  if(ts.length){
+    r=r.map(d=>{
+      if(!ts.every(t=>d.plain.includes(t))) return null;
+      let s=0; ts.forEach(t=>{ if(d.q.toLowerCase().includes(t)) s+=5; if(d.ql.includes(t)) s+=3; s+=1; });
+      if(d.soon) s-=0.5;
+      return {d,s};
+    }).filter(Boolean).sort((a,b)=>b.s-a.s).map(x=>x.d);
+  }
+  return r;
+}
+function renderList(){
+  const r=filtered(), box=$('#list');
+  $('#count').textContent=r.length+'개의 질문';
+  if(!r.length){
+    box.innerHTML=`<div class="empty"><div class="big">🔎</div><h3>일치하는 질문이 없어요</h3><p>다른 단어로 검색하거나 제품·카테고리 필터를 해제해 보세요.</p><p>예) “이륙”, “페어링”, “배터리”, “캘리브레이션”</p><p style="margin-top:14px"><a class="pill-btn" href="${AS_URL}" target="_blank" rel="noopener">기술 및 AS 신청하기</a></p></div>`;
+    return;
+  }
+  box.innerHTML=r.map(d=>{
+    const v=P[d.p], open=state.open.has(d.id)||(state.q&&r.length<=2);
+    return `<details class="item" id="${d.id}" style="--c:${v.color}" ${open?'open':''}>
+      <summary><span class="badge">${pimg(d.p,'bimg')} ${v.name}</span>
+        <span class="q">${hl(d.q)}${d.soon?'<span class="tag-soon">준비중</span>':''}<small>${d.c}${state.p==='all'?'':''}</small></span>
+        <svg class="chev" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </summary>
+      <div class="ans">${d.a}
+        <div class="item-foot">
+          <button data-copy="${d.id}">🔗 링크 복사</button>
+          ${d.ext?`<a href="${d.ext}" target="_blank" rel="noopener">공식 FAQ 열기 ↗</a>`:''}
+          <a href="${AS_URL}" target="_blank" rel="noopener">해결이 안 되나요? AS 신청</a>
+        </div>
+      </div></details>`;
+  }).join('');
+  box.querySelectorAll('details').forEach(el=>el.addEventListener('toggle',()=>{ el.open?state.open.add(el.id):state.open.delete(el.id); updateToggle(); }));
+  updateToggle();
+}
+function updateToggle(){
+  const ds=[...document.querySelectorAll('#list details')];
+  $('#toggleAll').textContent=ds.length&&ds.every(d=>d.open)?'모두 접기':'모두 펼치기';
+}
+function render(){applyTheme();renderProducts();renderCats();renderList();}
+
+/* events */
+$('#products').addEventListener('click',e=>{const b=e.target.closest('[data-p]');if(!b)return;state.p=b.dataset.p;state.c='all';render();});
+$('#cats').addEventListener('click',e=>{const b=e.target.closest('[data-c]');if(!b)return;state.c=b.dataset.c;renderCats();renderList();});
+const qi=$('#q');
+let timer;
+qi.addEventListener('input',()=>{state.q=qi.value.trim();$('#searchBox').classList.toggle('has',!!qi.value);clearTimeout(timer);timer=setTimeout(renderList,80);});
+$('#clear').addEventListener('click',()=>{qi.value='';state.q='';$('#searchBox').classList.remove('has');renderList();qi.focus();});
+document.addEventListener('keydown',e=>{
+  if(e.key==='/'&&document.activeElement!==qi){e.preventDefault();qi.focus();}
+  if(e.key==='Escape'&&document.activeElement===qi){qi.blur();}
+});
+$('#toggleAll').addEventListener('click',()=>{
+  const ds=[...document.querySelectorAll('#list details')], allOpen=ds.every(d=>d.open);
+  ds.forEach(d=>{d.open=!allOpen;});
+});
+$('#list').addEventListener('click',e=>{
+  const b=e.target.closest('[data-copy]');if(!b)return;
+  const url=location.href.split('#')[0]+'#'+b.dataset.copy;
+  (navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(()=>{b.textContent='✔ 복사됨'},()=>{prompt('링크를 복사하세요',url)});
+  setTimeout(()=>b.textContent='🔗 링크 복사',1600);
+});
+
+/* theme */
+const root=document.documentElement;
+function setTheme(t){root.dataset.theme=t;$('#theme').textContent=t==='dark'?'☀️':'🌙';try{localStorage.setItem('rl-theme',t)}catch(_){}}
+let saved=null;try{saved=localStorage.getItem('rl-theme')}catch(_){}
+setTheme(saved||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
+$('#theme').addEventListener('click',()=>setTheme(root.dataset.theme==='dark'?'light':'dark'));
+
+/* deep link */
+function openHash(){
+  const id=location.hash.slice(1); const d=D.find(x=>x.id===id); if(!d) return;
+  state.p='all';state.c='all';state.q='';qi.value='';state.open.add(id);render();
+  const el=document.getElementById(id); if(el){el.open=true;setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'center'}),50);}
+}
+window.addEventListener('hashchange',openHash);
+render(); if(location.hash) openHash();
+</script>
+</body>
+</html>
