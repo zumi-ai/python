@@ -165,7 +165,7 @@
         #paramModal button, #paramModal input { min-height: 44px; }
 
         @media (max-width: 767px) and (min-height: 521px) {
-            #learnPanel { height: 44% !important; }
+            #learnPanel { height: 60% !important; }
             #learnPanel.collapsed { height: auto !important; }
             #learnCollapseBtn { width: 2.25rem !important; height: 2.25rem !important; font-size: 14px !important; }
             #learnPanel > div:first-child { cursor: pointer; }
@@ -186,6 +186,25 @@
             #paramModal p { margin-bottom: 0.5rem !important; }
             #paramModal .mb-5 { margin-bottom: 0.5rem !important; }
         }
+
+        /* ===== 조이스틱 / 학습창 개선 ===== */
+        #joystick { display: none; position: relative; width: 132px; height: 132px; flex-shrink: 0; border-radius: 9999px;
+            background: radial-gradient(circle, rgba(30,41,59,0.95) 55%, rgba(51,65,85,0.7) 100%);
+            border: 3px solid rgba(148,163,184,0.45); touch-action: none; }
+        #joystick.on { border-color: #34d399; box-shadow: 0 0 18px rgba(16,185,129,0.45); }
+        #joyKnob { position: absolute; left: 50%; top: 50%; width: 58px; height: 58px; margin: -29px 0 0 -29px; border-radius: 9999px;
+            background: linear-gradient(to bottom, #6ee7b7, #10b981); box-shadow: 0 4px 10px rgba(0,0,0,0.5); pointer-events: none; }
+        #joystick .joy-mark { position: absolute; color: rgba(226,232,240,0.45); font-size: 11px; pointer-events: none; }
+        @media (pointer: coarse) { #dpadGrid { display: none !important; } #joystick { display: block; } }
+        #learnPanel.learn-hidden { display: none !important; }
+        #learnFab { position: absolute; left: 0.5rem; bottom: 0.5rem; z-index: 35; }
+        @media (max-width: 767px), (max-height: 520px) {
+            #learnTabs { padding: 0.25rem 0.5rem !important; gap: 0.25rem !important; }
+            #learnTabs button { flex-direction: row !important; justify-content: center; padding: 0.3rem 0 !important; gap: 0.25rem !important; font-size: 10px !important; }
+            #learnTabs button i { font-size: 11px !important; }
+            #learnBody { padding: 0.5rem !important; }
+        }
+        @media (max-height: 520px) { #joystick { width: 112px; height: 112px; } #joyKnob { width: 50px; height: 50px; margin: -25px 0 0 -25px; } }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 w-full overflow-hidden flex flex-col justify-between">
@@ -344,6 +363,7 @@
                 <div class="text-sm font-black text-white"><i class="fa-solid fa-graduation-cap text-fuchsia-400 mr-1.5"></i>AI 학습 모드</div>
                 <div class="flex items-center gap-2">
                     <span id="learnProgress" class="text-[11px] font-bold text-amber-300">⭐ 0/4 완료</span>
+                    <button id="learnHideBtn" onclick="learnSetHidden(true)" class="w-6 h-6 rounded bg-slate-800 text-slate-300 text-xs" aria-label="학습창 닫기">✕</button>
                     <button id="learnCollapseBtn" onclick="learnToggleCollapse()" class="w-6 h-6 rounded bg-slate-800 text-slate-300 text-xs" aria-label="접기">▾</button>
                 </div>
             </div>
@@ -355,6 +375,8 @@
             </div>
             <div id="learnBody" class="flex-1 min-h-0 overflow-y-auto p-3 space-y-3" style="-webkit-overflow-scrolling:touch"></div>
         </div>
+
+        <button id="learnFab" onclick="learnSetHidden(false)" class="hidden px-3 py-2 rounded-xl bg-fuchsia-600 text-white text-xs font-black shadow-lg border border-fuchsia-300/60"><i class="fa-solid fa-graduation-cap mr-1"></i>학습창 열기</button>
 
         <!-- ZUMI CAMERA (PiP) -->
         <div id="zumiCamPanel" class="absolute right-4 z-30 w-56 sm:w-72 md:w-80" style="top:50%;transform:translateY(-50%)">
@@ -545,7 +567,8 @@
 
         <!-- DRIVE MODE CONTROL PANEL -->
         <div id="drivePanel" class="hidden w-full max-w-3xl items-center justify-center gap-4 sm:gap-10 flex" style="min-height:144px">
-            <div class="grid grid-cols-3 gap-2" style="touch-action:none">
+            <div id="joystick" aria-label="조이스틱"><span class="joy-mark" style="left:50%;top:5px;transform:translateX(-50%)">▲</span><span class="joy-mark" style="left:50%;bottom:5px;transform:translateX(-50%)">▼</span><span class="joy-mark" style="left:7px;top:50%;transform:translateY(-50%)">◀</span><span class="joy-mark" style="right:7px;top:50%;transform:translateY(-50%)">▶</span><div id="joyKnob"></div></div>
+            <div id="dpadGrid" class="grid grid-cols-3 gap-2" style="touch-action:none">
                 <div></div>
                 <button data-key="up" class="drive-btn" aria-label="전진"><i class="fa-solid fa-chevron-up"></i></button>
                 <div></div>
@@ -2264,7 +2287,7 @@ function generateRandomRoads() {
             camera.aspect = cw / ch;
             // 휴대폰 세로 화면: 학습 시트가 아래 절반을 가리므로 로봇이 위쪽에 보이게 화면 중심을 위로 옮김
             const lp = document.getElementById('learnPanel');
-            const sheetOpen = document.body.classList.contains('learn-open') && lp && !lp.classList.contains('collapsed');
+            const sheetOpen = document.body.classList.contains('learn-open') && lp && !lp.classList.contains('collapsed') && !lp.classList.contains('learn-hidden');
             if (sheetOpen && window.matchMedia('(max-width: 767px) and (min-height: 521px)').matches) camera.setViewOffset(cw, ch, (typeof learnModule !== 'undefined' && learnModule === 'vision' && camOn) ? Math.round(cw * 0.24) : 0, Math.round(ch * 0.22), cw, ch);
             else camera.clearViewOffset();
             camera.updateProjectionMatrix();
@@ -2412,6 +2435,39 @@ function generateRandomRoads() {
             };
             slider.addEventListener('input', () => applySpeed(slider.value));
             document.querySelectorAll('[data-speed]').forEach(b => b.addEventListener('click', () => applySpeed(b.dataset.speed)));
+
+            // ===== 가상 조이스틱 (터치 기기) =====
+            const joy = document.getElementById('joystick'), knob = document.getElementById('joyKnob');
+            if (joy) {
+                let joyId = null;
+                const cur = { up: false, down: false, left: false, right: false };
+                const apply = (nx, ny) => {
+                    const mag = Math.hypot(nx, ny);
+                    const want = { up: false, down: false, left: false, right: false };
+                    if (mag > 0.3) {
+                        // 8방향: 기울어진 쪽 축만 켜고, 대각선이면 두 축 모두 켬
+                        if (ny < -0.38) want.up = true;
+                        if (ny > 0.38) want.down = true;
+                        if (nx < -0.38) want.left = true;
+                        if (nx > 0.38) want.right = true;
+                    }
+                    for (const k in want) if (want[k] !== cur[k]) { cur[k] = want[k]; setKey(k, want[k]); }
+                };
+                const move = (e) => {
+                    const r = joy.getBoundingClientRect(), R = r.width / 2;
+                    let dx = e.clientX - (r.left + R), dy = e.clientY - (r.top + R);
+                    const m = Math.hypot(dx, dy), lim = R * 0.62;
+                    if (m > lim) { dx *= lim / m; dy *= lim / m; }
+                    knob.style.transform = `translate(${dx}px, ${dy}px)`;
+                    apply(dx / lim, dy / lim);
+                };
+                const end = () => { joyId = null; knob.style.transform = ''; joy.classList.remove('on'); apply(0, 0); };
+                joy.addEventListener('pointerdown', (e) => { e.preventDefault(); joyId = e.pointerId; try { joy.setPointerCapture(e.pointerId); } catch (err) {} joy.classList.add('on'); move(e); });
+                joy.addEventListener('pointermove', (e) => { if (e.pointerId === joyId) move(e); });
+                ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(ev => joy.addEventListener(ev, (e) => { if (e.pointerId === joyId || ev === 'lostpointercapture') end(); }));
+                joy.addEventListener('contextmenu', (e) => e.preventDefault());
+                window.addEventListener('blur', end);
+            }
         }
 
         // ============================================================
@@ -2676,6 +2732,7 @@ function generateRandomRoads() {
             resizeZumiCam();
             learnEnsureTheme(id);
             lg('learnBody').innerHTML = learnBodyHtml(id);
+            if (window.matchMedia('(max-width: 767px), (max-height: 520px)').matches) lg('learnBody').querySelectorAll('details').forEach(d => d.removeAttribute('open'));
             learnState[id].seen = true;
             lg('learnBody').scrollTop = 0;
             learnUpdateTabs();
@@ -2695,8 +2752,14 @@ function generateRandomRoads() {
             learnSwitch('sensor');
             learnUpdateTabs();
             learnBindHeader();
+            learnSetHidden(false);
             // 가로 휴대폰은 화면이 낮아 패널이 화면을 가리므로 접힌 상태로 시작 (제목줄을 누르면 열림)
             if (window.matchMedia('(max-height: 520px)').matches) learnSetCollapsed(true);
+        }
+        function learnSetHidden(hide) {
+            lg('learnPanel').classList.toggle('learn-hidden', hide);
+            lg('learnFab').classList.toggle('hidden', !hide);
+            if (typeof onWindowResize === 'function' && renderer) onWindowResize();
         }
         function learnSetCollapsed(want) {
             const collapsed = lg('learnPanel').classList.contains('collapsed');
@@ -2720,6 +2783,8 @@ function generateRandomRoads() {
             learnHideHelpers();
             if (camRes !== 0) visSetRes(0, true);
             lg('learnPanel').classList.add('hidden');
+            lg('learnPanel').classList.remove('learn-hidden');
+            lg('learnFab').classList.add('hidden');
             document.body.classList.remove('learn-open');
             lg('zumiCamPanel').classList.remove('cam-large');
             resizeZumiCam();
