@@ -144,6 +144,48 @@
             #zumiCamPanel { right: 0.4rem !important; top: 0.4rem !important; transform: none !important; width: 10rem !important; }
             #zumiCamPanel.cam-large { width: 18rem !important; }
         }
+
+        /* ===================== 모바일 보강 패치 ===================== */
+        /* 터치 기기: hover 확대가 눌린 채로 남아 카드가 잘리거나 어긋나는 문제 방지 */
+        @media (hover: none) {
+            .coding-card:hover { transform: none; box-shadow: none; }
+            .coding-card:active { transform: scale(0.96); }
+            .drive-btn:hover { border-color: rgba(148, 163, 184, 0.35); }
+        }
+        /* 학습 패널 안 버튼: 글자가 길어도 한 줄로 늘어지지 않게 줄바꿈 + 일정한 높이 */
+        #learnBody button, #learnBody label { word-break: keep-all; line-height: 1.25; }
+        #learnBody .grid-cols-2 > button { min-height: 2.5rem; padding-left: 0.25rem; padding-right: 0.25rem; font-size: 11px; }
+        #learnBody button[onclick^="learnAnswer"] { min-height: 2.5rem; }
+        /* 조종 버튼을 누르는 동안 학습 패널을 반투명으로 비워 로봇이 보이게 */
+        body.driving-now #learnPanel { opacity: 0.3; pointer-events: none; }
+        #learnPanel { transition: opacity 0.15s; }
+        /* 숫자 입력 창: 키보드가 올라와 화면이 좁아져도 스크롤로 버튼에 닿을 수 있게 */
+        #paramModal { overflow-y: auto; align-items: flex-start !important; padding: 0.5rem 0; -webkit-overflow-scrolling: touch; }
+        #paramModal > div { margin-top: auto !important; margin-bottom: auto !important; }
+        #paramModal button, #paramModal input { min-height: 44px; }
+
+        @media (max-width: 767px) and (min-height: 521px) {
+            #learnPanel { height: 44% !important; }
+            #learnPanel.collapsed { height: auto !important; }
+            #learnCollapseBtn { width: 2.25rem !important; height: 2.25rem !important; font-size: 14px !important; }
+            #learnPanel > div:first-child { cursor: pointer; }
+        }
+        @media (max-height: 520px) {
+            /* 가로 휴대폰: 패널을 좁히고(왼쪽 36%), 접으면 제목줄만 남게 */
+            #learnPanel { width: min(15rem, 36vw) !important; }
+            #learnPanel.collapsed { bottom: auto !important; height: auto !important; width: auto !important; min-width: 10.5rem; }
+            #learnCollapseBtn { width: 2rem !important; height: 2rem !important; font-size: 14px !important; }
+            #learnPanel > div:first-child { cursor: pointer; }
+            #zumiCamPanel.cam-large { width: min(14rem, 34vw) !important; }
+            #zumiCamPanel { width: min(10rem, 28vw) !important; }
+            /* 입력 창 압축 */
+            #paramModal > div { max-width: 26rem; }
+            #paramModal > div > div { padding: 0.75rem !important; }
+            #paramModal #paramValueInput { font-size: 1.5rem; padding-top: 0.25rem; padding-bottom: 0.25rem; }
+            #paramModal h4 { font-size: 1rem; }
+            #paramModal p { margin-bottom: 0.5rem !important; }
+            #paramModal .mb-5 { margin-bottom: 0.5rem !important; }
+        }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 w-full overflow-hidden flex flex-col justify-between">
@@ -2250,6 +2292,7 @@ function generateRandomRoads() {
         function setKey(k, down) {
             if (down) keys.add(k); else keys.delete(k);
             document.querySelectorAll(`[data-key="${k}"]`).forEach(b => b.classList.toggle('active', down));
+            document.body.classList.toggle('driving-now', keys.size > 0);
         }
         function releaseAllKeys() {
             ['up', 'down', 'left', 'right'].forEach(k => setKey(k, false));
@@ -2651,6 +2694,22 @@ function generateRandomRoads() {
             learnModule = null;
             learnSwitch('sensor');
             learnUpdateTabs();
+            learnBindHeader();
+            // 가로 휴대폰은 화면이 낮아 패널이 화면을 가리므로 접힌 상태로 시작 (제목줄을 누르면 열림)
+            if (window.matchMedia('(max-height: 520px)').matches) learnSetCollapsed(true);
+        }
+        function learnSetCollapsed(want) {
+            const collapsed = lg('learnPanel').classList.contains('collapsed');
+            if (collapsed !== want) learnToggleCollapse();
+        }
+        let learnHeaderBound = false;
+        function learnBindHeader() {
+            if (learnHeaderBound) return;
+            learnHeaderBound = true;
+            lg('learnPanel').firstElementChild.addEventListener('click', (e) => {
+                if (e.target.closest('#learnCollapseBtn')) return;   // 버튼은 자체 onclick 사용
+                learnToggleCollapse();
+            });
         }
         function learnLeave() {
             if (!lg('learnPanel')) return;
