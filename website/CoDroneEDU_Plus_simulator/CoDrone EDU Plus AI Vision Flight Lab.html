@@ -119,12 +119,13 @@ const lam=c=>new THREE.MeshLambertMaterial({color:col(c)}),add=o=>(Wg.add(o),o);
 const box=(w,h,d,c,x,y,z)=>{const m=add(new THREE.Mesh(new THREE.BoxGeometry(w,h,d),c.isMaterial?c:lam(c)));m.position.set(x,y,z);return m};
 const flat=(w,d,c,x,y,z)=>{const m=add(new THREE.Mesh(new THREE.PlaneGeometry(w,d),c.isMaterial?c:lam(c)));m.rotation.x=-Math.PI/2;m.position.set(x,y,z);const mt=m.material;mt.polygonOffset=true;mt.polygonOffsetFactor=mt.polygonOffsetUnits=y>.2?-4:-Math.round(1+y*100);return m};
 const solid=(x,z,hx,hz,h,y0,nf)=>solids.push({x,z,hx,hz,h,y0,nf});
+const tsolid=(...a)=>{solid(...a);solids[solids.length-1].tr=1};
 const floorAt=(x,z,y)=>{let h=0;for(const s of solids)if(!s.nf&&Math.abs(x-s.x)<s.hx+M&&Math.abs(z-s.z)<s.hz+M&&(s.y0==null||(y!=null&&y-REST>=s.h-.4)))h=Math.max(h,s.h);return h};
 const ceilAt=(x,z,y)=>{let c=1e9;for(const s of solids)if(!s.nf&&s.y0!=null&&Math.abs(x-s.x)<s.hx+M&&Math.abs(z-s.z)<s.hz+M&&y-REST<s.h-.4)c=Math.min(c,s.y0);return c-1.4};
 function camFix(c){if(Z&&Z.hall){c.x=clamp(c.x,-Z.hall,Z.hall);c.z=Math.max(c.z,-Z.hall)}
  const free=v=>!solids.some(s=>Math.abs(v.x-s.x)<s.hx+.4&&Math.abs(v.z-s.z)<s.hz+.4&&v.y<s.h+.3&&v.y>(s.y0||0)-.3);
  if(free(c))return;let lo=0,hi=1;const d=c.clone();for(let i=0;i<8;i++){const m=(lo+hi)/2;c.lerpVectors(P,d,m);if(free(c))lo=m;else hi=m}c.lerpVectors(P,d,lo)}
-function los(a,b){for(let i=1;i<14;i++){const k=i/14,x=a.x+(b.x-a.x)*k,y=a.y+(b.y-a.y)*k,z=a.z+(b.z-a.z)*k;if(solids.some(s=>Math.abs(x-s.x)<s.hx&&Math.abs(z-s.z)<s.hz&&y<s.h&&y>(s.y0||0)))return false}return true}
+function los(a,b,sk){for(let i=1;i<14;i++){const k=i/14,x=a.x+(b.x-a.x)*k,y=a.y+(b.y-a.y)*k,z=a.z+(b.z-a.z)*k;if(solids.some(s=>!(sk&&s.tr)&&!(Math.abs(b.x-s.x)<s.hx+.15&&Math.abs(b.z-s.z)<s.hz+.15&&b.y<s.h+.15&&b.y>(s.y0||0)-.15)&&Math.abs(x-s.x)<s.hx&&Math.abs(z-s.z)<s.hz&&y<s.h&&y>(s.y0||0)))return false}return true}
 const blocked=(x,z,bot)=>solids.some(s=>Math.abs(x-s.x)<s.hx+M&&Math.abs(z-s.z)<s.hz+M&&bot<s.h-.02&&bot+.6>(s.y0||0));
 const ctex=(w,h,fn)=>{const c=document.createElement('canvas');c.width=w;c.height=h;fn(c.getContext('2d'),w,h);const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;return t};
 const pad=(x,z,txt,c,s,y0)=>flat(s,s,new THREE.MeshBasicMaterial({map:ctex(128,128,g=>{g.strokeStyle=c;g.lineWidth=8;g.beginPath();g.arc(64,64,56,0,7);g.stroke();g.fillStyle=c;g.font='bold '+(txt.length>2?30:64)+'px Sora,sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(txt,64,68)}),transparent:true}),x,(y0||0)+.05,z);
@@ -170,7 +171,7 @@ function build(gltf){
 
 /* ---- state & controls ---- */
 const P=new THREE.Vector3(0,REST,6),V=new THREE.Vector3(),look=new THREE.Vector3(),clock=new THREE.Clock(),K={};
-let holdH=0,orbit=0,elev=.526,camYaw=Math.PI,zoom=1,zoomT=1,state='loading',st=0,om=0,yaw=Math.PI,pitch=0,roll=0,targetY=0,y0=0,time=0,tilt=0,muted=false,fpvMode=false,toastT=0;
+let bt=0,holdH=0,orbit=0,elev=.526,camYaw=Math.PI,zoom=1,zoomT=1,state='loading',st=0,om=0,yaw=Math.PI,pitch=0,roll=0,targetY=0,y0=0,time=0,tilt=0,muted=false,fpvMode=false,toastT=0;
 const LABEL={loading:'Loading…',landed:'Landed · ready',spinup:'Starting motors',takeoff:'Taking off…',flying:'Flying',landing:'Landing…',spindown:'Motors stopping'};
 const toast=(m,c)=>{const e=$('toast');e.textContent=m;e.className='on '+(c||'');toastT=2.8};
 function toggle(){if(state==='landed'){state='spinup';st=0}else if(state==='flying')state='landing'}
@@ -204,6 +205,7 @@ function step(dt){
  else if(state==='spindown'){V.set(0,0,0);om*=Math.exp(-1.3*dt);if(om<.4){om=0;state='landed'}}
  tilt=clamp(tilt+((K.KeyE?1:0)-(K.KeyQ?1:0))*.9*dt,-1.45,.9);
  if(state==='flying'||state==='landing'){tryMove(V.x*dt,V.z*dt);P.y=Math.max(P.y,floorAt(P.x,P.z,P.y)+REST)}
+ bt-=dt;if(state==='flying'&&bt<=0&&(Math.abs(P.x)>=LIM-.4||Math.abs(P.z)>=LIM-.4)){bt=3;toast(tr('Edge of the mission area. Turn back.','임무 구역의 끝이에요. 돌아가세요.'))}
  const sp=Math.hypot(V.x,V.z),vf=V.x*Math.sin(yaw)+V.z*Math.cos(yaw),vr=-V.x*Math.cos(yaw)+V.z*Math.sin(yaw),b=1-Math.exp(-6*dt);
  pitch+=(clamp(vf/MAXV*.3,-.5,.5)-pitch)*b;roll+=(clamp(vr/MAXV*.3,-.5,.5)-roll)*b;
  drone.position.copy(P);drone.rotation.set(roll,yaw+FRONT,-pitch);
@@ -223,11 +225,11 @@ function fpvUpdate(){drone.updateMatrixWorld();fpv.position.copy(drone.localToWo
  fpv.quaternion.copy(drone.quaternion).multiply(qOff.setFromEuler(new THREE.Euler(-.1+tilt,-Math.PI/2,0,'YXZ')));
  fpv.aspect=pip.clientWidth/pip.clientHeight;fpv.updateProjectionMatrix();fpv.updateMatrixWorld();fpv.matrixWorldInverse.copy(fpv.matrixWorld).invert()}
 function ai(){dets=[];lock=null;if(!Z.range)return;const cp=fpv.position;
- for(const t of T){if(t.gone)continue;const d=cp.distanceTo(t.c);if(d>Z.range||d<1)continue;if(t.occ&&!los(cp,t.c))continue;
+ for(const t of T){if(t.gone)continue;const d=cp.distanceTo(t.c);if(d>Z.range||d<1)continue;if(t.occ&&!los(cp,t.c,t.cls==='victim'))continue;
   if(t.n){tv.copy(cp).sub(t.c).normalize();if(tv.dot(t.n)<.3)continue}
   tv.copy(t.c).project(fpv);if(tv.z>1||Math.abs(tv.x)>1||Math.abs(tv.y)>1)continue;
   let x0=9,y0=9,x1=-9,y1=-9;for(const a of[-1,1])for(const b of[-1,1])for(const c of[-1,1]){tc.set(t.c.x+a*t.s[0],t.c.y+b*t.s[1],t.c.z+c*t.s[2]).project(fpv);x0=Math.min(x0,tc.x);x1=Math.max(x1,tc.x);y0=Math.min(y0,tc.y);y1=Math.max(y1,tc.y)}
-  const off=tv.x*tv.x+tv.y*tv.y,o={t,d,off,x0,x1,y0,y1,conf:clamp(1.04-d/Z.range*.7-off*.15,.2,.99)};dets.push(o);if(off<.12&&(!lock||off<lock.off))lock=o}}
+  const off=tv.x*tv.x+tv.y*tv.y,o={t,d,off,x0,x1,y0,y1,conf:clamp(1.04-d/Z.range*.7-off*.15,.2,.99)};dets.push(o);if(off<(t.cls==='victim'?.3:.12)&&(!lock||off<lock.off))lock=o}}
 function overlay(){const w=pip.clientWidth,h=pip.clientHeight;if(ov.width!==w||ov.height!==h){ov.width=w;ov.height=h}ox.clearRect(0,0,w,h);const fs=Math.max(10,Math.min(15,w/34));ox.font='700 '+fs+'px Sora,sans-serif';
  for(const d of dets){const[txt,c,fill]=Z.lab(d.t,d.conf),x=(d.x0*.5+.5)*w,X=(d.x1*.5+.5)*w,y=(-d.y1*.5+.5)*h,Y=(-d.y0*.5+.5)*h;
   ox.strokeStyle=c;ox.lineWidth=d===lock?3:1.5;ox.strokeRect(x,y,X-x,Y-y);if(fill){ox.fillStyle=c+'33';ox.fillRect(x,y,X-x,Y-y)}const tw=ox.measureText(txt).width+10,ty=Math.max(y,fs+6);
@@ -260,7 +262,7 @@ function draw(){const W=innerWidth,H=innerHeight;FX.forEach(f=>f.pts.visible=!!Z
  if(fpvMode){psc(fpv,H);drone.visible=false;renderer.render(scene,fpv);drone.visible=true;return}
  psc(cam,H);renderer.render(scene,cam);const r=pip.getBoundingClientRect(),w=pip.clientWidth,h=pip.clientHeight,x=r.left+pip.clientLeft,y=H-(r.top+pip.clientTop+h);
  psc(fpv,h);renderer.setScissorTest(true);renderer.setViewport(x,y,w,h);renderer.setScissor(x,y,w,h);drone.visible=false;renderer.render(scene,fpv);drone.visible=true;renderer.setScissorTest(false);renderer.setViewport(0,0,W,H)}
-const tree1=(x,z,h,y0)=>{y0=y0||0;solid(x,z,h*.15,h*.15,y0+h*1.05,y0?y0:undefined,y0?1:0);const g=new THREE.Group();g.position.set(x,y0,z);add(g);const m=(geo,c,py)=>{const o=new THREE.Mesh(geo,lam(c));o.position.y=py;g.add(o)};
+const tree1=(x,z,h,y0)=>{y0=y0||0;tsolid(x,z,h*.15,h*.15,y0+h*1.05,y0?y0:undefined,y0?1:0);const g=new THREE.Group();g.position.set(x,y0,z);add(g);const m=(geo,c,py)=>{const o=new THREE.Mesh(geo,lam(c));o.position.y=py;g.add(o)};
  m(new THREE.CylinderGeometry(.2+h*.012,.3+h*.02,h*.4,6),0x3a2a1c,h*.2);const gc=[0x244d2b,0x1f4426,0x2c5a30][Math.floor(R()*3)];for(let i=0;i<4;i++)m(new THREE.ConeGeometry(h*(.21-.035*i),h*.34,7),gc,h*(.38+.16*i))};
 const bar=(v,c)=>`<span class="bar"><i style="width:${v|0}%;background:${c}"></i></span>`;
 const walkers=[];function crewAt(x,z,vest,hat,path,y){const p=person(vest,hat);p.g.position.set(x,y||0,z);p.g.rotation.y=R()*6;add(p.g);walkers.push({p,x,z,path:path||0,ph:R()*6})}
@@ -285,7 +287,7 @@ function dogM(c1,c2){const g=new THREE.Group(),bx=(w,h,d,c,x,y,z,p)=>{const m=ne
  for(const a of[-.32,.32])for(const b of[-.14,.14])bx(.12,.45,.12,c2,a,.22,b);const tp=new THREE.Group();tp.position.set(-.5,.78,0);g.add(tp);bx(.45,.08,.08,c1,-.22,.1,0,tp);g.userData.tail=tp;return g}
 function vic(kind,x,z){const g=kind==='D'?dogM(x>0?0xd9a24a:0x9aa0a6,x>0?0xb07a2a:0xe8e8e8):(()=>{const p=person(0x3b82f6,0x3a2a1a);p.g.scale.setScalar(.95);const w=new THREE.Group();w.add(p.g);w.userData.p=p;return w})();
  g.position.set(x,0,z);g.rotation.y=kind==='D'?R()*6:0;add(g);const d=kind==='D';
- const v={g,kind,hang:d?1:1.8,c:new THREE.Vector3(),s:d?[.6,.45,.4]:[.35,.95,.35],cy:d?.5:.95,cls:'victim',occ:1,id:false,prog:0,held:false,fall:false,done:false};vs.push(v);T.push(v)}
+ const v={g,kind,hang:d?1:1.8,c:new THREE.Vector3(),s:d?[1,.8,.8]:[.8,1.3,.8],cy:d?.5:.95,cls:'victim',occ:1,id:false,prog:0,held:false,fall:false,done:false};vs.push(v);T.push(v)}
 var wc={ph:'idle',L:.6,v:null,t:0},clawG,cableM;
 function grab(){
  if(wc.ph==='carry'){const v=wc.v;v.held=false;v.fall=true;held=null;wc.ph='idle';return}
@@ -304,9 +306,9 @@ function decal(kind,w,x,y,z,nx,ny,nz,real,lw,sev){
  const t=ctex(256,256,g=>{if(kind==='crack'){g.strokeStyle='#1a1a1a';g.lineCap='round';const br=[],wk=(x,y,a,n,w)=>{g.lineWidth=w;g.beginPath();g.moveTo(x,y);for(let i=0;i<n;i++){a+=(R()-.5)*1.1;x+=Math.cos(a)*14;y+=Math.sin(a)*14;g.lineTo(x,y);if(R()<.15&&w>1.5)br.push([x,y,a+(R()<.5?1:-1)*.8,6,w*.6])}g.stroke()};wk(128,20,Math.PI/2,15,lw);while(br.length)wk(...br.shift())}
   else if(kind==='stain'){const r=g.createRadialGradient(128,128,10,128,128,100);r.addColorStop(0,'rgba(20,40,60,.55)');r.addColorStop(1,'rgba(20,40,60,0)');g.fillStyle=r;g.fillRect(0,0,256,256)}
   else{g.fillStyle='rgba(20,20,20,.8)';g.fillRect(124,0,3,256);g.fillRect(131,0,3,256)}});
- const m=add(new THREE.Mesh(new THREE.PlaneGeometry(w,w),new THREE.MeshBasicMaterial({map:t,transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2})));
- m.position.set(x,y,z);if(ny)m.rotation.x=Math.PI/2;else if(nx)m.rotation.y=nx>0?Math.PI/2:-Math.PI/2;else if(nz<0)m.rotation.y=Math.PI;
- T.push({occ:1,c:new THREE.Vector3(x,y,z),s:ny?[w*.4,.1,w*.4]:nx?[.1,w*.4,w*.4]:[w*.4,w*.4,.1],n:new THREE.Vector3(nx,ny,nz),cls:kind,real,sev,done:false})}
+ const m=add(new THREE.Mesh(new THREE.PlaneGeometry(w,w),new THREE.MeshBasicMaterial({map:t,transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-4,polygonOffsetUnits:-8})));
+ const ex=x+nx*.06,ey=y+ny*.06,ez=z+nz*.06;m.position.set(ex,ey,ez);if(ny)m.rotation.x=Math.PI/2;else if(nx)m.rotation.y=nx>0?Math.PI/2:-Math.PI/2;else if(nz<0)m.rotation.y=Math.PI;
+ T.push({occ:1,c:new THREE.Vector3(ex,ey,ez),s:ny?[w*.4,.1,w*.4]:nx?[.1,w*.4,w*.4]:[w*.4,w*.4,.1],n:new THREE.Vector3(nx,ny,nz),cls:kind,real,sev,done:false})}
 
 const DX=9,DZ=26;
 /* ===== shared asset helpers ===== */
@@ -372,6 +374,9 @@ function safeNet(cx,cz){const tx=ctex(64,64,q=>{q.strokeStyle='#ffe28a';q.lineWi
  const geo=new THREE.PlaneGeometry(6,6,8,8),pa=geo.attributes.position;for(let i=0;i<pa.count;i++){const x=pa.getX(i),y=pa.getY(i);pa.setZ(i,-.5*(1-(x*x+y*y)/18))}geo.computeVertexNormals();
  const m=add(new THREE.Mesh(geo,new THREE.MeshBasicMaterial({map:tx,transparent:true,side:THREE.DoubleSide,opacity:.9})));m.rotation.x=-Math.PI/2;m.position.set(cx,1.05,cz);
  [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([a,b])=>{const p=person(0xffd21f,0xc8201a);p.g.position.set(cx+a*3.2,0,cz+b*3.2);p.g.rotation.y=Math.atan2(-a,-b);p.arms[0].rotation.x=p.arms[1].rotation.x=-1.2;add(p.g)})}
+function sigLine(){let b=null,bd=1e9;for(const v of vs)if(!v.id&&!v.done){const d=Math.hypot(v.g.position.x-P.x,v.g.position.z-P.z);if(d<bd){bd=d;b=v}}if(!b)return'';
+ const dx=b.g.position.x-P.x,dz=b.g.position.z-P.z,f=dx*Math.sin(yaw)+dz*Math.cos(yaw),r=-dx*Math.cos(yaw)+dz*Math.sin(yaw),k=((Math.round(Math.atan2(r,f)/(Math.PI/4))%8)+8)%8;
+ return`<br>📡 ${tr('Unknown signal','미확인 신호')} ${['⬆','↗','➡','↘','⬇','↙','⬅','↖'][k]} <b>${bd|0} m</b>`}
 function farScene(){farF=[[-52,-20,1.3,6.4],[53,-14,1.2,5.4],[-50,-44,1,0],[48,-40,1.2,0]];jets=[];cabin(-52,-20,6,5,6,1);cabin(53,-14,5,6,5,1);
  [[-44,-14,0],[46,-8,1],[-42,-40,2],[42,-36,3]].forEach(([x,z,k])=>{const f=farF[k],dx=f[0]-x,dz=f[1]-z,l=Math.hypot(dx,dz);ftruck(x,z,Math.atan2(dx,dz),0);
   jets.push({sx:x+dx/l*2,sy:3,sz:z+dz/l*2,tx:f[0],ty:f[3]+1.5,tz:f[1]});crewAt(x+2.5,z+2,0xffd21f,0xc8201a);crewAt(x-2.5,z+1,0xffd21f,0xc8201a)})}
@@ -463,7 +468,7 @@ const ZONES=[
  hud(){const m=Math.floor(tm/60),s=String(Math.floor(tm%60)).padStart(2,'0');return'<b>'+tr('Order #'+ordNo+' · City Hospital','주문 #'+ordNo+' · 시립병원')+'</b><br>'+PICK.map(b=>`${dv.has(b.code)?'✅':got.has(b.code)?'📷':'⬜'} <b>${b.code}</b> ${pn(b.pr)}<small>${loc(b)}</small>`).join('')+tr('Collisions','충돌')+` <b>${hits}</b> · ${tr('Time','시간')} <b>${m}:${s}</b>`}},
 
 {t:['Fire Rescue','산불 구조'],d:['A wildfire traps residents. Let the AI find survivors, then grip and carry them out.','산불로 고립된 사람과 동물을 카메라와 AI로 찾아보고,\n물통을 사용하여 불을 끄거나, 그리퍼를 사용하여 안전하게 옮깁니다.'],tg:[['Object detection','객체 인식'],['Gripper','그리퍼'],['Water tank','물통']],ic:'🔥',lv:3,
- sky:0x6a3a22,fog:[22,115],lim:38,alt:20,sx:-8,sz:24,yaw:Math.PI,range:40,fx:1,tilt0:-.55,lt:[0xffb27a,0x3a1c10,.75,0xff7a3a,1],
+ sky:0x6a3a22,fog:[22,115],lim:38,alt:20,sx:-8,sz:24,yaw:Math.PI,range:60,fx:1,tilt0:-.55,lt:[0xffb27a,0x3a1c10,.75,0xff7a3a,1],
  build(){fires=[];vs=[];walkers.length=0;ftk.length=0;
   const gt=ctex(256,256,(g,w,h)=>{g.fillStyle='#2a211c';g.fillRect(0,0,w,h);for(let i=0;i<500;i++){g.fillStyle=`rgba(${R()<.15?'255,110,20':'0,0,0'},${R()*.25})`;g.fillRect(R()*w,R()*h,R()*8+1,R()*3+1)}});gt.wrapS=gt.wrapT=THREE.RepeatWrapping;gt.repeat.set(40,40);
   flat(400,400,new THREE.MeshLambertMaterial({map:gt}),0,0,0);
@@ -471,14 +476,14 @@ const ZONES=[
   const B=[[-18,-12,6,5,6,1],[14,-6,5,6,5,1],[-4,-30,7,5,7,1],[20,-26,5,5,4,0],[-26,-28,4,4,4,0]];B.forEach(([x,z,w,d,h,b])=>cabin(x,z,w,d,h,b));
   fire(-18,-12,1.1,6.4);fire(14,-6,1,5.4);fire(-4,-30,1.2,7.4);
   [[-18,-8,1.3],[-12,-11,1],[14,-1.5,1.2],[9,-5,1],[-4,-26,1.4],[1,-29,1.2],[20,-22,1.2],[-26,-24,1],[-4,-14,1],[4,-18,1]].forEach(([x,z,s])=>fire(x,z,s,0));
-  const keep=[...B.map(b=>[b[0],b[1],7]),[-18,-17.5,2],[16,-12,2],[-6,-35,2],[-52,-20,9],[53,-14,9],[-44,-14,6],[46,-8,6],[-42,-40,6],[42,-36,6],[-50,-44,5],[48,-40,5],...fires.map(f=>[f.c.x,f.c.z,3])],N=170,
+  const keep=[...B.map(b=>[b[0],b[1],7]),[-18,-17.5,2],[16,-12,2],[-11,-30,2],[-52,-20,9],[53,-14,9],[-44,-14,6],[46,-8,6],[-42,-40,6],[42,-36,6],[-50,-44,5],[48,-40,5],...fires.map(f=>[f.c.x,f.c.z,3])],N=170,
    im=[new THREE.InstancedMesh(new THREE.CylinderGeometry(.18,.28,1,6),lam(0x3a2a1c),N)],cg=new THREE.ConeGeometry(1,1,7);for(let i=0;i<4;i++)im.push(new THREE.InstancedMesh(cg,new THREE.MeshLambertMaterial({color:0xffffff}),N));
   const o=new THREE.Object3D();let n=0,tf=0;
   for(let a=0;a<1200&&n<N;a++){const x=R()*150-75,z=-95+R()*125;if(z>12&&Math.abs(x)<28)continue;if(keep.some(k=>Math.hypot(x-k[0],z-k[1])<k[2]))continue;
    const h=9+R()*8,burnt=R()<.4,c=new THREE.Color(burnt?0x1e1a18:[0x244d2b,0x1f4426,0x2c5a30][n%3]),tw=1+h*.05;
    o.rotation.set(0,0,0);o.position.set(x,h*.2,z);o.scale.set(tw,h*.4,tw);o.updateMatrix();im[0].setMatrixAt(n,o.matrix);
    for(let i=0;i<4;i++){const r=h*(.21-.035*i);o.position.set(x,h*(.38+.16*i),z);o.scale.set(r,h*.34,r);o.updateMatrix();im[i+1].setMatrixAt(n,o.matrix);im[i+1].setColorAt(n,c)}
-   if(Math.abs(x)<LIM+2&&Math.abs(z)<LIM+2)solid(x,z,h*.15,h*.15,h*1.05);if(tf<8&&Math.abs(x)<32&&z>-36&&z<10&&R()<.2){fire(x,z,.55,0);tf++}n++}
+   if(Math.abs(x)<LIM+2&&Math.abs(z)<LIM+2)tsolid(x,z,h*.15,h*.15,h*1.05);if(tf<8&&Math.abs(x)<32&&z>-36&&z<10&&R()<.2){fire(x,z,.55,0);tf++}n++}
   im.forEach(m=>{m.count=n;m.frustumCulled=false;add(m)});
   pad(-8,24,'H','#f4c542',3.4);pad(6,24,'SAFE','#22c55e',5);pad(18,24,'WATER','#2e8bff',5);
   ftruck(-22,31,0,0);safeNet(6,24);ambulance(-2,34);farScene();
@@ -487,9 +492,9 @@ const ZONES=[
   for(let i=0;i<8;i++){const c=add(new THREE.Mesh(new THREE.ConeGeometry(.25,.6,8),lam(0xff7a1a)));const a=i/8*6.28;c.position.set(6+Math.cos(a)*3.4,.3,24+Math.sin(a)*3.4)}
   solid(-22,31,1.7,4.2,3.2);solid(6,31,2.5,2,3);
   crewAt(-18,28,0xffd21f,0xc8201a);crewAt(-16,30,0xffd21f,0xc8201a);crewAt(2,28,0xffffff,0xc8201a);crewAt(9,28,0xffffff,0xc8201a);
-  vic('P',-18,-17.5);vic('D',16,-12);vic('D',-6,-35);
-  [[-18,-17.5],[16,-12],[-6,-35]].forEach(([x,z])=>{for(let i=0;i<5;i++){const a=i/5*6.28+R()*.4,r=3.6+R()*.6,tx=x+Math.cos(a)*r,tz=z+Math.sin(a)*r,h=9+R()*3;tree1(tx,tz,h)}});
-  fire(-22,-16.5,.9,0);fire(19,-11,.8,0);fire(-8.5,-34,.9,0);
+  vic('P',-18,-17.5);vic('D',16,-12);vic('D',-11,-30);
+  [[-18,-17.5],[16,-12],[-11,-30]].forEach(([x,z])=>{for(let i=0;i<5;i++){const a=i/5*6.28+R()*.4,r=3.6+R()*.6,tx=x+Math.cos(a)*r,tz=z+Math.sin(a)*r,h=9+R()*3;tree1(tx,tz,h)}});
+  fire(-22,-16.5,.9,0);fire(19,-11,.8,0);fire(-9,-27,.9,0);
   clawG=new THREE.Group();const bxc=(w,h,d,m,x,y,z,pp)=>{const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);(pp||clawG).add(o);return o};
   bxc(.5,.18,.3,lam(0x333333),0,0,0);clawG.userData.f=[-1,1].map(s=>{const pv=new THREE.Group();pv.position.set(s*.2,-.09,0);clawG.add(pv);bxc(.1,.6,.2,lam(0xff8a1f),0,-.3,0,pv);return pv});clawG.visible=false;add(clawG);
   cableM=add(new THREE.Mesh(new THREE.CylinderGeometry(.03,.03,1,6),lam(0x222222)));cableM.visible=false;
@@ -533,8 +538,8 @@ const ZONES=[
    else if(u.p){u.p.arms[1].rotation.x=-2.6+Math.sin(time*5)*.35;u.p.arms[0].rotation.x=-2.6+Math.sin(time*5+2)*.35}
    v.c.set(v.g.position.x,v.g.position.y+v.cy,v.g.position.z)});
   const gt=K.KeyF&&lock&&lock.t.cls==='victim'&&!lock.t.id?lock.t:null;vs.forEach(v=>{if(!v.id&&v!==gt&&v.prog>0)v.prog=Math.max(0,v.prog-dt*.25)});
-  if(gt){gt.prog+=dt/1.4*(lock.conf>.55?1:.25);if(gt.prog>=1){gt.id=true;toast(tr('AI identified: ','AI 식별 완료: ')+kn(gt),'g')}}
-  $('sg').style.display=gt&&!gt.id?'block':'none';if(gt){$('sgi').style.width=Math.min(100,gt.prog*100)+'%';$('sgl').textContent=tr('🔍 AI analyzing… ','🔍 AI 분석 중… ')+Math.min(100,Math.round(gt.prog*100))+'%'+(lock.conf<=.55?tr(' · weak signal, move closer',' · 신호 약함, 더 가까이'):'')}},
+  if(gt){gt.prog+=dt/1.0*(lock.conf>.4?1:.35);if(gt.prog>=1){gt.id=true;toast(tr('AI identified: ','AI 식별 완료: ')+kn(gt),'g')}}
+  $('sg').style.display=gt&&!gt.id?'block':'none';if(gt){$('sgi').style.width=Math.min(100,gt.prog*100)+'%';$('sgl').textContent=tr('🔍 AI analyzing… ','🔍 AI 분석 중… ')+Math.min(100,Math.round(gt.prog*100))+'%'+(lock.conf<=.4?tr(' · weak signal, move closer',' · 신호 약함, 더 가까이'):'')}},
  brief(){return{t:tr('Mission: Wildfire rescue','미션: 산불 구조'),
   p:tr('A wildfire is closing in on a mountain village. Thick smoke hides people and animals from the rescue teams, and the fire is too hot to enter on foot. Your drone can fly into the smoke, let the AI find survivors, and carry them out.','산불이 산골 마을로 번지고 있어요. 짙은 연기 때문에 구조대가 사람과 동물을 볼 수 없고, 불길이 너무 뜨거워 걸어서는 들어갈 수 없어요. 드론이 연기 속으로 들어가 AI로 생존자를 찾고 구조합니다.'),
   s:[tr('Press <kbd>C</kbd> for the AI camera (it starts tilted down; <kbd>Q</kbd> / <kbd>E</kbd> adjusts it). Cyan boxes are unknown objects, possible survivors. Orange-red boxes are fire.','<kbd>C</kbd> 키로 AI 카메라를 켜세요. 처음엔 아래를 보고 있고 <kbd>Q</kbd> / <kbd>E</kbd>로 조절해요. 하늘색 상자는 미확인 물체(생존자일 수 있음), 주황빨강 상자는 불이에요.'),tr('Hold <kbd>F</kbd> (SCAN) while the camera tracks a cyan box. The AI analyzes it and tells you if it is a person or a dog.','하늘색 상자를 카메라로 따라가며 <kbd>F</kbd>(스캔)를 길게 누르세요. AI가 분석해서 사람인지 강아지인지 알려 줘요.'),tr('Equip the gripper with <kbd>1</kbd> and hover above an identified survivor (up to 15 m high). Press <kbd>G</kbd>: the claw lowers on a cable like a crane game and lifts them up.','<kbd>1</kbd>로 그리퍼를 장착하고 식별된 생존자 위(최대 15 m 높이)에서 <kbd>G</kbd>를 누르세요. 인형뽑기처럼 줄이 내려가 집게로 집어 올려요.'),tr('Carry them to the green SAFE pad and press <kbd>G</kbd> again. Use <kbd>2</kbd> and hold <kbd>X</kbd> to spray water on flames. Stay away from fire or the drone overheats.','초록 SAFE 패드로 옮기고 <kbd>G</kbd>를 다시 누르세요. <kbd>2</kbd>를 고르고 <kbd>X</kbd>를 누르면 불에 물을 뿌려요. 불에 너무 가까우면 드론이 과열돼요.')],x:''}},
@@ -544,17 +549,17 @@ const ZONES=[
   const t=lock&&lock.t;if(t&&t.cls==='victim'&&!t.id)return tr('Hold F to let the AI identify it.','F를 길게 눌러 AI가 식별하게 하세요.');
   if(t&&t.cls==='victim'&&t.id&&!t.done)return tr('Press 1, hover above it (cable reaches 15 m) and press G: the claw lowers.','1을 눌러 그리퍼를 장착하고, 위에서 G를 누르세요(줄 길이 15 m).');
   if(t&&t.cls==='fire')return tr('Fire! Press 2 and hold X above it to spray water.','불이에요! 2를 누르고 위에서 X를 눌러 물을 뿌리세요.');
-  return tr('Search the smoke. Cyan boxes are unknown objects.','연기 속을 수색하세요. 하늘색 상자는 미확인 물체예요.')},
+  return tr('Follow the 📡 signal arrow in the HUD. Cyan boxes are unknown objects.','HUD의 📡 신호 화살표 방향으로 날아가 보세요. 하늘색 상자는 미확인 물체예요.')},
  lab(t,c){const p=Math.round(c*100)+'%';if(t.cls==='fire')return[(c<.5?tr('Heat? ','열원? '):tr('FIRE ','불 '))+p,'#ff5a3c'];if(t.id)return[kn(t)+' '+p,'#27d36b'];return[(t.prog>0?tr('🔍 Analyzing ','🔍 분석 중 ')+Math.round(t.prog*100)+'%':tr('❓ Unknown ','❓ 미확인 ')+p),'#19e3ff',1]},
- hud:()=>`<div class="al">🚨 ${tr('WILDFIRE EMERGENCY','산불 긴급 상황')}</div>${tr('Rescued','구조')} <b>${rescued}/3</b> · ${tr('Fires out','진화')} <b>${fires.filter(f=>f.gone).length}/${fires.length}</b><br><span class="ch${tool?'':' on'}" data-k="Digit1">🦾 ${tr('Gripper','그리퍼')} [1]</span><span class="ch${tool?' on':''}" data-k="Digit2">💧 ${tr('Water','물통')} [2]</span><br>${tr('Water','물')} ${bar(water,'#2e8bff')}<br>${tr('Heat','열')} ${bar(heat,'#ff5a3c')}<br>`+vs.map(v=>(v.done?'✅':v.id?'🔎':'❔')+' '+(v.id||v.done?kn(v):tr('Unknown','미확인'))).join(' · ')+(held?`<br>🤝 ${tr('Carrying','운반 중')} ${kn(held)}`:'')},
+ hud:()=>`<div class="al">🚨 ${tr('WILDFIRE EMERGENCY','산불 긴급 상황')}</div>${tr('Rescued','구조')} <b>${rescued}/3</b> · ${tr('Fires out','진화')} <b>${fires.filter(f=>f.gone).length}/${fires.length}</b><br><span class="ch${tool?'':' on'}" data-k="Digit1">🦾 ${tr('Gripper','그리퍼')} [1]</span><span class="ch${tool?' on':''}" data-k="Digit2">💧 ${tr('Water','물통')} [2]</span><br>${tr('Water','물')} ${bar(water,'#2e8bff')}<br>${tr('Heat','열')} ${bar(heat,'#ff5a3c')}<br>`+vs.map(v=>(v.done?'✅':v.id?'🔎':'❔')+' '+(v.id||v.done?kn(v):tr('Unknown','미확인'))).join(' · ')+(held?`<br>🤝 ${tr('Carrying','운반 중')} ${kn(held)}`:'')+sigLine()},
 
 {t:['Bridge Inspection','교각 점검'],d:['Fly under a huge bridge and tell real cracks from stains and joints.','거대한 다리 아래로 들어가, 카메라를 사용해 교각의 균열을 찾아보고 사진을 찍어봅니다.'],tg:[['Anomaly detection','이상 탐지'],['Camera tilt','카메라 틸트']],ic:'🌉',lv:4,
- sky:0xbfd4e4,fog:[90,260],lim:78,alt:44,sx:-64,sz:10,sy:HB,yaw:Math.PI/2,range:34,
+ sky:0xbfd4e4,fog:[90,260],lim:78,alt:44,sx:-64,sz:12,sy:DKT,yaw:Math.PI/2,range:34,
  build(){walkers.length=0;cars=[];boats=[];turb=[];
   const rk=ctex(128,128,(g,w,h)=>{g.fillStyle='#7a6a58';g.fillRect(0,0,w,h);for(let i=0;i<500;i++){g.fillStyle=`rgba(${R()<.5?'0,0,0':'255,230,200'},${R()*.15})`;g.fillRect(R()*w,R()*h,R()*10+1,R()*4+1)}});rk.wrapS=rk.wrapT=THREE.RepeatWrapping;rk.repeat.set(8,3);const rm=new THREE.MeshLambertMaterial({map:rk});
   const cc=ctex(128,128,(g,w,h)=>{g.fillStyle='#b9b9b4';g.fillRect(0,0,w,h);for(let i=0;i<900;i++){g.fillStyle=`rgba(${R()<.5?'0,0,0':'255,255,255'},${R()*.12})`;g.fillRect(R()*w,R()*h,2,2)}});cc.wrapS=cc.wrapT=THREE.RepeatWrapping;cc.repeat.set(2,3);const cm=new THREE.MeshLambertMaterial({map:cc});
   flat(700,700,0x6f7f62,0,0,0);flat(112,220,0x2f6f9f,0,.04,0);
-  [-1,1].forEach(s=>{box(40,HB,200,rm,s*76,HB/2,0);solid(s*76,0,20,100,HB);flat(40,200,0x8a7d66,s*76,HB+.02,0);flat(26,10,0x2f3338,s*83,HB+.05,0)});
+  [-1,1].forEach(s=>{box(40,DKT,200,rm,s*76,DKT/2,0);solid(s*76,0,20,100,DKT);flat(40,200,0x8a7d66,s*76,DKT+.02,0);flat(26,10,0x2f3338,s*83,DKT+.05,0)});
   [-48,-24,0,24,48].forEach(x=>{box(4,HB,8,cm,x,HB/2,0);box(5,1.4,10.5,cm,x,HB-.7,0);box(6,1.4,10,cm,x,.7,0);solid(x,0,2.5,5.3,HB)});
   box(140,1.6,12,cm,0,HB+.8,0);solid(0,0,70,6,DKT,HB);[-4.5,4.5].forEach(z=>{box(140,2.2,.9,cm,0,HB-1.1,z);solid(0,z,70,.45,HB,HB-2.2)});
   flat(140,10,0x2f3338,0,DKT+.06,0);for(let x=-68;x<68;x+=6)flat(3,.2,0xf5f5f5,x+1.5,DKT+.09,0);
@@ -562,35 +567,36 @@ const ZONES=[
   for(let x=-66;x<=66;x+=12)[-1,1].forEach(s=>{box(.15,4.5,.15,0x333333,x,DKT+2.25,s*5.5);box(.9,.15,.3,bas(0xfff2b0),x,DKT+4.5,s*5.5);solid(x,s*5.5,.2,.2,DKT+4.7,DKT,1)});
   const cc2=[0xe8412f,0x2457ff,0xf4f4f4,0x222222,0xf2c230,0x22c55e];
   for(let i=0;i<12;i++){const g=new THREE.Group(),tk=i%4===3;pb(g,tk?7:4,tk?2.4:.9,1.9,cc2[i%6],0,tk?1.2:.5,0);if(!tk)pb(g,2,.7,1.7,0x9fd0ff,-.2,1.2,0);add(g);
-   const cs={x:0,z:0,hx:tk?3.6:2.1,hz:1.05,h:DKT+(tk?2.5:1.6),y0:DKT-.1,nf:1};solids.push(cs);cars.push({g,cs,dir:i%2?1:-1,x:R()*140-70,v:7+R()*5})}
+   const cs={x:0,z:0,hx:tk?3.6:2.1,hz:1.05,h:DKT+(tk?2.5:1.6),y0:DKT-.1,nf:1};solids.push(cs);cars.push({g,cs,dir:i%2?1:-1,x:R()*180-90,v:7+R()*5})}
   [[-14,0],[12,2],[34,4]].forEach(([bx,ph],i)=>{const g=new THREE.Group();pb(g,i?3:5,1.1,i?9:16,[0x9a3a2a,0xffffff,0x2b3a55][i],0,.55,0);pb(g,i?1.6:3,1.4,i?2:3,0xffffff,0,1.6,i?-2:-5);
-   if(i===0)[0,1,2].forEach(k=>pb(g,3,2.4,5,[0x2457ff,0xe8412f,0x22a06b][k],0,2.3,-1+k*4.5));if(i===2){pb(g,.15,6,.15,0xdddddd,0,4,1);pb(g,.05,5,3,0xffffff,0,4.5,3)}add(g);boats.push({g,x:bx,ph,sp:.04+i*.02})});
-  crane=new THREE.Group();crane.position.set(-68,HB,30);add(crane);pb(crane,1.6,42,1.6,0xf2c230,0,21,0);const jib=new THREE.Group();jib.position.y=42;crane.add(jib);
-  pb(jib,30,1,1,0xf2c230,8,0,0);pb(jib,4,2,2.4,0x555555,-10,-1,0);pb(jib,1.5,1.5,1.5,0x333333,0,-1.2,0);pb(jib,.08,10,.08,0x222222,20,-5,0);pb(jib,1,.7,1,0xe8412f,20,-10,0);pb(jib,.4,3,.4,0xffd21f,0,2.5,0);crane.userData.jib=jib;solid(-68,30,1.3,1.3,HB+42,HB,1);
-  [[-60,36,0,0x2457ff],[-60,36,2.6,0xe8412f],[-54,40,0,0x22a06b]].forEach(([x,z,y,c])=>box(6,2.6,2.6,c,x,HB+1.3+y,z));solid(-60,36,3.1,1.4,HB+5.2,HB,1);solid(-54,40,3.1,1.4,HB+2.6,HB,1);
-  box(8,3,3.2,0xe8edf2,-75,HB+1.5,20);for(let i=0;i<3;i++)box(1.6,1,.05,bas(0x8ad0ff),-77+i*2.4,HB+1.8,21.63);solid(-75,20,4,1.6,HB+3.2,HB,1);
-  exc=new THREE.Group();exc.position.set(-60,HB,22);add(exc);pb(exc,2.6,1.2,3.6,0xf2c230,0,1,0);pb(exc,2.8,.6,4,0x222222,0,.3,0);pb(exc,1.6,1.4,1.6,0x9fd0ff,.4,2.1,.6);const bm=new THREE.Group();bm.position.set(0,1.8,-1.6);exc.add(bm);pb(bm,.5,.5,4,0xf2c230,0,.8,-2);pb(bm,1,.8,.8,0x555555,0,.3,-4.2);exc.userData.boom=bm;solid(-60,22,1.6,2.2,HB+2.8,HB,1);
-  const mx=new THREE.Group();mx.position.set(-66,HB,8);add(mx);pb(mx,2.6,.6,7,0x333333,0,.7,0);pb(mx,2.4,1.8,1.8,0xff8a1f,0,1.7,3.2);[[-1.2,2.8],[1.2,2.8],[-1.2,-2.5],[1.2,-2.5]].forEach(([a,c])=>wheel(mx,.55,.4,a,.55,c));
-  const dg=new THREE.Group();dg.position.set(0,2.3,-.8);dg.rotation.x=Math.PI/2+.25;mx.add(dg);drum=new THREE.Mesh(new THREE.CylinderGeometry(1.2,.8,4.5,16),lam(0xdddddd));dg.add(drum);pb(drum,.3,4,.3,0xff8a1f,1.1,0,0);solid(-66,8,1.4,3.6,HB+3,HB,1);
-  const sc=(x,z)=>{for(const a of[-1.5,1.5])for(const c of[-.8,.8])box(.1,9,.1,0x9aa3a8,x+a,HB+4.5,z+c);for(let k=1;k<=3;k++){box(3.4,.12,1.9,0xb08a55,x,HB+k*3,z);box(3.2,.9,.05,0xff7a1a,x,HB+k*3+.5,z+.95);box(3.2,.9,.05,0xff7a1a,x,HB+k*3+.5,z-.95)}solid(x,z,1.7,1,HB+9.2,HB,1)};sc(-58,-14);sc(-58,-8);
-  crewAt(-58,-14,0xffd21f,0xffffff,0,HB+3.12);crewAt(-58,-8,0xff7a1a,0xffd21f,0,HB+6.12);crewAt(-62,28,0xffd21f,0xffffff,4,HB);crewAt(-56,25,0xff7a1a,0xffd21f,0,HB);crewAt(-64,18,0xffd21f,0xffffff,3,HB);
-  [[-70,40],[-56,28],[-72,-5]].forEach(([x,z])=>{box(.2,8,.2,0x333333,x,HB+4,z);box(1.4,.6,.3,bas(0xfff4c2),x,HB+8.2,z)});
-  box(.12,.12,80,0xf2c230,-56.3,HB+1.1,5);box(.12,.12,80,0xf2c230,56.3,HB+1.1,5);for(let z=-30;z<=50;z+=4){box(.12,1.1,.12,0xf2c230,-56.3,HB+.55,z);box(.12,1.1,.12,0xf2c230,56.3,HB+.55,z)}
-  box(5,2.4,4,0xf5f5f5,-66,HB+1.2,2);const rf=add(new THREE.Mesh(new THREE.ConeGeometry(4,1.4,4),lam(0x2457ff)));rf.rotation.y=Math.PI/4;rf.position.set(-66,HB+3.1,2);box(2,.9,1,0x6b4a2f,-64.5,HB+.5,-1);solid(-66,2,2.6,2.1,HB+3.4,HB,1);
-  box(5,2.2,2.4,0xffffff,-72,HB+1.3,-3);solid(-72,-3,2.6,1.3,HB+2.6,HB,1);crewAt(-68,0,0x2457ff,0xffffff,0,HB);crewAt(-63.5,0,0xffd21f,0xffffff,0,HB);crewAt(-65.5,-2.4,0xffd21f,0xffffff,0,HB);
-  pad(-64,10,'H','#f4c542',3.4,HB);
-  for(let i=0;i<26;i++){const x=-92+R()*28,z=R()<.5?-75+R()*60:50+R()*25;tree1(x,z,9+R()*8,HB)}
-  for(let i=0;i<24;i++){const x=60+R()*32,z=R()*150-75;if(Math.abs(z)<9)continue;tree1(x,z,9+R()*8,HB)}
-  [[70,-40],[84,40]].forEach(([x,z])=>{const t=add(new THREE.Mesh(new THREE.CylinderGeometry(.5,.9,40,10),lam(0xeeeeee)));t.position.set(x,HB+20,z);box(2.4,1.2,1.2,0xdddddd,x+.6,HB+40,z);
-   const bg=new THREE.Group();bg.position.set(x+1.4,HB+40,z);add(bg);for(let k=0;k<3;k++){const a=new THREE.Group();a.rotation.x=k*Math.PI*2/3;bg.add(a);pb(a,.3,12,1,0xf4f4f4,0,6,0)}turb.push(bg);solid(x,z,1,1,HB+40,HB,1)});
+   if(i===0)[0,1,2].forEach(k=>pb(g,3,2.4,5,[0x2457ff,0xe8412f,0x22a06b][k],0,2.3,-1+k*4.5));if(i===2){pb(g,.15,6,.15,0xdddddd,0,4,1);pb(g,.05,5,3,0xffffff,0,4.5,3)}add(g);const cs={x:bx,z:0,hx:[2.6,1.6,1.6][i],hz:[8.2,4.6,4.6][i],h:[4.2,2.9,7.5][i],y0:0,nf:1};solids.push(cs);boats.push({g,cs,x:bx,ph,sp:.04+i*.02})});
+  const SB=DKT;
+  crane=new THREE.Group();crane.position.set(-68,SB,32);add(crane);box(5,1.2,5,0x777777,-68,SB+.6,32);pb(crane,1.6,42,1.6,0xf2c230,0,21,0);const jib=new THREE.Group();jib.position.y=42;crane.add(jib);
+  pb(jib,30,1,1,0xf2c230,8,0,0);pb(jib,4,2,2.4,0x555555,-10,-1,0);pb(jib,1.5,1.5,1.5,0x333333,0,-1.2,0);pb(jib,.08,10,.08,0x222222,20,-5,0);pb(jib,1,.7,1,0xe8412f,20,-10,0);pb(jib,.4,3,.4,0xffd21f,0,2.5,0);crane.userData.jib=jib;solid(-68,32,2.5,2.5,SB+42,SB,1);
+  [[-62,40,0,0x2457ff],[-62,40,2.6,0xe8412f],[-74,42,0,0x22a06b]].forEach(([x,z,y,c])=>box(6,2.6,2.6,c,x,SB+1.3+y,z));solid(-62,40,3.1,1.4,SB+5.2,SB,1);solid(-74,42,3.1,1.4,SB+2.6,SB,1);
+  box(8,3,3.2,0xe8edf2,-76,SB+1.5,22);for(let i=0;i<3;i++)box(1.6,1,.05,bas(0x8ad0ff),-78+i*2.4,SB+1.8,23.63);solid(-76,22,4,1.6,SB+3.2,SB,1);
+  exc=new THREE.Group();exc.position.set(-62,SB,24);add(exc);pb(exc,2.6,1.2,3.6,0xf2c230,0,1,0);pb(exc,2.8,.6,4,0x222222,0,.3,0);pb(exc,1.6,1.4,1.6,0x9fd0ff,.4,2.1,.6);const bm=new THREE.Group();bm.position.set(0,1.8,-1.6);exc.add(bm);pb(bm,.5,.5,4,0xf2c230,0,.8,-2);pb(bm,1,.8,.8,0x555555,0,.3,-4.2);exc.userData.boom=bm;solid(-62,24,1.6,2.2,SB+2.8,SB,1);
+  const mx=new THREE.Group();mx.position.set(-66,SB,-12);add(mx);pb(mx,2.6,.6,7,0x333333,0,.7,0);pb(mx,2.4,1.8,1.8,0xff8a1f,0,1.7,3.2);[[-1.2,2.8],[1.2,2.8],[-1.2,-2.5],[1.2,-2.5]].forEach(([a,c])=>wheel(mx,.55,.4,a,.55,c));
+  const dg=new THREE.Group();dg.position.set(0,2.3,-.8);dg.rotation.x=Math.PI/2+.25;mx.add(dg);drum=new THREE.Mesh(new THREE.CylinderGeometry(1.2,.8,4.5,16),lam(0xdddddd));dg.add(drum);pb(drum,.3,4,.3,0xff8a1f,1.1,0,0);solid(-66,-12,1.4,3.6,SB+3,SB,1);
+  const sc=(x,z)=>{for(const a of[-1.5,1.5])for(const c of[-.8,.8])box(.1,9,.1,0x9aa3a8,x+a,SB+4.5,z+c);for(let k=1;k<=3;k++){box(3.4,.12,1.9,0xb08a55,x,SB+k*3,z);box(3.2,.9,.05,0xff7a1a,x,SB+k*3+.5,z+.95);box(3.2,.9,.05,0xff7a1a,x,SB+k*3+.5,z-.95)}solid(x,z,1.7,1,SB+9.2,SB,1)};sc(-62,-26);sc(-62,-32);
+  crewAt(-62,-26,0xffd21f,0xffffff,0,SB+3.12);crewAt(-62,-32,0xff7a1a,0xffd21f,0,SB+6.12);crewAt(-62,30,0xffd21f,0xffffff,4,SB);crewAt(-70,26,0xff7a1a,0xffd21f,0,SB);crewAt(-66,18,0xffd21f,0xffffff,3,SB);
+  [[-72,40],[-62,30],[-72,-20]].forEach(([x,z])=>{box(.2,8,.2,0x333333,x,SB+4,z);box(1.4,.6,.3,bas(0xfff4c2),x,SB+8.2,z)});
+  [[-24,32],[28,40]].forEach(([zc,len])=>{[-1,1].forEach(s=>{box(.12,.12,len,0xf2c230,s*56.3,SB+1.1,zc);for(let z=zc-len/2;z<=zc+len/2;z+=4)box(.12,1.1,.12,0xf2c230,s*56.3,SB+.55,z)})});
+  box(5,2.4,4,0xf5f5f5,-76,SB+1.2,12);const rf=add(new THREE.Mesh(new THREE.ConeGeometry(4,1.4,4),lam(0x2457ff)));rf.rotation.y=Math.PI/4;rf.position.set(-76,SB+3.1,12);box(2,.9,1,0x6b4a2f,-73,SB+.5,9.5);solid(-76,12,2.6,2.1,SB+3.4,SB,1);
+  box(5,2.2,2.4,0xffffff,-76,SB+1.3,7.6);solid(-76,7.6,2.6,1.3,SB+2.6,SB,1);crewAt(-71,12,0x2457ff,0xffffff,0,SB);crewAt(-69,14.5,0xffd21f,0xffffff,0,SB);crewAt(-73,9.6,0xffd21f,0xffffff,0,SB);
+  pad(-64,12,'H','#f4c542',3.4,DKT);
+  for(let i=0;i<26;i++){const x=-92+R()*28,z=R()<.5?-75+R()*60:50+R()*25;tree1(x,z,9+R()*8,DKT)}
+  for(let i=0;i<24;i++){const x=60+R()*32,z=R()*150-75;if(Math.abs(z)<9)continue;tree1(x,z,9+R()*8,DKT)}
+  [[70,-40],[84,40]].forEach(([x,z])=>{const t=add(new THREE.Mesh(new THREE.CylinderGeometry(.5,.9,40,10),lam(0xeeeeee)));t.position.set(x,DKT+20,z);box(2.4,1.2,1.2,0xdddddd,x+.6,DKT+40,z);
+   const bg=new THREE.Group();bg.position.set(x+1.4,DKT+40,z);add(bg);for(let k=0;k<3;k++){const a=new THREE.Group();a.rotation.x=k*Math.PI*2/3;bg.add(a);pb(a,.3,12,1,0xf4f4f4,0,6,0)}turb.push(bg);solid(x,z,1,1,DKT+40,DKT,1)});
   for(let i=0;i<14;i++){const a=i/14*6.28,m=add(new THREE.Mesh(new THREE.ConeGeometry(50+R()*40,80+R()*60,6),lam(0x6a7f8f)));m.position.set(Math.cos(a)*240,30,Math.sin(a)*240)}
   [['crack',3.2,-10,HB-.01,-1.5,0,-1,0,1,5,'M'],['crack',3,14,HB-.01,1.5,0,-1,0,1,3,'m'],['stain',3.2,0,HB-.01,-2.2,0,-1,0,0],
    ['crack',3.4,-21.99,HB*.55,1,1,0,0,1,1.6,'h'],['crack',3.4,-2.01,HB*.42,-.5,-1,0,0,1,3,'m'],['stain',3.4,2.01,HB*.5,0,1,0,0,0],['crack',3.4,22.01,HB*.62,1,-1,0,0,1,1.6,'h'],['stain',3.4,26.01,HB*.45,-1,1,0,0,0],
    ['crack',2.2,-14,HB-1.1,-4.05,0,0,1,1,3,'m'],['joint',2.2,6,HB-1.1,4.05,0,0,-1,0]].forEach(a=>decal(...a))},
  init(){logs=[]},
- update(dt){cars.forEach(c=>{c.x+=c.dir*c.v*dt;if(c.x>70)c.x=-70;if(c.x<-70)c.x=70;const lz=c.dir>0?2.6:-2.6;c.g.position.set(c.x,DKT+.08,lz);c.g.rotation.y=c.dir>0?0:Math.PI;c.cs.x=c.x;c.cs.z=lz;
+ update(dt){cars.forEach(c=>{c.x+=c.dir*c.v*dt;if(c.x>90)c.x=-90;if(c.x<-90)c.x=90;const lz=c.dir>0?2.6:-2.6;c.g.position.set(c.x,DKT+.08,lz);c.g.rotation.y=c.dir>0?0:Math.PI;c.cs.x=c.x;c.cs.z=lz;
    if(Math.abs(P.x-c.x)<c.cs.hx+M&&Math.abs(P.z-lz)<c.cs.hz+M&&P.y-REST<c.cs.h&&P.y-REST>DKT-.2){P.y=c.cs.h+REST+.6;targetY=P.y;toast(tr('Traffic! The drone was lifted above the vehicle.','차량 접근! 드론이 차 위로 올라갔어요.'),'r')}});
-  boats.forEach(b=>{b.g.position.set(b.x,.3,Math.sin(time*b.sp+b.ph)*80);b.g.rotation.y=Math.cos(time*b.sp+b.ph)>0?0:Math.PI});
+  boats.forEach(b=>{const bz=Math.sin(time*b.sp+b.ph)*80;b.g.position.set(b.x,.3,bz);b.g.rotation.y=Math.cos(time*b.sp+b.ph)>0?0:Math.PI;b.cs.x=b.x;b.cs.z=bz;if(Math.abs(P.x-b.x)<b.cs.hx+M&&Math.abs(P.z-bz)<b.cs.hz+M&&P.y-REST<b.cs.h){P.y=b.cs.h+REST+.6;targetY=P.y;toast(tr('Boat ahead! The drone was lifted above it.','배가 지나가요! 드론이 배 위로 올라갔어요.'),'r')}});
   crane.userData.jib.rotation.y=Math.sin(time*.15)*1.2;exc.userData.boom.rotation.x=Math.sin(time*.8)*.25;drum.rotation.y+=dt*1.5;turb.forEach(t=>t.rotation.x+=dt*.8);updCrew()},
  brief(){return{t:tr('Mission: Hidden crack inspection','미션: 숨은 균열 점검'),
   p:tr('Cracks that form under the deck of a tall bridge, between the girders, or on the facing sides of the piers are hard for inspectors to see by eye. Ropes or special equipment are needed to reach them, so the drone flies in and checks with its camera and AI.','높은 교각의 상판 아래, 다리 보 사이, 서로 마주보는 교각의 옆면 혹은 같은 곳에서 생기는 균열은 점검자가 육안으로 확인하기 어렵습니다. 로프나 특수 장비가 있어야 닿는 곳을 드론이 날아가서 카메라와 AI로 확인합니다.'),
