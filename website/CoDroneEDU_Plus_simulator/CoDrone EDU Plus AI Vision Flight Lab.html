@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>CoDrone EDU Plus · AI Vision Flight Lab</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;800&family=Noto+Sans+KR:wght@400;700&display=swap">
 <style>
@@ -101,15 +101,32 @@ h1.logo{font:800 clamp(34px,5.6vw,64px)/1 Sora,sans-serif;letter-spacing:-.045em
 #sp{position:fixed;inset:0;z-index:25;display:none;place-items:center;background:#0c1426c0;padding:12px;box-sizing:border-box}
 .sr{display:flex;align-items:center;gap:12px;margin:12px 0;font-weight:700}.sr span{width:110px}.sr input[type=range]{flex:1;accent-color:#2457ff}.sr input[type=checkbox]{width:20px;height:20px;accent-color:#2457ff}
 .hb{display:flex;gap:8px}#sp .bc{min-width:min(420px,90vw)}
+:root{--tb:52px}
+html,body{overscroll-behavior:none;-webkit-touch-callout:none}*{-webkit-tap-highlight-color:transparent}
+#hud h3{cursor:pointer}#hud h3::after{content:" ▾";opacity:.6;font-size:11px}#hud.min h3::after{content:" ▸"}#hud.min .r,#hud.min #mis,#hud.min #stat{display:none}
+#tip{top:calc(12px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);margin:0;max-width:min(40vw,520px);text-align:center;font-size:13px;color:#fff;padding:7px 12px;z-index:3;pointer-events:none}#tip:empty{display:none}
+#toast{top:calc(58px + env(safe-area-inset-top,0px))}#wn{top:calc(100px + env(safe-area-inset-top,0px))}
+#pip:not(.full){pointer-events:auto;cursor:pointer}
+#ta{position:fixed;z-index:6;bottom:calc(12px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);display:none;gap:6px;flex-wrap:wrap;justify-content:center;align-content:flex-end;max-width:calc(100vw - 2*(3*var(--tb) + 40px))}
+#tl{grid-template-columns:repeat(3,var(--tb));grid-template-rows:repeat(3,var(--tb));left:calc(12px + env(safe-area-inset-left,0px))}
+#tr{right:calc(12px + env(safe-area-inset-right,0px));grid-template-columns:repeat(3,var(--tb));grid-template-rows:repeat(2,var(--tb));max-width:none;align-content:end}
+.tb{min-width:var(--tb);height:var(--tb);opacity:.72;font-size:13px;padding:0 6px}.tb:active{opacity:1;transform:scale(.94)}#ta .tb{min-width:calc(var(--tb)*1.1);padding:0 10px}
+@media (pointer:coarse),(max-width:700px){#tl{display:grid}#tr{display:grid}#ta{display:flex}#sg{bottom:auto;top:calc(104px + env(safe-area-inset-top,0px))}}
+@media (max-width:520px){#ta{bottom:calc(12px + 3*var(--tb) + 18px + env(safe-area-inset-bottom,0px));max-width:96vw}}
+@media (max-height:430px){:root{--tb:44px}}
+@media (max-width:700px),(max-height:480px){#hud{width:auto;max-width:46vw;max-height:52vh;overflow:auto;font-size:12px;padding:8px 10px;min-width:0}#tip{max-width:32vw;font-size:11.5px;padding:5px 9px}#pip{width:min(26vw,200px);top:calc(52px + env(safe-area-inset-top,0px))}.ib{width:32px;height:32px;font-size:14px}#ctl{gap:4px}#toast{font-size:12px;max-width:50vw;padding:6px 12px;top:calc(52px + env(safe-area-inset-top,0px))}}
+@media (pointer:coarse),(max-width:900px){body[data-z="0"] #help{display:none}body[data-z="0"] #help.show{display:block;top:50%;left:50%;right:auto;transform:translate(-50%,-50%);width:min(92vw,460px);max-height:80vh;z-index:18}#hcl{display:none}#help.show #hcl{display:block;margin-top:10px}}
+#hcl{color:#fff;border-color:#8fb4ff;background:transparent}body.m #ta,body.m #tip{display:none!important}
+.bc .tl{margin:8px 0 0;padding:8px;border-radius:10px;background:#eef3ff;color:#0f1a2e;font-size:12.5px;line-height:1.5}
 </style></head>
 <body class="m">
 <div id="hud" class="pn"><h3 id="zn"></h3><div class="s" id="stat"></div>
 <div class="r">Altitude <b id="alt"></b></div><div class="r">Speed <b id="spd"></b></div>
-<div id="mis"></div><div id="tip"></div></div>
+<div id="mis"></div></div><div id="tip" class="pn"></div>
 <div id="ctl"><button class="ib" id="bg" title="Sound">⚙</button><button class="ib" id="bq" title="Mission info">?</button><button class="ib" id="bl"></button><button class="ib" id="bp" title="Pause (Esc)">⏸</button><button class="ib" id="br" title="Restart this space">↻</button><button class="ib" id="bh" title="Back to start">⌂</button></div>
 <div id="pip"><canvas id="ov"></canvas><span id="pipl">● AI camera</span></div>
-<details id="help" class="pn" open><summary id="hs"></summary><div class="k" id="hk"></div><div id="sws"></div></details>
-<div id="tl"></div><div id="tr"></div><div id="toast"></div><div id="fl"></div>
+<details id="help" class="pn" open><summary id="hs"></summary><div class="k" id="hk"></div><div id="sws"></div><button id="hcl" class="pill"></button></details>
+<div id="tl"></div><div id="tr"></div><div id="ta"></div><div id="toast"></div><div id="fl"></div>
 <div id="ps"><div><h2 id="pt"></h2><p id="ph"></p><button id="rs"></button></div></div>
 <div id="bf"><div class="bc"><h2 id="bt"></h2><div id="bb"></div><div class="bn"><button id="bk"></button><span id="bd"></span><button id="bs"></button></div></div></div><div id="sp"><div class="bc"><h2 id="spt"></h2>
 <div class="sr"><span id="spm"></span><input type="range" id="v_master" min="0" max="100"></div>
@@ -130,7 +147,7 @@ const PROPS=[{"c":[-0.2544,-0.2656],"f":[33446,33447,33448,33449,33450,33451,335
 const FRONT=-Math.PI/2,DS=1.5,REST=.1176*DS,MAXV=9,HOVER=3,M=1,OM_IDLE=14,OM_MAX=40,DIR=[1,-1,-1,1];
 let LIM=38,ALT=18;
 const $=id=>document.getElementById(id),clamp=(v,a,b)=>Math.min(b,Math.max(a,v)),ease=t=>{t=clamp(t,0,1);return t*t*(3-2*t)},col=h=>new THREE.Color(h).convertSRGBToLinear(),R=Math.random;
-const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.domElement.id='c';document.body.prepend(renderer.domElement);
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,(window.matchMedia&&matchMedia('(pointer:coarse)').matches)?1.5:2));renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.domElement.id='c';document.body.prepend(renderer.domElement);
 const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(55,1,1,300);
 const hemi=new THREE.HemisphereLight(0xffffff,col(0x7f9a6c),.9);scene.add(hemi);const sun=new THREE.DirectionalLight(0xfff2dc,1.6);sun.position.set(20,40,15);scene.add(sun);
 (function(){const es=new THREE.Scene(),g=new THREE.SphereGeometry(50,24,12),p=g.attributes.position,c=[];
@@ -213,9 +230,10 @@ addEventListener('wheel',e=>{e.preventDefault();zoomT=clamp(zoomT*Math.exp(e.del
 (function(){const c=renderer.domElement;let dr=false;c.addEventListener('pointerdown',e=>{dr=true;c.setPointerCapture(e.pointerId)});
  c.addEventListener('pointermove',e=>{if(!dr)return;orbit-=e.movementX*.006;elev=clamp(elev+e.movementY*.005,.05,1.45)});
  const up=()=>dr=false;c.addEventListener('pointerup',up);c.addEventListener('pointercancel',up);c.addEventListener('dblclick',()=>{orbit=0;elev=.526;zoomT=1})})();
-[['tl',[['','',0],['▲','ArrowUp'],['','',0],['◀','ArrowLeft'],['','',0],['▶','ArrowRight'],['','',0],['▼','ArrowDown']]],
- ['tr',[['Take off','Space','a'],['SCAN','KeyF','f'],['Up','KeyW'],['Down','KeyS'],['⟲','KeyA'],['⟳','KeyD'],['Cam▴','KeyE'],['Cam▾','KeyQ'],['View','KeyC'],['Grip','Digit1','z3'],['Water','Digit2','z3'],['Grab','KeyG','zg'],['Spray','KeyX','z3']]]].forEach(([id,bs])=>bs.forEach(([t,c,k])=>{
- const b=document.createElement(t||c?'button':'span');if(t||c){b.className='tb '+(k||'');b.dataset.c=c;b.textContent=t;b.addEventListener('pointerdown',e=>{e.preventDefault();kd(c)});['pointerup','pointerleave','pointercancel'].forEach(n=>b.addEventListener(n,()=>ku(c)));b.addEventListener('contextmenu',e=>e.preventDefault())}$(id).appendChild(b)}));
+const mkb=(id,t,c,k)=>{const b=document.createElement(t||c?'button':'span');if(t||c){b.className='tb '+(k||'');b.textContent=t;b.dataset.c=c;b.addEventListener('pointerdown',e=>{e.preventDefault();kd(c)});['pointerup','pointerleave','pointercancel'].forEach(n=>b.addEventListener(n,()=>ku(c)));b.addEventListener('contextmenu',e=>e.preventDefault())}$(id).appendChild(b)};
+[['','',0],['▲','ArrowUp'],['','',0],['◀','ArrowLeft'],['','',0],['▶','ArrowRight'],['','',0],['▼','ArrowDown']].forEach(a=>mkb('tl',...a));
+[['⟲','KeyA'],['Up','KeyW'],['⟳','KeyD'],['Cam ▾','KeyQ'],['Down','KeyS'],['Cam ▴','KeyE']].forEach(a=>mkb('tr',...a));
+[['Take off','Space','a'],['SCAN','KeyF','f'],['View','KeyC'],['Grip','Digit1','z3'],['Water','Digit2','z3'],['Grab','KeyG','zg'],['Spray','KeyX','z3']].forEach(a=>mkb('ta',...a));
 let AC;function audio(){SND.init()}
 const lerpAng=(a,b,t)=>a+(((b-a+Math.PI*3)%(Math.PI*2))-Math.PI)*t;
 function tryMove(dx,dz){const bot=P.y-REST;const ins=blocked(P.x,P.z,bot);let nx=clamp(P.x+dx,-LIM,LIM);if(ins||!blocked(nx,P.z,bot))P.x=nx;else V.x=0;let nz=clamp(P.z+dz,-LIM,LIM);if(ins||!blocked(P.x,nz,bot))P.z=nz;else V.z=0}
@@ -261,6 +279,7 @@ function overlay(){const w=pip.clientWidth,h=pip.clientHeight;if(ov.width!==w||o
   ox.strokeStyle=c;ox.lineWidth=d===lock?3:1.5;ox.strokeRect(x,y,X-x,Y-y);if(fill){ox.fillStyle=c+'33';ox.fillRect(x,y,X-x,Y-y)}const tw=ox.measureText(txt).width+10,ty=Math.max(y,fs+6);
   ox.fillStyle=c;ox.fillRect(x,ty-fs-6,tw,fs+6);ox.fillStyle='#000';ox.fillText(txt,x+5,ty-5)}}
 /* ===== language, progress, particles ===== */
+const isTouch=(window.matchMedia&&matchMedia('(pointer:coarse)').matches)||innerWidth<700;
 var lang=/^ko/i.test(navigator.language||'')?'ko':'en',ready=false,badge,brief=false,lastH='',lastC='';
 const tr=(e,k)=>lang==='ko'?k:e,T2=a=>a[lang==='ko'?1:0],cleared=[0,0,0,0];
 const clear=i=>{if(!cleared[i]){cleared[i]=1;SND.play('win');renderMenu();toast(tr('Space cleared! Back at the start screen you can see your progress.','공간 클리어! 시작 화면에서 진행도를 확인할 수 있어요.'),'g')}};
@@ -469,7 +488,7 @@ const SND={ctx:null,v:{master:.6,drone:.25,amb:.5,sfx:.7},mute:false,amb:[],ev:[
 SND.load();
 
 const ZONES=[
-{t:['Flight School','비행 학교'],d:['Learn the controls, fly through rings, and paint your drone.','몇가지 미션을 통해 드론을 조작하는 방법을 배우고, 드론을 나만의 색상으로 꾸며봅니다.'],tg:[['Controls','조작'],['Custom colors','색상 커스텀']],ic:'🛫',lv:1,
+{t:['Flight School','비행 학교'],d:['Learn the controls through a few missions, then customize your drone with your own colors.','몇가지 미션을 통해 드론을 조작하는 방법을 배우고, 드론을 나만의 색상으로 꾸며봅니다.'],tg:[['Controls','조작'],['Custom colors','색상 커스텀']],ic:'🛫',lv:1,
  sky:0xcfe8f3,fog:[50,150],lim:38,alt:18,sx:0,sz:8,yaw:Math.PI,range:0,
  build(){flat(300,300,0x93b883,0,0,0);flat(76,76,0xa8cb98,0,.01,0);const g=new THREE.GridHelper(76,38,col(0x86aa76),col(0x86aa76));g.position.y=.08;add(g);pad(0,8,'H','#f4c542',3.4);pad(-12,-4,'LAND','#22c55e',5);
   rg=[[0,4,-10,0xe8412f],[8,6,-22,0x2457ff],[-8,8,-30,0xe8412f]].map(([x,y,z,c])=>{const m=add(new THREE.Mesh(new THREE.TorusGeometry(2.2,.18,12,32),lam(c)));m.position.set(x,y,z);return{m,c:m.position}})},
@@ -482,7 +501,7 @@ const ZONES=[
  coach:()=>(tut[4]&&tut[5]&&!tut[6]&&state==='landed')?tr('Take off again and land inside the LAND pad ring.','다시 이륙해서 LAND 패드 원 안에 착륙하세요.'):tr('Follow the checklist. Change the drone colors in the Help panel.','체크리스트를 따라 해 보세요. 드론의 색상은 도움말 패널에서 바꿀 수 있습니다.'),
  hud:()=>[tr('Take off with Space','Space로 이륙'),tr('Fly 5 m from the pad','패드에서 5 m 이동'),tr('Climb above 6 m (W)','6 m 이상 상승 (W)'),tr('Turn with A / D','A / D로 회전'),tr('Fly through 3 rings ('+rn+'/3)','링 3개 통과 ('+rn+'/3)'),tr('Hover steady for 3 s ('+Math.min(3,hvT).toFixed(1)+'/3)','3초간 제자리 호버링 ('+Math.min(3,hvT).toFixed(1)+'/3)'),tr('Land inside the LAND pad ring','LAND 패드 원 안에 착륙')].map((t,i)=>(tut[i]?'✅ ':'⬜ ')+t).join('<br>')},
 
-{t:['Warehouse Vision','물류 창고 비전'],d:['Read barcodes on shelves 6 to 16 m high, then bring the boxes to the shipping pad.','사람의 손이 닿기 힘든 곳에 있는 선반 위의 상자 바코드를 읽고 상자를 출고 패드로 운반합니다.'],tg:[['Barcode AI','바코드 AI'],['Confidence','신뢰도'],['Obstacles','장애물 회피'],['Delivery','운반']],ic:'📦',lv:2,
+{t:['Warehouse Vision','물류 창고 비전'],d:['Read the barcodes on boxes stored where people can barely reach, then carry the boxes to the shipping pad.','사람의 손이 닿기 힘든 곳에 있는 선반 위의 상자 바코드를 읽고 상자를 출고 패드로 운반합니다.'],tg:[['Barcode AI','바코드 AI'],['Confidence','신뢰도'],['Obstacles','장애물 회피'],['Delivery','운반']],ic:'📦',lv:2,
  sky:0x2a323a,fog:[45,130],lim:36,alt:22,hall:37.6,sx:0,sz:28,yaw:Math.PI,range:18,lt:[0xdde6ff,0x555a60,.85,0xffffff,1.2],
  build(){ents=[];convs=[];flat(300,300,0x3a434b,0,0,0);flat(76,76,floorMat(),0,.01,0);
   for(const x of[-16,0,16])flat(.4,24,0xf2c230,x,.02,-20);flat(76,.5,0xf2c230,0,.02,-5);pad(0,28,'H','#f4c542',3.4);
@@ -525,15 +544,15 @@ const ZONES=[
    e.cool-=dt;if(e.cool<=0&&Math.hypot(P.x-e.g.position.x,P.z-e.g.position.z)<1.3&&P.y-REST<e.h){e.cool=1.6;e.fl=1.2;hits++;SND.play('hit');toast(tr('Collision with '+e.n+'! Fly above moving traffic.',e.n+'와 충돌! 움직이는 것들 위로 날아가세요.'),'r')}
    e.fl=Math.max(0,e.fl-dt);const on=e.fl>0&&Math.sin(time*40)>0;e.g.traverse(o=>{if(o.isMesh&&o.material.emissive)o.material.emissive.setHex(on?0xff1010:0)})})},
  brief(){return{t:tr('Mission: Emergency order','미션: 긴급 주문'),
-  p:tr('City Hospital sent an emergency order. The warehouse system lost track of 5 boxes stored 6 to 16 m up. The forklift lifts are locked for a safety inspection, and ladders that high are not allowed. Your drone checks them safely, then brings each box to the shipping pad near the start.','인근 시립병원에서 긴급 주문이 들어왔습니다. 이 창고는 사람의 손이 닿기 힘든 6~16m 부분에 물품들이 상자에 담겨 있는데,\n지게차와 사다리는 사용할 수 없는 상태입니다. 따라서 드론의 카메라를 사용하여, 바코드를 확인하고, 물품을 시작 지점 근처 출고 패드로 상자를 가져와야 합니다.'),
-  s:[tr('Take off and find the boxes on your order. Items are grouped in lines A–H, and signs for lines A–H hang above the racks.','이륙해서 주문서에 적힌 물품 상자를 찾아보세요. 물품은 A~H 로 구분 되어 있으며, 선반의 위에 A~H 표지판이 걸려 있습니다.'),
+  p:tr('A nearby city hospital has placed an emergency order. In this warehouse, the items are stored in boxes 6 to 16 m up, out of easy reach for people, and forklifts and ladders cannot be used. So use the drone’s camera to check the barcodes, then bring each box to the shipping pad near the start.','인근 시립병원에서 긴급 주문이 들어왔습니다. 이 창고는 사람의 손이 닿기 힘든 6~16m 부분에 물품들이 상자에 담겨 있는데,\n지게차와 사다리는 사용할 수 없는 상태입니다. 따라서 드론의 카메라를 사용하여, 바코드를 확인하고, 물품을 시작 지점 근처 출고 패드로 상자를 가져와야 합니다.'),
+  s:[tr('Take off and find the boxes on your order. Items are organized into lines A–H, and a sign for each line hangs above the racks.','이륙해서 주문서에 적힌 물품 상자를 찾아보세요. 물품은 A~H 로 구분 되어 있으며, 선반의 위에 A~H 표지판이 걸려 있습니다.'),
    tr('Press <kbd>C</kbd> to switch to the drone camera. The AI reads barcodes and shows the item name.','<kbd>C</kbd> 키로 드론 카메라 화면으로 전환 할 수 있습니다. AI가 바코드를 읽고 물품의 이름을 표시합니다.'),
    tr('Use <kbd>Q</kbd> / <kbd>E</kbd> to tilt the camera and aim the center ring at the barcode. Green means the box is on your order, gray means it is not. Fly as close as you can until the AI confidence passes 80%.','<kbd>Q</kbd>, <kbd>E</kbd> 키를 사용하여, 드론 카메라를 상자 바코드에 맞추세요. 초록은 주문서에 있는 상자, 회색은 아닌 상자입니다. 카메라의 인식 신뢰도가 80%를 넘을 수 있도록, 드론을 최대한 목표 상자 가까이 이동시키세요.'),
    tr('Press <kbd>F</kbd> to take a photo. The AI reads the barcode and the system confirms the box is really there.','<kbd>F</kbd> 키로 사진을 찍으세요. AI가 바코드를 읽고, 시스템이 상자가 실제로 있는지 확인합니다.'),
    tr('With the photographed box close by and at the same height, press <kbd>G</kbd> and the drone lifts the box. Carry it to the green SHIP pad near the start and press <kbd>G</kbd> again to drop it.','알맞게 인식된 상자와 드론을 가까이 두고, 같은 높이에서 <kbd>G</kbd>키를 누르면, 드론이 상자를 들어올립니다. 상자를 들어올렸다면, 시작 지점 근처의 초록 SHIP 패드로 옮겨 <kbd>G</kbd>를 다시 눌러 내려놓으세요.')],
   x:'<b>'+tr('Order #'+ordNo,'주문 #'+ordNo)+'</b><ol>'+PICK.map(b=>`<li><b>${b.code}</b> · ${pn(b.pr)}<br><em>${pw(b.pr)}</em><br><small>${loc(b)}</small></li>`).join('')+'</ol>'}},
  coach(){const l=lock&&lock.t.cls==='bar'?lock:null;if(carry)return tr('Box hooked! Fly to the green SHIP pad near the start and press G to drop it.','상자를 걸었어요! 시작 지점 근처의 초록 SHIP 패드로 가서 G로 내려놓으세요.');if(nearPick())return tr('Photo taken. Press G to hook this box.','촬영 완료. G를 눌러 이 상자를 거세요.');if(l&&got.has(l.t.code)&&l.t.ph!=='done')return tr('Photo taken. Move the drone close to this box and press G.','촬영 완료. 드론을 이 상자 가까이 이동한 뒤 G를 눌러 걸어 주세요.');if(!fpvMode)return tr('Press C to look through the drone camera. The AI reads labels there.','C 키로 드론 카메라 화면을 켜세요. AI가 거기서 라벨을 읽어요.');
-  if(fin)return tr('Inventory complete! Press Home to pick another space.','재고 확인 완료! 홈 버튼으로 다른 공간을 고르세요.');
+  if(fin)return tr('Inventory complete! Use the ⌂ button to pick another space.','재고 확인 완료! 홈 버튼으로 다른 공간을 고르세요.');
   if(!l)return tr('Fly to your target line and aim the center ring at a barcode.','목표 라인으로 날아가 가운데 원을 바코드에 맞춰 보세요.');
   if(l.conf<.8)return tr('Move closer. AI confidence '+Math.round(l.conf*100)+'% (needs 80%).','더 가까이 가세요. AI 신뢰도 '+Math.round(l.conf*100)+'% (80% 필요).');
   return PICK.includes(l.t)&&!got.has(l.t.code)?tr('Green label! Press F to take the photo.','초록 라벨이에요! F 키로 사진을 찍으세요.'):tr('Not on the order. Keep looking for green labels.','주문서에 없는 상자예요. 초록 라벨을 계속 찾으세요.')},
@@ -546,7 +565,7 @@ const ZONES=[
   got.add(t.code);toast(tr(t.code+' read: '+pn(t.pr)+'. Now get within 4 m and press G to hook the box.',t.code+' 판독 완료: '+pn(t.pr)+'. 4 m 이내로 가서 G로 상자를 걸어 가져오세요.'),'g')},
  hud(){const m=Math.floor(tm/60),s=String(Math.floor(tm%60)).padStart(2,'0');return'<b>'+tr('Order #'+ordNo+' · City Hospital','주문 #'+ordNo+' · 시립병원')+'</b><br>'+PICK.map(b=>`${dv.has(b.code)?'✅':got.has(b.code)?'📷':'⬜'} <b>${b.code}</b> ${pn(b.pr)}<small>${loc(b)}</small>`).join('')+tr('Collisions','충돌')+` <b>${hits}</b> · ${tr('Time','시간')} <b>${m}:${s}</b>`}},
 
-{t:['Fire Rescue','산불 구조'],d:['A wildfire traps residents. Let the AI find survivors, then grip and carry them out.','산불로 고립된 사람과 동물을 카메라와 AI로 찾아보고,\n물통을 사용하여 불을 끄거나, 그리퍼를 사용하여 안전하게 옮깁니다.'],tg:[['Object detection','객체 인식'],['Gripper','그리퍼'],['Water tank','물통']],ic:'🔥',lv:3,
+{t:['Fire Rescue','산불 구조'],d:['Use the camera and AI to find people and animals trapped by a wildfire, then put out flames with the water tank or carry survivors to safety with the gripper.','산불로 고립된 사람과 동물을 카메라와 AI로 찾아보고,\n물통을 사용하여 불을 끄거나, 그리퍼를 사용하여 안전하게 옮깁니다.'],tg:[['Object detection','객체 인식'],['Gripper','그리퍼'],['Water tank','물통']],ic:'🔥',lv:3,
  sky:0x6a3a22,fog:[22,115],lim:38,alt:20,sx:-8,sz:24,yaw:Math.PI,range:60,fx:1,tilt0:-.55,lt:[0xffb27a,0x3a1c10,.75,0xff7a3a,1],
  build(){fires=[];vs=[];walkers.length=0;ftk.length=0;
   const gt=ctex(256,256,(g,w,h)=>{g.fillStyle='#2a211c';g.fillRect(0,0,w,h);for(let i=0;i<500;i++){g.fillStyle=`rgba(${R()<.15?'255,110,20':'0,0,0'},${R()*.25})`;g.fillRect(R()*w,R()*h,R()*8+1,R()*3+1)}});gt.wrapS=gt.wrapT=THREE.RepeatWrapping;gt.repeat.set(40,40);
@@ -632,7 +651,7 @@ const ZONES=[
  lab(t,c){const p=Math.round(c*100)+'%';if(t.cls==='fire')return[(c<.5?tr('Heat? ','열원? '):tr('FIRE ','불 '))+p,'#ff5a3c'];if(t.id)return[kn(t)+' '+p,'#27d36b'];return[(t.prog>0?tr('🔍 Analyzing ','🔍 분석 중 ')+Math.round(t.prog*100)+'%':tr('❓ Unknown ','❓ 미확인 ')+p),'#19e3ff',1]},
  hud:()=>`<div class="al">🚨 ${tr('WILDFIRE EMERGENCY','산불 긴급 상황')}</div>${tr('Rescued','구조')} <b>${rescued}/3</b> · ${tr('Fires out','진화')} <b>${fires.filter(f=>f.gone).length}/${fires.length}</b><br><span class="ch${tool?'':' on'}" data-k="Digit1">🦾 ${tr('Gripper','그리퍼')} [1]</span><span class="ch${tool?' on':''}" data-k="Digit2">💧 ${tr('Water','물통')} [2]</span><br>${tr('Water','물')} ${bar(water,'#2e8bff')}<br>${tr('Heat','열')} ${bar(heat,'#ff5a3c')}<br>`+vs.map(v=>(v.done?'✅':v.id?'🔎':'❔')+' '+(v.id||v.done?kn(v):tr('Unknown','미확인'))).join(' · ')+(held?`<br>🤝 ${tr('Carrying','운반 중')} ${kn(held)}`:'')+sigLine()},
 
-{t:['Bridge Inspection','교각 점검'],d:['Fly under a huge bridge and tell real cracks from stains and joints.','거대한 다리 아래로 들어가, 카메라를 사용해 교각의 균열을 찾아보고 사진을 찍어봅니다.'],tg:[['Anomaly detection','이상 탐지'],['Camera tilt','카메라 틸트']],ic:'🌉',lv:4,
+{t:['Bridge Inspection','교각 점검'],d:['Fly under a huge bridge, find cracks with the camera, and tell real ones from stains and joints.','거대한 다리 아래로 들어가, 카메라를 사용해 교각의 균열을 찾아보고 사진을 찍어봅니다.'],tg:[['Anomaly detection','이상 탐지'],['Camera tilt','카메라 틸트']],ic:'🌉',lv:4,
  sky:0xbfd4e4,fog:[90,260],lim:78,alt:44,sx:-64,sz:12,sy:DKT,yaw:Math.PI/2,range:34,
  build(){walkers.length=0;cars=[];boats=[];turb=[];
   const rk=ctex(128,128,(g,w,h)=>{g.fillStyle='#7a6a58';g.fillRect(0,0,w,h);for(let i=0;i<500;i++){g.fillStyle=`rgba(${R()<.5?'0,0,0':'255,230,200'},${R()*.15})`;g.fillRect(R()*w,R()*h,R()*10+1,R()*4+1)}});rk.wrapS=rk.wrapT=THREE.RepeatWrapping;rk.repeat.set(8,3);const rm=new THREE.MeshLambertMaterial({map:rk});
@@ -680,7 +699,7 @@ const ZONES=[
  brief(){return{t:tr('Mission: Hidden crack inspection','미션: 숨은 균열 점검'),
   p:tr('Cracks that form under the deck of a tall bridge, between the girders, or on the facing sides of the piers are hard for inspectors to see by eye. Ropes or special equipment are needed to reach them, so the drone flies in and checks with its camera and AI.','높은 교각의 상판 아래, 다리 보 사이, 서로 마주보는 교각의 옆면 혹은 같은 곳에서 생기는 균열은 점검자가 육안으로 확인하기 어렵습니다. 로프나 특수 장비가 있어야 닿는 곳을 드론이 날아가서 카메라와 AI로 확인합니다.'),
   s:[tr('You start on the cliff beside the bridge. Fly out and down into the gorge, then under the deck between the piers. The outer sides of the bridge are clean.','다리 옆 절벽 위에서 시작합니다. 협곡 아래로 내려가 상판 아래, 교각 사이로 들어가세요. 다리 바깥쪽 면은 깨끗해요.'),tr('Press <kbd>C</kbd> for the AI camera and use <kbd>Q</kbd> / <kbd>E</kbd> to tilt it up toward the ceiling.','<kbd>C</kbd> 키로 AI 카메라를 켜고 <kbd>Q</kbd> / <kbd>E</kbd>로 위쪽을 향해 기울이세요.'),tr('Far away the AI only says "Anomaly?". Get closer and it names the problem: red is a crack, blue is a stain or joint that is not a crack.','멀리서는 AI가 "이상?"이라고만 말해요. 가까이 가면 이름을 붙여 줘요. 빨강은 균열, 파랑은 균열이 아닌 얼룩이나 이음매예요.'),tr('When confidence passes 80%, press <kbd>F</kbd> to log the spot. Find all 6 real cracks and avoid false alarms.','신뢰도가 80%를 넘으면 <kbd>F</kbd>로 기록하세요. 진짜 균열 6개를 모두 찾고, 오탐지는 피하세요.')],x:''}},
- coach(){if(!fpvMode)return tr('Press C for the AI camera. Q / E tilts it up and down.','C 키로 AI 카메라를 켜세요. Q / E로 위아래로 기울여요.');if(logs.length===6)return tr('Inspection complete! Press Home to pick another space.','점검 완료! 홈 버튼으로 다른 공간을 고르세요.');
+ coach(){if(!fpvMode)return tr('Press C for the AI camera. Q / E tilts it up and down.','C 키로 AI 카메라를 켜세요. Q / E로 위아래로 기울여요.');if(logs.length===6)return tr('Inspection complete! Use the ⌂ button to pick another space.','점검 완료! 홈 버튼으로 다른 공간을 고르세요.');
   if(P.y<HB-1&&Math.abs(P.x)<68&&Math.abs(P.z)<8)return lock?tr('Move closer until confidence passes 80%, then press F.','신뢰도가 80%를 넘을 때까지 가까이 간 뒤 F를 누르세요.'):tr('Under the bridge. Tilt the camera and look at the ceiling, girders and pier sides.','다리 아래예요. 카메라를 기울여 상판, 보, 교각 옆면을 살펴보세요.');
   return tr('Fly down into the gorge and under the deck, between the piers. Hidden cracks are inside.','협곡으로 내려가 상판 아래 교각 사이로 들어가세요. 숨은 균열은 안쪽에 있어요.')},
  lab(t,c){const p=Math.round(c*100)+'%';if(c<.8)return[tr('Anomaly? ','이상? ')+p,'#ffd23f'];if(t.cls==='crack')return[sevN(t.sev)+tr(' crack ',' 균열 ')+p+(t.done?' ✔':''),'#ff4d4d'];return[(t.cls==='joint'?tr('Expansion joint','신축 이음'):tr('Surface stain','표면 얼룩'))+tr(' · not a crack',' · 균열 아님'),'#7fd0ff']},
@@ -691,7 +710,7 @@ const ZONES=[
 ];
 
 /* ===== UI: language, menu, help, briefing ===== */
-const I18N={sub:['AI Vision Flight Lab','AI 비전 비행 실험실'],lead:['Learn to fly, then learn how a drone’s camera sees. Four training spaces, each one teaching a different way AI helps us work where people can’t.','비행을 배우고, 드론의 카메라가 세상을 어떻게 보는지 배웁니다.\n사람이 접근하기 어려운 공간에서 드론과 AI가 어떤 역할을 하는지\n4개의 공간에서 체험해봅니다.'],plbl:['Training progress','훈련 진행도'],hs:['Help & customize','도움말 · 커스터마이즈'],pt:['Paused','일시정지'],ph:['Press Esc to resume','Esc 키로 계속하기'],rs:['Resume','계속하기'],spt:['Sound settings','소리 설정'],spm:['Master','전체 볼륨'],spd:['Drone motor','드론 모터'],spa:['Ambience','배경 소리'],sps:['Effects','효과음'],spu:['Mute all','모두 끄기'],spc:['Close','닫기']};
+const I18N={sub:['AI Vision Flight Lab','AI 비전 비행 실험실'],lead:['Learn to fly, and learn how a drone’s camera sees the world.\nSee what drones and AI can do in places people can’t easily reach,\nthrough four training spaces.','비행을 배우고, 드론의 카메라가 세상을 어떻게 보는지 배웁니다.\n사람이 접근하기 어려운 공간에서 드론과 AI가 어떤 역할을 하는지\n4개의 공간에서 체험해봅니다.'],plbl:['Training progress','훈련 진행도'],hs:['Help & customize','도움말 · 커스터마이즈'],pt:['Paused','일시정지'],ph:['Press Esc to resume','Esc 키로 계속하기'],rs:['Resume','계속하기'],spt:['Sound settings','소리 설정'],spm:['Master','전체 볼륨'],spd:['Drone motor','드론 모터'],spa:['Ambience','배경 소리'],sps:['Effects','효과음'],spu:['Mute all','모두 끄기'],spc:['Close','닫기'],hcl:['Close','닫기']};
 const HK=[['Space','Take off / land','이륙 / 착륙'],['↑↓←→','Move','이동'],['W S','Up / down','상승 / 하강'],['A D','Turn','회전'],['Q E','Camera tilt','카메라 기울기'],['Shift','Fast','빠르게'],['C','Camera view','카메라 시점'],['F','AI scan / photo','AI 스캔 / 촬영'],['Drag','Look around','시점 회전'],['Esc','Pause','일시정지']];
 const SW=[[null,'Original','기본'],['#e63b2e','Red','빨강'],['#1f4bff','Blue','파랑'],['#22c55e','Green','초록'],['#facc15','Yellow','노랑'],['#8b5cf6','Purple','보라'],['#ff5fa2','Pink','분홍'],['#f4f4f4','White','흰색']],selSw={front:0,rear:2,frame:0};
 const TB={Space:['Take off','이륙'],KeyF:['SCAN','스캔'],KeyW:['Up','상승'],KeyS:['Down','하강'],KeyE:['Cam ▴','카메라▴'],KeyQ:['Cam ▾','카메라▾'],KeyC:['View','화면'],Digit1:['Grip','그리퍼'],Digit2:['Water','물통'],KeyG:['Grab','잡기'],KeyX:['Spray','분사']};
@@ -704,24 +723,25 @@ function renderHelp(){$('hk').innerHTML=HK.map(([k,e,ko])=>`<span>${k.split(' ')
   SW.forEach(([h,n,nk],k)=>{const b=document.createElement('button');b.className='sw'+(k===selSw[part]?' on':'');b.title=tr(n,nk);b.setAttribute('aria-label',tr(e,ko)+' '+tr(n,nk));b.style.background=h||'conic-gradient(#e8412f 0 50%,#1a1a1a 0)';
    b.onclick=()=>{selSw[part]=k;paint(part,h);r.querySelectorAll('.sw').forEach(x=>x.classList.remove('on'));b.classList.add('on')};r.lastChild.appendChild(b)});$('sws').appendChild(r)})}
 function applyLang(){document.documentElement.lang=lang;for(const id in I18N)$(id).textContent=T2(I18N[id]);$('lgb').textContent=lang==='ko'?'English':'한국어';$('bl').textContent=lang==='ko'?'EN':'한';
- document.querySelectorAll('#tr .tb').forEach(b=>{const t=TB[b.dataset.c];if(t&&b.dataset.c!=='Space')b.textContent=T2(t)});renderMenu();renderHelp();lastH=lastC='';
+ document.querySelectorAll('#tr .tb,#ta .tb').forEach(b=>{const t=TB[b.dataset.c];if(t&&b.dataset.c!=='Space')b.textContent=T2(t)});renderMenu();renderHelp();lastH=lastC='';if(isTouch)$('ph').textContent='';
  if(Z){$('zn').textContent=zname(zi);$('pipl').textContent=Z.range?tr('● AI camera · detecting','● AI 카메라 · 인식 중'):tr('● Drone camera','● 드론 카메라');if(brief)openBrief(true)}}
 $('lgb').onclick=$('bl').onclick=()=>{lang=lang==='ko'?'en':'ko';applyLang()};
 let bpgs=[],bi=0;
 function renderBrief(){const last=bi===bpgs.length-1;$('bb').innerHTML=bpgs[bi];$('bd').textContent=(bi+1)+' / '+bpgs.length;$('bk').style.visibility=bi?'visible':'hidden';$('bk').textContent=tr('◀ Back','◀ 이전');$('bs').textContent=last?tr('Start mission','미션 시작'):tr('Next ▶','다음 ▶')}
-function openBrief(keep){const b=Z.brief();$('bt').textContent=b.t;bpgs=[`<h3>${tr('Why this mission','왜 이 미션인가요?')}</h3><p>${b.p}</p>`,`<h3>${tr('How it works','진행 방법')}</h3><ol>${b.s.map(s=>`<li>${s}</li>`).join('')}</ol>`];if(b.x)bpgs.push(`<h3>${tr('Your order','주문서')}</h3>`+b.x);
+function openBrief(keep){const b=Z.brief();$('bt').textContent=b.t;bpgs=[`<h3>${tr('Why this mission','왜 이 미션인가요?')}</h3><p>${b.p}</p>`,`<h3>${tr('How it works','진행 방법')}</h3><ol>${b.s.map(s=>`<li>${s}</li>`).join('')}</ol>`+(isTouch?`<p class="tl">📱 ${tr('On a touch screen, use the on-screen buttons: C = View, F = SCAN, G = Grab, X = Spray, 1 = Grip, 2 = Water, Q / E = Cam ▾ / ▴, Space = Take off / Land.','터치 화면에서는 화면 버튼을 사용하세요: C = 화면, F = 스캔, G = 잡기, X = 분사, 1 = 그리퍼, 2 = 물통, Q / E = 카메라 ▾ / ▴, Space = 이륙 / 착륙.')}</p>`:'')];if(b.x)bpgs.push(`<h3>${tr('Your order','주문서')}</h3>`+b.x);
  bi=keep?Math.min(bi,bpgs.length-1):0;renderBrief();$('bf').style.display='grid';brief=true;paused=true}
 function closeBrief(){$('bf').style.display='none';brief=false;paused=false}
 const nextBrief=()=>bi<bpgs.length-1?(bi++,renderBrief()):closeBrief();
-$('bs').onclick=nextBrief;$('bk').onclick=()=>{bi--;renderBrief()};$('bq').onclick=()=>Z&&Z.brief&&openBrief();addEventListener('keydown',e=>{if(brief&&e.code==='Enter')nextBrief()});
+$('bs').onclick=nextBrief;$('bk').onclick=()=>{bi--;renderBrief()};$('bq').onclick=()=>{if(!Z)return;if(Z.brief)openBrief();else toggleHelp()};$('hcl').onclick=()=>toggleHelp();$('hud').querySelector('h3').onclick=()=>$('hud').classList.toggle('min');pip.addEventListener('click',()=>{if(zi>=0&&!paused&&!brief){kd('KeyC');ku('KeyC')}});addEventListener('keydown',e=>{if(brief&&e.code==='Enter')nextBrief()});
 function menuPage(){}
 function enter(i){zi=i;Z=ZONES[i];if(Wg)scene.remove(Wg);Wg=new THREE.Group();scene.add(Wg);solids=[];T=[];dets=[];lock=null;fpvMode=false;pip.className='';
  const l=Z.lt||[0xffffff,0x7f9a6c,.9,0xfff2dc,1.6];hemi.color.set(l[0]);hemi.groundColor.set(col(l[1]));hemi.intensity=l[2];sun.color.set(l[3]);sun.intensity=l[4];
  FX.forEach(f=>f.clear());if(badge)drone.remove(badge);$('hv').style.opacity=0;$('sg').style.display=$('wn').style.display='none';holdH=0;
  scene.background=col(Z.sky);scene.fog=new THREE.Fog(col(Z.sky),Z.fog[0],Z.fog[1]);LIM=Z.lim;ALT=Z.alt;grip.visible=tank.visible=false;
  Z.build();resetPose();Z.init();paused=false;brief=false;$('ps').style.display='none';$('bf').style.display='none';$('menu').style.display='none';document.body.className='';document.body.dataset.z=i;
- $('bq').style.display=Z.brief?'':'none';$('help').open=innerWidth>700;applyLang();SND.zone(i);if(Z.brief)openBrief()}
-var spP=false;
+ $('bq').style.display=(Z.brief||(i===0&&isTouch))?'':'none';$('help').open=innerWidth>700;$('help').classList.remove('show');hP=false;$('hud').classList.toggle('min',innerWidth<700||innerHeight<480);if(isTouch&&innerHeight>innerWidth&&innerWidth<700)toast(tr('Tip: rotate your phone to landscape for a better view.','가로 화면으로 돌리면 더 잘 보여요.'));applyLang();SND.zone(i);if(Z.brief)openBrief()}
+var spP=false,hP=false;
+function toggleHelp(){const h=$('help'),on=!h.classList.contains('show');h.classList.toggle('show',on);h.open=true;if(on&&!paused){paused=true;hP=true}else if(!on&&hP){paused=false;hP=false}}
 function openSp(){audio();$('v_master').value=SND.v.master*100;$('v_drone').value=SND.v.drone*100;$('v_amb').value=SND.v.amb*100;$('v_sfx').value=SND.v.sfx*100;$('v_mute').checked=SND.mute;$('sp').style.display='grid';if(zi>=0&&!paused&&!brief){paused=true;spP=true}}
 function closeSp(){$('sp').style.display='none';if(spP){paused=false;spP=false}SND.save()}
 ['master','drone','amb','sfx'].forEach(k=>{const e=$('v_'+k);e.oninput=()=>{SND.v[k]=e.value/100;SND.apply()};e.onchange=()=>SND.play('click')});
@@ -740,7 +760,7 @@ addEventListener('resize',resize);resize();applyLang();
  fpvUpdate();ai();overlay();draw();
  const h=Z.hud();if(h!==lastH){$('mis').innerHTML=h;lastH=h}const c=Z.coach();if(c!==lastC){$('tip').textContent=c;lastC=c}
  $('stat').textContent=STL(state);$('bp').textContent=paused&&!brief?'▶':'⏸';
- const b=document.querySelector('#tr .a');if(b)b.textContent=state==='flying'?tr('Land','착륙'):tr('Take off','이륙');
+ const b=document.querySelector('#ta .a');if(b)b.textContent=state==='flying'?tr('Land','착륙'):tr('Take off','이륙');
  SND.update(dt)})();
 new THREE.GLTFLoader().parse(GLTF_JSON,'',build,e=>{console.error(e);$('lead').textContent='The drone model failed to load. Please reload the page.'});
 </script></body></html>
