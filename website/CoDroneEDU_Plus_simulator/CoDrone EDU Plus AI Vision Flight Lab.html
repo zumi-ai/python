@@ -118,6 +118,8 @@ html,body{overscroll-behavior:none;-webkit-touch-callout:none}*{-webkit-tap-high
 @media (pointer:coarse),(max-width:900px){body[data-z="0"] #help{display:none}body[data-z="0"] #help.show{display:block;top:50%;left:50%;right:auto;transform:translate(-50%,-50%);width:min(92vw,460px);max-height:80vh;z-index:18}#hcl{display:none}#help.show #hcl{display:block;margin-top:10px}}
 #hcl{color:#fff;border-color:#8fb4ff;background:transparent}body.m #ta,body.m #tip{display:none!important}
 .bc .tl{margin:8px 0 0;padding:8px;border-radius:10px;background:#eef3ff;color:#0f1a2e;font-size:12.5px;line-height:1.5}
+#hud #tip{position:static;transform:none;max-width:none;background:none;padding:4px 0 0;margin:0;font-size:12px;color:#cfe0ff;backdrop-filter:none;text-align:left;border-radius:0;z-index:auto}
+@media (pointer:coarse),(max-width:900px){#toast{top:26%;max-width:60vw;z-index:9}#wn{top:calc(26% + 56px);z-index:9;max-width:60vw}#sg{top:calc(26% + 108px)!important}}
 </style></head>
 <body class="m">
 <div id="hud" class="pn"><h3 id="zn"></h3><div class="s" id="stat"></div>
@@ -752,7 +754,8 @@ $('bh').onclick=()=>{zi=-1;paused=false;brief=false;$('ps').style.display='none'
 $('mis').onclick=e=>{const k=e.target.dataset.k;if(k){kd(k);ku(k)}};
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&zi>=0&&!paused&&!brief)pause()});
 function resize(){renderer.setSize(innerWidth,innerHeight);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix()}
-addEventListener('resize',resize);resize();applyLang();
+function placeTip(){const t=$('tip'),h=$('hud'),want=isTouch||innerWidth<900;if(want&&t.parentNode!==h)h.insertBefore(t,$('mis'));else if(!want&&t.parentNode===h)document.body.appendChild(t)}
+addEventListener('resize',()=>{resize();placeTip()});resize();placeTip();applyLang();
 (function loop(){requestAnimationFrame(loop);const dt=Math.min(clock.getDelta(),.05);
  if(toastT>0){toastT-=dt;if(toastT<=0)$('toast').className=''}
  if(zi<0)return;
