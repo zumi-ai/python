@@ -540,6 +540,16 @@
     </div>
   </div>
 
+<!-- ===================================================================== -->
+<!-- TOP 버튼 (스크롤 시 맨 위로 이동)                                      -->
+<!-- ===================================================================== -->
+  <button id="top-btn"
+          onclick="scrollToTop()"
+          aria-label="페이지 맨 위로 이동"
+          class="fixed bottom-6 right-6 z-50 flex items-center justify-center w-11 h-11 rounded-2xl bg-slate-900/90 hover:bg-slate-950 text-white shadow-xl shadow-slate-950/20 border border-white/15 opacity-0 pointer-events-none translate-y-3 transition-all duration-300">
+    <i class="fa-solid fa-arrow-up text-sm"></i>
+  </button>
+
   <!-- ===================================================================== -->
   <!-- JAVASCRIPT: 데이터 설정 (이미지 링크 수정 주석) & 상태/썸네일 연동     -->
   <!-- ===================================================================== -->
@@ -1121,6 +1131,28 @@ icon: 'fa-solid fa-boxes-stacked',
 
       document.querySelectorAll('.reveal-up').forEach((el) => revealObserver.observe(el));
     });
+// TOP 버튼 스크롤 토글 및 부드러운 스크롤 이동 함수
+    const topBtn = document.getElementById('top-btn');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        topBtn.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-3');
+        topBtn.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0');
+      } else {
+        topBtn.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
+        topBtn.classList.add('opacity-0', 'pointer-events-none', 'translate-y-3');
+      }
+    });
+
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+
+
   </script>
+
 </body>
 </html>
