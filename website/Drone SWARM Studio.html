@@ -323,13 +323,25 @@ function persist(){try{localStorage.setItem('dronestudio2',JSON.stringify({bpm,s
 function pushH(){clearTimeout(hT);hT=0;const s=cj();if(hist[hi]===s)return;hist=hist.slice(0,hi+1);hist.push(s);if(hist.length>100)hist.shift();hi=hist.length-1}
 function save(){refitAll();persist();clearTimeout(hT);hT=setTimeout(pushH,350)}
 function undo(r){if(hT)pushH();const k=hi+(r?1:-1);if(k<0||k>=hist.length)return;hi=k;clips=JSON.parse(hist[k]);clips.forEach(compileClip);if(!selClip())sel=null;renderClips();persist()}
+
 function restore(){try{const s=JSON.parse(localStorage.getItem('dronestudio2')||'null');if(s&&Array.isArray(s.clips)&&s.clips.length){clips=s.clips;uid=Math.max(0,...clips.map(c=>c.id||0));return}}catch(e){}
  const B=k=>LIB.find(l=>l.k===k);[
-   ['takeoff', 0, 6],    // 시작 지점(0초)에 이륙 블록 (길이 6초)
-   ['heart', 7, 6],      // 7초부터 하트
-   ['star', 14, 6],      // 14초부터 별
-   ['land', 22, 6]       // 22초에 착륙 블록
- ].forEach(([k,s,d],j)=>clips.push({id:++uid,name:B(k).n,code:B(k).c,start:s,dur:d,color:PAL[j%6],rb:k==='firework'||k==='galaxy',s0:1,s1:1,gr:B(k).gr}))}
+   ['takeoff', 0, 6],    
+   ['heart', 7, 6],      
+   ['star', 14, 6],      
+   ['land', 22, 6]       
+ ].forEach(([k,s,d],j)=>clips.push({
+   id: ++uid,
+   name: B(k).n,
+   code: B(k).c,
+   start: s,
+   dur: d,
+   color: (k === 'takeoff' || k === 'land') ? '#ffffff' : PAL[j % 6], // 이륙, 착륙은 흰색(#ffffff), 나머지는 팔레트 색상
+   rb: k === 'firework' || k === 'galaxy',
+   s0: 1,
+   s1: 1,
+   gr: B(k).gr
+ }))}
 /* ---------- 3D 무대 ---------- */
 const gl=$('#gl'),R=new THREE.WebGLRenderer({canvas:gl,antialias:true});R.setPixelRatio(Math.min(2,devicePixelRatio||1));
 const S=new THREE.Scene();S.background=new THREE.Color(0x060a1c);const CAM=new THREE.PerspectiveCamera(50,1,.1,4000);let yaw=.4,pitch=.22,zoom=.85;
