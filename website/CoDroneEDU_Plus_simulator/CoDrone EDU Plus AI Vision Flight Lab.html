@@ -2588,18 +2588,76 @@ if(t.log){
    const y0=mh(a.x,a.z);t.c.set(a.x,y0+.9,a.z);if(t.mk)t.mk.position.set(a.x,y0+3.6,a.z);if(Math.hypot(P.x-a.x,P.z-a.z)<20)near=true});
   near=near&&state==='flying'&&agl>3&&agl<14&&far;m.dist=clamp(m.dist+(near?28:-8)*dt,0,100);
   if(m.dist>=100&&m.flee<=0){m.flee=8;m.dis++;m.dist=0;penalty(10,tr('Scared the animals','동물을 놀라게 함'));toast(tr('You scared the animals! Keep above 14 m near wildlife.','동물들이 놀랐어요! 야생동물 근처에서는 14 m 이상 높이를 유지하세요.'),'r')}if(m.flee>0)m.flee-=dt;
-  if(m.hot&&(!m.hot.log||m.hotT>0)){m.hotT-=dt;if(!m.hot.log||m.hotT>0){fxN.emit(m.hot.c.x,m.hot.c.y,m.hot.c.z,(R()-.5)*.6,2+R(),(R()-.5)*.6,3,.8,3.5,.35,.35,.35,.4,-.2,.1);if(R()<.3)fxA.emit(m.hot.c.x,m.hot.c.y,m.hot.c.z,(R()-.5),1.5+R()*2,(R()-.5),1.5,.15,.05,1,.5,.1,1,-.3,0)}}
+  if(m.hot&&!m.hotOut){fxN.emit(m.hot.c.x,m.hot.c.y,m.hot.c.z,(R()-.5)*.6,2+R(),(R()-.5)*.6,3,.8,3.5,.35,.35,.35,.4,-.2,.1);if(R()<.3)fxA.emit(m.hot.c.x,m.hot.c.y,m.hot.c.z,(R()-.5),1.5+R()*2,(R()-.5),1.5,.15,.05,1,.5,.1,1,-.3,0)}
   const hh=m.hiker;
-  if(hh&&m.hs<2){const hp=hh.p,g=hh.g;if(hh.id){hp.arms[1].rotation.x=-2.6+Math.sin(time*6)*.4;hp.arms[0].rotation.x=-2.4+Math.sin(time*6+1.5)*.4;g.rotation.set(0,Math.atan2(P.x-hh.x,P.z-hh.z),0)}else{g.rotation.z=Math.sin(time*1.2)*.18;g.rotation.x=Math.sin(time*.9+1)*.12;hp.arms[0].rotation.x=Math.sin(time*1.1)*.3;hp.arms[1].rotation.x=-.9+Math.sin(time*1.4)*.2}}
+  if(hh&&m.hs<2){const hp=hh.p,g=hh.g;if(m.hs===1){const a=Math.sin(time*2.8);g.rotation.set(.12,0,0);hp.arms[0].rotation.x=-1.35+a*.18;hp.arms[1].rotation.x=-1.15-a*.18;hp.legs[0].rotation.x=.12;hp.legs[1].rotation.x=.12}else if(hh.id){hp.arms[1].rotation.x=-2.6+Math.sin(time*6)*.4;hp.arms[0].rotation.x=-2.4+Math.sin(time*6+1.5)*.4;g.rotation.set(0,Math.atan2(P.x-hh.x,P.z-hh.z),0)}else{g.rotation.z=Math.sin(time*1.2)*.18;g.rotation.x=Math.sin(time*.9+1)*.12;hp.arms[0].rotation.x=Math.sin(time*1.1)*.3;hp.arms[1].rotation.x=-.9+Math.sin(time*1.4)*.2}}
   holdH=(m.kit&&!m.dr&&m.hs===0)?1.7:0;m.kitM.visible=m.cable.visible=m.kit&&m.hs===0;
   if(m.kit&&m.hs===0&&hh){let Lk=1.3;if(m.dr){m.dr.L=Math.min(m.dr.target,m.dr.L+6*dt);Lk=m.dr.L}m.kitM.position.set(P.x,P.y-Lk,P.z);const top=P.y-Lk+.3,by=P.y-.15;m.cable.position.set(P.x,(by+top)/2,P.z);m.cable.scale.set(1,Math.max(.1,by-top),1);
-   if(m.dr&&m.dr.L>=m.dr.target-.01){m.dr=null;m.hs=1;m.hT=0;const sp=m.kitM.clone();sp.position.set(hh.x+1.2,hh.c.y-.8,hh.z);add(sp);SND.play('win');m.heli.visible=true;toast(tr('Medical kit delivered! A rescue helicopter is on its way.','의료 물품 전달 완료! 구조 헬기가 출동했어요.'),'g')}}
-  if(hh&&m.hs>=1){const h=m.heli,LS=m.ls,ly=mh(LS[0],LS[1])+1.6;m.hT+=dt;h.userData.rotor.rotation.y+=dt*(m.hs===3?10:22);
-   if(m.hs===1){const k=Math.min(1,m.hT/14),e=k*k*(3-2*k),sx=LS[0]+150,sy=ly+70,sz=LS[1]-90;h.position.set(sx+(LS[0]-sx)*e,sy+(ly-sy)*e,sz+(LS[1]-sz)*e);h.rotation.y=Math.atan2(LS[0]-sx,LS[1]-sz);if(k>=1){m.hs=2;toast(tr('The helicopter landed. The hiker is walking to it.','헬기가 착륙했어요. 등산객이 헬기로 걸어가요.'),'g')}}
-   else if(m.hs===2){const dx=LS[0]-hh.x,dz=LS[1]-hh.z,d=Math.hypot(dx,dz);if(d>2.4){hh.x+=dx/d*1.3*dt;hh.z+=dz/d*1.3*dt;const s=Math.sin(time*7)*.6;hh.p.legs[0].rotation.x=s;hh.p.legs[1].rotation.x=-s;hh.p.arms[0].rotation.x=-s*.8;hh.p.arms[1].rotation.x=s*.8;hh.g.position.set(hh.x,mh(hh.x,hh.z),hh.z);hh.g.rotation.set(0,Math.atan2(dx,dz),0);hh.c.set(hh.x,hh.g.position.y+1,hh.z)}else{m.hs=3;m.hT=0;hh.g.visible=false;hh.gone=true;toast(tr('The hiker boarded the helicopter.','등산객이 헬기에 탑승했어요.'),'g')}}
-   else if(m.hs===3){if(m.hT>2.5){m.hs=4;m.hT=0}}
-   else if(m.hs===4){const k=Math.min(1,m.hT/12);h.position.set(LS[0]+k*160,ly+k*k*90,LS[1]-k*60);h.rotation.y=Math.atan2(160,-60);if(k>=1){h.visible=false;m.hs=5;m.rescued=true;toast(tr('The helicopter flew off with the hiker. Rescue complete!','헬기가 등산객을 태우고 떠났어요. 구조 완료!'),'g')}}}
-  if(!m.fin&&m.groups.every(t=>t.id)&&m.habs.every(t=>t.log)&&(!m.hot||m.hot.log)&&(!hh||m.rescued)&&STG.def.k!=='tut'){m.fin=true;toast(tr('Mountain mission complete! Scared animals: '+m.dis,'산악 임무 완료! 동물 놀라게 한 횟수 '+m.dis),'g');clear(7)}},
+   if(m.dr&&m.dr.L>=m.dr.target-.01){m.dr=null;m.hs=1;m.hT=0;const sp=m.kitM.clone();sp.position.set(hh.x+1.2,hh.c.y-.8,hh.z);add(sp);SND.play('win');toast(tr('Medical kit delivered. The hiker is treating their injury while rescue is dispatched.','의료 물품 전달 완료! 등산객이 응급처치를 하고 구조대가 출동합니다.'),'g')}}
+  /* Mountain rescue sequence: first aid -> high-altitude helicopter -> rescuer descends -> assisted hoist -> departure */
+  if(hh&&m.hs>=1){
+   const h=m.heli,LS=m.ls,ground=mh(LS[0],LS[1]),hoverY=ground+25;
+   m.hT+=dt;
+   if(m.hs===1){
+    /* Give the hiker time to apply the delivered first-aid kit before the helicopter arrives. */
+    if(m.hT>6){m.hs=2;m.hT=0;h.visible=true;h.position.set(LS[0]+150,ground+58,LS[1]-90)}
+   }else if(m.hs===2){
+    const k=Math.min(1,m.hT/12),e=k*k*(3-2*k),sx=LS[0]+150,sy=ground+58,sz=LS[1]-90;
+    h.position.set(sx+(LS[0]-sx)*e,sy+(hoverY-sy)*e,sz+(LS[1]-sz)*e);
+    h.rotation.y=Math.atan2(LS[0]-sx,LS[1]-sz);
+    if(k>=1){
+     m.hs=3;m.hT=0;
+     const rg=person(0x285b45,0xf0c94b),res=new THREE.Group();res.add(rg.g);res.position.set(LS[0],hoverY-2,LS[1]);add(res);
+     const rope=new THREE.Mesh(new THREE.CylinderGeometry(.045,.045,1,6),lam(0xd9e2ec));add(rope);
+     const stretcher=new THREE.Group();pb(stretcher,1.5,.12,.48,0xd9e2e8,0,0,0);pb(stretcher,.08,.22,.08,0x444b55,-.62,.13,0);pb(stretcher,.08,.22,.08,0x444b55,.62,.13,0);add(stretcher);
+     m.rescueTeam={res,p:rg,rope,stretcher,ground,hoverY};
+     toast(tr('The helicopter is hovering above the ridge. A rescue worker is descending.','헬기가 산등성이 위에서 정지했습니다. 구조대원이 로프를 타고 내려옵니다.'),'g');
+    }
+   }else if(m.hs===3){
+    const q=m.rescueTeam,k=Math.min(1,m.hT/5),e=k*k*(3-2*k),y=q.hoverY-2-(q.hoverY-ground-2)*e;
+    q.res.position.set(LS[0],y,LS[1]);q.res.rotation.y=Math.atan2(hh.x-LS[0],hh.z-LS[1]);
+    q.rope.position.set(LS[0],(q.hoverY+y)/2,LS[1]);q.rope.scale.set(1,Math.max(.1,q.hoverY-y),1);
+    q.p.legs[0].rotation.x=Math.sin(time*8)*.12;q.p.legs[1].rotation.x=-Math.sin(time*8)*.12;
+    if(k>=1){
+     m.hs=4;m.hT=0;
+     hh.g.rotation.set(-.35,Math.atan2(LS[0]-hh.x,LS[1]-hh.z),0);
+     q.p.arms[0].rotation.x=-1.2;q.p.arms[1].rotation.x=-1.2;
+     toast(tr('The rescue worker is helping the injured hiker onto the stretcher.','구조대원이 부상당한 등산객을 부축해 들것에 옮깁니다.'),'g');
+    }
+   }else if(m.hs===4){
+    const q=m.rescueTeam,k=Math.min(1,m.hT/5),e=k*k*(3-2*k),y=ground+1+(q.hoverY-ground-1)*e;
+    if(m.hT<1.2){hh.p.arms[0].rotation.x=-1.8;hh.p.arms[1].rotation.x=-1.8;hh.g.rotation.x=-.5}
+    if(m.hT>=1.2&&!q.loaded){
+     q.loaded=true;hh.gone=true;hh.g.visible=true;hh.g.scale.setScalar(.62);hh.g.rotation.set(Math.PI/2,0,0);q.stretcher.add(hh.g);hh.g.position.set(0,.18,0);
+     q.stretcher.position.set(LS[0],ground+1,LS[1]);
+     q.res.position.set(LS[0],ground+1,LS[1]);
+    }
+    q.res.position.set(LS[0],y,LS[1]);q.stretcher.position.set(LS[0],y-.65,LS[1]);
+    q.rope.position.set(LS[0],(q.hoverY+y)/2,LS[1]);q.rope.scale.set(1,Math.max(.1,q.hoverY-y),1);
+    if(k>=1){m.hs=5;m.hT=0;toast(tr('The injured hiker and rescue worker are safely aboard.','부상당한 등산객과 구조대원이 안전하게 헬기에 탑승했습니다.'),'g')}
+   }else if(m.hs===5){
+    const k=Math.min(1,m.hT/12);h.position.set(LS[0]+k*160,hoverY+k*k*55,LS[1]-k*60);h.rotation.y=Math.atan2(160,-60);
+    if(m.rescueTeam){const q=m.rescueTeam;q.res.position.set(h.position.x,h.position.y-2,h.position.z);q.stretcher.position.set(h.position.x,h.position.y-2.7,h.position.z);q.rope.position.set(h.position.x,h.position.y-1,h.position.z);q.rope.scale.set(1,2,1)}
+    if(k>=1){h.visible=false;m.hs=6;m.rescued=true;toast(tr('The helicopter has carried the hiker to safety. Rescue complete!','헬기가 등산객을 태우고 안전한 곳으로 떠났습니다. 구조 완료!'),'g')}
+   }
+   h.userData.rotor.rotation.y+=dt*22;
+  }
+  /* Ranger response to the reported campfire */
+  if(m.ranger&&!m.ranger.done){
+   const r=m.ranger,dx=m.hot.c.x-r.x,dz=m.hot.c.z-r.z,d=Math.hypot(dx,dz);
+   if(r.phase===0){
+    const step=Math.min(d,2.5*dt);if(d>.8){r.x+=dx/d*step;r.z+=dz/d*step;r.g.position.set(r.x,mh(r.x,r.z),r.z);r.g.rotation.y=Math.atan2(dx,dz);const w=Math.sin(time*8)*.5;r.p.legs[0].rotation.x=w;r.p.legs[1].rotation.x=-w;r.p.arms[0].rotation.x=-w*.5;r.p.arms[1].rotation.x=w*.5}
+    else{r.phase=1;r.t=0;r.p.arms[0].rotation.x=-1.7;r.p.arms[1].rotation.x=-1.7}
+   }else if(r.phase===1){
+    r.t+=dt;r.p.arms[0].rotation.x=-1.8+Math.sin(time*5)*.12;r.p.arms[1].rotation.x=-1.8+Math.sin(time*5+1)*.12;
+    if(r.t>3){m.hotOut=true;r.phase=2;r.t=0;toast(tr('The ranger has extinguished the campfire.','레인저가 모닥불을 완전히 진화했습니다.'),'g')}
+   }else if(r.phase===2){
+    r.t+=dt;const tx=r.startX,tz=r.startZ,ddx=tx-r.x,ddz=tz-r.z,dd=Math.hypot(ddx,ddz);
+    if(dd>.8){r.x+=ddx/dd*2*dt;r.z+=ddz/dd*2*dt;r.g.position.set(r.x,mh(r.x,r.z),r.z);r.g.rotation.y=Math.atan2(ddx,ddz);const w=Math.sin(time*7)*.45;r.p.legs[0].rotation.x=w;r.p.legs[1].rotation.x=-w}
+    else{r.done=true;r.g.visible=false}
+   }
+  }
+  if(!m.fin&&m.groups.every(t=>t.id)&&m.habs.every(t=>t.log)&&(!m.hot||m.hotOut)&&(!hh||m.rescued)&&STG.def.k!=='tut'){m.fin=true;toast(tr('Mountain mission complete! Scared animals: '+m.dis,'산악 임무 완료! 동물 놀라게 한 횟수 '+m.dis),'g');clear(7)}},
  key(c){const m=M8;if(c==='Digit1'||c==='Digit2'){m.thermal=c==='Digit2';SND.play('click');tutEv(m.thermal?'thermal':'normal');toast(m.thermal?tr('Thermal camera ON: warm bodies glow, even under trees','열화상 카메라 ON: 나무 아래에서도 체온이 있는 물체가 밝게 보여요'):tr('Normal camera','일반 카메라'));return}
   if(c!=='KeyG')return;if(!m.hiker)return toast(tr('There is nobody to help in this stage.','이 스테이지에는 도울 사람이 없어요.'),'r');if(m.hs>0||m.dr||!m.kit)return;if(state!=='flying')return toast(tr('Take off first','먼저 이륙하세요'),'r');
   if(!m.hiker.id)return toast(tr('Find and identify the hiker first (use the thermal camera and press F).','먼저 등산객을 찾아 확인하세요 (열화상으로 찾고 F).'),'r');
@@ -2610,11 +2668,11 @@ if(t.log){
   s:[tr('<b>Wildlife census:</b> press <kbd>C</kbd> and find the deer (meadow), boars (forest), the bear (stream) and goats (rocky cliff). Press <kbd>F</kbd>: one scan counts the whole group. Stay above 14 m or they run away (+10 s in the final).','<b>야생동물 조사:</b> <kbd>C</kbd> 키를 누르고 고라니(초원), 멧돼지(숲), 반달가슴곰(계곡), 산양(암벽)을 찾으세요. <kbd>F</kbd>를 누르면 무리 전체를 세요. 14 m 이상 높이를 유지하세요. 가까이 가면 도망가고 최종에서는 +10초예요.'),
    tr('<b>Habitat signs:</b> read the wooden signs (Meadow, Stream bank, Rocky cliff) with <kbd>F</kbd> to check the condition of each habitat.','<b>서식지 표지판:</b> 나무 표지판(초원, 계곡 물가, 암벽 지대)을 <kbd>F</kbd>로 읽어 각 서식지의 상태를 확인하세요.'),
    tr('<b>Thermal camera:</b> press <kbd>2</kbd>. Warm bodies glow, even under trees: animals, the missing hiker inside the red circle on the minimap, and an unattended campfire (a wildfire risk). Scan the hiker and the hotspot with <kbd>F</kbd>.','<b>열화상 카메라:</b> <kbd>2</kbd>를 누르세요. 나무 아래에서도 체온이 있는 물체가 밝게 보여요: 동물, 미니맵 빨간 원 안의 실종 등산객, 꺼지지 않은 모닥불(산불 위험). 등산객과 열점을 <kbd>F</kbd>로 스캔하세요.'),
-   tr('<b>Rescue:</b> after scanning the hiker, hover within 7 m above them and press <kbd>G</kbd> to lower the medical kit. A helicopter lands, the hiker walks to it, and they fly away.','<b>구조:</b> 등산객을 스캔한 뒤 7 m 이내 위에서 <kbd>G</kbd>로 의료 물품을 내리세요. 헬기가 착륙하고, 등산객이 걸어가 탑승한 뒤 함께 떠나요.')],x:''}},
+   tr('<b>Rescue:</b> after scanning the hiker, hover within 7 m above them and press <kbd>G</kbd> to lower the medical kit. The hiker gives first aid. A helicopter hovers above the ridge, a rescuer descends by rope, and they are hoisted aboard.','<b>구조:</b> 등산객을 스캔한 뒤 7 m 이내 위에서 <kbd>G</kbd>로 의료 물품을 내리세요. 등산객이 응급처치를 합니다. 헬기는 산등성이 위에서 정지하고 구조대원이 로프로 내려와 부상자를 들것에 옮겨 함께 떠나요.')],x:''}},
  coach(){const m=M8;if(m.fin)return tr('Mission complete! Use the ⌂ button to pick another space.','임무 완료! 홈 버튼으로 다른 공간을 고르세요.');if(!fpvMode)return tr('Press C for the AI camera. Press 2 for thermal.','C 키로 AI 카메라를 켜세요. 2번은 열화상 카메라 입니다.');
   if(m.dist>60)return tr('You are disturbing the animals! Climb higher.','동물을 방해하고 있어요! 더 높이 올라가세요.');const t=lock&&lock.t,c=m.cfg;
   if(m.hiker&&m.hiker.id&&m.hs===0)return tr('Hiker found. Fly above them (within 7 m) and press G to lower the medical kit.','등산객을 찾았어요. 위(7 m 이내)로 이동해 G로 의료 물품을 내리세요.');
-  if(m.hs>=1&&m.hs<5)return tr('Watch the rescue helicopter.','구조 헬기를 지켜보세요.');
+  if(m.hs>=1&&m.hs<6)return tr('Watch the first aid and mountain rescue operation.','응급처치와 산악 구조 과정을 지켜보세요.');
   if(t&&t.cls==='hiker')return tr('A person! Press F to scan.','사람이에요! F를 눌러 스캔하세요.');if(t&&t.cls==='hot')return tr('A hot campfire! Press F to report it.','꺼지지 않은 모닥불이에요! F를 눌러 신고하세요.');
   if(t&&(t.cls==='wild'||t.cls==='habsign'))return tr('Press F to scan.','F를 눌러 스캔하세요.');
   const miss=m.groups.find(g=>!g.id);if(c.ani&&miss&&!m.hiker)return tr('Look for the '+T2(WLN[miss.kind])+' ('+GS[miss.kind].hint[0]+').',T2(WLN[miss.kind])+'을(를) 찾아보세요 ('+GS[miss.kind].hint[1]+').');
@@ -2630,7 +2688,7 @@ if(t.log){
    ms.forEach(d=>{d.t.id=true;d.t.mk=chkSprite(d.t.c.x,d.t.c.y+3,d.t.c.z,2)});tutEv('scan:wild');toast(tr('Counted: ','집계: ')+ms.map(d=>T2(WLN[d.t.kind])+' ×'+d.t.n).join(', ')+' ('+m.groups.filter(a=>a.id).length+'/'+m.groups.length+')','g');return}
   if(l.conf<.75)return toast(tr('AI confidence '+Math.round(l.conf*100)+'%. Fly closer or zoom (Z).','AI 신뢰도 '+Math.round(l.conf*100)+'%. 가까이 가거나 확대(Z)하세요.'),'r');
   if(t.cls==='habsign'){if(t.log)return toast(tr('Already logged ✔','이미 기록했어요 ✔'));t.log=true;t.mk=chkSprite(t.c.x,t.c.y+2,t.c.z,2);tutEv('scan:hab');toast(tr(T2(t.name)+': '+T2(t.note)+' '+t.cond+'%'+(t.cond<70?' (needs attention)':' (good)'),T2(t.name)+': '+T2(t.note)+' '+t.cond+'%'+(t.cond<70?' (주의 필요)':' (양호)')),t.cond<70?'r':'g');return}
-  if(t.cls==='hot'){if(t.log)return toast(tr('Already reported ✔','이미 신고했어요 ✔'));if(!m.thermal)return toast(tr('Smoke and a faint glow... switch to the thermal camera (2) to check the temperature.','연기와 희미한 불빛... 열화상(2)으로 온도를 확인하세요.'),'r');t.log=true;m.hotT=8;t.mk=chkSprite(t.c.x,t.c.y+3,t.c.z,2);toast(tr('Hotspot 210°C: an unattended campfire! A ranger is sent to put it out and prevent a wildfire.','열점 210°C: 꺼지지 않은 모닥불! 산불을 막기 위해 레인저가 출동해 불을 꺼요.'),'g');return}
+  if(t.cls==='hot'){if(t.log)return toast(tr('Already reported ✔','이미 신고했어요 ✔'));if(!m.thermal)return toast(tr('Smoke and a faint glow... switch to the thermal camera (2) to check the temperature.','연기와 희미한 불빛... 열화상(2)으로 온도를 확인하세요.'),'r');t.log=true;m.hotT=0;t.mk=chkSprite(t.c.x,t.c.y+3,t.c.z,2);const rp=person(0x285b45,0xf0c94b),rg=new THREE.Group();rg.add(rp.g);const rx=t.c.x+24,rz=t.c.z+18;rg.position.set(rx,mh(rx,rz),rz);add(rg);m.ranger={g:rg,p:rp,x:rx,z:rz,startX:rx,startZ:rz,phase:0,t:0,done:false};toast(tr('Hotspot 210°C: a ranger is walking to the campfire to extinguish it.','열점 210°C: 레인저가 모닥불을 직접 끄기 위해 현장으로 이동합니다.'),'g');return}
   if(t.cls==='hiker'){if(!t.id){t.id=true;m.srch.r=6;m.srch.c=[t.x,t.z];toast(tr('Hiker found! Body temp 35.6°C, dizzy and injured. Hover above them (within 7 m) and press G to lower the medical kit.','등산객 발견! 체온 35.6°C, 어지러워하고 다쳤어요. 위(7 m 이내)에서 G로 의료 물품을 내리세요.'),'g')}}},
  hud(){const m=M8,c=m.cfg;let h=`<span class="ch${m.thermal?'':' on'}" data-k="Digit1">📷 ${tr('Normal','일반')} [1]</span><span class="ch${m.thermal?' on':''}" data-k="Digit2">🌡 ${tr('Thermal','열화상')} [2]</span>`;
   if(c.ani)h+=`<br>🦌 ${tr('Census','개체수')} <b>${m.groups.filter(g=>g.id).length}/${m.groups.length}</b><small>${m.groups.map(g=>(g.id?'✅ ':'⬜ ')+T2(WLN[g.kind])+' ×'+g.n+' · '+T2(GS[g.kind].hint)).join('<br>')}</small>`;
