@@ -413,19 +413,28 @@ html,body{overscroll-behavior:none;-webkit-touch-callout:none}*{-webkit-tap-high
 .tab:after{content:"";position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;transition:transform .25s,filter .25s;filter:saturate(1.12) brightness(1.08)}
 .tab:hover:after{transform:scale(1.05);filter:saturate(1.2) brightness(1.16)}
 .tab:hover{transform:translateY(-2px);border-color:#fff;box-shadow:0 10px 24px #00152f88}
-.tab.on{border:2px solid #46d8ff;box-shadow:0 0 0 1px #46d8ff,0 0 22px #23bfffaa,0 8px 22px #00152f88;animation:missionCardBreath 3.2s ease-in-out infinite}
-/* Selected mission: soft cyan wave passes across the card, below its text and imagery. */
+.tab.on{
+  border:2px solid #70e2ff;
+  box-shadow:0 0 0 1px #46d8ff88,0 0 20px #23bfff88,0 8px 22px #00152f88;
+  animation:missionCardBreath 4.8s ease-in-out infinite;
+}
+/* Selected mission: a steady, translucent cyan wash with a slow, gentle wave. */
 .tab.on::before{
   background:
-    linear-gradient(180deg,rgba(2,16,36,.04) 5%,rgba(3,18,40,.08) 48%,rgba(2,15,35,.9) 100%),
-    linear-gradient(112deg,transparent 0%,rgba(93,203,255,.04) 27%,rgba(109,221,255,.19) 43%,rgba(224,248,255,.12) 50%,rgba(71,174,255,.17) 58%,transparent 78%);
-  background-size:100% 100%,240% 100%;
-  background-position:0 0,-145% 0;
-  animation:missionCardWave 4.6s ease-in-out infinite;
+    linear-gradient(180deg,rgba(2,16,36,.02) 5%,rgba(3,18,40,.045) 48%,rgba(2,15,35,.88) 100%),
+    linear-gradient(112deg,rgba(75,190,255,.075) 0%,rgba(100,210,255,.12) 28%,rgba(190,239,255,.18) 48%,rgba(91,190,255,.12) 68%,rgba(75,190,255,.075) 100%),
+    linear-gradient(112deg,transparent 0%,rgba(109,221,255,.025) 34%,rgba(190,239,255,.13) 50%,rgba(71,174,255,.07) 62%,transparent 82%);
+  background-size:100% 100%,100% 100%,260% 100%;
+  background-position:0 0,0 0,-145% 0;
+  animation:missionCardWave 12s ease-in-out infinite;
+}
+@keyframes missionCardBreath{
+  0%,100%{box-shadow:0 0 0 1px #46d8ff66,0 0 14px #23bfff66,0 8px 22px #00152f88}
+  50%{box-shadow:0 0 0 2px #8beaffbb,0 0 23px #23bfff99,0 8px 24px #00152f99}
 }
 @keyframes missionCardWave{
-  0%,12%{background-position:0 0,-145% 0;opacity:.88}
-  58%,100%{background-position:0 0,145% 0;opacity:1}
+  0%,18%{background-position:0 0,0 0,-145% 0}
+  82%,100%{background-position:0 0,0 0,145% 0}
 }
 .tab.ok{border-color:#4de4b2}
 .tab .mission-no{z-index:2;top:10px;right:auto;left:12px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#45c9ff,#1769d9);color:#fff;font-size:15px;box-shadow:0 3px 12px #001b3c99}
@@ -875,8 +884,42 @@ html,body{overscroll-behavior:none;-webkit-touch-callout:none}*{-webkit-tap-high
 }
 </style>
 
+
+<style id="game-robolink-logo">
+/* Robolink brand mark: visible only while a mission is running (missions 1–8). */
+#gameRobolinkLogo{
+  display:none;
+  position:fixed;
+  right:14px;
+  bottom:14px;
+  z-index:4;
+  width:clamp(68px,7.2vw,104px);
+  max-height:48px;
+  height:auto;
+  object-fit:contain;
+  opacity:.82;
+  filter:drop-shadow(0 2px 7px rgba(0,0,0,.45));
+  pointer-events:none;
+  user-select:none;
+}
+body:not(.m) #gameRobolinkLogo{display:block}
+@media (pointer:coarse),(max-width:700px){
+  #gameRobolinkLogo{
+    right:calc(12px + env(safe-area-inset-right,0px));
+    bottom:calc(116px + env(safe-area-inset-bottom,0px));
+    width:clamp(58px,13vw,82px);
+    max-height:40px;
+    opacity:.76;
+  }
+}
+@media (max-height:420px) and (orientation:landscape){
+  #gameRobolinkLogo{bottom:8px;width:62px;max-height:30px}
+}
+</style>
+
 </head>
 <body class="m">
+<img id="gameRobolinkLogo" src="https://zumi-ai.github.io/python/website/SIMULATOR/image/logo.png" alt="Robolink" aria-hidden="true">
 <div id="hud" class="pn"><h3 id="zn"></h3><div class="s" id="stat"></div>
 <div class="r">Altitude <b id="alt"></b></div><div class="r">Speed <b id="spd"></b></div>
 <div id="mis"></div></div><div id="tip" class="pn"></div>
