@@ -18,6 +18,13 @@ input[type=number]{width:70px}
 #top{grid-area:top;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:8px 12px;background:var(--p1);border-bottom:1px solid var(--line)}
 #top label{display:flex;align-items:center;gap:5px;color:var(--mut)}
 .brand{font-weight:800;font-size:15px;color:var(--ink)}
+#studioMenuToggle{background:transparent;border:0;padding:4px 0;font-weight:800;font-size:15px;color:var(--ink);white-space:nowrap}
+#studioMenuToggle:hover{color:var(--acc);border-color:transparent}
+#studioMenu{position:fixed;top:48px;left:12px;z-index:20;min-width:210px;padding:6px;background:var(--p1);border:1px solid var(--line);border-radius:8px;box-shadow:0 8px 24px #0008}
+#studioMenu[hidden]{display:none}
+#studioMenu a{display:block;padding:9px 11px;border-radius:6px;color:var(--ink);text-decoration:none;font-weight:700}
+#studioMenu a:hover{background:var(--p2);color:var(--acc)}
+
 #play{background:var(--hot);border-color:var(--hot);color:#2a0612;font-weight:800;width:44px}
 #time{font:600 14px ui-monospace,Menlo,Consolas,monospace;min-width:130px}
 aside{background:var(--p1);padding:10px;overflow:auto;border-right:1px solid var(--line)}
@@ -66,7 +73,7 @@ details summary{cursor:pointer;margin:4px 0 6px;color:var(--acc);font-weight:700
 <body>
 <div id="app">
 <header id="top">
-  <span class="brand">🛸 드론 군무 스튜디오</span>
+  <button type="button" class="brand" id="studioMenuToggle" aria-haspopup="true" aria-expanded="false">🛸 드론 타임라인 스튜디오 ▼</button>
   <select id="song" aria-label="노래"></select>
   <label style="cursor:pointer;color:var(--ink)!important;background:var(--p2);border:1px solid var(--line);border-radius:7px;padding:5px 10px">🎵 곡 추가<input id="mf" type="file" accept="audio/*" hidden></label>
   <button id="bsave">💾 저장</button><label style="cursor:pointer;color:var(--ink)!important;background:var(--p2);border:1px solid var(--line);border-radius:7px;padding:5px 10px">📂 불러오기<input id="pf" type="file" accept=".json,application/json" hidden></label>
@@ -105,6 +112,10 @@ details summary{cursor:pointer;margin:4px 0 6px;color:var(--acc);font-weight:700
   <div id="tlbar"><b style="color:var(--ink)">타임라인</b><label>확대 <input id="zoom" type="range" min="4" max="60" value="14"></label><span class="hint">눈금을 누르면 이동 · 동작을 끌어 옮기고 오른쪽 끝을 끌어 길이 조절</span></div>
   <div id="tls"><div id="tlin"><canvas id="wave"></canvas><div id="lane"></div><div id="ph"></div></div></div>
 </section>
+</div>
+
+<div id="studioMenu" hidden>
+  <a href="https://zumi-ai.github.io/python/website/Drone_SWRM_Studio/Drone_SWRM_Studio.html">🚁 드론 군무 스튜디오</a>
 </div>
 
 <div id="spm" hidden><div id="spb">
@@ -735,5 +746,21 @@ $('#snd').onclick=()=>{SND=!SND;$('#snd').textContent=SND?'\ud83d\udd0a \ud658\u
 restore();setN(100);pushH();try{const s=JSON.parse(localStorage.getItem('dronestudio2')||'null');if(s&&s.song>0)$('#song').value=s.song}catch(e){}
 loadSong(+$('#song').value||0).then(()=>{try{const s=JSON.parse(localStorage.getItem('dronestudio2')||'null');if(s&&s.bpm&&s.song===SONG){bpm=s.bpm;$('#bpm').value=bpm;drawWave()}}catch(e){}});
 requestAnimationFrame(frame);
+
+/* ---------- 스튜디오 메뉴 ---------- */
+(()=>{
+  const toggle=document.getElementById('studioMenuToggle');
+  const menu=document.getElementById('studioMenu');
+  if(!toggle||!menu)return;
+  const close=()=>{menu.hidden=true;toggle.setAttribute('aria-expanded','false')};
+  toggle.addEventListener('click',e=>{
+    e.stopPropagation();
+    menu.hidden=!menu.hidden;
+    toggle.setAttribute('aria-expanded',String(!menu.hidden));
+  });
+  menu.addEventListener('click',e=>{if(e.target.closest('a'))close()});
+  document.addEventListener('click',e=>{if(!menu.contains(e.target)&&!toggle.contains(e.target))close()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+})();
 </script>
 </body></html>
