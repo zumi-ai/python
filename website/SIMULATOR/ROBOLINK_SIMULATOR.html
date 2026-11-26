@@ -402,27 +402,24 @@
       </article>
 
       <!-- ================================================================= -->
-      <!-- [3] 드론 군무 스튜디오 (녹색 계열 / 에메랄드 테마)                   -->
-      <!-- ================================================================= -->
+      <!-- [3] 드론 군무 스튜디오: 실제 드론 조종 / 대규모 가상 군집 연출 -->
       <article id="sim-swarm"
                class="reveal-up rounded-3xl bg-gradient-to-br from-emerald-50/55 via-white to-teal-50/40 border border-emerald-200/90 p-5 sm:p-7 lg:p-8 shadow-sm hover:shadow-xl hover:shadow-emerald-950/5 transition-all duration-500">
-
-        <!-- 카드 상단: 타이틀 & 고시인성 실행 버튼 -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-emerald-100">
           <div>
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100/80 text-emerald-900 text-[11px] font-bold tracking-wider uppercase mb-2">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
               DRONE SWARM PROGRAM & LIGHT SHOW
             </div>
-            <h2 onclick="resetSim('sim3')" class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-950 cursor-pointer 	hover:text-emerald-600 transition-colors" title="기본 화면으로 돌아가기">
- 	 드론 군무 스튜디오
-	</h2>
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" id="swarm-mode-real" onclick="setSwarmMode('real')"
+                class="swarm-mode-btn px-3.5 py-2 rounded-xl border text-base sm:text-lg font-extrabold transition-all duration-200">🚁 드론 군무 스튜디오</button>
+              <button type="button" id="swarm-mode-virtual" onclick="setSwarmMode('virtual')"
+                class="swarm-mode-btn px-3.5 py-2 rounded-xl border text-base sm:text-lg font-extrabold transition-all duration-200">🛸 드론 군무 스튜디오</button>
+            </div>
           </div>
-
-          <!-- [시뮬레이터 3 실행 링크 수정 위치] href="" 안의 주소를 변경하세요 -->
-          <a href="https://zumi-ai.github.io/python/website/Drone%20SWARM%20Studio.html"
-             target="_blank"
-             rel="noopener noreferrer"
+          <a id="sim3-launch-link" href="https://zumi-ai.github.io/python/website/Drone_SWRM_Studio/Drone_SWRM_Studio.html"
+             target="_blank" rel="noopener noreferrer"
              class="group inline-flex items-center justify-center gap-2.5 shrink-0 px-7 py-3.5 rounded-2xl text-sm sm:text-base font-extrabold text-white bg-gradient-to-r from-emerald-600 via-emerald-700 to-teal-600 hover:from-emerald-700 hover:to-emerald-800 ring-4 ring-emerald-500/20 hover:ring-emerald-500/35 shadow-lg shadow-emerald-600/30 hover:shadow-xl hover:shadow-emerald-600/40 transition-all duration-200 hover:-translate-y-0.5">
             <span class="w-2.5 h-2.5 rounded-full bg-white animate-pulse"></span>
             <span>시뮬레이터 실행하기</span>
@@ -430,70 +427,47 @@
           </a>
         </div>
 
-        <!-- 중단: 좌측 메인 이미지 + 4개 미니 썸네일 / 우측 상단 설명 + 4개 기능 버튼 -->
         <div class="mt-5 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-
-          <!-- 좌측 미디어 영역 (7 cols) -->
           <div class="lg:col-span-7 flex flex-col justify-between bg-slate-950 rounded-2xl p-3 border border-emerald-200/80 shadow-inner">
             <div class="group relative flex-1 min-h-[240px] sm:min-h-[300px] rounded-xl overflow-hidden bg-slate-900">
-              <img id="sim3-main-img"
-                   src=""
-                   alt="드론 군무 스튜디오 화면"
-                   class="w-full h-full object-contain bg-slate-900 cursor-zoom-in transition-transform duration-500 group-hover:scale-[1.015]"
-                   onclick="openModal('sim3')" />
+              <img id="sim3-main-img" src="image/SWARM_0011.png" alt="드론 군무 스튜디오 화면"
+                   class="w-full h-full object-contain bg-slate-900 cursor-zoom-in transition-transform duration-500 group-hover:scale-[1.015]" onclick="openModal('sim3')" />
               <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2">
-                <span id="sim3-caption"
-                      class="px-3 py-1.5 rounded-xl bg-slate-950/80 backdrop-blur-md border border-emerald-400/30 text-white text-xs font-semibold truncate">
-                  드론 군무 스튜디오 — 기본 미리보기
-                </span>
-                <button type="button" onclick="openModal('sim3')"
-                        class="shrink-0 px-2.5 py-1.5 rounded-xl bg-slate-950/80 hover:bg-emerald-600 backdrop-blur-md border border-white/15 text-white text-[11px] font-semibold transition">
-                  확대 ↗
-                </button>
+                <span id="sim3-caption" class="px-3 py-1.5 rounded-xl bg-slate-950/80 backdrop-blur-md border border-emerald-400/30 text-white text-xs font-semibold truncate">🚁 드론 군무 스튜디오 — 실제 드론 연결 조종</span>
+                <button type="button" onclick="openModal('sim3')" class="shrink-0 px-2.5 py-1.5 rounded-xl bg-slate-950/80 hover:bg-emerald-600 backdrop-blur-md border border-white/15 text-white text-[11px] font-semibold transition">확대 ↗</button>
               </div>
             </div>
-
-            <!-- 하단 4개 미니 썸네일 스트립 -->
-            <div id="sim3-thumbs" class="mt-2.5 grid grid-cols-4 gap-2"></div>
+            <div id="sim3-thumbs" class="mt-2.5 grid grid-cols-6 gap-1.5"></div>
           </div>
 
-          <!-- 우측 설명 & 버튼 영역 (5 cols) -->
           <div class="lg:col-span-5 flex flex-col justify-between space-y-4">
-            <!-- [위쪽] 설명 박스: 초기 미선택 시 기본 프로그램 설명 표시 -->
-            <div id="sim3-desc-box"
-                 class="desc-animate rounded-2xl bg-white border border-emerald-200/90 p-4 sm:p-5 shadow-2xs space-y-2.5">
+            <div id="sim3-desc-box" class="desc-animate rounded-2xl bg-white border border-emerald-200/90 p-4 sm:p-5 shadow-2xs space-y-2.5">
               <div class="flex items-center justify-between gap-2">
-                <span id="sim3-desc-badge" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900">
-                  PROGRAM OVERVIEW
-                </span>
-                <button type="button" id="sim3-reset-btn" onclick="resetSim('sim3')"
-                        class="hidden text-[11px] font-semibold text-emerald-700 hover:text-emerald-950 underline underline-offset-2">
-                  기본 설명 보기
-                </button>
+                <span id="sim3-desc-badge" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900">PROGRAM OVERVIEW</span>
+                <button type="button" id="sim3-reset-btn" onclick="resetSim('sim3')" class="hidden text-[11px] font-semibold text-emerald-700 hover:text-emerald-950 underline underline-offset-2">기본 설명 보기</button>
               </div>
-              <h3 id="sim3-desc-title" class="text-base sm:text-lg font-extrabold text-slate-950">
-                20대부터 수천 대까지 나만의 드론 군무 연출
-              </h3>
-              <p id="sim3-desc-text" class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                최소 20대의 드론 부터 수천대의 드론까지, 프로그램을 통하여 드론의 군무를 직접 만들어보고, 편집하거나 수정 할 수 있는 프로그램 입니다. 드론의 속도와 색상, 모양 등을 조절하며, 음악에 알맞는 동작을 할 수 있도록 군무를 만들어보고, 전체화면 모드로 배경을 바꿔가며 내가 만든 군무를 관람 할 수 있습니다.
-              </p>
-              <div id="sim3-desc-tags" class="flex flex-wrap gap-1.5 pt-1">
-                <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 text-xs font-semibold">#20~수천 대 군집</span>
-                <span class="px-2.5 py-1 rounded-lg bg-teal-50 text-teal-800 text-xs font-semibold">#속도·색상·모양 조절</span>
-                <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 text-xs font-semibold">#음악 싱크 · 전체화면 관람</span>
-              </div>
+              <h3 id="sim3-desc-title" class="text-base sm:text-lg font-extrabold text-slate-950">1대~5대의 실제 드론 연결 및 군집 조종</h3>
+              <p id="sim3-desc-text" class="text-xs sm:text-sm text-slate-600 leading-relaxed">가상 드론 시뮬레이터에 실제 드론을 연결하여 함께 조종하고 군집 비행 환경을 구성할 수 있습니다.</p>
+              <div id="sim3-desc-tags" class="flex flex-wrap gap-1.5 pt-1"></div>
             </div>
 
-            <!-- [아래쪽] 4가지 핵심 연출 기능 버튼 (초기 상태는 모두 선택 해제) -->
-            <div class="space-y-2">
-              <div class="flex items-center justify-between px-0.5">
-                <span class="text-xs font-bold tracking-wider text-emerald-900 uppercase">스튜디오 핵심 연출 기능</span>
-                <span class="text-[11px] text-slate-400">버튼을 눌러 상세 보기</span>
+            <div class="space-y-2.5">
+              <div class="rounded-xl border border-emerald-200 bg-emerald-50/70 p-3">
+                <div class="flex items-center justify-between gap-2 mb-2">
+                  <span class="text-xs font-extrabold tracking-wide text-emerald-950">5대의 실제 드론 연결 조종 가능</span>
+                  <span class="text-[11px] text-slate-500">버튼을 눌러 상세 보기</span>
+                </div>
+                <div id="sim3-real-buttons" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
               </div>
-              <div id="sim3-buttons" class="grid grid-cols-2 gap-2"></div>
+              <div class="space-y-2">
+                <div class="flex items-center justify-between px-0.5">
+                  <span class="text-xs font-bold tracking-wider text-emerald-900 uppercase">스튜디오 핵심 연출 기능</span>
+                  <span class="text-[11px] text-slate-400">버튼을 눌러 상세 보기</span>
+                </div>
+                <div id="sim3-buttons" class="grid grid-cols-2 gap-2"></div>
+              </div>
             </div>
           </div>
-
         </div>
       </article>
 
@@ -799,65 +773,86 @@ icon: 'fa-solid fa-boxes-stacked',
       },
 
       // -----------------------------------------------------------------------
-      // [3] 드론 군무 스튜디오 (총 4개 핵심 기능 & 4개 이미지)
-      // -----------------------------------------------------------------------
+      // [3] 드론 군무 스튜디오: 실제 드론 연결(01~02) + 가상 대규모 군집(03~06)
       sim3: {
         theme: 'emerald',
-        selectedIndex: null, // 초기 상태: 아무 버튼도 선택되지 않음
-        defaultInfo: {
-          badge: 'PROGRAM OVERVIEW',
-          title: '드론 군무 스튜디오로 나만의 드론 군무 연출',
-          desc: '최소 20대의 드론 부터 수천대의 드론까지, 프로그램을 통하여 드론의 군무를 직접 만들어보고, 편집하거나 수정 할 수 있는 프로그램 입니다. 드론의 속도와 색상, 모양 등을 조절하며, 음악에 알맞는 동작을 할 수 있도록 군무를 만들어보고, 전체화면 모드로 배경을 바꿔가며 내가 만든 군무를 관람 할 수 있습니다.',
-          tags: ['#20~수천 대 군집', '#속도·색상·모양 조절', '#음악 싱크 · 전체화면 관람'],
-          // [드론 군무 스튜디오 기본 대표 이미지 수정 위치]
-          imgSrc: 'image/SWARM_0001.png',
-          fallbackSrc: makeSvgDataUri('emerald', 'DRONE SWARM STUDIO', '드론 군무 스튜디오', '20대~수천 대 군집 편대 제작 및 음악 싱크 라이트쇼'),
-          caption: '드론 군무 스튜디오 — 기본 미리보기'
+        selectedIndex: null,
+        mode: 'real',
+        modeInfos: {
+          real: {
+            badge: 'PROGRAM OVERVIEW',
+            title: '1대~5대의 실제 드론 연결 및 군집 조종',
+            desc: '가상 드론 시뮬레이터에 실제 드론을 연결하고 조이스틱으로 조종할 수 있습니다. 시뮬레이터의 동작에 맞춰 실제 드론을 회전시키고 좌표 이동 및 LED 변경을 실행하면서 군집 드론 환경을 구성하고 편집할 수 있습니다.',
+            tags: ['#실제 드론 1~5대 연결', '#조이스틱 조종', '#군집 제작·편집'],
+            imgSrc: 'image/SWARM_0011.png',
+            fallbackSrc: makeSvgDataUri('emerald', 'REAL DRONE CONTROL', '실제 드론 연결 조종', '1대~5대 실제 드론 연결 및 군집 제어'),
+            caption: '🚁 드론 군무 스튜디오 — 실제 드론 연결 조종'
+          },
+          virtual: {
+            badge: 'PROGRAM OVERVIEW',
+            title: '드론 군무 스튜디오로 나만의 드론 군무 연출',
+            desc: '최소 20대의 드론부터 수천 대의 드론까지, 프로그램을 통하여 드론의 군무를 직접 만들어보고 편집하거나 수정할 수 있습니다. 드론의 속도와 색상, 모양 등을 조절하며 음악에 알맞은 동작을 연출하고, 전체화면 모드에서 배경을 바꿔가며 내가 만든 군무를 관람할 수 있습니다.',
+            tags: ['#20~수천 대 군집', '#속도·색상·모양 조절', '#음악 싱크 · 전체화면 관람'],
+            imgSrc: 'image/SWARM_0001.png',
+            fallbackSrc: makeSvgDataUri('emerald', 'DRONE SWARM STUDIO', '드론 군무 스튜디오', '20대~수천 대 군집 편대 제작 및 음악 싱크 라이트쇼'),
+            caption: '🛸 드론 군무 스튜디오 — 대규모 군집 연출'
+          }
         },
+        defaultInfo: null,
         items: [
           {
-            num: '01',
-            shortTitle: '대규모 군집 편대',
-            title: '(1) 최소 20대 ~ 수천 대 군집 편대 제작',
+            num: '01', shortTitle: '가상 드론 시뮬레이터',
+            title: '(1) 1대~5대 - 가상의 드론으로 군집 시뮬레이터',
+            desc: '최소 1대에서 5대까지의 가상 드론을 추가하여, 드론을 회전시키고 좌표 이동, LED 변경을 실행하면서 군집 드론 환경을 만들어 보고 편집하거나 수정할 수 있습니다.',
+            tags: ['#가상 드론 군무', '#군무 제작·편집'],
+            imgSrc: 'image/SWARM_0012.png',
+            fallbackSrc: makeSvgDataUri('emerald', 'SWARM 01 / 06', '가상 드론 시뮬레이터', '1대~5대 가상 드론 군집 시뮬레이션'),
+            caption: '(1) 가상 드론 1대~5대 군집 시뮬레이터'
+          },
+          {
+            num: '02', shortTitle: '실제 드론 연결 시뮬레이터',
+            title: '(2) 1대~5대 - 실제의 드론으로 군집 시뮬레이터',
+            desc: '시뮬레이터의 가상 드론 프로그램에 페어링된 실제 드론을 연결하고 조이스틱으로 조종합니다. 시뮬레이터 동작에 맞춰 드론을 회전시키고 좌표 이동 및 LED 변경을 실행하면서 군집 드론 환경을 만들어 보고 편집하거나 수정할 수 있습니다.',
+            tags: ['#실제 드론 군무', '#군무 제작·편집'],
+            imgSrc: 'image/SWARM_0013.png',
+            fallbackSrc: makeSvgDataUri('emerald', 'SWARM 02 / 06', '실제 드론 연결 시뮬레이터', '1대~5대 실제 드론 연결 및 군집 제어'),
+            caption: '(2) 실제 드론 1대~5대 군집 시뮬레이터'
+          },
+          {
+            num: '03', shortTitle: '대규모 군집 편대',
+            title: '(3) 최소 20대 ~ 수천 대 군집 편대 제작',
             desc: '최소 20대의 드론부터 수천 대의 드론까지, 프로그램을 통하여 드론의 군무를 직접 만들어보고 편집하거나 수정할 수 있습니다.',
             tags: ['#20~수천 대 드론', '#군무 제작·편집'],
-            // [드론 군무 이미지 1 수정 위치]
             imgSrc: 'image/SWARM_0002.png',
-            fallbackSrc: makeSvgDataUri('emerald', 'SWARM 01 / 04', '(1) 최소 20대 ~ 수천 대 군집 편대', '대규모 드론 편대 구성 및 시퀀스 편집'),
-            caption: '(1) 최소 20대 ~ 수천 대 군집 편대 제작 및 편집'
+            fallbackSrc: makeSvgDataUri('emerald', 'SWARM 03 / 06', '대규모 군집 편대', '대규모 드론 편대 구성 및 시퀀스 편집'),
+            caption: '(3) 최소 20대~수천 대 군집 편대 제작 및 편집'
           },
           {
-            num: '02',
-            shortTitle: '속도·색상·모양 조절',
-            title: '(2) 드론 속도 · 색상 · 모양 정밀 조절',
+            num: '04', shortTitle: '속도·색상·모양 조절',
+            title: '(4) 드론 속도 · 색상 · 모양 정밀 조절',
             desc: '드론의 비행 속도와 다채로운 LED 색상, 입체적인 대형 모양 등을 세밀하게 조절하며 나만의 군무를 디자인합니다.',
             tags: ['#속도 제어', '#LED 색상', '#입체 대형 모양'],
-            // [드론 군무 이미지 2 수정 위치]
             imgSrc: 'image/SWARM_0003.png',
-            fallbackSrc: makeSvgDataUri('emerald', 'SWARM 02 / 04', '(2) 속도 · 색상 · 모양 정밀 조절', '드론의 비행 속도와 LED 컬러 및 3D 대형 커스텀'),
-            caption: '(2) 드론 속도 · 색상 · 모양 정밀 조절'
+            fallbackSrc: makeSvgDataUri('emerald', 'SWARM 04 / 06', '속도·색상·모양 조절', '드론의 비행 속도와 LED 컬러 및 3D 대형 커스텀'),
+            caption: '(4) 드론 속도 · 색상 · 모양 정밀 조절'
           },
           {
-            num: '03',
-            shortTitle: '음악 싱크 동작 연출',
-            title: '(3) 음악에 알맞는 동작 군무 연출',
+            num: '05', shortTitle: '음악 싱크 동작 연출',
+            title: '(5) 음악에 알맞은 동작 군무 연출',
             desc: '배경 음악의 리듬과 분위기에 알맞은 동작과 대형 전환을 배치하여 완성도 높은 드론 라이트쇼를 만듭니다.',
             tags: ['#음악 비트 싱크', '#맞춤형 동작 연출'],
-            // [드론 군무 이미지 3 수정 위치]
             imgSrc: 'image/SWARM_0004.png',
-            fallbackSrc: makeSvgDataUri('emerald', 'SWARM 03 / 04', '(3) 음악에 알맞는 동작 연출', '음악 리듬에 맞춘 역동적인 드론 군무 시퀀스'),
-            caption: '(3) 음악에 알맞는 동작 군무 연출'
+            fallbackSrc: makeSvgDataUri('emerald', 'SWARM 05 / 06', '음악 싱크 동작 연출', '음악 리듬에 맞춘 역동적인 드론 군무 시퀀스'),
+            caption: '(5) 음악에 알맞은 동작 군무 연출'
           },
           {
-            num: '04',
-            shortTitle: '전체화면 배경 관람',
-            title: '(4) 전체화면 모드 & 배경 전환 관람',
-            desc: '전체화면 모드로 전환하고 다양한 배경을 바꿔가며 내가 직접 만든 드론 군무를 실감나게 관람할 수 있습니다.',
+            num: '06', shortTitle: '전체화면 배경 관람',
+            title: '(6) 전체화면 모드 & 배경 전환 관람',
+            desc: '전체화면 모드로 전환하고 다양한 배경을 바꿔가며 내가 직접 만든 드론 군무를 실감 나게 관람할 수 있습니다.',
             tags: ['#전체화면 모드', '#배경 무대 전환', '#군무 관람'],
-            // [드론 군무 이미지 4 수정 위치]
             imgSrc: 'image/SWARM_0005.png',
-            fallbackSrc: makeSvgDataUri('emerald', 'SWARM 04 / 04', '(4) 전체화면 모드 & 배경 전환 관람', '다양한 야경 배경을 바꿔가며 나만의 군무 감상'),
-            caption: '(4) 전체화면 모드 & 배경 전환 관람'
+            fallbackSrc: makeSvgDataUri('emerald', 'SWARM 06 / 06', '전체화면 배경 관람', '다양한 야경 배경을 바꿔가며 나만의 군무 감상'),
+            caption: '(6) 전체화면 모드 & 배경 전환 관람'
           }
         ]
       }
@@ -939,7 +934,7 @@ icon: 'fa-solid fa-boxes-stacked',
 
       if (data.selectedIndex === null) {
         // 초기 미선택 상태: 기본 프로그램 설명 표시
-        const info = data.defaultInfo;
+        const info = simKey === 'sim3' ? data.modeInfos[data.mode] : data.defaultInfo;
         badgeEl.textContent = info.badge;
         resetBtn.classList.add('hidden');
         titleEl.textContent = info.title;
@@ -1019,9 +1014,55 @@ icon: 'fa-solid fa-boxes-stacked',
       });
     }
 
+    // 드론 군무 전용 버튼: 01~02 실제 드론 연결 기능과 03~06 핵심 연출 기능을 분리
+    function renderSwarmButtons() {
+      const data = SIM_DATA.sim3;
+      const realContainer = document.getElementById('sim3-real-buttons');
+      const coreContainer = document.getElementById('sim3-buttons');
+      realContainer.innerHTML = '';
+      coreContainer.innerHTML = '';
+      data.items.forEach((item, idx) => {
+        const btn = document.createElement('button');
+        const active = data.selectedIndex === idx;
+        btn.type = 'button';
+        btn.onclick = () => selectSimItem('sim3', idx);
+        btn.className = active
+          ? 'flex items-center gap-2 text-left px-3 py-2.5 rounded-xl border bg-emerald-600 text-white border-emerald-600 shadow-xs text-xs font-semibold transition-all duration-200'
+          : 'flex items-center gap-2 text-left px-3 py-2.5 rounded-xl border border-slate-200/90 bg-white hover:border-emerald-300 hover:bg-emerald-50/40 text-xs font-semibold text-slate-700 transition-all duration-200';
+        const num = document.createElement('span');
+        num.textContent = item.num;
+        num.className = active ? 'px-1.5 py-0.5 rounded bg-white/20 text-white text-[11px] font-bold' : 'px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 text-[11px] font-bold';
+        const label = document.createElement('span');
+        label.textContent = item.shortTitle;
+        label.className = 'truncate';
+        btn.append(num, label);
+        (idx < 2 ? realContainer : coreContainer).appendChild(btn);
+      });
+    }
+
+    function setSwarmMode(mode) {
+      const data = SIM_DATA.sim3;
+      data.mode = mode;
+      data.selectedIndex = null;
+      // 선택한 스튜디오 모드에 따라 실행하기 버튼의 연결 주소 변경
+      const launchLink = document.getElementById('sim3-launch-link');
+      launchLink.href = mode === 'virtual'
+        ? 'https://zumi-ai.github.io/python/website/Drone_SWRM_Studio/Drone_SWRM_Studio_.html'
+        : 'https://zumi-ai.github.io/python/website/Drone_SWRM_Studio/Drone_SWRM_Studio.html';
+      const realBtn = document.getElementById('swarm-mode-real');
+      const virtualBtn = document.getElementById('swarm-mode-virtual');
+      [realBtn, virtualBtn].forEach(btn => btn.className = 'swarm-mode-btn px-3.5 py-2 rounded-xl border text-base sm:text-lg font-extrabold transition-all duration-200 bg-white border-emerald-200 text-slate-600 hover:bg-emerald-50');
+      const active = mode === 'real' ? realBtn : virtualBtn;
+      active.className = 'swarm-mode-btn px-3.5 py-2 rounded-xl border text-base sm:text-lg font-extrabold transition-all duration-200 bg-emerald-600 border-emerald-600 text-white shadow-md shadow-emerald-600/20';
+      renderSwarmButtons();
+      renderThumbnails('sim3');
+      updateDescriptionBox('sim3');
+    }
+
     function selectSimItem(simKey, idx) {
       SIM_DATA[simKey].selectedIndex = idx;
-      renderStandardButtons(simKey);
+      if (simKey === 'sim3') renderSwarmButtons();
+      else renderStandardButtons(simKey);
       renderThumbnails(simKey);
       updateDescriptionBox(simKey);
     }
@@ -1072,7 +1113,8 @@ icon: 'fa-solid fa-boxes-stacked',
       if (simKey === 'sim2') {
         updateZumiButtonStyles();
       } else {
-        renderStandardButtons(simKey);
+        if (simKey === 'sim3') renderSwarmButtons();
+        else renderStandardButtons(simKey);
       }
       renderThumbnails(simKey);
       updateDescriptionBox(simKey);
@@ -1086,8 +1128,9 @@ icon: 'fa-solid fa-boxes-stacked',
       const modalLabel = document.getElementById('modal-label');
 
       if (data.selectedIndex === null) {
-        modalLabel.textContent = data.defaultInfo.caption;
-        setSafeImgSrc(modalImg, data.defaultInfo.imgSrc, data.defaultInfo.fallbackSrc);
+        const info = simKey === 'sim3' ? data.modeInfos[data.mode] : data.defaultInfo;
+        modalLabel.textContent = info.caption;
+        setSafeImgSrc(modalImg, info.imgSrc, info.fallbackSrc);
       } else {
         const item = data.items[data.selectedIndex];
         modalLabel.textContent = item.caption;
@@ -1116,9 +1159,7 @@ icon: 'fa-solid fa-boxes-stacked',
       renderThumbnails('sim2');
       updateDescriptionBox('sim2');
 
-      renderStandardButtons('sim3');
-      renderThumbnails('sim3');
-      updateDescriptionBox('sim3');
+      setSwarmMode('real');
 
       // 스크롤 등장 애니메이션
       const revealObserver = new IntersectionObserver((entries) => {
