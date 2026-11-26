@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>드론 군무 스튜디오</title>
+<title>🛸 드론 군무 시뮬레이터</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
 :root{--bg:#0b0f1a;--p1:#121829;--p2:#182036;--line:#263050;--ink:#e6ebff;--mut:#8c97bd;--acc:#38bdf8;--hot:#fb7185;--ok:#4ade80;--bad:#f87171;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -18,6 +18,8 @@ input[type=number]{width:70px}
 #top{grid-area:top;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:8px 12px;background:var(--p1);border-bottom:1px solid var(--line)}
 #top label{display:flex;align-items:center;gap:5px;color:var(--mut)}
 .brand{font-weight:800;font-size:15px;color:var(--ink)}
+.company-logo{margin-left:auto;height:30px;width:auto;max-width:150px;object-fit:contain;display:block;flex:none}
+@media (max-width:900px){.company-logo{height:26px;max-width:130px}}
 #studioMenuToggle{background:transparent;border:0;padding:4px 0;font-weight:800;font-size:15px;color:var(--ink);white-space:nowrap}
 #studioMenuToggle:hover{color:var(--acc);border-color:transparent}
 #studioMenu{position:fixed;top:48px;left:12px;z-index:20;min-width:210px;padding:6px;background:var(--p1);border:1px solid var(--line);border-radius:8px;box-shadow:0 8px 24px #0008}
@@ -73,7 +75,7 @@ details summary{cursor:pointer;margin:4px 0 6px;color:var(--acc);font-weight:700
 <body>
 <div id="app">
 <header id="top">
-  <button type="button" class="brand" id="studioMenuToggle" aria-haspopup="true" aria-expanded="false">🛸 드론 타임라인 스튜디오 ▼</button>
+  <button type="button" class="brand" id="studioMenuToggle" aria-haspopup="true" aria-expanded="false">🛸 드론 군무 시뮬레이터 ▼</button>
   <select id="song" aria-label="노래"></select>
   <label style="cursor:pointer;color:var(--ink)!important;background:var(--p2);border:1px solid var(--line);border-radius:7px;padding:5px 10px">🎵 곡 추가<input id="mf" type="file" accept="audio/*" hidden></label>
   <button id="bsave">💾 저장</button><label style="cursor:pointer;color:var(--ink)!important;background:var(--p2);border:1px solid var(--line);border-radius:7px;padding:5px 10px">📂 불러오기<input id="pf" type="file" accept=".json,application/json" hidden></label>
@@ -83,6 +85,7 @@ details summary{cursor:pointer;margin:4px 0 6px;color:var(--acc);font-weight:700
   <label><input id="snap" type="checkbox" checked> 박자 눈금에 맞추기</label>
   <label>드론 이동 속도 <input id="spd" type="range" min="4" max="30" value="10"><b id="sv">10</b>m/s</label>
   <label>드론 <input id="n" type="range" min="20" max="5000" step="10" value="100"><input id="nv" type="number" min="20" max="5000" step="10" value="100" style="width:76px">대</label>
+  <img class="company-logo" src="https://zumi-ai.github.io/python/website/SIMULATOR/image/logo.png" alt="Robolink 로고">
 </header>
 
 <aside id="lib"><h2>동작 라이브러리</h2><div id="libl"></div></aside>

@@ -1,4 +1,4 @@
-<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>드론 타임라인 스튜디오 · 실제 드론</title>
+<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>🚁 드론 군무 스튜디오</title>
 <style>
 :root{--bg:#0b1020;--p:#141b33;--p2:#1c2547;--ln:#2c3866;--tx:#e8ecff;--mu:#8e9acb;--ac:#4dd2ff;--bad:#ff5c7a}
 *{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--tx);font:14px system-ui,'Malgun Gothic',sans-serif}
@@ -52,7 +52,7 @@ dialog{background:var(--p);color:var(--tx);border:1px solid var(--ln);border-rad
 <select id="song"><option value="0.5">기본 노래 30초</option><option value="1">기본 노래 1분</option><option value="2">기본 노래 2분</option><option value="3" hidden>기본 노래 3분</option><option value="0">내 노래 불러오기…</option></select><input id="af" type="file" accept="audio/*" hidden>
 <button id="sv">💾 저장</button><button id="ld">📂 불러오기</button><input id="jf" type="file" accept=".json" hidden><span class="sp"></span>
 <button id="av">➕ 가상 드론</button><button id="ar">🔌 실제 드론(USB)</button><button id="fit">📐 드론 전부 보이게</button><button id="vw">🎬 감상</button><button id="la">🛬 전부 착륙</button><button id="es" class="bad">🛑 비상정지</button></header>
-<div id="studioMenu"><button type="button" id="openDroneSwarm">🛸 드론 군무 스튜디오</button></div>
+<div id="studioMenu"><button type="button" id="openDroneSwarm">🛸 드론 군무 시뮬레이터</button></div>
 <aside id="pal"><h4>동작 고르기 → 타임라인에 추가</h4><div class="g" id="pg"></div><button id="exb" style="width:100%;margin-bottom:10px;background:linear-gradient(135deg,#06b6d4,#a855f7);border:none;font-weight:800;color:#fff">🎆 군집 비행 예제</button>
 <label style="font-size:12px;display:block;margin-bottom:10px"><input type="checkbox" id="all" style="width:auto"> 모든 드론에 한꺼번에 추가</label>
 <h4>선택한 블록</h4><div id="insp">블록을 눌러 보세요</div></aside>
@@ -85,8 +85,8 @@ dialog{background:var(--p);color:var(--tx);border:1px solid var(--ln);border-rad
 })();
 const $=s=>document.querySelector(s),HW=150,COL=['#ff5c8a','#4dd2ff','#7dff6b','#ffd23f','#c084fc'],NEUT='#2a3157';
 let PPS=30;
-const TY={takeoff:{c:'#22c55e',n:'이륙',i:'🛫',len:7,p:{h:100},ch:'m'},land:{c:'#f97316',n:'착륙',i:'🛬',len:3,p:{},ch:'m'},move:{c:'#3b82f6',n:'이동',i:'➡️',len:2,p:{f:0,r:0,u:0,w:0},ch:'m'},xyz:{c:'#a855f7',n:'좌표 이동',i:'📍',len:2,p:{x:0,y:100,z:0,w:0},ch:'m'},led:{c:'#ec4899',n:'LED',i:'💡',len:2,p:{c:'#ff3366',k:'solid'},ch:'l'},fmt:{c:'#06b6d4',n:'비행 패턴',i:'🛩️',len:3,p:{k:'v',sp:170,fh:100,fz:180,ly:0},ch:'m'}};
-const LB={h:'높이',f:'앞(+)·뒤(-)',r:'오른(+)·왼(-)',u:'위(+)·아래(-)',w:'회전 오른(+)·왼(-)',x:'X 오른(+)·왼(-)',y:'Y 높이',z:'Z 앞(+)·뒤(-)',sp:'간격',fh:'높이',fz:'중심 앞쪽',ly:'층 간격'},UN={h:'cm',f:'cm',r:'cm',u:'cm',w:'°',x:'cm',y:'cm',z:'cm',sp:'cm',fh:'cm',fz:'cm',ly:'cm'};
+const TY={takeoff:{c:'#22c55e',n:'이륙',i:'🛫',len:7,p:{x:0,h:100,z:0},ch:'m'},land:{c:'#f97316',n:'착륙',i:'🛬',len:3,p:{},ch:'m'},move:{c:'#3b82f6',n:'이동',i:'➡️',len:2,p:{f:0,r:0,u:0,w:0,v:0},ch:'m'},xyz:{c:'#a855f7',n:'좌표 이동',i:'📍',len:2,p:{x:0,y:100,z:0,w:0,v:0},ch:'m'},led:{c:'#ec4899',n:'LED',i:'💡',len:2,p:{c:'#ff3366',k:'solid'},ch:'l'},fmt:{c:'#06b6d4',n:'비행 패턴',i:'🛩️',len:3,p:{k:'v',sp:170,fh:100,fz:180,ly:0},ch:'m'}};
+const LB={v:'속도 단계 (0=그대로)',h:'Y 높이',f:'앞(+)·뒤(-)',r:'오른(+)·왼(-)',u:'위(+)·아래(-)',w:'회전 오른(+)·왼(-)',x:'X 오른(+)·왼(-)',y:'Y 높이',z:'Z 앞(+)·뒤(-)',sp:'간격',fh:'높이',fz:'중심 앞쪽',ly:'층 간격'},UN={v:'',h:'cm',f:'cm',r:'cm',u:'cm',w:'°',x:'cm',y:'cm',z:'cm',sp:'cm',fh:'cm',fz:'cm',ly:'cm'};
 const FN={line:'일렬 (가로)',vline:'일렬 (세로)',v:'V자',vInv:'거꾸로 V자',tri:'삼각형',circle:'원',square:'사각형',diamond:'다이아몬드',cross:'십자 +',x:'X자',wave:'물결 지그재그',stair:'계단 (대각선)',double:'2줄'};
 const ARR=(n,f)=>Array.from({length:n},(_,r)=>f(r)),CEN=(n,r)=>r-(n-1)/2,PER=(n,r,P,k)=>{if(n===1)return[0,0];const s=r/n*4,i=Math.floor(s),u=s-i,a=P[i],b=P[i+1];return[(a[0]+(b[0]-a[0])*u)*k,(a[1]+(b[1]-a[1])*u)*k]};
 const FM={line:n=>ARR(n,r=>[CEN(n,r),0]),vline:n=>ARR(n,r=>[0,CEN(n,r)]),v:n=>ARR(n,r=>[CEN(n,r),-Math.abs(CEN(n,r))]),vInv:n=>ARR(n,r=>[CEN(n,r),Math.abs(CEN(n,r))]),
@@ -212,16 +212,17 @@ if(d.kind==='real'&&!d.dead){if(d.air){if(!confirm('이 드론은 지금 날고 
 B=B.filter(b=>b.d!==i);D[i]=null;selD=Math.max(0,D.findIndex(Boolean));SEL=new Set();selB=null;log((i+1)+'번 자리가 비었어요');rTL();insp();save()}
 /* ---- 움직임 계산 ---- */
 const home=i=>(i-2)*160;
+const startOf=i=>{const f=B.filter(b=>b.d===i&&TY[b.t].ch==='m').sort((a,b)=>a.s-b.s)[0];return f&&f.t==='takeoff'?[home(i)+(+f.p.x||0),0,+f.p.z||0,0]:[home(i),0,0,0]};
 const ease=k=>{k=Math.max(0,Math.min(1,k));return .5*k+.5*k*k*(3-2*k)};
-function segs(i){let cur=[home(i),0,0,0],o=[];const act=D.map((d,k)=>d?k:-1).filter(k=>k>=0),rk=act.indexOf(i),L=B.filter(b=>b.d===i&&TY[b.t].ch==='m').sort((a,b)=>a.s-b.s);
+function segs(i){const st0=startOf(i);let cur=[...st0],o=[];const act=D.map((d,k)=>d?k:-1).filter(k=>k>=0),rk=act.indexOf(i),L=B.filter(b=>b.d===i&&TY[b.t].ch==='m').sort((a,b)=>a.s-b.s);
 L.forEach((b,j)=>{const p=b.p,a=[...cur],w=+p.w||0,th=a[3]*Math.PI/180;let t=[...cur];
 if(b.t==='takeoff')t[1]=+p.h;else if(b.t==='land')t[1]=0;
 else if(b.t==='move'){const f=+p.f||0,r=+p.r||0;t[0]+=r*Math.cos(th)+f*Math.sin(th);t[2]+=f*Math.cos(th)-r*Math.sin(th);t[1]=Math.max(0,t[1]+(+p.u||0));t[3]+=w}
 else if(b.t==='xyz')t=[home(i)+ +p.x,Math.max(0,+p.y),+p.z,a[3]+w];
 else{const q=fslots(p.k,act.length)[rk]||[0,0],sp=+p.sp||80;t=[q[0]*sp,(+p.fh||0)+rk*(+p.ly||0),(+p.fz||0)+q[1]*sp,a[3]]}
 const t0=b.s,t1=b.s+b.len,nx=L[j+1],te=nx?Math.min(t1,Math.max(t0,nx.s)):t1,k=ease((te-t0)/b.len);
-o.push({t0,t1,te,a,t,b});cur=te<t1?a.map((v,n)=>v+(t[n]-v)*k):t});return o}
-function pos(i,t,sg){let r=[home(i),0,0,0];for(const s of sg||segs(i)){if(t>=s.te)r=s.te<s.t1?s.a.map((v,n)=>v+(s.t[n]-v)*ease((s.te-s.t0)/(s.t1-s.t0))):s.t;else if(t>=s.t0){const k=ease((t-s.t0)/(s.t1-s.t0));return s.a.map((v,n)=>v+(s.t[n]-v)*k)}else break}return r}
+o.push({t0,t1,te,a,t,b});cur=te<t1?a.map((v,n)=>v+(t[n]-v)*k):t});o.st=st0;return o}
+function pos(i,t,sg){sg=sg||segs(i);let r=sg.st||[home(i),0,0,0];for(const s of sg){if(t>=s.te)r=s.te<s.t1?s.a.map((v,n)=>v+(s.t[n]-v)*ease((s.te-s.t0)/(s.t1-s.t0))):s.t;else if(t>=s.t0){const k=ease((t-s.t0)/(s.t1-s.t0));return s.a.map((v,n)=>v+(s.t[n]-v)*k)}else break}return r}
 function led(i,t){let c=null;B.forEach(b=>{if(b.d===i&&TY[b.t].ch==='l'&&t>=b.s&&t<b.s+b.len&&(!c||b.s>=c.s))c=b});if(!c)return NEUT;const p=c.p,u=t-c.s;const k=p.k||'solid';if(k==='solid')return p.c;if(k==='blink')return Math.floor(u*3)%2?NEUT:p.c;if(k==='pulse')return mix(p.c,.25+.75*(.5+.5*Math.sin(u*6)));return hsl(u*120%360)}
 /* ---- 충돌 검사 (30cm 이내) ---- */
 const COLD=150;let CF=[],cfSig='';
@@ -237,6 +238,7 @@ const R3=new THREE.WebGLRenderer({canvas:$('#cv'),antialias:true}),S=new THREE.S
 S.background=new THREE.Color('#0a1030');S.fog=new THREE.Fog('#0a1030',22,70);S.add(new THREE.AmbientLight(0xffffff,.75));const dl=new THREE.DirectionalLight(0xffffff,.8);dl.position.set(3,6,4);S.add(dl);
 const fl=new THREE.Mesh(new THREE.PlaneGeometry(20,12),new THREE.MeshLambertMaterial({color:0x141c44}));fl.rotation.x=-Math.PI/2;fl.position.z=-1.5;S.add(fl);
 const gr=new THREE.GridHelper(20,20,0x4dd2ff,0x26357a);gr.scale.z=12/20;gr.position.set(0,.005,-1.5);S.add(gr);
+try{const lg=new THREE.Mesh(new THREE.PlaneGeometry(14,14),new THREE.MeshBasicMaterial({transparent:true,opacity:.6,depthWrite:false}));lg.rotation.x=-Math.PI/2;lg.position.set(0,.01,-2);lg.visible=false;S.add(lg);const ld=new THREE.TextureLoader();ld.setCrossOrigin('anonymous');ld.load('https://zumi-ai.github.io/python/website/SIMULATOR/image/logo.png',tx=>{const im=tx.image,a=(im&&im.width&&im.height)?im.width/im.height:1,w=14;lg.geometry.dispose();lg.geometry=new THREE.PlaneGeometry(w,w/a);lg.material.map=tx;lg.material.needsUpdate=true;lg.visible=true},undefined,()=>{})}catch(e){}
 {const p=[];for(let i=0;i<400;i++){const a=Math.random()*6.28,r=18+Math.random()*10;p.push(Math.cos(a)*r,2+Math.random()*14,-Math.abs(Math.sin(a))*r-4)}const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(p,3));S.add(new THREE.Points(g,new THREE.PointsMaterial({size:.12,color:0xbfd4ff})))}
 const gt=(()=>{const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d'),g=x.createRadialGradient(32,32,0,32,32,32);g.addColorStop(0,'#fff');g.addColorStop(.3,'#fffa');g.addColorStop(1,'#fff0');x.fillStyle=g;x.fillRect(0,0,64,64);return new THREE.CanvasTexture(c)})();
 function mkD(i){const g=new THREE.Group(),dk=new THREE.MeshLambertMaterial({color:0x2a2f4a});g.add(new THREE.Mesh(new THREE.BoxGeometry(.18,.06,.18),dk));{const ns=new THREE.Mesh(new THREE.BoxGeometry(.06,.045,.1),new THREE.MeshBasicMaterial({color:0xffffff}));ns.position.set(0,.01,-.13);g.add(ns)}
@@ -259,8 +261,11 @@ $('#cams').innerHTML=Object.entries(VW).map(([k,v])=>`<button data-v=${k} title=
 const GRP=[],gridOn=[false,false,false,false,false];
 function lbl(g,t,x,y,z,col){const c=document.createElement('canvas');c.width=128;c.height=48;const x2=c.getContext('2d');x2.fillStyle=col;x2.font='bold 34px sans-serif';x2.textAlign='center';x2.fillText(t,64,36);const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true,depthWrite:false}));sp.scale.set(.5,.19,1);sp.position.set(x,y,z);g.add(sp)}
 COL.forEach((col,i)=>{const g=new THREE.Group(),h=(i-2)*1.6,z0=.45+.17*i;[-200,-100,100,200].forEach(v=>lbl(g,''+v,h+v/100,.02,z0,col));[-200,-100,100,200,300,400].forEach(v=>lbl(g,''+v,h-.3,.02,-v/100,col));[100,200].forEach(v=>lbl(g,''+v,h+.3,v/100+.1,0,col));S.add(g);GRP.push(g)});const TG=new THREE.Vector3(0,.9,-.8),MK=new THREE.Mesh(new THREE.SphereGeometry(.1,12,8),new THREE.MeshBasicMaterial({wireframe:true})),MG=new THREE.Mesh(new THREE.RingGeometry(.08,.13,24),new THREE.MeshBasicMaterial({side:2}));MG.rotation.x=-Math.PI/2;S.add(MK,MG);
+const AR=new THREE.Group();{const am=new THREE.MeshBasicMaterial({color:0xffffff,depthTest:false,transparent:true}),c=new THREE.Mesh(new THREE.ConeGeometry(.09,.2,16),am),st=new THREE.Mesh(new THREE.CylinderGeometry(.025,.025,.16,10),am);c.rotation.x=Math.PI;c.position.y=-.1;st.position.y=.08;c.renderOrder=st.renderOrder=999;AR.add(c,st);AR.renderOrder=999;AR.mat=am}S.add(AR);
 $('#cv').onpointerdown=e=>{CG=null;clearOn();const x0=e.clientX,y0=e.clientY,a0=az,e0=el,t0=TG.clone(),pan=e.altKey||e.button>0,xv=new THREE.Vector3(),yv=new THREE.Vector3(),zv=new THREE.Vector3();CAM.matrixWorld.extractBasis(xv,yv,zv);
-const mv=v=>{const dx=v.clientX-x0,dy=v.clientY-y0;if(pan){const k=dist*.0016;TG.copy(t0).addScaledVector(xv,-dx*k).addScaledVector(yv,dy*k)}else{az=a0-dx*.008;el=Math.max(.05,Math.min(1.4,e0+dy*.006))}},up=()=>{removeEventListener('pointermove',mv);removeEventListener('pointerup',up)};addEventListener('pointermove',mv);addEventListener('pointerup',up)};
+const mv=v=>{const dx=v.clientX-x0,dy=v.clientY-y0;if(pan){const k=dist*.0016;TG.copy(t0).addScaledVector(xv,-dx*k).addScaledVector(yv,dy*k)}else{az=a0-dx*.008;el=Math.max(.05,Math.min(1.4,e0+dy*.006))}},up=u=>{removeEventListener('pointermove',mv);removeEventListener('pointerup',up);if(!pan&&Math.abs(u.clientX-x0)+Math.abs(u.clientY-y0)<5)pickD(u.clientX,u.clientY)};addEventListener('pointermove',mv);addEventListener('pointerup',up)};
+function pickD(cx,cy){const r=$('#cv').getBoundingClientRect();let best=-1,bd=40;const v=new THREE.Vector3();for(let i=0;i<D.length;i++){if(!D[i]||!M[i])continue;v.copy(M[i].position).project(CAM);if(v.z>1)continue;const sx=r.left+(v.x+1)/2*r.width,sy=r.top+(1-v.y)/2*r.height,d=Math.hypot(sx-cx,sy-cy);if(d<bd){bd=d;best=i}}
+if(best>=0){selD=best;document.querySelectorAll('.rh').forEach(x=>x.classList.toggle('sel',+x.dataset.d===best));const rw=document.querySelector('.rh[data-d="'+best+'"]');rw&&rw.scrollIntoView({block:'nearest'})}}
 $('#coords').onchange=e=>{const g=e.target.dataset&&e.target.dataset.g;if(g!==undefined)gridOn[+g]=e.target.checked};
 $('#cv').oncontextmenu=e=>e.preventDefault();$('#cv').ondblclick=()=>goView('home');
 $('#cv').onwheel=e=>{e.preventDefault();CG=null;clearOn();dist=Math.max(2.5,Math.min(20,dist+e.deltaY*.005))};
@@ -272,7 +277,8 @@ d.fall={t0:performance.now()/1e3,p,vx:(Math.random()-.5)*30,vz:(Math.random()-.5
 function draw(){const W=$('#st').clientWidth,H=$('#st').clientHeight;if(R3._w!==W||R3._h!==H){R3.setSize(W,H,false);CAM.aspect=W/H;CAM.updateProjectionMatrix();R3._w=W;R3._h=H}
 while(M.length<5)M.push(mkD(M.length));const n=performance.now()/1e3,PP=D.map((d,i)=>fallPos(d)||pos(i,T)),hit=new Set();for(let a=0;a<D.length;a++)for(let b=a+1;b<D.length;b++)if(D[a]&&D[b]&&Math.hypot(PP[a][0]-PP[b][0],PP[a][1]-PP[b][1],PP[a][2]-PP[b][2])<COLD){hit.add(a);hit.add(b)}
 D.forEach((d,i)=>{const m=M[i];m.visible=m.sh.visible=m.ln.visible=m.pd.visible=!!d;if(!d)return;const p=PP[i],f=d.fall,c=f?(Math.floor(n*8)%2?'#ff2244':NEUT):led(i,T),y=.1+p[1]/100,x=p[0]/100,z=-p[2]/100;m.position.set(x,y+(p[1]>5?Math.sin(n*3+i)*.012:0),z);m.rotation.y=-(p[3]||0)*Math.PI/180;m.ro.forEach(r=>r.material.color.set(d.color));m.rotation.x=f?f.rx:0;m.rotation.z=f?f.rz:0;m.ro.forEach(r=>r.material.opacity=f?.1:.6);
-m.led.material.color.set(c);m.gl.visible=c!==NEUT;m.gl.material.color.set(c);m.sh.position.set(x,.012,z);m.sh.scale.setScalar(Math.max(.4,1-y*.25));m.ln.position.set(x,y/2,z);m.ln.scale.y=Math.max(.01,y);m.pd.position.set(home(i)/100,.014,0);m.pd.material.color.set(d.color);const h=hit.has(i);m.gl.scale.setScalar(h?2.4:1.3);if(h){const bk=Math.floor(n*6)%2;m.ro.forEach(r=>r.material.color.set(bk?'#ff2244':'#ffffff'));m.gl.visible=true;m.gl.material.color.set('#ff2244')}});
+m.led.material.color.set(c);m.gl.visible=c!==NEUT;m.gl.material.color.set(c);m.sh.position.set(x,.012,z);m.sh.scale.setScalar(Math.max(.4,1-y*.25));m.ln.position.set(x,y/2,z);m.ln.scale.y=Math.max(.01,y);(s0=>m.pd.position.set(s0[0]/100,.014,-s0[2]/100))(getSG(i).st||[home(i),0,0]);m.pd.material.color.set(d.color);const h=hit.has(i);m.gl.scale.setScalar(h?2.4:1.3);if(h){const bk=Math.floor(n*6)%2;m.ro.forEach(r=>r.material.color.set(bk?'#ff2244':'#ffffff'));m.gl.visible=true;m.gl.material.color.set('#ff2244')}});
+{const sd=D[selD];AR.visible=!!sd;if(sd){const p=PP[selD];const bp=new THREE.Vector3(p[0]/100,.1+p[1]/100,-p[2]/100),k=Math.max(.5,CAM.position.distanceTo(bp)*.18),up=new THREE.Vector3(0,1,0).applyQuaternion(CAM.quaternion);AR.quaternion.copy(CAM.quaternion);AR.scale.setScalar(k);AR.position.copy(bp).addScaledVector(up,k*(.4+Math.sin(n*4)*.04));AR.mat.color.set(sd.color)}}
 const sg2=D.map(d=>d?1:0).join('');if(sg2!==draw.sg){draw.sg=sg2;$('#coords').innerHTML=(D.some(Boolean)?'<div style="color:var(--mu)">출발점 기준 cm · ☑ 눈금 숫자 표시</div>':'')+D.map((d,i)=>!d?'':`<div class=cr data-i=${i}><label><input type=checkbox data-g=${i} ${gridOn[i]?'checked':''} style="accent-color:${d.color}"> <b style="color:${d.color}">${i+1}번</b></label> <span class=cv></span></div>`).join('');draw.sp=[];document.querySelectorAll('#coords .cv').forEach(sp=>draw.sp[+sp.parentNode.dataset.i]=sp)}
 D.forEach((d,i)=>{const sp=draw.sp&&draw.sp[i];if(d&&sp){const tx='X '+(PP[i][0]-home(i)).toFixed(0)+' · Y '+PP[i][1].toFixed(0)+' · Z '+PP[i][2].toFixed(0)+' · 회전 '+Math.round(PP[i][3]||0)+'°';if(sp.textContent!==tx)sp.textContent=tx}});GRP.forEach((g,i)=>g.visible=!!D[i]&&gridOn[i]);
 const sb=B.find(x=>x.id===selB),sg=sb&&TY[sb.t].ch==='m'&&D[sb.d]?segs(sb.d).find(z=>z.b===sb):null;MK.visible=MG.visible=!!sg;if(sg){const[ax,ay,az2]=sg.t;MK.position.set(ax/100,.1+ay/100,-az2/100);MG.position.set(ax/100,.015,-az2/100);MK.material.color.set(D[sb.d].color);MG.material.color.set(D[sb.d].color)}
@@ -295,14 +301,15 @@ if(mw>wl)W.push('· '+d.name+': 회전 속도 '+mw.toFixed(0)+'°/초 ('+fmt(aw)
 if(hi>170)W.push('· '+d.name+': 높이 '+hi.toFixed(0)+'cm — 170cm 위에서는 고도 센서 보정이 꺼져요')}
 if(CF.length)W.push('· 드론끼리 160cm 안으로 가까워지는 곳이 '+CF.length+'군데 있어요 (바람에 밀릴 수 있어요)');
 return skip||confirm('실제 드론 '+R.length+'대가 날아요!\n주변에 사람·물건이 없는지 확인했나요?\n(문제가 생기면 🛑 비상정지 · 🛬 전부 착륙)'+(W.length?'\n\n⚠ 확인해 주세요\n'+W.join('\n'):''))}
-function setPlay(p,skip){if(p)clearFall();if(p){if(!BUF&&!D.some(Boolean))return toast('먼저 드론을 연결해 주세요');if(!playing){if(T>=dur-.05)T=0;if(!preflight(skip))return}ac.resume();if(T>=dur-.05)T=0;startSrc();last=performance.now()}else stopSrc();playing=p;$('#pl').textContent=p?'⏸ 멈춤':'▶ 재생'}
+function applyLv(t){D.forEach((d,i)=>{if(!d||d.kind!=='real'||d.dead)return;let c=null;B.forEach(b=>{if(b.d===i&&(b.t==='move'||b.t==='xyz')&&+b.p.v>0&&b.s<t&&(!c||b.s>c.s))c=b});if(c){qcmd(d,PROTO.command(4,+c.p.v),3);log(d.name+' 속도 '+(+c.p.v)+'단계 (현재 위치 기준)')}})}
+function setPlay(p,skip){if(p)clearFall();if(p){if(!BUF&&!D.some(Boolean))return toast('먼저 드론을 연결해 주세요');if(!playing){if(T>=dur-.05)T=0;if(!preflight(skip))return;applyLv(T)}ac.resume();if(T>=dur-.05)T=0;startSrc();last=performance.now()}else stopSrc();playing=p;$('#pl').textContent=p?'⏸ 멈춤':'▶ 재생'}
 function endCheck(){const a=D.filter(d=>d&&d.kind==='real'&&!d.dead&&d.air);if(a.length){log('⚠ 실제 드론 '+a.length+'대가 아직 공중에 있어요 — 🛬 전부 착륙을 눌러 주세요','bad');toast('아직 공중에 있는 드론이 있어요! 🛬 전부 착륙')}}
 function startSrc(){stopSrc();if(!BUF)return;src=ac.createBufferSource();src.buffer=BUF;src.connect(ac.destination);src.start(0,T)}
 function stopSrc(){try{src&&src.stop()}catch(e){}src=null}
 function seek(t){clearFall();T=Math.max(0,Math.min(dur,t));if(playing){if(hasReal()){setPlay(false);toast('실제 드론이 있어서 재생을 멈췄어요. 위치를 확인하고 다시 ▶ 눌러 주세요')}else startSrc()}}
 function frame(n){try{frame0(n)}catch(e){console.error(e)}requestAnimationFrame(frame)}
 function frame0(n){n=Math.max(n,last);const dt=Math.max(0,Math.min(.1,(n-last)/1e3));last=n;if(playing&&!scrub){const p=T;T+=dt;if(T>=dur){T=dur;setPlay(false);endCheck()}fire(p,T)}if(playing&&!scrub&&!drag){const tl=$('#tl'),w=tl.clientWidth,x=HW+T*PPS;if(x>tl.scrollLeft+w*.65)tl.scrollLeft=x-w*.65;else if(x<tl.scrollLeft+HW)tl.scrollLeft=Math.max(0,x-HW)}draw();$('#tm').textContent=fmt(T);$('#ph').style.left=(HW+T*PPS)+'px'}
-function fire(p,t){B.forEach(b=>{const d=D[b.d];if(!d||d.kind!=='real'||d.dead)return;if(b.s>=p-1e-9&&b.s<t){if(b.t==='takeoff'){rcmd(d,'takeoff');log(d.name+' 이륙 명령 전송')}else if(b.t==='land'){rcmd(d,'land');log(d.name+' 착륙 명령 전송')}}});
+function fire(p,t){B.forEach(b=>{const d=D[b.d];if(!d||d.kind!=='real'||d.dead)return;if(b.s>=p-1e-9&&b.s<t){if(b.t==='takeoff'){rcmd(d,'takeoff');log(d.name+' 이륙 명령 전송')}else if(b.t==='land'){rcmd(d,'land');log(d.name+' 착륙 명령 전송')}else if((b.t==='move'||b.t==='xyz')&&+b.p.v>0){qcmd(d,PROTO.command(4,+b.p.v),3);log(d.name+' 속도 '+(+b.p.v)+'단계')}}});
 const n=performance.now();D.forEach((d,i)=>{if(d&&d.kind==='real'&&!d.dead){const c=led(i,t);if(c!==d.lc&&n-(d.lt||0)>250){d.lc=c;d.lt=n;rcmd(d,'led',c)}}})}
 /* ---- 노래 ---- */
 function synth(m){const sr=22050,n=m*60*sr,b=ac.createBuffer(1,n,sr),o=b.getChannelData(0),sp=60/({.5:108,1:108,2:96,3:120}[m]||108)/2,ch=[[0,4,7],[7,11,14],[9,12,16],[5,9,12]],pat=[0,1,2,1,0,1,2,1],f=s=>261.63*2**(s/12);
@@ -316,7 +323,7 @@ D.forEach((d,i)=>{if(!d){h+=`<div class=row style="height:40px"><div class=rh st
 CF.filter(c=>c.a===i||c.b===i).forEach(c=>h+=`<i class=cm title="${c.a+1}번·${c.b+1}번 너무 가까움 (160cm 미만)" style="left:${c.t0*PPS}px;width:${Math.max(6,(c.t1-c.t0)*PPS)}px"></i>`);B.filter(b=>b.d===i).forEach(b=>{const t=TY[b.t];h+=`<div class="blk${SEL.has(b.id)?' sel':''}" data-b=${b.id} style="left:${b.s*PPS}px;width:${Math.max(14,b.len*PPS)}px;top:${t.ch==='m'?3:38}px;height:${t.ch==='m'?34:22}px;background:${t.ch==='m'?t.c:(b.p.k==='rainbow'?'linear-gradient(90deg,#ef4444,#f59e0b,#22c55e,#3b82f6,#a855f7)':b.p.c)}">${t.i} ${b.t==='fmt'?FN[b.p.k]:t.n}${b.t==='led'&&b.p.k!=='solid'?' · '+{blink:'깜빡',pulse:'숨쉬기',rainbow:'무지개'}[b.p.k]:''}${b.len*PPS>=60?`<button class=bx data-bx=${b.id} title="삭제">✕</button>`:''}<span class=rz></span></div>`});h+='</div></div>'});
 if(!D.some(Boolean))h+=`<div style="padding:16px;color:var(--mu)">연결된 드론이 없어요. 위의 ➕ 가상 드론을 눌러 보세요.</div>`;
 h+='<div id=ph></div>';$('#tin').style.width=(HW+w)+'px';$('#tin').innerHTML=h;wave();fitTL()}
-const STP={s:.1,len:.5,h:10,f:10,r:10,u:10,w:15,x:10,y:10,z:10,sp:10,fh:10,fz:10,ly:5},SW=['#ff3b5c','#ff9f43','#ffd23f','#7dff6b','#2ee6c8','#4dd2ff','#3b6bff','#c084fc','#ff6bd6','#ffffff'];
+const STP={v:1,s:.1,len:.5,h:10,f:10,r:10,u:10,w:15,x:10,y:10,z:10,sp:10,fh:10,fz:10,ly:5},SW=['#ff3b5c','#ff9f43','#ffd23f','#7dff6b','#2ee6c8','#4dd2ff','#3b6bff','#c084fc','#ff6bd6','#ffffff'];
 function setP(b,p,v){b.p[p]=v;if(b.t==='fmt'&&b.g)B.forEach(x=>{if(x!==b&&x.t==='fmt'&&x.g===b.g)x.p[p]=v});rTL();save()}
 function insp(){const b=B.find(x=>x.id===selB),e=$('#insp');if(SEL.size>1){e.style.setProperty('--ic','#4dd2ff');e.innerHTML='<div class=ti>✅ '+SEL.size+'개 블록 선택됨</div><div style="color:var(--mu);line-height:1.8">Delete · 모두 삭제<br>Ctrl+C · 모두 복사<br>Ctrl+V · 재생바 위치에 붙여넣기<br>Ctrl+X · 잘라내기<br>Ctrl+D · 바로 뒤에 복제</div><button class=bad id=db style="margin-top:8px;width:100%">🗑 '+SEL.size+'개 삭제</button>';$('#db').onclick=delSel;return}if(!b){e.innerHTML='<div style="color:var(--mu);line-height:1.7">블록을 눌러 보세요<br>빈 곳을 끌면 여러 개를 한 번에 선택해요</div>';return}const t=TY[b.t],d=D[b.d];e.style.setProperty('--ic',t.c);
 const nm=(a,k,v,u)=>`<span class=ip><button class=sb data-st=-${STP[k]}>−</button><input type=number step=any ${a} value=${v}><button class=sb data-st=${STP[k]}>+</button><i>${u}</i></span>`;
@@ -327,11 +334,13 @@ else if(k==='k')h+=`<label>${b.t==='fmt'?'대형':'패턴'}<button class=dd>${(O
 else h+=`<label><span>${LB[k]}</span>${nm('data-p='+k,k,b.p[k],UN[k])}</label>`});
 if(b.t==='takeoff')h+='<div style="color:var(--mu);line-height:1.6">처음 약 4초는 이륙(프로펠러가 돌며 뜨는 시간)이에요. 그 뒤 남은 시간 동안 설정한 높이로 맞춰요 (배터리가 달라도 같은 높이). 길이를 늘리면 높이를 맞출 시간이 더 생겨요</div>';
 if(b.t==='xyz')h+='<div style="color:var(--mu)">출발한 자리가 (0, 0, 0)이에요</div>';
+if(b.t==='takeoff')h+='<div style="color:var(--mu);line-height:1.6;margin-top:4px">X·Z는 이륙 자리예요 (기준 0,0은 원래 출발 자리). 맨 처음 이륙 블록의 좌표가 출발 위치가 되고, 착륙 뒤 다시 이륙할 땐 착륙한 자리에서 떠요</div>';
+{const sgm=(b.t==='move'||b.t==='xyz')&&segs(b.d).find(z=>z.b===b);if(sgm)h+='<div style="color:var(--mu);line-height:1.6;margin-top:4px">계획 속도 약 '+(Math.hypot(sgm.t[0]-sgm.a[0],sgm.t[1]-sgm.a[1],sgm.t[2]-sgm.a[2])/b.len).toFixed(0)+' cm/초<br>속도 단계(1~3)는 🔌 실제 드론에만 적용돼요 (블록이 시작될 때 드론에 보내요). ⓘ 보정은 쓰려는 단계에서 측정해 주세요</div>'}
 if(b.t==='fmt')h+='<div style="color:var(--mu)">모든 드론이 자동으로 자리를 맞춰요 (설정은 함께 바뀌어요). 층 간격은 드론마다 높이를 다르게 해서 부딪히지 않게 해요</div>';
 if(d.kind==='real'&&(b.t==='move'||b.t==='xyz'||b.t==='fmt'))h+='<div style="color:var(--mu)">🔌 실제 드론도 같이 움직여요 (ⓘ 에서 속도 보정). 너무 빠르면 재생 전에 알려 줘요</div>';
 e.innerHTML=h+'<button class=bad style="margin-top:8px;width:100%" id=db>🗑 삭제</button>';$('#db').onclick=()=>{B=B.filter(x=>x!==b);SEL=new Set();selB=null;rTL();insp();save()};
 const apply=el=>{const k=el.dataset.k,p=el.dataset.p;let v=el.type==='number'?+el.value:el.value;if(el.type==='number'&&isNaN(v))v=0;
-if(k==='s'){const q=place(b,Math.max(0,v));if(q!=null)b.s=q;else toast('그 자리에는 다른 블록이 있어요')}else if(k==='len')b.len=Math.max(b.t==='takeoff'?4.5:.5,Math.min(hiOf(b)-b.s,v));else{setP(b,p,v);return}rTL();save()};
+if(k==='s'){const q=place(b,Math.max(0,v));if(q!=null)b.s=q;else toast('그 자리에는 다른 블록이 있어요')}else if(k==='len')b.len=Math.max(b.t==='takeoff'?4.5:.5,Math.min(hiOf(b)-b.s,v));else{setP(b,p,p==='v'?Math.max(0,Math.min(3,Math.round(v))):v);return}rTL();save()};
 e.querySelectorAll('input').forEach(el=>el.oninput=()=>apply(el));
 e.querySelectorAll('.sb').forEach(bt=>bt.onclick=()=>{const i=bt.parentNode.querySelector('input');if(i.disabled)return;i.value=Math.round((+i.value+ +bt.dataset.st)*100)/100;apply(i);i.value=i.dataset.k==='s'?b.s:i.dataset.k==='len'?b.len:b.p[i.dataset.p]});
 e.querySelectorAll('.sw button').forEach(bt=>bt.onclick=()=>{setP(b,'c',bt.dataset.c);insp()});
@@ -377,11 +386,11 @@ else{const q=fslots(st[1],n).map(v=>[v[0]*170,180+v[1]*170]);let mx=0;cur.forEac
 P.push({st,ty,len,hold,col});fixed+=len;hw+=hold});
 const spare=Math.max(0,DUR-1-fixed),u=hw?spare/hw:0;let t=0;
 P.forEach(x=>{const hs=Math.floor(x.hold*u*2)/2,all=x.len+hs,st=x.st;
-if(x.ty==='takeoff')ids.forEach(d=>o.push({id:++uid,d,t:'takeoff',s:t,len:x.len,p:{h:EXH}}));
+if(x.ty==='takeoff')ids.forEach(d=>o.push({id:++uid,d,t:'takeoff',s:t,len:x.len,p:{x:0,h:EXH,z:0}}));
 else if(x.ty==='land')ids.forEach(d=>o.push({id:++uid,d,t:'land',s:t,len:x.len,p:{}}));
-else if(x.ty==='xyz')ids.forEach(d=>o.push({id:++uid,d,t:'xyz',s:t,len:x.len,p:{x:st[1],y:EXH,z:st[2],w:0}}));
-else if(x.ty==='mv')ids.forEach(d=>o.push({id:++uid,d,t:'move',s:t,len:x.len,p:{f:st[1],r:st[2],u:0,w:st[3]}}));
-else if(x.ty==='spin')ids.forEach(d=>o.push({id:++uid,d,t:'move',s:t,len:x.len,p:{f:0,r:0,u:0,w:st[1]}}));
+else if(x.ty==='xyz')ids.forEach(d=>o.push({id:++uid,d,t:'xyz',s:t,len:x.len,p:{x:st[1],y:EXH,z:st[2],w:0,v:0}}));
+else if(x.ty==='mv')ids.forEach(d=>o.push({id:++uid,d,t:'move',s:t,len:x.len,p:{f:st[1],r:st[2],u:0,w:st[3],v:0}}));
+else if(x.ty==='spin')ids.forEach(d=>o.push({id:++uid,d,t:'move',s:t,len:x.len,p:{f:0,r:0,u:0,w:st[1],v:0}}));
 else{const g=++uid;ids.forEach(d=>o.push({id:++uid,d,t:'fmt',s:t,len:x.len,g,p:{k:st[1],sp:170,fh:EXH,fz:180,ly:0}}))}
 if(x.col)ids.forEach(d=>o.push({id:++uid,d,t:'led',s:t,len:all,p:{c:x.col==='rainbow'?'#ffffff':x.col,k:x.col==='rainbow'?'rainbow':'solid'}}));
 t+=all});return o}
