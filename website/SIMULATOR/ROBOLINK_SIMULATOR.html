@@ -415,7 +415,7 @@
               <button type="button" id="swarm-mode-real" onclick="setSwarmMode('real')"
                 class="swarm-mode-btn px-3.5 py-2 rounded-xl border text-base sm:text-lg font-extrabold transition-all duration-200">🚁 드론 군무 스튜디오</button>
               <button type="button" id="swarm-mode-virtual" onclick="setSwarmMode('virtual')"
-                class="swarm-mode-btn px-3.5 py-2 rounded-xl border text-base sm:text-lg font-extrabold transition-all duration-200">🛸 드론 군무 스튜디오</button>
+                class="swarm-mode-btn px-3.5 py-2 rounded-xl border text-base sm:text-lg font-extrabold transition-all duration-200">🛸 드론 군무 시뮬레이터</button>
             </div>
           </div>
           <a id="sim3-launch-link" href="https://zumi-ai.github.io/python/website/Drone_SWRM_Studio/Drone_SWRM_Studio.html"
@@ -452,17 +452,26 @@
             </div>
 
             <div class="space-y-2.5">
-              <div class="rounded-xl border border-emerald-200 bg-emerald-50/70 p-3">
-                <div class="flex items-center justify-between gap-2 mb-2">
-                  <span class="text-xs font-extrabold tracking-wide text-emerald-950">5대의 실제 드론 연결 조종 가능</span>
-                  <span class="text-[11px] text-slate-500">버튼을 눌러 상세 보기</span>
-                </div>
-                <div id="sim3-real-buttons" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
-              </div>
+              
+
+<!-- 실제 드론 연결 프로그램 -->
+<div class="space-y-2">
+  <div class="flex items-center justify-between px-0.5">
+    <span class="text-xs font-bold tracking-wider text-emerald-900 uppercase">
+      🚁 드론 군무 스튜디오
+    </span>
+    <span class="text-[11px] text-slate-400">
+      5대의 실제 드론 연결 조종 가능
+    </span>
+  </div>
+
+  <div id="sim3-real-buttons" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+</div>
+
               <div class="space-y-2">
                 <div class="flex items-center justify-between px-0.5">
-                  <span class="text-xs font-bold tracking-wider text-emerald-900 uppercase">스튜디오 핵심 연출 기능</span>
-                  <span class="text-[11px] text-slate-400">버튼을 눌러 상세 보기</span>
+                  <span class="text-xs font-bold tracking-wider text-emerald-900 uppercase">🛸 드론 군무 시뮬레이터</span>
+                  <span class="text-[11px] text-slate-400">스튜디오 핵심 연출 기능</span>
                 </div>
                 <div id="sim3-buttons" class="grid grid-cols-2 gap-2"></div>
               </div>
@@ -790,12 +799,12 @@ icon: 'fa-solid fa-boxes-stacked',
           },
           virtual: {
             badge: 'PROGRAM OVERVIEW',
-            title: '드론 군무 스튜디오로 나만의 드론 군무 연출',
+            title: '드론 군무 시뮬레이터로 나만의 드론 군무 연출',
             desc: '최소 20대의 드론부터 수천 대의 드론까지, 프로그램을 통하여 드론의 군무를 직접 만들어보고 편집하거나 수정할 수 있습니다. 드론의 속도와 색상, 모양 등을 조절하며 음악에 알맞은 동작을 연출하고, 전체화면 모드에서 배경을 바꿔가며 내가 만든 군무를 관람할 수 있습니다.',
             tags: ['#20~수천 대 군집', '#속도·색상·모양 조절', '#음악 싱크 · 전체화면 관람'],
             imgSrc: 'image/SWARM_0001.png',
             fallbackSrc: makeSvgDataUri('emerald', 'DRONE SWARM STUDIO', '드론 군무 스튜디오', '20대~수천 대 군집 편대 제작 및 음악 싱크 라이트쇼'),
-            caption: '🛸 드론 군무 스튜디오 — 대규모 군집 연출'
+            caption: '🛸 드론 군무 시뮬레이터 — 대규모 군집 연출'
           }
         },
         defaultInfo: null,
