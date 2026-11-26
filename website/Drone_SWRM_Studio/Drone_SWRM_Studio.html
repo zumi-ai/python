@@ -15,7 +15,13 @@ body.view{grid-template-columns:0 1fr 0;grid-template-rows:52px 1fr 0}body.view 
 button,select,input{font:inherit;color:var(--tx);background:var(--p2);border:1px solid var(--ln);border-radius:8px;padding:6px 10px}button{cursor:pointer}button:hover{border-color:var(--ac)}
 .pri{background:var(--ac);color:#04121f;font-weight:700}.bad{background:var(--bad);color:#fff;font-weight:700}
 header{grid-area:h;display:flex;gap:6px;align-items:center;padding:0 10px;background:var(--p);border-bottom:1px solid var(--ln);overflow-x:auto;white-space:nowrap}
-header b{margin-right:6px}#tm{font:700 15px ui-monospace,monospace;min-width:92px;text-align:center}.sp{flex:1}
+header b{margin-right:6px}
+#studioMenuToggle{border:0;background:transparent;padding:6px 4px;font-weight:800;font-size:14px;white-space:nowrap}
+#studioMenuToggle span{font-size:10px;color:var(--mu);margin-left:3px}
+#studioMenu{position:fixed;display:none;z-index:200;background:var(--p2);border:1px solid var(--ln);border-radius:10px;padding:5px;box-shadow:0 10px 28px #0009;min-width:210px}
+#studioMenu button{display:block;width:100%;text-align:left;border:0;background:transparent;padding:9px 11px;border-radius:7px;white-space:nowrap}
+#studioMenu button:hover{background:var(--ac);color:#04121f}
+#tm{font:700 15px ui-monospace,monospace;min-width:92px;text-align:center}.sp{flex:1}
 #pal,#lg{background:var(--p);padding:10px;overflow:auto}#pal{grid-area:pal;border-right:1px solid var(--ln)}#lg{grid-area:lg;border-left:1px solid var(--ln);font-size:12px}
 h4{margin:0 0 8px;color:var(--mu);font-size:12px}.g{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}.g button{padding:12px 4px 8px;font-size:13px;font-weight:800;color:#fff;border:none;border-radius:14px;box-shadow:0 4px 0 #0005;text-shadow:0 1px 2px #0006;line-height:1.5}.g button span{font-size:26px;display:block}.g button:hover{transform:translateY(-2px)}.g button:active{transform:translateY(2px);box-shadow:none}
 #insp{background:var(--p2);border-radius:14px;padding:10px;font-size:12px;border-top:5px solid var(--ic,var(--ln))}#insp .ti{font-size:15px;font-weight:800;margin-bottom:6px}#insp label{display:flex;justify-content:space-between;align-items:center;margin:6px 0;gap:6px;background:#0e1430;border-radius:12px;padding:6px 8px 6px 12px;color:var(--mu);white-space:nowrap}
@@ -42,10 +48,11 @@ select{-webkit-appearance:none;appearance:none;padding-right:30px;border-radius:
 dialog{background:var(--p);color:var(--tx);border:1px solid var(--ln);border-radius:14px;min-width:300px}dialog table td{padding:4px 10px 4px 0}
 .bt{font-size:11px;color:var(--mu);white-space:nowrap}dialog button:disabled{cursor:not-allowed}dialog table input,dialog select{padding:4px 8px}dialog h4{margin:0 0 6px}
 </style>
-<header><b>🚁 드론 타임라인 스튜디오</b><button id="rw">⏮</button><button id="pl" class="pri">▶ 재생</button><span id="tm">0:00.0</span>
+<header><button id="studioMenuToggle" type="button">🚁 드론 군무 스튜디오 <span aria-hidden="true">▼</span></button><button id="rw">⏮</button><button id="pl" class="pri">▶ 재생</button><span id="tm">0:00.0</span>
 <select id="song"><option value="0.5">기본 노래 30초</option><option value="1">기본 노래 1분</option><option value="2">기본 노래 2분</option><option value="3" hidden>기본 노래 3분</option><option value="0">내 노래 불러오기…</option></select><input id="af" type="file" accept="audio/*" hidden>
 <button id="sv">💾 저장</button><button id="ld">📂 불러오기</button><input id="jf" type="file" accept=".json" hidden><span class="sp"></span>
 <button id="av">➕ 가상 드론</button><button id="ar">🔌 실제 드론(USB)</button><button id="fit">📐 드론 전부 보이게</button><button id="vw">🎬 감상</button><button id="la">🛬 전부 착륙</button><button id="es" class="bad">🛑 비상정지</button></header>
+<div id="studioMenu"><button type="button" id="openDroneSwarm">🛸 드론 군무 스튜디오</button></div>
 <aside id="pal"><h4>동작 고르기 → 타임라인에 추가</h4><div class="g" id="pg"></div><button id="exb" style="width:100%;margin-bottom:10px;background:linear-gradient(135deg,#06b6d4,#a855f7);border:none;font-weight:800;color:#fff">🎆 군집 비행 예제</button>
 <label style="font-size:12px;display:block;margin-bottom:10px"><input type="checkbox" id="all" style="width:auto"> 모든 드론에 한꺼번에 추가</label>
 <h4>선택한 블록</h4><div id="insp">블록을 눌러 보세요</div></aside>
@@ -57,6 +64,25 @@ dialog{background:var(--p);color:var(--tx);border:1px solid var(--ln);border-rad
 <script>window.THREE||document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"><\/script>')</script>
 <script>if(!window.THREE){window.NO3D=true;const mk=()=>new Proxy(function(){},{get:(t,k)=>k===Symbol.toPrimitive?()=>0:(k==='then'?undefined:mk()),apply:()=>mk(),construct:()=>mk(),set:()=>true});window.THREE=mk()}</script>
 <script>
+(()=>{
+ const toggle=document.getElementById('studioMenuToggle');
+ const menu=document.getElementById('studioMenu');
+ const item=document.getElementById('openDroneSwarm');
+ const close=()=>{menu.style.display='none'};
+ toggle.addEventListener('click',e=>{
+   e.stopPropagation();
+   const opening=menu.style.display!=='block';
+   if(!opening){close();return}
+   const r=toggle.getBoundingClientRect();
+   menu.style.left=Math.max(8,Math.min(r.left,window.innerWidth-225))+'px';
+   menu.style.top=Math.min(r.bottom+4,window.innerHeight-60)+'px';
+   menu.style.display='block';
+ });
+ item.addEventListener('click',()=>{window.location.href='https://zumi-ai.github.io/python/website/Drone_SWRM_Studio/Drone_SWRM_Studio_.html'});
+ document.addEventListener('click',e=>{if(!menu.contains(e.target)&&e.target!==toggle)close()});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+ window.addEventListener('resize',close);
+})();
 const $=s=>document.querySelector(s),HW=150,COL=['#ff5c8a','#4dd2ff','#7dff6b','#ffd23f','#c084fc'],NEUT='#2a3157';
 let PPS=30;
 const TY={takeoff:{c:'#22c55e',n:'이륙',i:'🛫',len:7,p:{h:100},ch:'m'},land:{c:'#f97316',n:'착륙',i:'🛬',len:3,p:{},ch:'m'},move:{c:'#3b82f6',n:'이동',i:'➡️',len:2,p:{f:0,r:0,u:0,w:0},ch:'m'},xyz:{c:'#a855f7',n:'좌표 이동',i:'📍',len:2,p:{x:0,y:100,z:0,w:0},ch:'m'},led:{c:'#ec4899',n:'LED',i:'💡',len:2,p:{c:'#ff3366',k:'solid'},ch:'l'},fmt:{c:'#06b6d4',n:'비행 패턴',i:'🛩️',len:3,p:{k:'v',sp:170,fh:100,fz:180,ly:0},ch:'m'}};
