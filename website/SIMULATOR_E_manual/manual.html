@@ -873,14 +873,25 @@ function sync(){
   if (t && THEMES[t]) { st.style.setProperty('--sc', THEMES[t]); st.classList.add('th'); } else st.classList.remove('th');
   try { history.replaceState(null, '', '#' + mode + '/' + cur); } catch (e) {} }
 
+
 function size(){
-  const w = $('bookWrap').clientWidth - 32, h = $('bookWrap').clientHeight - 32;
-  single = innerWidth < 700;
-  const pw = Math.max(120, single ? Math.min(w, h / R, 640) : Math.min(w / 2, h / R, 620));
+  const w = $('bookWrap').clientWidth - 32,
+        h = $('bookWrap').clientHeight - 32;
+
+  single = innerWidth < 900;
+
+  // 책 크기 확대
+  const pw = Math.max(120,
+    single ? Math.min(w, h / R, 700)
+           : Math.min(w / 2, h / R, 740));
+
   $('bookWrap').style.setProperty('--pw', pw + 'px');
   $('bookWrap').style.setProperty('--ph', pw * R + 'px');
-  $('book').hidden = single; $('single').hidden = !single;
+
+  $('book').hidden = single;
+  $('single').hidden = !single;
 }
+
 
 let tmr;
 const leaves = () => document.querySelectorAll('.leaf');
