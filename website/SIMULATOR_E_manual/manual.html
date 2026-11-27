@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Robolink Simulator Guide</title>
+<style>
+:root{--blue:#1f5fe0;--navy:#10244d;--mut:#5d6b82;--line:#d5dce7;--bg:#e8eef8;--r:1.1;font-family:"Pretendard","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--navy)}
+button{font:inherit;cursor:pointer;color:inherit}
+button:focus-visible,a:focus-visible{outline:3px solid #2563eb;outline-offset:2px}
+[hidden]{display:none!important}
+
+/* ===== 위쪽 바 ===== */
+#viewer{height:100%;display:flex;flex-direction:column}
+.bar{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:8px;align-items:center;padding:10px 14px;background:#fff;border-bottom:1px solid var(--line)}
+.bar h2{flex:1;min-width:0;margin:0 4px;font-size:17px;color:var(--blue);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.btn,#ind{flex-shrink:0;white-space:nowrap}
+.btn{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:9px 14px;font-size:15px;font-weight:600}
+.btn:hover{border-color:var(--blue)}
+.btn.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn.pri{background:var(--navy);border-color:var(--navy);color:#fff}
+.seg{display:flex;flex-shrink:0}
+.seg .btn:first-child{border-radius:10px 0 0 10px}
+.seg .btn:last-child{border-radius:0 10px 10px 0;margin-left:-1.5px}
+#ind{min-width:80px;text-align:center;font-size:15px;color:var(--mut)}
+#pgIn{width:3.4em;font:inherit;text-align:center;color:var(--navy);font-weight:700;background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:4px 2px;-moz-appearance:textfield}
+#pgIn::-webkit-outer-spin-button,#pgIn::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+#pgIn:hover,#pgIn:focus{border-color:var(--blue);outline:none}
+.short{display:none}
+#copy.ok span{display:none}
+#copy.ok::after{content:"복사됨!"}
+@media(max-width:640px){
+  .bar{gap:6px;padding:8px 10px}
+  .bar h2{display:none}
+  #toc{margin-right:auto}
+  .btn{padding:7px 9px;font-size:13px}
+  .long{display:none}.short{display:inline}
+  #ind{min-width:0;font-size:12px}
+  #pgIn{padding:3px 1px}
+}
+
+/* ===== 무대 ===== */
+.stage{flex:1;min-height:0;position:relative}
+#bookWrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:16px}
+.nv{position:absolute;top:50%;transform:translateY(-50%);z-index:500;width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line);background:rgba(255,255,255,.92);font-size:26px;line-height:1;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.nv:disabled{opacity:.25;cursor:default}
+#pv{left:10px}#nx{right:10px}
+
+/* 책 (펼침면) */
+.book{position:relative;width:calc(var(--pw)*2);height:var(--ph);perspective:2600px}
+.base{position:absolute;top:0;width:var(--pw);height:var(--ph);overflow:hidden;box-shadow:0 6px 24px rgba(16,36,77,.22)}
+.base.l{left:0;border-radius:8px 2px 2px 8px}
+.base.r{left:50%;border-radius:2px 8px 8px 2px}
+.leaf{position:absolute;left:50%;top:0;width:var(--pw);height:var(--ph);transform-origin:left center;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.5,0,.2,1)}
+.leaf.flipped{transform:rotateY(-180deg)}
+.face{position:absolute;inset:0;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.face.back{transform:rotateY(180deg)}
+.face.front{border-radius:2px 8px 8px 2px}
+.face.back{border-radius:8px 2px 2px 8px}
+.base::after,.face::after{content:"";position:absolute;inset:0;pointer-events:none}
+.base.r::after,.face.front::after{background:linear-gradient(90deg,rgba(0,0,0,.14),transparent 6%)}
+.base.l::after,.face.back::after{background:linear-gradient(270deg,rgba(0,0,0,.14),transparent 6%)}
+
+/* 한 쪽씩 보기 (좁은 화면) */
+#single .sheet{width:var(--pw);box-shadow:0 6px 24px rgba(16,36,77,.22);border-radius:8px}
+.inN{animation:inN .45s ease}.inP{animation:inP .45s ease}
+@keyframes inN{from{transform:translateX(40px) rotateY(-14deg);opacity:0}}
+@keyframes inP{from{transform:translateX(-40px) rotateY(14deg);opacity:0}}
+
+/* 스크롤 보기 */
+#scroll{position:absolute;inset:0;overflow-y:auto;padding:18px 12px 60px;-webkit-overflow-scrolling:touch}
+#scroll::after{content:"";display:block;height:70vh}
+#scroll .sheet{width:min(100%,760px);margin:0 auto 18px;box-shadow:0 4px 18px rgba(16,36,77,.15);border-radius:8px}
+
+/* ===== 페이지 공통 (cqw = 페이지 너비 기준 비율) ===== */
+.sheet{container-type:inline-size;width:100%;aspect-ratio:1/var(--r);background:#fff;overflow:hidden;position:relative}
+.pg{position:absolute;inset:0;padding:5.5cqw 6cqw 4.5cqw;display:flex;flex-direction:column;font-size:2.9cqw;line-height:1.55;color:var(--navy);overflow:hidden;--c:var(--blue);--cs:#eaf1fd;--cm:#dce7fa;--cl:#8fb0f0;--cd:#1745a8;background:linear-gradient(165deg,#fff 0%,var(--cs) 100%) center/cover}
+.pg h3{margin:0;font-size:4.8cqw;line-height:1.2;letter-spacing:-.02em;font-weight:800}
+.pg small{display:block;font-size:2.6cqw;color:var(--mut);line-height:1.5}
+.hd{display:flex;align-items:center;gap:2.2cqw}
+.hd .tag{margin-left:auto;text-align:right;font-size:2.3cqw;line-height:1.35;font-weight:600;color:#26407a}
+.n{display:inline-flex;align-items:center;justify-content:center;width:3.4cqw;height:3.4cqw;border-radius:50%;background:var(--c);color:#fff;font-style:normal;font-weight:800;font-size:2cqw;line-height:1;flex:none}
+.hd .n{width:4.4cqw;height:4.4cqw;font-size:2.4cqw}
+.fr{border-radius:3cqw;overflow:hidden;background:linear-gradient(135deg,var(--cm),var(--cs));display:flex;align-items:center;justify-content:center;color:#7a8db0;font-size:2.6cqw}
+.fr img,.th img,.ci img,.rimg img{width:100%;height:100%;object-fit:cover;display:block}
+.go{display:inline-block;border:0;border-radius:4cqw;background:var(--c);color:#fff;font-weight:800;font-size:2.7cqw;padding:1.6cqw 3.6cqw;text-decoration:none;white-space:nowrap;box-shadow:0 .6cqw 1.6cqw rgba(16,36,77,.25)}
+.go.big{font-size:3.6cqw;padding:2.2cqw 10cqw}
+.ft{display:flex;align-items:center;justify-content:center;gap:3cqw;margin-top:2.5cqw;height:6.5cqw;flex:none}
+.ft span{font-size:2.8cqw;font-weight:700;white-space:nowrap;color:var(--c)}
+
+/* 표지 */
+.pg.cover{background:linear-gradient(180deg,#cfe6ff 0%,#9cc7f7 45%,#2f74e6 100%) center/cover}
+.cover .ctop{display:flex;align-items:center;justify-content:flex-end}
+.logo{position:absolute;top:5.5cqw;left:6cqw;height:auto;pointer-events:none}
+.brand{margin-right:auto;font-size:3.6cqw;color:var(--blue);font-weight:900;letter-spacing:.02em}
+.badge{background:#3b82f6;color:#fff;border-radius:3cqw;padding:1cqw 2.6cqw;font-size:2.5cqw;font-weight:700}
+.cover h2{margin:9cqw 0 2.4cqw;font-size:7.6cqw;line-height:1.2;font-weight:900;letter-spacing:-.02em}
+.cover h2 em{display:block;font-style:normal;color:var(--blue)}
+.cover p{margin:0;font-size:3.4cqw;line-height:1.55;font-weight:600}
+.flt{position:absolute;top:12cqw;right:5cqw;height:auto;pointer-events:none;filter:drop-shadow(0 2.2cqw 1.6cqw rgba(16,36,77,.28));animation:flt 3.4s ease-in-out infinite alternate}
+@keyframes flt{from{transform:translate(0,0) rotate(-3deg)}to{transform:translate(-1cqw,-2.4cqw) rotate(3deg)}}
+.cover .cft{margin-top:auto;display:flex;justify-content:space-between;color:#fff;font-size:2.4cqw;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.35)}
+
+/* 목차 */
+.contents h3{font-size:7cqw;color:var(--blue);font-weight:900}
+.contents .sub{margin:1.2cqw 0 3cqw;font-size:3cqw;font-weight:700}
+.list{flex:1;min-height:0;display:flex;flex-direction:column}
+.ci2{display:flex;align-items:center;gap:3cqw;width:100%;flex:1;min-height:0;border:0;border-bottom:.3cqw solid #d5e0f5;background:transparent;padding:2.4cqw 0;text-align:left}
+.ci2:last-child{border-bottom:0}
+.ci2 .th{flex:0 0 45%;height:100%;max-height:22cqw;border-radius:1.2cqw;overflow:hidden;background:linear-gradient(135deg,var(--cm),var(--cs));display:flex;align-items:center;justify-content:center;font-size:2.4cqw;color:#7a8db0}
+.ci2 .tx{flex:1}
+.ci2 b{display:flex;gap:1.4cqw;align-items:flex-start;font-size:3.2cqw;line-height:1.3}
+.ci2 .n{width:3.8cqw;height:3.8cqw;font-size:2.3cqw;margin-top:.2cqw}
+.ci2 small{margin:.8cqw 0 0 5.2cqw}
+.ar{width:6cqw;height:6cqw;border-radius:50%;background:#fff;color:var(--c);box-shadow:0 .4cqw 1.4cqw rgba(16,36,77,.2);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:3.6cqw;flex:none}
+
+/* 시작 전 확인 */
+.check .list{gap:2.6cqw;margin:3.5cqw 0}
+.check .row{display:flex;align-items:center;gap:3cqw;background:var(--cm);border-radius:3cqw;padding:3cqw 3.4cqw;flex:1;min-height:0}
+.ck{width:5.6cqw;height:5.6cqw;border-radius:50%;background:var(--c);color:#fff;display:flex;align-items:center;justify-content:center;font-size:3.2cqw;flex:none}
+.row b{display:block;font-size:3.4cqw}
+.rimg{margin-left:auto;width:22cqw;height:100%;max-height:16cqw;border-radius:2cqw;overflow:hidden;flex:none}
+.cta{text-align:center}
+
+/* 시뮬레이터 소개 */
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:4cqw;align-items:center;margin:3cqw 0;flex:none}
+.hero .fr{aspect-ratio:16/10}
+.hero .fr img{object-fit:contain}
+.hx{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:2.2cqw}
+.hero p{margin:0;font-weight:600;line-height:1.65;font-size:2.7cqw}
+.dbtn{margin:0 0 2cqw}
+.prog{flex:1;min-height:0;display:flex;flex-direction:column;background:rgba(255,255,255,.75);border-radius:3cqw;padding:2.6cqw 3cqw;box-shadow:0 .4cqw 2cqw rgba(30,70,160,.08)}
+.prog h4{margin:0 0 2cqw;font-size:3cqw}
+.prog h4::first-letter{color:var(--c)}
+.grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(var(--cols),1fr);grid-auto-rows:1fr;gap:2cqw}
+.cd{display:flex;flex-direction:column;min-height:0;gap:.8cqw}
+.ci{position:relative;flex:1;min-height:0;border-radius:2cqw;overflow:hidden;background:linear-gradient(135deg,var(--cm),var(--cs));display:flex;align-items:center;justify-content:center;color:#7a8db0;font-size:2.2cqw}
+.ct{font-size:2.3cqw;font-weight:700;display:flex;align-items:center;gap:1cqw;line-height:1.3;white-space:nowrap}
+.ci .n{position:absolute;top:.9cqw;left:.9cqw;box-shadow:0 .3cqw .8cqw rgba(0,0,0,.3)}
+.cd.ico{background:var(--cm);border-radius:2.4cqw;align-items:center;justify-content:center;padding:2cqw;text-align:center}
+.ico .ci{flex:none;width:11cqw;height:11cqw;border-radius:50%;background:#fff}
+.ico .ci span{font-size:6cqw}
+.ico .ct{justify-content:center;text-align:center;white-space:normal;font-size:2.5cqw}
+
+/* 세부 페이지 */
+.detail .fr{flex:1;min-height:0;margin:2.5cqw 0}
+.detail .fr img{object-fit:contain}
+.crumb{font-size:2.3cqw;font-weight:700;color:var(--c);margin:0 0 1cqw}
+.drow{display:flex;align-items:center;justify-content:space-between;gap:2cqw;margin:0 0 2cqw}
+.tags{display:flex;flex-wrap:wrap;gap:1cqw}
+.tags span{background:var(--cs);border:.25cqw solid var(--cm);color:var(--cd);border-radius:2cqw;padding:.6cqw 1.8cqw;font-size:2.2cqw;font-weight:700}
+.cd[data-go]{cursor:pointer}
+.detail .dt{margin:0 0 1.5cqw;font-weight:600;line-height:1.7}
+.detail ul{margin:0 0 1cqw;padding-left:4cqw}
+
+/* 미션 구성 페이지 */
+.mlist{flex:1;min-height:0;display:flex;flex-direction:column;gap:2cqw;margin:3cqw 0 0}
+.mi{flex:1;min-height:0;max-height:24cqw;display:flex;align-items:center;gap:3cqw;background:rgba(255,255,255,.85);border:.3cqw solid var(--cm);border-radius:3cqw;padding:1.6cqw 3.2cqw}
+.mic{flex:none;width:9cqw;height:9cqw;border-radius:50%;background:var(--cm);display:flex;align-items:center;justify-content:center;font-size:5cqw}
+.mi b{display:block;font-size:3.3cqw;line-height:1.3;margin-bottom:.6cqw}
+.mi small{color:var(--navy);font-weight:500;font-size:2.7cqw}
+.mi.fin{background:var(--c);border-color:var(--c);color:#fff}
+.mi.fin small{color:#fff}.mi.fin .mic{background:rgba(255,255,255,.25)}
+
+/* 조작 방법 페이지 */
+.cdia{margin:2.4cqw 0 1.6cqw;background:#fff;border:.3cqw solid var(--cm);border-radius:3cqw;padding:1.6cqw 4cqw}
+.cdia svg{display:block;width:100%;height:auto;max-height:38cqw}
+.pc{fill:var(--c)}
+.controls .ft{margin-top:auto}
+.cnote{margin:1.2cqw 0 .4cqw;font-size:2.4cqw;font-weight:600;color:var(--mut)}
+.chd,.cr{display:grid;grid-template-columns:31% 28% 1fr;gap:2cqw;align-items:center}
+.chd{margin-top:.8cqw;padding:0 2.6cqw;font-size:2.4cqw;font-weight:800;color:var(--cd)}
+.cgh{margin:.9cqw 0 .6cqw;font-size:2.7cqw;font-weight:800;color:var(--c)}
+.cr{background:rgba(255,255,255,.88);border:.25cqw solid var(--cm);border-radius:2cqw;padding:.5cqw 2.6cqw;margin-bottom:.5cqw;font-size:2.6cqw;font-weight:600;line-height:1.3}
+.cr b{font-size:2.8cqw}
+kbd{display:inline-block;min-width:4.6cqw;padding:.4cqw 1.4cqw;margin:.2cqw .5cqw .2cqw 0;text-align:center;font:inherit;font-weight:800;color:var(--navy);background:#fff;border:.3cqw solid #9aa8c4;border-bottom-width:.7cqw;border-radius:1.1cqw}
+.pd{display:inline-block;padding:.4cqw 1.8cqw;margin-right:.7cqw;border-radius:2cqw;background:var(--c);color:#fff;font-style:normal;font-weight:800}
+
+/* 이렇게 시작해요 (howto) */
+.howto .steps{display:flex;align-items:stretch;gap:1cqw;margin:3cqw 0 2.4cqw;flex:none}
+.howto .st{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:.8cqw;background:#fff;border-radius:3cqw;padding:2.4cqw 1.4cqw;box-shadow:0 .4cqw 1.6cqw rgba(30,70,160,.1)}
+.howto .st i{display:flex;align-items:center;justify-content:center;width:6.4cqw;height:6.4cqw;border-radius:50%;background:var(--c);color:#fff;font-style:normal;font-weight:900;font-size:3.6cqw}
+.howto{word-break:keep-all}
+.howto .st b{font-size:2.7cqw}
+.howto .st small{font-size:2.3cqw;line-height:1.45}
+.howto .sa{align-self:center;font-size:4cqw;font-weight:900;color:var(--cl)}
+.howto .ht{margin:0 0 1.6cqw;font-size:3cqw;font-weight:800}
+.hcols{flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,1fr);gap:2.2cqw}
+.hc{display:flex;flex-direction:column;min-height:0;background:#fff;border-radius:3cqw;overflow:hidden;border:.3cqw solid var(--cm)}
+.hc .top{background:var(--c);color:#fff;text-align:center;padding:2cqw 1cqw;font-weight:800;font-size:3cqw;line-height:1.3}
+.hc .top span{display:block;font-size:6cqw;line-height:1.2}
+.hc ul{list-style:none;margin:0;padding:2cqw 1.8cqw;display:flex;flex-direction:column;gap:1.2cqw;font-size:2.4cqw;font-weight:600;line-height:1.4}
+.hc li{display:flex;gap:1cqw;align-items:flex-start}
+.hc li::before{content:"●";color:var(--c);font-size:1.8cqw;line-height:2.1}
+
+/* 뒷표지 */
+.pg.endp{align-items:center;justify-content:center}
+.pg.endp h3{color:var(--navy);font-size:6cqw;letter-spacing:.12em}
+.elogo{width:46cqw;height:auto;display:block}
+
+
+/* 사용 방법 설명 페이지 (manual) */
+.manual .hd h3{font-size:3.5cqw;color:var(--mut);font-weight:800;letter-spacing:-.01em}
+.manual .ml{margin:1.2cqw 0 0;font-weight:600;font-size:2.7cqw}
+.manual .mf{flex:none;height:auto!important;width:72cqw;aspect-ratio:1920/900;align-self:center;margin:1.6cqw 0 .5cqw;background:none;border-radius:2cqw;box-shadow:0 .5cqw 1.6cqw rgba(16,36,77,.18)}
+.manual .mf img{object-fit:cover}
+.mc{text-align:center;font-size:2.2cqw;color:var(--mut);font-weight:600;margin:0 0 1.6cqw}
+.stp{display:flex;gap:2.2cqw;align-items:flex-start;background:rgba(255,255,255,.88);border:.25cqw solid var(--cm);border-radius:2.4cqw;padding:.8cqw 2.2cqw;margin-bottom:.8cqw}
+.stp .n{width:4cqw;height:4cqw;font-size:2.3cqw;margin-top:.3cqw}
+.stp b{display:block;font-size:2.7cqw;line-height:1.4}
+.stp small{font-size:2.4cqw;line-height:1.45;color:var(--navy);font-weight:500}
+.mr{display:grid;grid-template-columns:var(--g);gap:2cqw;align-items:center;background:rgba(255,255,255,.88);border:.25cqw solid var(--cm);border-radius:2cqw;padding:.6cqw 2.4cqw;margin-bottom:.6cqw;font-size:2.5cqw;font-weight:600;line-height:1.35}
+.mr.mh{background:transparent;border:0;padding:0 2.4cqw;font-weight:800;color:var(--cd);margin-bottom:.4cqw}
+.mtip{margin-top:.6cqw;background:var(--c);color:#fff;border-radius:2.4cqw;padding:1.2cqw 2.6cqw;font-weight:700;font-size:2.5cqw;line-height:1.45}
+.manual .ft{margin-top:auto}
+
+/* 주미 AI 소개·세부 페이지: 이미지 틀을 1920x900 비율로 */
+.detail[style*="#2563eb"] .fr{flex:none;width:100%;aspect-ratio:1920/900;margin:2.5cqw 0 2cqw;background:none}
+.detail[style*="#2563eb"] .fr img{object-fit:cover}
+.sim[style*="#2563eb"] .hero{grid-template-columns:1fr 1fr}
+.sim[style*="#2563eb"] .grid{grid-auto-rows:auto;align-content:start}
+.sim[style*="#2563eb"] .prog{flex:none}
+.sim[style*="#2563eb"] .ci{flex:none;aspect-ratio:1920/900}
+.sim[style*="#2563eb"] .ci img{object-fit:cover}
+.sim[style*="#2563eb"] .hero .fr{aspect-ratio:1920/900;background:none}
+.sim[style*="#2563eb"] .hero .fr img{object-fit:cover}
+
+/* 주미 AI 소개 페이지(25페이지) 이미지 및 여백 축소 */
+.sim[style*="#2563eb"] .hero {
+  margin: 1.5cqw 0;
+}
+
+.sim[style*="#2563eb"] .hero .fr {
+  aspect-ratio: 2.5 / 1;
+}
+
+.sim[style*="#2563eb"] .ci {
+  aspect-ratio: 2.5 / 1;
+}
+
+.sim[style*="#2563eb"] .prog {
+  padding: 1.8cqw 2.4cqw;
+}
+
+.mr .fa-solid {
+  margin-right: 1.2cqw;
+  color: var(--c);
+}
+
+/* 책 바깥(무대) 배경: 보고 있는 시뮬레이터 색을 따라 옅은 색 + 패턴 */
+.stage.th{background:
+ radial-gradient(circle at 18% 22%,color-mix(in srgb,var(--sc) 16%,transparent),transparent 34%),
+ radial-gradient(circle at 82% 78%,color-mix(in srgb,var(--sc) 14%,transparent),transparent 38%),
+ radial-gradient(circle at 78% 12%,color-mix(in srgb,var(--sc) 9%,transparent),transparent 26%),
+ radial-gradient(circle,color-mix(in srgb,var(--sc) 15%,transparent) 1.5px,transparent 2px) 7px 11px/53px 47px,
+ radial-gradient(circle,color-mix(in srgb,var(--sc) 11%,transparent) 2.5px,transparent 3px) 31px 5px/89px 71px,
+ radial-gradient(circle,color-mix(in srgb,var(--sc) 9%,transparent) 1px,transparent 1.5px) 19px 33px/37px 41px,
+ color-mix(in srgb,var(--sc) 9%,#fff)}
+
+/* 이미지 크게 보기 */
+.fr img,.ci img,.rimg img{cursor:zoom-in}
+#lb{position:fixed;inset:0;z-index:3000;display:flex;align-items:center;justify-content:center;background:rgba(10,20,40,.88);padding:3vmin;cursor:zoom-out}
+#lb[hidden]{display:none}
+#lb{animation:lbBg .5s ease}
+#lb img{animation:lbIn .5s cubic-bezier(.2,.9,.3,1.15)}
+@keyframes lbBg{from{background:rgba(10,20,40,0)}}
+@keyframes lbIn{from{opacity:0;transform:scale(.6) translateY(30px)}to{opacity:1;transform:none}}
+#lb img{max-width:96vw;max-height:92vh;object-fit:contain;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,.5)}
+#lb button{position:absolute;top:12px;right:14px;width:42px;height:42px;border-radius:50%;border:0;background:#fff;color:var(--navy);font-size:22px;font-weight:700}
+@media print{#lb{display:none!important}}
+@media (prefers-reduced-motion:reduce){#lb,#lb img{animation:none}}
+
+/* ===== 인쇄 / PDF ===== */
+#print{display:none}
+@media print{
+  body{background:#fff}
+  #viewer{display:none!important}
+  #print{display:block}
+  #print .sheet{width:210mm;height:calc(210mm * var(--r));aspect-ratio:auto;break-after:page;page-break-after:always}
+  #print .sheet:last-child{break-after:auto;page-break-after:auto}
+  .flt{animation:none}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+@media (prefers-reduced-motion:reduce){.leaf{transition:none}.inN,.inP,.flt{animation:none}}
+
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<section id="viewer">
+  <div class="bar">
+    <button class="btn" id="toc">처음으로</button>
+    <h2 id="vt"></h2>
+    <div class="seg" role="group" aria-label="읽기 방식">
+      <button class="btn" id="mBook">E-Book</button>
+      <button class="btn" id="mScroll">세로보기</button>
+    </div>
+    <span id="ind"><input id="pgIn" type="number" inputmode="numeric" min="1" aria-label="이동할 페이지 번호" title="번호를 고치고 Enter를 누르면 그 페이지로 이동해요"> / <span id="pgN"></span></span>
+    <button class="btn" id="copy" title="지금 보는 페이지로 바로 연결되는 링크를 복사합니다"><span class="long">링크 복사</span><span class="short">링크</span></button>
+    <button class="btn pri" id="pdf" title="인쇄 창에서 'PDF로 저장'을 선택하세요">다운로드</button>
+  </div>
+  <div class="stage">
+    <div id="bookWrap">
+      <div class="book" id="book"></div>
+      <div id="single"></div>
+      <button class="nv" id="pv" aria-label="이전 페이지">‹</button>
+      <button class="nv" id="nx" aria-label="다음 페이지">›</button>
+    </div>
+    <div id="scroll" hidden></div>
+  </div>
+</section>
+<div id="print"></div>
+<div id="lb" hidden><button aria-label="닫기">✕</button><img alt=""></div>
+
+<script>
+/* ================================================================
+   ★ 여기만 고치면 됩니다 (글, 사진, 링크) ★
+   - 글: 따옴표 안의 문장을 바꾸세요. 줄을 바꾸고 싶으면 \n 을 넣으세요.
+   - 사진: img:'' 자리에 IMG + '파일이름.png' 로 적으세요. 예) img: IMG + '0002.png'
+           (image 폴더 안의 파일. 비워두면 "이미지" 칸이 보입니다)
+           폴더 이름이 다르면 아래 IMG 한 줄만 바꾸면 됩니다.
+   - 시작하기 버튼 링크: button:{label:'시작하기', url:'https://...'}
+   - 페이지 이동 버튼:   button:{label:'시작하기', go:4}  (4페이지로 이동)
+   - go 는 번호(go:4) 대신 페이지의 id 로도 쓸 수 있습니다. 예) go:'zumi'
+     (id 를 쓰면 중간에 페이지를 끼워 넣어도 이동 위치가 어긋나지 않습니다)
+   - 색: 페이지의 theme:'codrone' / 'zumi' / 'swarm' 으로 색을 고릅니다 (위 THEMES 에서 색 변경)
+   - 페이지 순서 = 아래 PAGES 줄 순서. 1번째 줄이 1페이지(표지)입니다.
+   - 페이지를 늘리려면 { ... } 한 덩어리를 복사해서 추가하세요.
+     (페이지 수는 짝수로 맞춰지며, 홀수면 뒷표지가 자동으로 붙습니다)
+   - 페이지 모양(type): cover(표지) contents(목차) check(시작 전 확인)
+                        sim(시뮬레이터 소개) detail(세부 페이지) missions(미션 구성) howto(사용 방법 안내) controls(키보드·조이스틱 조작표) manual(그림+단계 설명)
+   ================================================================ */
+const SITE = {
+  title: 'Robolink Simulator Guide',
+  ratio: 1.1            /* 페이지 세로/가로 비율 (1.1 = 거의 정사각형, 1.414 = A4 세로) */
+};
+
+/* 시뮬레이터 실행 주소 (시작하기 버튼이 이동하는 곳) */
+const SIM = {
+  codrone:      'https://zumi-ai.github.io/python/website/CoDroneEDU_Plus_simulator/CoDrone%20EDU%20AI%20Vision%20Flight%20Lab.html',
+  zumi:         'https://zumi-ai.github.io/python/website/zumi_ai_simulator.html',
+  swarmReal:    'https://zumi-ai.github.io/python/website/Drone_SWRM_Studio/Drone_SWRM_Studio.html',
+  swarmVirtual: 'https://zumi-ai.github.io/python/website/Drone_SWRM_Studio/Drone_SWRM_SIMULATOR.html'
+};
+/* 마지막 페이지 로고 (주소 또는 image 폴더 파일, 예: IMG + 'logo.png') */
+const LOGO = 'https://zumi-ai.github.io/python/website/SIMULATOR/image/logo.png';
+const WEB = 'https://zumi-ai.github.io/python/website/SIMULATOR/image/';   /* 소개 사이트의 그림 주소 (군무 이미지 등) */
+const IMG = 'image/';                      /* 그림 폴더 이름 (이 HTML 파일과 같은 위치) */
+
+/* 시뮬레이터별 대표 색 (#RRGGBB). 바꾸면 해당 페이지의 번호·버튼·게이지·배경 톤이 함께 바뀝니다 */
+const THEMES = { codrone:'#7c3aed', zumi:'#2563eb', swarm:'#0f9d6b' };
+
+const PAGES = [
+  /* 1페이지: 표지 */
+  { type:'cover', brand:'ROBOLINK', badge:'E-Manual',
+    title:'Zumi AI &\nCoDrone EDU', highlight:'Simulator Guide',
+    sub:'시뮬레이터와 함께하는\n더 즐거운 Physical AI 학습!',
+    img: IMG + '0000.png',                    /* 표지 배경 이미지 (페이지를 꽉 채움) */
+    logoImg: IMG + '0002.png', logoSize: 18,    /* 왼쪽 위 작은 로고 이미지 (필요 없으면 '' → ROBOLINK 글자가 보임) */
+    floatImg: IMG + '0001.png', floatSize: 22, /* 오른쪽 위에 둥둥 떠 있는 작은 이미지 (필요 없으면 ''), 크기는 숫자가 클수록 큼 */
+    showText: true,                           /* false 로 하면 표지 글자를 숨기고 이미지만 보여줌 */
+    footer:'Simulator', tagline:'Learn · Explore · Create' },
+
+  /* 2페이지: 목차 (go = 이동할 페이지 번호) */
+  { type:'contents', title:'Contents', sub:'지금, 다양한 시뮬레이터와 함께해요!',
+    items:[
+      { t:'코드론 EDU 시뮬레이터', d:'드론으로 배우는\nAI와 다양한 미션!', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/Drone_0000.png', go:'codrone', theme:'codrone' },
+      { t:'주미 AI 시뮬레이터',   d:'자율주행과 AI를 직접\n체험하는 공간!',   img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/ZumiAI_0001.png', go:'zumi', theme:'zumi' },
+      { t:'드론 군무 스튜디오',   d:'실제 드론과 함께하는\n군집 비행!', img:WEB + 'SWARM_0011.png', go:'swarm', theme:'swarm' },
+      { t:'드론 군무 시뮬레이터', d:'수많은 드론이 만드는\n환상적인 군무!', img:WEB + 'SWARM_0001.png', go:'swarm-sim', theme:'swarm' }
+    ] },
+
+  /* 3페이지: 시작 전 확인 */
+  { type:'check', title:'시작 전 확인하세요!', side:'더 즐거운 학습을 위한\n간단한 안내!',
+    items:[
+      { t:'PC 환경을 확인해요!',   d:'크롬 브라우저에서 원활하게 실행할 수 있어요.', img:'' },
+      { t:'마우스와 키보드 준비!', d:'더 편리한 조작을 위해 준비해주세요.',          img:'' },
+      { t:'자, 이제 시작해볼까요?', d:'각 시뮬레이터의 가이드를 따라\n재미있는 학습을 시작해보세요!', img:'' }
+    ] },
+
+  /* 4페이지: 시뮬레이터 공통 사용 방법 (steps = 3단계, cols = 시뮬레이터별 한눈에 보기) */
+  { type:'howto', title:'🚀 이렇게 시작해요!', side:'어떤 시뮬레이터든\n똑같이 시작해요!',
+    steps:[
+      { t:'시뮬레이터 고르기', d:'배우고 싶은\n시뮬레이터를 골라요.' },
+      { t:'[시작하기] 누르기', d:'버튼을 누르면\n새 창에서 열려요.' },
+      { t:'직접 해보기',       d:'가이드를 따라\n체험해요!' }
+    ],
+    colsTitle:'시뮬레이터별 한눈에 보기',
+    cols:[
+      { theme:'codrone', icon:'🕹️', t:'코드론 EDU', lines:['키보드·조종기로 조종','튜토리얼→연습→도전','AI 카메라 미션'] },
+      { theme:'zumi',    icon:'🚗', t:'주미 AI',    lines:['카드·키보드로 제어','센서와 AI 체험','자율주행·SLAM'] },
+      { theme:'swarm',   icon:'✨', t:'드론 군무',  lines:['가상 드론 군무 제작','음악에 맞춘 편집','전체화면 공연 관람'] }
+    ] },
+
+  /* 5페이지: 코드론 EDU 시뮬레이터 소개 (카드를 누르면 해당 미션 페이지로 이동) */
+  { type:'sim', id:'codrone', theme:'codrone', no:1, title:'코드론 EDU 시뮬레이터', tag:'드론으로 배우는\nAI와 다양한 미션!', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/Drone_0000.png',
+    text:'코드론 EDU 시뮬레이터에서는\n8가지의 다양한 미션을 통해,\n드론 조작부터 AI까지 폭넓게 학습할 수 있습니다.',
+
+section:'주요 프로그램', cols:4, numbered:true,
+cards:[
+  { t:'비행학교', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/Drone_0001.png', go:'codrone-1' },
+  { t:'물류 창고 비전', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/Drone_0002.png', go:'codrone-2' },
+  { t:'산불 구조', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/Drone_0003.png', go:'codrone-3' },
+  { t:'교각 점검', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/Drone_0004.png', go:'codrone-4' },
+  { t:'스마트 농업 드론', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/Drone_0005.png', go:'codrone-5' },
+  { t:'물품 배송 드론', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/Drone_0006.png', go:'codrone-6' },
+  { t:'해양 드론', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/Drone_0007.png', go:'codrone-7' },
+  { t:'산악 레인저 드론', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/Drone_0008.png', go:'codrone-8' }
+],
+
+    button:{ label:'시작하기', url:SIM.codrone } },
+
+  /* 6~8페이지: 코드론 조작 방법: 키보드 / 조이스틱 (행 = ['동작', '키보드', '조이스틱'])
+     키는 `Space` 처럼 ` ` 로 감싸면 키캡 모양, 조종기 버튼은 {L1} 처럼 { } 로 감싸면 동그란 버튼 모양이 됩니다 */
+  { type:'controls', id:'codrone-ctl', theme:'codrone', crumb:'코드론 EDU 시뮬레이터 · 조작 방법 1', title:'🎮 조종기와 키보드', diagram:true,
+    note:'키보드로 조종해도 되고, 드론을 연결하면 조종기(조이스틱)로도 조종할 수 있어요.\nL1·L2·R1·R2 버튼은 조종기 뒤쪽 윗부분에 있어요.',
+    groups:[
+      { h:'이륙 · 착륙', rows:[
+        ['이륙하기', '`Space`', '{L1} 길게 누르기'],
+        ['착륙하기\n(비행 중)', '`Space`', '{L1} 길게 누르기']
+      ] }
+    ] },
+  { type:'controls', id:'codrone-ctl-2', theme:'codrone', crumb:'코드론 EDU 시뮬레이터 · 조작 방법 2', title:'🕹️ 이동 · 고도 · 회전',
+    groups:[
+      { h:'앞뒤좌우로 이동하기', rows:[
+        ['앞으로 전진', '`↑`', '오른쪽 스틱을 ↑ 방향으로'],
+        ['뒤로 후진', '`↓`', '오른쪽 스틱을 ↓ 방향으로'],
+        ['왼쪽으로 이동', '`←`', '오른쪽 스틱을 ← 방향으로'],
+        ['오른쪽으로 이동', '`→`', '오른쪽 스틱을 → 방향으로']
+      ] },
+      { h:'높이와 방향 바꾸기', rows:[
+        ['고도 이동\n(W 위 · S 아래)', '`W` `S`', '왼쪽 스틱을 ↑ ↓ 로'],
+        ['회전하기\n(A 왼쪽 · D 오른쪽)', '`A` `D`', '왼쪽 스틱을 ← → 로']
+      ] }
+    ] },
+  { type:'controls', id:'codrone-ctl-3', theme:'codrone', crumb:'코드론 EDU 시뮬레이터 · 조작 방법 3', title:'📷 카메라 · 동작',
+    note:'동작 1·2는 미션마다 달라요 (산불: 그리퍼/물통, 농업: 확인 카메라)',
+    groups:[
+      { h:'카메라', rows:[
+        ['카메라 전환', '`C`', '{L2}'],
+        ['사진 찍기', '`F`', '{R1}'],
+        ['AI 스캔', '`F` 길게 누르기', '{R1} 길게 누르기'],
+        ['카메라 위로', '`E`', '가운데 ▲ 버튼'],
+        ['카메라 아래로', '`Q`', '가운데 ▼ 버튼']
+      ] },
+      { h:'동작', rows:[
+        ['동작 실행', '`G`', '{R2} 길게 누르기'],
+        ['동작 1 선택', '`1`', '가운데 ◀ 버튼'],
+        ['동작 2 선택', '`2`', '가운데 ▶ 버튼']
+      ] }
+    ] },
+
+  /* 9~24페이지: 코드론 EDU 미션 소개 (미션별 2페이지: 소개 + 미션 구성) */
+  { type:'detail', id:'codrone-1', theme:'codrone', no:1, crumb:'코드론 EDU 시뮬레이터 · 미션 1', title:'🛫 비행학교', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/Drone_0001.png',
+    text:'몇가지 미션을 통해 드론을 조작하는 방법을 배우고, 드론을 나만의 색상으로 꾸며봅니다.',
+    tags:['#조작','#색상 커스텀'] },
+  { type:'missions', id:'codrone-1-m', theme:'codrone', no:1, crumb:'코드론 EDU 시뮬레이터 · 미션 1', title:'🛫 비행학교 · 미션 구성',
+    items:[
+      ['🎓','튜토리얼: 비행 기본기','이륙, 이동, 상승, 회전, 카메라 사용, 착륙까지 차근차근 배워요.'],
+      ['🏆','도전: 링, 호버링, 정밀 착륙','링 3개 통과, 3초 호버링, LAND 패드에 착륙. 가장 빠른 사람이 승리!']
+    ] },
+  { type:'detail', id:'codrone-2', theme:'codrone', no:2, crumb:'코드론 EDU 시뮬레이터 · 미션 2', title:'📦 물류 창고 비전', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/Drone_0002.png',
+    text:'사람의 손이 닿기 힘든 곳에 있는 선반 위의 상자 바코드를 읽고 상자를 출고 패드로 운반합니다.',
+    tags:['#바코드AI','#신뢰도','#장애물회피'] },
+  { type:'missions', id:'codrone-2-m', theme:'codrone', no:2, crumb:'코드론 EDU 시뮬레이터 · 미션 2', title:'📦 물류 창고 비전 · 미션 구성',
+    items:[
+      ['🎓','튜토리얼: 상자 1개 찾아 옮기기','이륙, AI 카메라, 바코드 스캔, 상자 걸기, 배송까지 한 단계씩 따라 해요.'],
+      ['🎯','연습: 상자 2개','주문서의 상자 2개를 찾아 촬영하고 배송하세요.'],
+      ['🎯','연습: 상자 3개','주문서의 상자 3개를 찾아 촬영하고 배송하세요.'],
+      ['🏆','최종: 상자 5개, 기록 경쟁','상자 5개를 최대한 빨리 배송하세요. 충돌 1회마다 5초가 더해져요.']
+    ] },
+  { type:'detail', id:'codrone-3', theme:'codrone', no:3, crumb:'코드론 EDU 시뮬레이터 · 미션 3', title:'🔥 산불 구조', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/Drone_0003.png',
+    text:'산불로 고립된 사람과 동물을 카메라와 AI로 찾아보고, 물통을 사용하여 불을 끄거나, 그리퍼를 사용하여 안전하게 옮깁니다.',
+    tags:['#객체 인식','#그리퍼','#물통'] },
+  { type:'missions', id:'codrone-3-m', theme:'codrone', no:3, crumb:'코드론 EDU 시뮬레이터 · 미션 3', title:'🔥 산불 구조 · 미션 구성',
+    items:[
+      ['🎓','튜토리얼: 구조와 불 끄기','생존자 식별, 그리퍼로 구조, 물 채우기와 불 끄기까지 한 단계씩 배워요.'],
+      ['🎯','연습: 생존자 2명, 불 2곳','생존자 2명을 구조하고 불 2곳을 끄세요.'],
+      ['🎯','연습: 생존자 모두 구조','생존자 3명을 모두 구조하고 불 4곳을 끄세요.'],
+      ['🏆','최종: 산불 전체, 기록 경쟁','생존자 3명 구조와 불 6곳 진화를 최대한 빨리 끝내세요. 과열 1회마다 10초가 더해져요.']
+    ] },
+  { type:'detail', id:'codrone-4', theme:'codrone', no:4, crumb:'코드론 EDU 시뮬레이터 · 미션 4', title:'🌉 교각 점검', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/Drone_0004.png',
+    text:'거대한 다리 아래로 들어가, 카메라를 사용해 교각의 균열을 찾아보고 사진을 찍어봅니다.',
+    tags:['#이상 탐지','#카메라 틸트'] },
+  { type:'missions', id:'codrone-4-m', theme:'codrone', no:4, crumb:'코드론 EDU 시뮬레이터 · 미션 4', title:'🌉 교각 점검 · 미션 구성',
+    items:[
+      ['🎓','튜토리얼: 균열 1개 찾기','다리 아래로 들어가 카메라를 기울이고, 진짜 균열과 오탐지를 스캔해 보세요.'],
+      ['🎯','연습: 균열 2개','진짜 균열 2개를 찾아 기록하세요.'],
+      ['🎯','연습: 균열 4개','진짜 균열 4개를 찾아 기록하세요.'],
+      ['🏆','최종: 전체 점검, 기록 경쟁','진짜 균열 6개를 최대한 빨리 찾으세요.']
+    ] },
+  { type:'detail', id:'codrone-5', theme:'codrone', no:5, crumb:'코드론 EDU 시뮬레이터 · 미션 5', title:'🌾 스마트 농업 드론', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/Drone_0005.png',
+    text:'논밭 위에서 작물의 종류와 건강 상태를 진단하고, 필요한 곳에만 농약을 살포합니다.',
+    tags:['#작물인식','#건강진단','#정밀살포'] },
+  { type:'missions', id:'codrone-5-m', theme:'codrone', no:5, crumb:'코드론 EDU 시뮬레이터 · 미션 5', title:'🌾 스마트 농업 드론 · 미션 구성',
+    items:[
+      ['🎓','튜토리얼: 밭 1곳 조사','작물을 식별하고, 식물의 건강을 확인한 뒤, 피해 부분에만 농약을 뿌려 보세요.'],
+      ['🎯','연습: 밭 2곳','밭 2곳을 조사하세요. 한 곳은 건강해요. 뿌리면 안 돼요!'],
+      ['🎯','연습: 밭 3곳','건강, 병해충, 가뭄: 각 밭에 알맞은 처방을 고르세요.'],
+      ['🏆','최종: 밭 6곳, 기록 경쟁','밭 6곳을 조사하고 아픈 곳을 치료하세요. 안전 위반 +10초, 농약을 많이 낭비하면 +10초.']
+    ] },
+  { type:'detail', id:'codrone-6', theme:'codrone', no:6, crumb:'코드론 EDU 시뮬레이터 · 미션 6', title:'📬 물품 배송 드론', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/Drone_0006.png',
+    text:'AI 카메라로 주소 표지판을 읽고, 미니맵을 따라가 4곳에 택배를 정확한 위치에 전달합니다.',
+    tags:['#주소 인식','#내비게이션','#비행 금지 구역'] },
+  { type:'missions', id:'codrone-6-m', theme:'codrone', no:6, crumb:'코드론 EDU 시뮬레이터 · 미션 6', title:'📬 물품 배송 드론 · 미션 구성',
+    items:[
+      ['🎓','튜토리얼: 첫 GPS 배송','택배를 싣고, 자율비행을 시작하고, AI 카메라로 착륙지를 확인한 뒤 택배를 내려놓아요.'],
+      ['🎯','연습: 2곳 배송','비행 금지 구역을 피하는 경로를 계획하세요. 투하 전에 매번 착륙지를 확인하세요.'],
+      ['🎯','연습: 3곳 배송','막힌 패드가 있어요. 사람과 반려동물은 비킬 때까지 기다리고, 차가 막고 있으면 대체 지점을 쓰세요.'],
+      ['🏆','최종: 4곳 배송, 기록 경쟁','택배 4개를 최대한 빨리 배송하세요. 위험한 투하는 +10초, 비행 금지 구역은 +8초.']
+    ] },
+  { type:'detail', id:'codrone-7', theme:'codrone', no:7, crumb:'코드론 EDU 시뮬레이터 · 미션 7', title:'🌊 해양 드론', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/Drone_0007.png',
+    text:'해양 쓰레기와 오염 구역을 탐지하고, 바다에서 실종된 사람에게 구명 뗏목을 전달하며, 해양 생물의 개체수를 파악합니다.',
+    tags:['#쓰레기 탐지','#해상구조','#생물 조사'] },
+  { type:'missions', id:'codrone-7-m', theme:'codrone', no:7, crumb:'코드론 EDU 시뮬레이터 · 미션 7', title:'🌊 해양 드론 · 미션 구성',
+    items:[
+      ['🎓','튜토리얼: 바다 스캔하기','AI 카메라로 떠다니는 쓰레기, 오염 구역, 바다 동물을 찾고 확대하는 법을 배워요.'],
+      ['🎯','연습: 해상 구조','조난자를 찾아 구명조끼를 던지고, 해양경찰의 구조 과정을 지켜보세요.'],
+      ['🎯','연습: 해양 생물 조사','해양 생물 5종을 세고 산호초를 점검하세요. 동물을 놀라게 하면 안 돼요.'],
+      ['🏆','최종: 해양 순찰 전체, 기록 경쟁','쓰레기와 오염을 기록하고, 생물을 세고, 조난자를 구조하세요. 동물을 놀라게 하면 +10초.']
+    ] },
+  { type:'detail', id:'codrone-8', theme:'codrone', no:8, crumb:'코드론 EDU 시뮬레이터 · 미션 8', title:'⛰️ 산악 레인저 드론', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/Drone_0008.png',
+    text:'야생 동물의 종류와 개체수를 파악하고 서식지를 점검하며, 열화상 카메라로 실종된 등산객을 수색해 의료 물품을 전달합니다.',
+    tags:['#야생동물 조사','#열화상 카메라','#의료 물품 운송'] },
+  { type:'missions', id:'codrone-8-m', theme:'codrone', no:8, crumb:'코드론 EDU 시뮬레이터 · 미션 8', title:'⛰️ 산악 레인저 드론 · 미션 구성',
+    items:[
+      ['🎓','튜토리얼: 레인저 기본','사슴 무리를 세고, 서식지 표지판을 읽고, 열화상 카메라를 사용해 보세요.'],
+      ['🎯','연습: 수색과 구조','열화상으로 실종 등산객을 찾고, 꺼지지 않은 모닥불을 신고하고, 의료 물품을 전달한 뒤 헬기 구조를 지켜보세요.'],
+      ['🎯','연습: 야생동물 조사','동물 4종 무리를 세고 서식지 표지판 3곳을 읽으세요.'],
+      ['🏆','최종: 레인저 임무 전체, 기록 경쟁','야생동물과 서식지를 조사하고, 모닥불을 신고하고, 등산객을 구조하세요. 동물을 놀라게 하면 +10초.']
+    ] },
+
+  /* 25페이지: 주미 AI 시뮬레이터 소개 */
+  { type:'sim', id:'zumi', theme:'zumi', no:2, title:'주미 AI 시뮬레이터', tag:'주미 AI와 함께하는\n자율주행과 AI의 세계!', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/ZumiAI_0000.png',
+    text:'주미 AI 시뮬레이터에서는\n카드와 키보드로 주미 AI를\n직접 제어하고, 센서와 AI 기술을\n체험할 수 있습니다.',
+    section:'주요 프로그램', cols:2, numbered:true,
+    cards:[
+      { t:'카드 실험실', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/ZumiAI_0002.png', go:'zumi-1' },
+      { t:'심화 코딩',   img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/ZumiAI_0003.png', go:'zumi-2' },
+      { t:'조종 모드',   img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/ZumiAI_0004.png', go:'zumi-3' },
+      { t:'AI 학습 모드', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/ZumiAI_0005.png', go:'zumi-ai' }
+    ],
+    button:{ label:'시작하기', url:SIM.zumi } },
+
+  /* 26~44페이지: 주미 AI 프로그램 소개 + 사용 방법 (type:'manual' = 그림 + 단계/표 설명)
+     26 화면 구성 | 27~28 카드 실험실 | 29~32 심화 코딩 | 33~34 조종 모드 | 35~36 AI 학습 패널
+     37~38 비젼 | 39~40 센서 | 41~42 학습 | 43~44 SLAM */
+  /* 📷 이미지 교체 (26페이지): 시뮬레이터 전체 화면 (①~⑥ 번호를 그림 위에 표시) */
+  { type:'manual', id:'zumi-screen', theme:'zumi', crumb:'주미 AI 시뮬레이터 · 시작하기', title:'화면 구성 알아보기', img: IMG + '0006.png', ih:26, cap:'그림 1. 주미 AI 시뮬레이터 화면',
+    head:['이름', '하는 일'], g:'30% 1fr',
+    rows:[
+      ['① 모드 이름표', '지금 어떤 모드인지 보여줘요.'],
+      ['② 맵 버튼', ':fa-border-all: 격자 · :fa-city: 도시 · :fa-tree: 숲 중에서 배경을 골라요.'],
+      ['③ 주미 카메라', '카메라가 ON이라면 ZUMI CAM이 오른쪽 화면이 떠요.'],
+      ['④ 랜덤 도로 생성', ':fa-city: 도시 · :fa-tree: 숲 맵에서 새로운 도로를 만들어요.'],
+      ['⑤ 위치 리셋', '주미AI 를 시작 위치로 되돌려요.'],
+      ['⑥ 모드 변경', '처음 화면으로 돌아가서 모드를 다시 골라요.']
+    ] },
+
+  { type:'detail', id:'zumi-1', theme:'zumi', no:'1', crumb:'주미 AI 시뮬레이터 · 프로그램 1', title:'카드 실험실', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/ZumiAI_0002.png',
+    text:'하단의 카드를 클릭하면 주미 AI가 카드를 즉시 카메라로 인식하며, 그에 맞는 동작을 바로 실행합니다.',
+    tags:['#카메라 카드 인식','#즉시 실행'] },
+  /* 📷 이미지 교체 (28페이지): 카드 팔레트(하단 카드 7장) + 스캔 장면 */
+  { type:'manual', id:'zumi-1-m', iw:50, theme:'zumi', crumb:'주미 AI 시뮬레이터 · 카드 실험실', title:'카드 실험실 · 사용 방법', img: IMG + '0008.png', ih:18, cap:'그림 2. 카드를 누르면 주미 AI가 카드를 스캔 하고 동작 합니다.',
+    steps:[
+      ['카드 누르기','아래쪽 카드(2~6번) 중 하나를 누릅니다.'],
+      ['주미AI 가 스캔!','카메라가 카드를 인식합니다.'],
+      ['바로 움직여요','전진·후진 10cm, 회전 90도, 기다리기 1초가 기본값입니다.']
+    ],
+    head:['카드', '하는 일'], g:'38% 1fr',
+    rows:[
+      ['2·3 전진 · 후진 카드', '앞 · 뒤로 10cm 이동'],
+      ['4·5 왼쪽 · 오른쪽 회전 카드', '제자리에서 90도 회전'],
+      ['6 기다리기 카드', '1초 멈춤'],
+      ['1·7 실행 · 삭제 카드', '이 카드 들은 심화 코딩에서 사용 됩니다.']
+    ] },
+
+  { type:'detail', id:'zumi-2', theme:'zumi', no:'2', crumb:'주미 AI 시뮬레이터 · 프로그램 2', title:'심화 코딩', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/ZumiAI_0003.png',
+    text:'원하는 값(거리/각도)을 설정하여 타임라인에 순차적으로 코딩을 쌓은 뒤 한 번에 실행합니다.',
+    tags:['#거리·각도 설정','#타임라인 순차 실행'] },
+  /* 📷 이미지 교체 (30페이지): 값 설정 창 + 위쪽 [코딩 명령어] 띠 */
+  { type:'manual', id:'zumi-2-m', theme:'zumi', crumb:'주미 AI 시뮬레이터 · 심화 코딩 ①', title:'심화 코딩 · 명령어 쌓기', img: IMG + '0009.png', ih:22, cap:'그림 3. 값 설정 창과 [입력 값]',
+    steps:[
+      ['심화코딩 모드 고르기','우측 상단에[모드 변경]을 선택하고, [심화 코딩]을 클릭합니다.'],
+      ['카드 누르고 값 정하기','전진 카드를 누르고, 거리(cm)를 설정 하고 [녹색 버튼 누르기(적용)]을 누릅니다.'],
+      ['카드 명령 쌓기','회전 카드로 각도(도)를 설정 하거나 대기 카드로 시간(초)를 설정하고 \n [녹색 버튼 누르기 (적용)]를 누르면 상단에 명령이 쌓여요.'],
+      ['계속 쌓기','원하는 순서대로 상단에 명령을 쌓아요. 명령은 최대 500개 까지 입력 할 수 있어요.']
+    ] },
+
+  /* 📷 이미지 교체 (31페이지): 실행 중인 [코딩 명령어] 띠 (반짝이는 블록) */
+  { type:'manual', id:'zumi-2-m2', theme:'zumi', crumb:'주미 AI 시뮬레이터 · 심화 코딩 ②', title:'심화 코딩 · 실행하고 고치기', img: IMG + '0010.png', ih:22, cap:'그림 4. 실행 중인 블록은 반짝여요',
+    steps:[
+      ['실행하기','우측 상단의 [실행하기 (Run)] 버튼이나 , 하단의 1번 카드(실행하기)를 누르면 왼쪽 명령부터 순서대로 주미 AI가 움직여요.'],
+      ['고치기','상단에 입력된 블록에서 ✕를 눌러 그 명령만 삭제할 수 있습니다.'],
+ ['삭제하기','7번 [삭제하기]는 마지막 명령, [전체삭제]는 모두 지워요.'],
+      ['실행 중 표시','지금 실행하는 블록이 반짝이면서 주미 AI의 움직임을 확인 할 수 있어요.']
+    ],
+     },
+
+  /* 그림 없음 (원하면 img: IMG + '0003.png', cap:'…' 추가) */
+  { type:'manual', id:'zumi-2-m3', theme:'zumi', crumb:'주미 AI 시뮬레이터 · 심화 코딩 ③', title:'심화 코딩 · 예제 따라하기',
+    lead:'카드를 쌓아서 삼각형이나 사각형 같은 모양을 그려 봐요! [카드 → 값 → 녹색 버튼]을 반복하고 [실행하기]를 눌러요.',
+    head:['예제','쌓는 순서'], g:'24% 1fr',
+    rows:[
+      ['정사각형','[전진 30cm] → [오른쪽 회전 90도] 를 4번'],
+      ['삼각형','[전진 30cm] → [오른쪽 회전 120도] 를 3번'],
+      ['전진 하고 뒤로 돌아서 후진하기','[전진 40cm] → [왼쪽 회전 180도] → [전진 40cm]'],
+      ['전진 하고 잠깐 쉬고 후진하기','[전진 20cm] → [기다리기 2초] → [후진 20cm]']
+    ],
+    steps:[
+      ['카드 고르기','회전은 30 · 45 · 90 · 180도, 이동은 20 · 30 · 50cm 를 사용 할 수 있습니다.'],
+      ['도전해 보기','아래의 예제를 보고, 나만의 도형을 만들어 보고, 친구와 코드를 비교해봅니다!']
+    ],
+    tip:'실행이 끝난 뒤 우측 상단에 [위치 리셋]을 누르면 주미 AI가 처음 자리로 돌아갑니다.' },
+
+  { type:'detail', id:'zumi-3', theme:'zumi', no:'3', crumb:'주미 AI 시뮬레이터 · 프로그램 3', title:'조종 모드', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/ZumiAI_0004.png',
+    text:'방향키와 속도 조절로 주미 AI를 직접 운전합니다. 나무·돌·건물은 통과할 수 없어요!',
+    tags:['#방향키 운전','#속도 조절','#충돌 물리'] },
+  /* 📷 이미지 교체 (34페이지): 하단 조종 패널(조이스틱·방향 버튼·속도 슬라이더) */
+  { type:'manual', id:'zumi-3-m', theme:'zumi', crumb:'주미 AI 시뮬레이터 · 조종 모드', title:'조종 모드 · 조작 방법', img: IMG + '0011.png', ih:22, cap:'그림 5. 조종 모드 화면 (방향 버튼과 속도 슬라이더)',
+    head:['동작', '키보드 1', '키보드 2'], g:'24% 34% 1fr',
+    rows:[
+      ['전진', '`↑ (방향키)` ', 'W'],
+      ['후진', '`↓(방향키)` ', 'S'],
+      ['좌회전', '`←(방향키)` ', 'A'],
+      ['우회전', '`→(방향키)` ', 'D']
+    ],
+    tip:'속도는 마우스로 슬라이더를 클릭하여 10~80cm/s까지 설정 할 수 있습니다. 속도가 빠르더라도, (나무 · 돌 · 건물 등)은 지나갈 수 없습니다.' },
+
+  /* 📷 이미지 교체 (35페이지): AI 학습 패널 전체 (4개) */
+  { type:'manual', id:'zumi-ai', theme:'zumi', crumb:'주미 AI 시뮬레이터 · AI 학습 모드', title:'AI 학습 패널 · 패널 구성', img: IMG + '0012.png', cap:'그림 6. AI 학습 패널 (4개)',
+    head:['이름','배우는 것'], g:'26% 1fr',
+   rows:[
+  [':fa-tower-broadcast: 센서','거리 센서 및 긴급제동'],
+  [':fa-eye: 비전','물체 인식과 확신도(%)'],
+  [':fa-brain: 학습','데이터 학습 및 자율주행'],
+  [':fa-map-location-dot: SLAM','지도 만들기 + 내 위치 찾기']
+],
+    tip:'조종 모드에서, [AI 학습 모드]를 선택해주세요.주미 AI를 방향키(WASD)로 운전하면서, 쉽게 AI를 학습 할 수 있습니다.' },
+
+  /* 📷 이미지 교체 (36페이지): 패널의 미션·퀴즈 영역 */
+  { type:'manual', id:'zumi-ai-2', theme:'zumi', crumb:'주미 AI 시뮬레이터 · AI 학습 모드', title:'AI 학습 패널 · 미션과 퀴즈', img: IMG + '0013.png', iw:50, cap:'그림 7. 미션 목록과 퀴즈',
+    steps:[
+      ['오늘의 개념','탭마다 \'💡 오늘의 개념\'이 있습니다. 단원을 이해하는데 도움을 줍니다.'],
+      ['체크 박스','🎯 미션의 ⬜는 조건을 달성하면 ✅로 바뀝니다. \n그리고 흰색 ⬜는 클릭 하여 ✅로 바꿀 수 있습니다.'],
+      ['퀴즈 맞히기','❓ 퀴즈에 정답을 선택하면 탭에 ⭐이 생깁니다. 4개의 ⭐을 모아봅시다!'],
+      ['맵은 자동으로','센서 · 비전은 숲/도시, 학습은 숲, SLAM은 도시 맵으로 바꿔 줘요.']
+    ],
+    tip:'이 화면은 ▾로 접을수 있고 ✕로 닫을 수 있습니다. 만약 창을 닫았다면, 최소화 된 [학습창 열기]로 다시 열어요.' },
+
+  { type:'detail', id:'zumi-4', theme:'zumi', no:'4', crumb:'주미 AI 시뮬레이터 · 프로그램 4', title:'AI 학습 모드 · 비젼', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/ZumiAI_0005.png',
+    text:'주미 AI의 카메라를 활용하여, 사물을 인식 시키고, 인식률을 조절 하여 확신도의 변화를 살펴 봅니다.',
+    tags:['#AI 학습 모드','#사물 인식','#확신도 변화'] },
+  /* 📷 이미지 교체 (38페이지): ZUMI CAM에 물체 상자와 확신도가 보이는 화면 */
+  { type:'manual', id:'zumi-4-m', theme:'zumi', crumb:'주미 AI 시뮬레이터 · AI 학습 모드 · 비젼', title:'AI 비전 · 미션 따라하기', img: IMG + '0003.png', ih:22, cap:'그림 8. AI가 찾은 물체와 확신도(%)',
+    steps:[
+      ['해상도 낮추기','32px · 64px로 바꾸면 AI의 눈이 거칠어져 확신도가 낮아져요. (미션 ①)'],
+      ['확신도 90% 이상 찾기','물체에 가까이 가면 네모 상자의 확신도가 올라가요. (미션 ②)'],
+      ['정답 보기 켜기','✅를 켜면 AI가 틀린 물체에 ✗가 표시돼요. (미션 ③)']
+    ],
+    tip:'확신도 기준을 올리면, 그보다 낮은 물체는 AI가 말하지 않아요.' },
+
+  { type:'detail', id:'zumi-5', theme:'zumi', no:'4', crumb:'주미 AI 시뮬레이터 · 프로그램 4', title:'AI 학습 모드 · 센서', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/ZumiAI_0006.png',
+    text:'주미 AI를 주행 해보고, 센서를 사용하여 물체와의 거리가 너무 가까우면 긴급 정지를 해봅니다.',
+    tags:['#AI 학습 모드','#거리 센서','#긴급 정지'] },
+  /* 📷 이미지 교체 (40페이지): 센서 탭의 레이더와 맵의 센서 빛줄기 */
+  { type:'manual', id:'zumi-5-m', theme:'zumi', crumb:'주미 AI 시뮬레이터 · AI 학습 모드 · 센서', title:'센서 · 미션 따라하기', img: IMG + '0003.png', ih:20, cap:'그림 9. 거리 레이더와 3D 센서 빛줄기',
+    steps:[
+      ['레이더 보기','앞 장애물까지 거리가 cm로 나오고 초록 → 노랑 → 빨강으로 바뀌어요.'],
+      ['20cm 안으로 다가가기','빨간 경고가 뜨면 미션 ① 완료!'],
+      ['긴급제동 AI 켜기','멈춤 거리(5~40cm)를 정하고 켜면 앞이 가까울 때 스스로 멈춰요. (미션 ②)'],
+      ['자율 탐험','를 켜면 센서만 보고 운전해요. 10초 안 부딪히면 미션 ③!']
+    ],
+    tip:'방향키를 누르면 사람이 운전을 이어받아요.' },
+
+  { type:'detail', id:'zumi-6', theme:'zumi', no:'4', crumb:'주미 AI 시뮬레이터 · 프로그램 4', title:'AI 학습 모드 · 학습', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/ZumiAI_0007.png',
+    text:'주미 AI 가 바라보는 바닥 데이터를 운전하며 수집하고, AI 학습을 시키며, 자율 주행을 체험 해봅니다.',
+    tags:['#AI 학습 모드','#바닥 데이터 수집','#머신러닝 자율주행'] },
+  /* 📷 이미지 교체 (42페이지): 학습 탭 (바닥 15칸, 데이터 막대, 학습 그래프) */
+  { type:'manual', id:'zumi-6-m', theme:'zumi', crumb:'주미 AI 시뮬레이터 · AI 학습 모드 · 학습', title:'머신러닝 · 자율주행 따라하기', img: IMG + '0003.png', ih:18, cap:'그림 10. 바닥 15칸 · 모은 데이터 · 정확도 그래프',
+    steps:[
+      ['데이터 모으기','[● 내가 운전하며 수집]을 켜고 길을 따라 달려요. [선생님 시범]은 자동으로 모아 줘요. (100개 이상 미션 ①)'],
+      ['AI 학습시키기','[AI 학습시키기]를 누르고 정확도가 50%를 넘으면 미션 ②!'],
+      ['자율주행 시작','[AI 자율주행 시작]으로 25초 동안 길을 안 벗어나면 미션 ③!']
+    ],
+    tip:'숲 맵의 흙길에서 해요. 좌 · 우 · 직진 데이터를 골고루 모아야 해요.' },
+
+  { type:'detail', id:'zumi-7', theme:'zumi', no:'4', crumb:'주미 AI 시뮬레이터 · 프로그램 4', title:'AI 학습 모드 · SLAM', img:'https://zumi-ai.github.io/python/website/SIMULATOR/image/ZumiAI_0008.png',
+    text:'주미 AI를 중심으로 지도를 그리는 SLAM을 체험 해보고, AI가 그린 지도와 실제 로봇의 위치를 비교해봅니다.',
+    tags:['#AI 학습 모드','#실시간 SLAM 지도','#로봇 위치 비교'] },
+
+  /* 📷 이미지 교체 (44페이지): SLAM 탭의 지도 화면과 오차·지도 완성·이동 거리 숫자 */
+  { type:'manual', id:'zumi-7-m', theme:'zumi', crumb:'주미 AI 시뮬레이터 · AI 학습 모드 · SLAM', title:'SLAM · 지도 만들기 따라하기', img: IMG + '0003.png', ih:18, cap:'그림 11. SLAM 지도 · 진짜 위치(파랑) · 믿는 위치(빨강)',
+    steps:[
+      ['지도 그리기','운전하면 라이다가 벽을 스캔해 지도가 그려져요. 10%를 넘기면 미션 ①!'],
+      ['500cm 달리기','이동 거리 500cm(5m)를 넘기면 미션 ②!  자동 탐험도 쓸 수 있어요.'],
+      ['오차 살펴보기','미끄러짐 오차를 켜면 믿는 위치가 진짜 위치에서 벗어나요.'],
+      ['SLAM 보정으로 고치기','지도를 지우고  보정을 켠 채 200cm 달려 오차 15cm 이하로! (미션 ③)']
+    ],
+    tip:'도시 맵에서 해요. SLAM은 지도 만들기와 내 위치 찾기를 동시에 해요!' },
+
+  /* 45페이지: 드론 군무 스튜디오 소개 (실제 드론 연결) */
+  { type:'sim', id:'swarm', theme:'swarm', no:3, title:'🚁 드론 군무 스튜디오', tag:'실제 드론과 함께하는\n군집 비행!', img: WEB + 'SWARM_0011.png',
+    text:'가상 드론 시뮬레이터에\n실제 드론을 연결하고 조이스틱으로\n조종할 수 있습니다. 시뮬레이터 동작에 맞춰\n회전, 좌표 이동, LED 변경을 실행해요.',
+    section:'주요 프로그램', cols:2, numbered:true,
+    cards:[
+      { t:'가상 드론 시뮬레이터', img: WEB + 'SWARM_0012.png', go:'swarm-1' },
+      { t:'실제 드론 연결 시뮬레이터', img: WEB + 'SWARM_0013.png', go:'swarm-2' }
+    ],
+    button:{ label:'시작하기', url:SIM.swarmReal } },
+
+  /* 46페이지: 드론 군무 시뮬레이터 소개 (가상 대규모 군집) */
+  { type:'sim', id:'swarm-sim', theme:'swarm', no:4, title:'🛸 드론 군무 시뮬레이터', tag:'수많은 드론이 만드는\n환상적인 군무!', img: WEB + 'SWARM_0001.png',
+    text:'최소 20대부터 수천 대의 드론까지,\n직접 군무를 만들고 편집하며,\n음악과 함께 멋진 공연을 연출할 수 있습니다.',
+    section:'주요 프로그램', cols:2, numbered:true,
+    cards:[
+      { t:'대규모 군집 편대', img: WEB + 'SWARM_0002.png', go:'swarm-3' },
+      { t:'속도·색상·모양 조절', img: WEB + 'SWARM_0003.png', go:'swarm-4' },
+      { t:'음악 싱크 동작 연출', img: WEB + 'SWARM_0004.png', go:'swarm-5' },
+      { t:'전체화면 배경 관람', img: WEB + 'SWARM_0005.png', go:'swarm-6' }
+    ],
+    button:{ label:'시작하기', url:SIM.swarmVirtual } },
+
+  /* 47~52페이지: 드론 군무 스튜디오·시뮬레이터 프로그램 소개 */
+  { type:'detail', id:'swarm-1', theme:'swarm', no:1, crumb:'드론 군무 스튜디오 · 프로그램 1', title:'가상 드론 시뮬레이터 · 1대~5대', img: WEB + 'SWARM_0012.png',
+    text:'최소 1대에서 5대까지의 가상 드론을 추가하여, 드론을 회전시키고 좌표 이동, LED 변경을 실행하면서 군집 드론 환경을 만들어 보고 편집하거나 수정할 수 있습니다.',
+    tags:['#가상 드론 군무','#군무 제작·편집'] },
+  { type:'detail', id:'swarm-2', theme:'swarm', no:2, crumb:'드론 군무 스튜디오 · 프로그램 2', title:'실제 드론 연결 시뮬레이터 · 1대~5대', img: WEB + 'SWARM_0013.png',
+    text:'시뮬레이터의 가상 드론 프로그램에 페어링된 실제 드론을 연결하고 조이스틱으로 조종합니다. 시뮬레이터 동작에 맞춰 드론을 회전시키고 좌표 이동 및 LED 변경을 실행하면서 군집 드론 환경을 만들어 보고 편집하거나 수정할 수 있습니다.',
+    tags:['#실제 드론 군무','#군무 제작·편집'] },
+  { type:'detail', id:'swarm-3', theme:'swarm', no:1, crumb:'드론 군무 시뮬레이터 · 프로그램 1', title:'대규모 군집 편대 · 최소 20대~수천 대', img: WEB + 'SWARM_0002.png',
+    text:'최소 20대의 드론부터 수천 대의 드론까지, 프로그램을 통하여 드론의 군무를 직접 만들어보고 편집하거나 수정할 수 있습니다.',
+    tags:['#20~수천 대 드론','#군무 제작·편집'] },
+  { type:'detail', id:'swarm-4', theme:'swarm', no:2, crumb:'드론 군무 시뮬레이터 · 프로그램 2', title:'드론 속도 · 색상 · 모양 정밀 조절', img: WEB + 'SWARM_0003.png',
+    text:'드론의 비행 속도와 다채로운 LED 색상, 입체적인 대형 모양 등을 세밀하게 조절하며 나만의 군무를 디자인합니다.',
+    tags:['#속도 제어','#LED 색상','#입체 대형 모양'] },
+  { type:'detail', id:'swarm-5', theme:'swarm', no:3, crumb:'드론 군무 시뮬레이터 · 프로그램 3', title:'음악에 알맞은 동작 군무 연출', img: WEB + 'SWARM_0004.png',
+    text:'배경 음악의 리듬과 분위기에 알맞은 동작과 대형 전환을 배치하여 완성도 높은 드론 라이트쇼를 만듭니다.',
+    tags:['#음악 비트 싱크','#맞춤형 동작 연출'] },
+  { type:'detail', id:'swarm-6', theme:'swarm', no:4, crumb:'드론 군무 시뮬레이터 · 프로그램 4', title:'전체화면 모드 & 배경 전환 관람', img: WEB + 'SWARM_0005.png',
+    text:'전체화면 모드로 전환하고 다양한 배경을 바꿔가며 내가 직접 만든 드론 군무를 실감 나게 관람할 수 있습니다.',
+    tags:['#전체화면 모드','#배경 무대 전환','#군무 관람'] },
+
+  /* 53페이지: 로고 (뒷표지) */
+  { type:'back', logo: LOGO }
+];
+/* ================================================================
+   ↑ 여기까지가 고치는 부분입니다. 아래는 건드리지 않아도 됩니다.
+   ================================================================ */
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const nl = s => esc(s).replace(/\n/g, '<br>');
+const mixw = (hex, a) => { const n = parseInt(hex.slice(1), 16), f = v => Math.round(255 - (255 - v) * a).toString(16).padStart(2, '0'); return '#' + f(n >> 16 & 255) + f(n >> 8 & 255) + f(n & 255); };
+const mixb = (hex, a) => { const n = parseInt(hex.slice(1), 16), f = v => Math.round(v * a).toString(16).padStart(2, '0'); return '#' + f(n >> 16 & 255) + f(n >> 8 & 255) + f(n & 255); };
+const thm = k => { const c = THEMES[k] || k; return /^#[0-9a-f]{6}$/i.test(c) ? `--c:${c};--cs:${mixw(c,.1)};--cm:${mixw(c,.2)};--cl:${mixw(c,.62)};--cd:${mixb(c,.7)};` : ''; };
+const R = SITE.ratio;
+document.documentElement.style.setProperty('--r', R);
+const pst = document.createElement('style');
+pst.textContent = `@page{size:210mm ${(210 * R).toFixed(1)}mm;margin:0}`;
+document.head.appendChild(pst);
+document.title = SITE.title; $('vt').textContent = SITE.title;
+
+const pages = PAGES.slice();
+if (pages.length % 2) {                       /* 쪽수를 짝수로 맞춤 (뒷표지는 항상 마지막) */
+  if (pages[pages.length - 1].type === 'back') pages.splice(pages.length - 1, 0, { type:'blank' });
+  else pages.push({ type:'back', logo:LOGO });
+}
+const pageNo = x => /^\d+$/.test(String(x)) ? +x : (pages.findIndex(p => p.id === x) + 1 || 1);
+const N = pages.length, S = N / 2;
+const setInd = n => { $('pgIn').value = n; };
+$('pgN').textContent = N;
+
+/* 페이지 만들기 */
+const ph = (src, alt) => src ? `<img src="${esc(src)}" alt="${esc(alt)}">` : '이미지';
+const btn = (b, big) => !b ? '' : (b.url
+  ? `<a class="go${big?' big':''}" href="${esc(b.url)}" target="_blank" rel="noopener">${esc(b.label || '시작하기')} ›</a>`
+  : `<button class="go${big?' big':''}" data-go="${pageNo(b.go)}">${esc(b.label || '다음 페이지')} ›</button>`);
+const foot = i => `<div class="ft"><span class="pgn">${i+1}</span></div>`;
+
+const PAD = `<svg viewBox="0 0 600 285" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="조종기 그림" font-family="Pretendard,'Noto Sans KR','Malgun Gothic',sans-serif" font-weight="800" text-anchor="middle">
+<rect x="30" y="70" width="540" height="200" rx="70" fill="#3a4152"/>
+<rect class="pc" x="60" y="6" width="130" height="26" rx="8"/><text x="125" y="25" fill="#fff" font-size="17">L1</text>
+<rect class="pc" x="60" y="37" width="130" height="26" rx="8"/><text x="125" y="56" fill="#fff" font-size="17">L2</text>
+<rect class="pc" x="410" y="6" width="130" height="26" rx="8"/><text x="475" y="25" fill="#fff" font-size="17">R1</text>
+<rect class="pc" x="410" y="37" width="130" height="26" rx="8"/><text x="475" y="56" fill="#fff" font-size="17">R2</text>
+<text x="300" y="40" fill="#5d6b82" font-size="13">▲ 조종기 뒤쪽 윗부분 버튼 ▲</text>
+<circle cx="150" cy="160" r="54" fill="#232834"/><circle cx="150" cy="160" r="33" fill="#4a5266" stroke="#8d97ad" stroke-width="3"/>
+<circle cx="450" cy="160" r="54" fill="#232834"/><circle cx="450" cy="160" r="33" fill="#4a5266" stroke="#8d97ad" stroke-width="3"/>
+<text x="150" y="238" fill="#fff" font-size="14">왼쪽 스틱</text><text x="150" y="256" fill="#cfd6e6" font-size="12">고도 · 회전</text>
+<text x="450" y="238" fill="#fff" font-size="14">오른쪽 스틱</text><text x="450" y="256" fill="#cfd6e6" font-size="12">이동</text>
+<rect x="235" y="92" width="130" height="62" rx="6" fill="#dfe8f3"/><text x="300" y="130" fill="#5d6b82" font-size="16">화면</text>
+<rect class="pc" x="288" y="162" width="24" height="20" rx="5"/><text x="300" y="177" fill="#fff" font-size="12">▲</text>
+<rect class="pc" x="288" y="228" width="24" height="20" rx="5"/><text x="300" y="243" fill="#fff" font-size="12">▼</text>
+<rect class="pc" x="256" y="194" width="28" height="22" rx="5"/><text x="270" y="210" fill="#fff" font-size="12">◀</text>
+<rect class="pc" x="316" y="194" width="28" height="22" rx="5"/><text x="330" y="210" fill="#fff" font-size="12">▶</text>
+<circle cx="300" cy="205" r="9" fill="#232834"/>
+<text x="300" y="264" fill="#cfd6e6" font-size="12">가운데 버튼</text>
+</svg>`;
+const kk = s => esc(s).replace(/:(fa-[a-z-]+):/g, '<i class="fa-solid $1"></i>').replace(/\{([^}]+)\}/g, '<i class="pd">$1</i>').replace(/\n/g, '<br>');
+const T = {
+  cover: p => { const t = p.showText !== false; return `<div class="pg cover"${p.img ? ` style="background-image:url('${esc(p.img)}')"` : ''}>
+    ${t ? `<div class="ctop">${p.logoImg ? '' : `<b class="brand">${esc(p.brand)}</b>`}<span class="badge">📖 ${esc(p.badge)}</span></div>
+    <h2>${nl(p.title)}<em>${esc(p.highlight)}</em></h2><p>${nl(p.sub)}</p>
+    <div class="cft"><span>🖥 ${esc(p.footer)}</span><span>${esc(p.tagline)}</span></div>` : ''}
+    ${p.logoImg ? `<img class="logo" src="${esc(p.logoImg)}" alt="${esc(p.brand)}" style="width:${+p.logoSize || 18}cqw">` : ''}
+    ${p.floatImg ? `<img class="flt" src="${esc(p.floatImg)}" alt="" style="width:${+p.floatSize || 22}cqw">` : ''}</div>`; },
+  contents: p => `<div class="pg contents"><h3>${esc(p.title)}</h3><div class="sub">${esc(p.sub)}</div>
+    <div class="list">${p.items.map((it, k) => `<button class="ci2" data-go="${pageNo(it.go)}" style="${thm(it.theme)}">
+      <span class="th">${ph(it.img, it.t)}</span>
+      <span class="tx"><b><i class="n">${k+1}</i>${esc(it.t)}</b><small>${nl(it.d)}</small></span><span class="ar">›</span></button>`).join('')}</div></div>`,
+  check: p => `<div class="pg check"><div class="hd"><h3>💡 ${esc(p.title)}</h3><span class="tag">${nl(p.side)}</span></div>
+    <div class="list">${p.items.map(it => `<div class="row"><span class="ck">✓</span><div><b>${esc(it.t)}</b><small>${nl(it.d)}</small></div>${it.img ? `<span class="rimg">${ph(it.img, it.t)}</span>` : ''}</div>`).join('')}</div>
+    ${p.button ? `<div class="cta">${btn(p.button, true)}</div>` : ''}</div>`,
+  sim: (p, i) => `<div class="pg sim" style="${thm(p.theme)}"><div class="hd">${p.no ? `<i class="n">${esc(p.no)}</i>` : ''}<h3>${esc(p.title)}</h3><span class="tag">${nl(p.tag)}</span></div>
+    <div class="hero"><div class="fr">${ph(p.img, p.title)}</div><div class="hx">${btn(p.button)}<p>${nl(p.text)}</p></div></div>
+    <div class="prog"><h4>★ ${esc(p.section)}</h4><div class="grid" style="--cols:${p.cols || 4}">${(p.cards || []).map((c, k) =>
+      `<div class="cd${c.icon ? ' ico' : ''}"${c.go ? ` data-go="${pageNo(c.go)}"` : ''}><div class="ci">${c.icon ? `<span>${esc(c.icon)}</span>` : ph(c.img, c.t)}${p.numbered ? `<i class="n">${k+1}</i>` : ''}</div><div class="ct">${nl(c.t)}</div></div>`).join('')}</div></div>${foot(i)}</div>`,
+  detail: (p, i) => `<div class="pg detail" style="${thm(p.theme)}">
+    ${p.crumb ? `<div class="crumb">${esc(p.crumb)}</div>` : ''}
+    <div class="hd">${p.no ? `<i class="n">${esc(p.no)}</i>` : ''}<h3>${esc(p.title)}</h3></div>
+    <div class="fr">${ph(p.img, p.title)}</div>
+    <div class="drow"><div class="tags">${(p.tags || []).map(x => `<span>${esc(x)}</span>`).join('')}</div>${btn(p.button)}</div>
+    <p class="dt">${nl(p.text)}</p>
+    ${p.points ? `<ul>${p.points.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}${foot(i)}</div>`,
+  controls: (p, i) => `<div class="pg controls" style="${thm(p.theme)}">
+    ${p.crumb ? `<div class="crumb">${esc(p.crumb)}</div>` : ''}
+    <div class="hd"><h3>${esc(p.title)}</h3></div>
+    ${p.diagram ? `<div class="cdia">${PAD}</div>` : ''}
+    ${p.note ? `<p class="cnote">${nl(p.note)}</p>` : ''}
+    <div class="chd"><span>동작</span><span>⌨ 키보드</span><span>🎮 조이스틱</span></div>
+    ${p.groups.map(g => `<div class="cgh">${esc(g.h)}</div>${g.rows.map(r => `<div class="cr"><b>${nl(r[0])}</b><span>${kk(r[1])}</span><span>${kk(r[2])}</span></div>`).join('')}`).join('')}
+    ${foot(i)}</div>`,
+  manual: (p, i) => `<div class="pg manual" style="${thm(p.theme)}">
+    ${p.crumb ? `<div class="crumb">${esc(p.crumb)}</div>` : ''}
+    <div class="hd"><h3>${esc(p.title)}</h3></div>
+    ${p.lead ? `<p class="ml">${kk(p.lead)}</p>` : ''}
+    ${p.img ? `<div class="fr mf" style="width:${p.iw || 72}cqw">${ph(p.img, p.title)}</div>${p.cap ? `<div class="mc">${esc(p.cap)}</div>` : ''}` : ''}
+    ${(p.steps || []).map((s, k) => `<div class="stp"><i class="n">${k+1}</i><div><b>${kk(s[0])}</b><small>${kk(s[1])}</small></div></div>`).join('')}
+    ${p.rows ? `<div class="mr mh" style="--g:${p.g}">${p.head.map(h => `<span>${esc(h)}</span>`).join('')}</div>${p.rows.map(r => `<div class="mr" style="--g:${p.g}">${r.map((c, k) => k ? `<span>${kk(c)}</span>` : `<b>${kk(c)}</b>`).join('')}</div>`).join('')}` : ''}
+    ${p.tip ? `<div class="mtip"><b>※ 팁 (Tip) : </b> ${kk(p.tip)}</div>` : ''}${foot(i)}</div>`,
+  howto: (p, i) => `<div class="pg howto"><div class="hd"><h3>${esc(p.title)}</h3><span class="tag">${nl(p.side)}</span></div>
+    <div class="steps">${p.steps.map((x, k) => `${k ? '<span class="sa">›</span>' : ''}<div class="st"><i>${k+1}</i><b>${esc(x.t)}</b><small>${nl(x.d)}</small></div>`).join('')}</div>
+    <h4 class="ht">★ ${esc(p.colsTitle)}</h4>
+    <div class="hcols">${p.cols.map(c => `<div class="hc" style="${thm(c.theme)}"><div class="top"><span>${esc(c.icon)}</span>${esc(c.t)}</div><ul>${c.lines.map(l => `<li>${esc(l)}</li>`).join('')}</ul></div>`).join('')}</div>
+    ${foot(i)}</div>`,
+  missions: (p, i) => `<div class="pg missions" style="${thm(p.theme)}">
+    ${p.crumb ? `<div class="crumb">${esc(p.crumb)}</div>` : ''}
+    <div class="hd">${p.no ? `<i class="n">${esc(p.no)}</i>` : ''}<h3>${esc(p.title)}</h3></div>
+    <div class="mlist">${p.items.map((m, k) => `<div class="mi${m[0] === '🏆' ? ' fin' : ''}"><span class="mic">${esc(m[0])}</span><div><b>${k+1}. ${esc(m[1])}</b><small>${nl(m[2])}</small></div></div>`).join('')}</div>${foot(i)}</div>`,
+  back: p => `<div class="pg endp">${p.logo ? `<img class="elogo" src="${esc(p.logo)}" alt="ROBOLINK" onerror="this.outerHTML='<h3>ROBOLINK</h3>'">` : '<h3>ROBOLINK</h3>'}</div>`,
+  blank: () => `<div class="pg"></div>`
+};
+const H = pages.map((p, i) => (T[p.type] || T.detail)(p, i));
+const sheet = h => `<div class="sheet">${h}</div>`;
+
+$('print').innerHTML = H.map(sheet).join('');
+$('scroll').innerHTML = H.map(sheet).join('');
+let lv = `<div class="base l">${sheet(H[0])}</div><div class="base r">${sheet(H[N-1])}</div>`;
+for (let k = 0; k < S - 1; k++)
+  lv += `<div class="leaf" data-k="${k}"><div class="face front">${sheet(H[2*k+1])}</div><div class="face back">${sheet(H[2*k+2])}</div></div>`;
+$('book').innerHTML = lv;
+
+/* 상태 */
+let mode = 'book', s = 0, cur = 1, single = false;
+function sync(){
+  const a = pages[cur-1], b = (mode === 'book' && !single) ? pages[cur] : null;
+  const t = (a && a.theme) || (b && b.theme), st = document.querySelector('.stage');
+  if (t && THEMES[t]) { st.style.setProperty('--sc', THEMES[t]); st.classList.add('th'); } else st.classList.remove('th');
+  try { history.replaceState(null, '', '#' + mode + '/' + cur); } catch (e) {} }
+
+function size(){
+  const w = $('bookWrap').clientWidth - 32, h = $('bookWrap').clientHeight - 32;
+  single = innerWidth < 700;
+  const pw = Math.max(120, single ? Math.min(w, h / R, 640) : Math.min(w / 2, h / R, 620));
+  $('bookWrap').style.setProperty('--pw', pw + 'px');
+  $('bookWrap').style.setProperty('--ph', pw * R + 'px');
+  $('book').hidden = single; $('single').hidden = !single;
+}
+
+let tmr;
+const leaves = () => document.querySelectorAll('.leaf');
+function layout(){
+  leaves().forEach(l => {
+    const k = +l.dataset.k, fl = k < s;
+    l.classList.toggle('flipped', fl);
+    l.style.zIndex = fl ? k + 1 : S - k;
+  });
+}
+function updUI(){
+  cur = 2 * s + 1;
+  setInd(2*s+1);
+  $('pv').disabled = s === 0; $('nx').disabled = s === S - 1;
+  sync();
+}
+/* 펼침면 이동: 움직이는 한 장만 맨 위에서 넘어가고, 나머지는 즉시 정리 */
+function setSpread(t, anim){
+  clearTimeout(tmr);
+  const L = [...leaves()], old = s, bk = $('book');
+  L.forEach(l => l.style.transition = 'none');   /* 진행 중이던 애니메이션은 끝난 상태로 고정 */
+  layout(); void bk.offsetWidth;
+  if (t === old || !anim) {
+    s = t; layout(); void bk.offsetWidth;
+    L.forEach(l => l.style.transition = '');
+    updUI(); return;
+  }
+  const lo = Math.min(old, t), hi = Math.max(old, t), a = t > old ? hi - 1 : lo;
+  s = t;
+  L.forEach(l => {
+    const k = +l.dataset.k, fl = k < s;
+    l.style.transition = k === a ? '' : 'none';
+    l.classList.toggle('flipped', fl);
+    l.style.zIndex = k === a ? 100 : (fl ? k + 1 : S - k);
+  });
+  updUI();
+  tmr = setTimeout(layout, 850);
+}
+function showSingle(n, dir){
+  cur = n;
+  $('single').innerHTML = sheet(H[n-1]);
+  if (dir) $('single').firstChild.classList.add(dir > 0 ? 'inN' : 'inP');
+  setInd(n);
+  $('pv').disabled = n === 1; $('nx').disabled = n === N;
+  sync();
+}
+function onScroll(){
+  const sc = $('scroll'), sh = sc.querySelector('.sheet'); if (!sh) return;
+  const i = Math.min(N, Math.round(sc.scrollTop / (sh.offsetHeight + 18)) + 1);
+  setInd(i);
+  if (mode === 'scroll') { cur = i; sync(); }
+}
+function goScroll(n){
+  const sc = $('scroll'), el = sc.querySelectorAll('.sheet')[n-1];
+  sc.scrollTop = el ? el.offsetTop - 18 : 0;
+  cur = n; onScroll();
+}
+function setMode(m, n){
+  if (n === undefined) n = cur;
+  mode = m;
+  const b = m === 'book';
+  $('bookWrap').hidden = !b; $('scroll').hidden = b;
+  $('mBook').classList.toggle('on', b); $('mScroll').classList.toggle('on', !b);
+  if (b) { size(); if (single) showSingle(n, 0); else setSpread((n - 1) >> 1, false); }
+  else goScroll(n);
+}
+function step(d){
+  if (mode !== 'book') return;
+  if (single) { const n = cur + d; if (n >= 1 && n <= N) showSingle(n, d); return; }
+  const n = s + d; if (n < 0 || n > S - 1) return;
+  setSpread(n, true);
+}
+function go(n){
+  n = Math.min(Math.max(n, 1), N);
+  if (mode === 'scroll') goScroll(n);
+  else if (single) showSingle(n, n > cur ? 1 : -1);
+  else setSpread((n - 1) >> 1, true);
+}
+
+/* 버튼 / 키보드 / 밀기 */
+$('mBook').onclick = () => setMode('book');
+$('mScroll').onclick = () => setMode('scroll');
+$('toc').onclick = () => go(1);
+$('pv').onclick = () => step(-1); $('nx').onclick = () => step(1);
+$('pdf').onclick = () => window.print();
+$('scroll').addEventListener('scroll', onScroll);
+document.addEventListener('click', e => { const g = e.target.closest('[data-go]'); if (g) go(+g.dataset.go); });
+addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') step(1); if (e.key === 'ArrowLeft') step(-1);
+});
+/* 오른쪽 위 "11 / 40"의 앞 숫자를 고치고 Enter 를 누르면 그 페이지로 이동 */
+const pgIn = $('pgIn');
+function jump(){ const v = parseInt(pgIn.value, 10); if (v >= 1) go(Math.min(v, N)); pgIn.blur(); }
+pgIn.addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Enter') jump(); });  /* 입력 중에는 방향키로 책이 넘어가지 않음 */
+pgIn.addEventListener('focus', () => pgIn.select());
+pgIn.addEventListener('blur', () => setInd(cur));
+let tx = null;
+$('bookWrap').addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive:true });
+$('bookWrap').addEventListener('touchend', e => {
+  if (tx == null) return;
+  const dx = e.changedTouches[0].clientX - tx; tx = null;
+  if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);
+});
+addEventListener('resize', () => {
+  if (mode !== 'book') return;
+  const was = single; size();
+  if (was !== single) { if (single) showSingle(cur, 0); else setSpread((cur - 1) >> 1, false); }
+});
+
+/* 이미지를 누르면 크게 보기 (페이지 이동보다 먼저 처리) */
+const lb = $('lb');
+const lbClose = () => { lb.hidden = true; };
+document.addEventListener('click', e => {
+  if (!lb.hidden) { lbClose(); e.stopPropagation(); return; }
+  const im = e.target.closest('img');
+  if (im && im.closest('.fr,.ci,.rimg') && im.getAttribute('src')) {
+    e.stopPropagation(); e.preventDefault();
+    lb.querySelector('img').src = im.src; lb.querySelector('img').alt = im.alt; lb.hidden = false;
+  }
+}, true);
+addEventListener('keydown', e => { if (!lb.hidden) { e.stopPropagation(); if (e.key === 'Escape') lbClose(); } }, true);
+
+/* 링크 복사: 주소#읽기방식/페이지  예) robolink-manual.html#scroll/4 */
+$('copy').onclick = () => {
+  const url = location.href.split('#')[0] + '#' + mode + '/' + cur;
+  const done = () => { $('copy').classList.add('ok'); setTimeout(() => $('copy').classList.remove('ok'), 1500); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, () => prompt('링크를 복사하세요', url));
+  else prompt('링크를 복사하세요', url);
+};
+
+/* 링크로 들어왔을 때 해당 페이지·읽기방식으로 바로 열기 (없으면 표지 펼침면) */
+function route(){
+  const parts = location.hash.slice(1).split('/');
+  const m = parts.find(x => x === 'book' || x === 'scroll');
+  const n = parts.find(x => /^\d+$/.test(x));
+  setMode(m || 'book', Math.min(Math.max(parseInt(n) || 1, 1), N));
+}
+addEventListener('hashchange', route);
+route();
+</script>
+</body>
+</html>
